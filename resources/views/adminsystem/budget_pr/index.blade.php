@@ -36,7 +36,7 @@
     <div class="col-xl-8 col-sm-12 mb-xl-0 mb-4">
         <div class="card h-100 p-3">
             <div class="card-header pb-0 px-3">
-                <h6 class="mb-0">HSE Budget Monitoring</h6>
+                <h6 class="mb-0">HSE. Budget Monitoring</h6>
             </div>
             <div class="card-body pt-4 p-3">
                 <div class="table-responsive p-0">
