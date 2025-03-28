@@ -1,0 +1,115 @@
+@extends('layouts.user_type.auth')
+
+@section('content')
+<div class="container-fluid py-4">
+    <div class="card mx-auto w-100" style="max-width: 95%;">
+        <div class="card-header pb-0 px-3">
+            <h6 class="mb-0">{{ __('Edit Pemasukan Barang') }}</h6>
+        </div>
+        <div class="card-body pt-4 p-3">
+            <form action="{{ route('adminsystem.pemasukan.update', $pemasukans->id) }}" method="POST" role="form text-left" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
+
+                <!-- Tampilkan Error -->
+                @if($errors->any())
+                <div class="mt-3 alert alert-danger alert-dismissible fade show" role="alert">
+                    <span class="alert-text text-white">{{ $errors->first() }}</span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                        <i class="fa fa-close" aria-hidden="true"></i>
+                    </button>
+                </div>
+                @endif
+
+                <!-- Tampilkan Success Message -->
+                @if(session('success'))
+                <div class="m-3 alert alert-success alert-dismissible fade show" role="alert">
+                    <span class="alert-text text-white">{{ session('success') }}</span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                        <i class="fa fa-close" aria-hidden="true"></i>
+                    </button>
+                </div>
+                @endif
+
+                <div class="row">
+                    <!-- Tanggal Pemasukan -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="tanggal">{{ __('Tanggal Pemasukan') }}</label>
+                            <input class="form-control" type="date" id="tanggal" name="tanggal" value="{{ old('tanggal', $pemasukans->tanggal) }}" required>
+                            @error('tanggal')
+                            <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <!-- Barang -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="barang_id">{{ __('Barang') }}</label>
+                            <select class="form-control" id="barang_id" name="barang_id" required>
+                                <option value="">Pilih Barang</option>
+                                @foreach($barangs as $barang)
+                                <option value="{{ $barang->id }}" {{ old('barang_id', $pemasukans->barang_id) == $barang->id ? 'selected' : '' }}>
+                                    {{ $barang->description }}
+                                </option>
+                                @endforeach
+                            </select>
+                            @error('barang_id')
+                            <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <!-- Quantity -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="quantity">{{ __('Quantity') }}</label>
+                            <input class="form-control" type="number" id="quantity" name="quantity" value="{{ old('quantity', $pemasukans->quantity) }}" required>
+                            @error('quantity')
+                            <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- Unit -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="unit">{{ __('Unit') }}</label>
+                            <select class="form-control" id="unit" name="unit" required>
+                                <option value="">Pilih Unit</option>
+                                @foreach($units as $unit)
+                                <option value="{{ $unit->unit }}" {{ old('unit', $pemasukans->unit) == $unit->unit ? 'selected' : '' }}>
+                                    {{ $unit->unit }}
+                                </option>
+                                @endforeach
+                            </select>
+                            @error('unit')
+                            <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <!-- Keterangan -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="keterangan">{{ __('Keterangan') }}</label>
+                            <textarea class="form-control" id="keterangan" name="keterangan" rows="3">{{ old('keterangan', $pemasukans->keterangan) }}</textarea>
+                            @error('keterangan')
+                            <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">{{ __('Update Pemasukan') }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endsection
