@@ -291,7 +291,7 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('/create', [UserController::class, 'create'])->name('create');
 			Route::get('/edit/{id}', [UserController::class, 'edit'])->name('edit');
 			Route::get('/detail/{id}', [UserController::class, 'detail'])->name('detail');
-			Route::put('/{id}', [UserController::class, 'update'])->name('update');
+			Route::put('/', [UserController::class, 'update'])->name('update');
 		});
 		Route::prefix('adminsystem/info_user')->name('adminsystem.info_user.')->group(function () {
 			Route::get('/', [InfoUserController::class, 'index'])->name('index');
@@ -329,6 +329,7 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::prefix('adminsystem')->name('adminsystem.')->group(function () {
 			Route::get('/home', [HomeController::class, 'index'])->name('home');
 			Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
+			Route::get('/dashboard-incident', [HomeController::class, 'incident'])->name('dashboard-incident');
 			Route::post('/home', [HomeController::class, 'store'])->name('store');
 			Route::delete('/{note}', [HomeController::class, 'destroy'])->name('destroy');
 		});

@@ -165,6 +165,7 @@
                                         <div class="form-group">
                                             <label for="klasifikasi_kejadiannya">{{ __('Klasifikasi Kejadian') }}</label>
                                             <select class="form-control" id="klasifikasi_kejadiannya" name="klasifikasi_kejadiannya">
+                                                <option value="">Pilih Klasifikasi</option>
                                                 <option value="Near Miss">Near Miss</option>
                                                 <option value="First Aid">First Aid</option>
                                                 <option value="Illness/Sick">Illness/Sick</option>
@@ -680,7 +681,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="perusahaan">{{ __('Perusahaan') }}</label>
-                                        <select class="form-control" id="perusahaan" name="perusahaan" required>
+                                        <select class="form-control" id="perusahaan" name="perusahaan" >
                                             <option value="" disabled selected>Pilih Perusahaan</option>
                                             @foreach($perusahaans as $perusahaan)
                                             <option value="{{ $perusahaan->perusahaan_name }}" {{ old('perusahaan') == $perusahaan->perusahaan_name ? 'selected' : '' }}>
@@ -696,7 +697,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="bagian">{{ __('Bagian') }}</label>
-                                                <select class="form-control" id="bagian" name="bagian" required>
+                                                <select class="form-control" id="bagian" name="bagian" >
                                                     <option value="" disabled selected>Pilih Bagian</option>
                                                 </select>
                                                 @error('bagian')

@@ -103,8 +103,8 @@ class Incident extends Model
         'total_man_hours',
         'safe_shift',
         'safe_day',
+        
         'total_safe_day_by_year',
-        'no_laporan',
     ];
 
     // Tipe data kolom tertentu

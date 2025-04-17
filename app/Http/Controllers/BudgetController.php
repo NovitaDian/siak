@@ -110,6 +110,7 @@ class BudgetController extends Controller
             'gl_code' => 'required|string|max:50',
             'gl_name' => 'required|string|max:100',
             'setahun_total' => 'required|numeric',
+            'setahun_qty' => 'required|numeric',
             'kategori' => 'required|string|max:100',
             'year' => 'required|string|max:100',
         ]);
@@ -120,6 +121,7 @@ class BudgetController extends Controller
             'gl_code' => $request->gl_code,
             'gl_name' => $request->gl_name,
             'setahun_total' => $request->setahun_total,
+            'setahun_qty' => $request->setahun_qty,
             'kategori' => $request->kategori,
             'year' => $request->year
         ]);
@@ -142,6 +144,7 @@ class BudgetController extends Controller
             'gl_code' => 'required|string|max:50',
             'gl_name' => 'required|string|max:100',
             'setahun_total' => 'required|numeric',
+            'setahun_qty' => 'required|numeric',
             'kategori' => 'required|string|max:100',
            
         ]);
@@ -179,17 +182,17 @@ class BudgetController extends Controller
     {
         $purs = PurchasingGroup::all();
         $units = Unit::all();
+        $budgets = Budget::all();
         $material_groups = MaterialGroup::all();
         $materials = Barang::all();
         $gls = Gl_Account::all();
-        return view('adminsystem.budget_pr.pr.create', compact('purs', 'units', 'material_groups', 'gls', 'materials'));
+        return view('adminsystem.budget_pr.pr.create', compact('purs', 'budgets', 'units', 'material_groups', 'gls', 'materials'));
     }
 
     public function pr_store(Request $request)
     {
         $request->validate([
             'pr_date' => 'required|date',
-            'material_group' => 'required|string',
             'pr_no' => 'required|string|unique:pr,pr_no',
             'pr_category' => 'required|string',
             'account_assignment' => 'required|string',
@@ -224,7 +227,6 @@ class BudgetController extends Controller
 
         $request->validate([
             'pr_date' => 'required|date',
-            'material_group' => 'required|string',
             'pr_no' => 'required|string|unique:pr,pr_no',
             'pr_category' => 'required|string',
             'account_assignment' => 'required|string',

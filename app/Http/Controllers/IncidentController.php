@@ -34,8 +34,8 @@ class IncidentController extends Controller
     // Menyimpan data baru (store)
     public function store(Request $request)
     {
-        // Validasi data dari request
-        $request->validate([
+        // Validasi data utama
+        $validated = $request->validate([
             'stamp_date' => 'nullable|date_format:d/m/Y',
             'shift_date' => 'required|date',
             'shift' => 'required|string|max:255',
@@ -112,9 +112,6 @@ class IncidentController extends Controller
             'permanent_partial_dissability' => 'nullable|boolean',
             'permanent_total_dissability' => 'nullable|boolean',
             'fatality' => 'nullable|boolean',
-            'lta' => 'nullable|boolean',
-            'wlta' => 'nullable|boolean',
-            'trc' => 'nullable|boolean',
             'fire_incident' => 'nullable|boolean',
             'road_incident' => 'nullable|boolean',
             'property_loss_damage' => 'nullable|boolean',
@@ -130,13 +127,77 @@ class IncidentController extends Controller
             'no_laporan' => 'nullable|string|max:255',
         ]);
 
-        $data = $request->all();
-        $data['stamp_date'] = Carbon::today()->toDateString();
-        $data['writer'] = auth()->user()->name;
-        $incident = Incident::create($data);
-        return redirect()->route('adminsystem.incident.show', $incident->id)
+        // Tanggal stamp & user
+        $validated['stamp_date'] = Carbon::today()->toDateString();
+        $validated['writer'] = auth()->user()->name;
+
+        // Total tenaga kerja
+        $totalWorkforce =
+            ($request->input('jml_employee') ?? 0) +
+            ($request->input('jml_outsources') ?? 0) +
+            ($request->input('jml_security') ?? 0) +
+            ($request->input('jml_loading_stacking') ?? 0) +
+            ($request->input('jml_contractor') ?? 0);
+
+        $validated['total_work_force'] = $totalWorkforce;
+
+        // Total man hours per hari (diasumsikan 8 jam kerja)
+        $validated['man_hours_per_day'] = $totalWorkforce * 8;
+
+        // Hitung status korban
+        $validated['ada'] = ($request->input('ada_korban') === 'Ada') ? 1 : 0;
+
+        // Hitung bulan_tahun
+        $validated['bulan_tahun'] = date('Y-m', strtotime($request->input('shift_date')));
+
+        // Klasifikasi Kejadian
+        $klasifikasi = $request->input('klasifikasi_kejadiannya');
+
+        // Tentukan LTA & WLTA sesuai klasifikasi
+        $validated['lta'] = in_array($klasifikasi, [
+            'Lost Workdays Case (LWC)',
+            'Permanent Partial Dissability (PPD)',
+            'Permanent Total Dissability (PTD)'
+        ]) ? 1 : 0;
+
+        $validated['wlta'] = in_array($klasifikasi, [
+            'First Aid Case (FAC)',
+            'Medical Treatment Case (MTC)',
+            'Restricted Work Case (RWC)'
+        ]) ? 1 : 0;
+
+        // TRC = LTA + WLTA
+        $validated['trc'] = $validated['lta'] + $validated['wlta'];
+
+        // Hitung total LTA tahun berjalan
+        $validated['total_lta_by_year'] = Incident::whereIn('klasifikasi_kejadiannya', [
+            'Lost Workdays Case (LWC)',
+            'Permanent Partial Dissability (PPD)',
+            'Permanent Total Dissability (PTD)'
+        ])
+            ->whereYear('shift_date', date('Y', strtotime($request->input('shift_date'))))
+            ->count();
+
+        // Hitung total WLTA tahun berjalan
+        $validated['total_wlta_by_year'] = Incident::whereIn('klasifikasi_kejadiannya', [
+            'First Aid Case (FAC)',
+            'Medical Treatment Case (MTC)',
+            'Restricted Work Case (RWC)'
+        ])
+            ->whereYear('shift_date', date('Y', strtotime($request->input('shift_date'))))
+            ->count();
+
+        // Hitung total man hours (contoh jika mau kalkulasi kumulatif per tahun)
+        $validated['total_man_hours'] = Incident::whereYear('shift_date', date('Y', strtotime($request->input('shift_date'))))
+            ->sum('man_hours_per_day') + $validated['man_hours_per_day'];
+
+        // Simpan ke database
+        $incident = Incident::create($validated);
+
+        return redirect()->route('adminsystem.incident.index', $incident->id)
             ->with('success', 'Data berhasil ditambahkan.');
     }
+
 
     // Form untuk mengedit data (edit)
     public function edit($id)

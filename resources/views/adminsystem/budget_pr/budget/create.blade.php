@@ -77,7 +77,13 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="setahun_total">{{ __('Total Price Year') }}</label>
+                                <label for="setahun_qty">{{ __('Total Jumlah Setahun') }}</label>
+                                <input class="form-control" type="text" id="setahun_qty" name="setahun_qty" value="{{ old('setahun_qty') }}" >
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="setahun_total">{{ __('Total Harga Setahun') }}</label>
                                 <input class="form-control" type="text" id="setahun_total" name="setahun_total" value="{{ old('setahun_total') }}" >
                             </div>
                         </div>

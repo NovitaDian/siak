@@ -13,12 +13,7 @@
         <div class="card card-body blur shadow-blur mx-4 mt-n6">
             <div class="row gx-4">
                 <div class="col-auto">
-                    <div class="avatar avatar-xl position-relative">
-                        <img src="../assets/img/bruce-mars.jpg" alt="..." class="w-100 border-radius-lg shadow-sm">
-                        <a href="javascript:;" class="btn btn-sm btn-icon-only bg-gradient-light position-absolute bottom-0 end-0 mb-n2 me-n2">
-                            <i class="fa fa-pen top-0" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Image"></i>
-                        </a>
-                    </div>
+                    
                 </div>
                 <div class="col-auto my-auto">
                     <div class="h-100">
@@ -37,8 +32,8 @@
                 <h6 class="mb-0">{{ __('Profile Information') }}</h6>
             </div>
             <div class="card-body pt-4 p-3">
-                <form action="{{ route('adminsystem.user.update') }}" method="POST" role="form text-left">
-                    @csrf
+            <form action="{{ route('adminsystem.info_user.store')}}" method="POST">
+            @csrf
                     @if($errors->any())
                     <div class="mt-3  alert alert-primary alert-dismissible fade show" role="alert">
                         <span class="alert-text text-white">{{ $errors->first() }}</span>

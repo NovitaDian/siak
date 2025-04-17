@@ -10,6 +10,11 @@
             <div class="col-xl-4 col-lg-5 col-md-6 d-flex flex-column mx-auto">
               <div class="card card-plain mt-8">
                 <div class="card-header pb-0 text-left bg-transparent">
+                  <div class="d-flex justify-content-between align-items-center mb-4">
+                    <img src="{{ asset('assets/img/logos/mitr_phol.png') }}" alt="Mitr Phol" style="height:30px;">
+                    <img src="{{ asset('assets/img/logos/hse.png') }}" alt="HSE" style="height:40px;">
+                    <img src="{{ asset('assets/img/logos/pt_dus.png') }}" alt="PT.DUS" style="height:40px;">
+                  </div>
                   <h3 class="font-weight-bolder text-info text-gradient">Welcome back</h3>
                   <p class="mb-0">Buat akun baru<br></p>
                   <p class="mb-0">Atau masuk dengan akun yang sudah ada:</p>

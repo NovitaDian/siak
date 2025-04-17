@@ -110,12 +110,13 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="material_code">{{ __('Kode Material') }}</label>
-                                <select class="form-control" id="plant" name="plant" required>
+                                <select class="form-control" id="material_code" name="material_code" required>
                                     <option value="">Pilih Material</option>
                                     @foreach($materials as $material)
                                     <option value="{{ $material->material_code }}" {{ old('material') == $material->material_code ? 'selected' : '' }}>{{ $material->material_code }}-{{ $material->description }}</option>
                                     @endforeach
-                                </select>                                @error('material_code')
+                                </select>
+                                @error('material_code')
                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                 @enderror
                             </div>
@@ -170,10 +171,12 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="io_assetcode">{{ __('IO / Assetcode') }}</label>
-                                <input class="form-control" type="text" id="io_assetcode" name="io_assetcode" value="{{ old('io_assetcode') }}">
-                                @error('io_assetcode')
-                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                                @enderror
+                                <select class="form-control" id="io_assetcode" name="io_assetcode" required>
+                                    <option value="">Pilih Internal Order</option>
+                                    @foreach($budgets as $budget)
+                                    <option value="{{ $budget->internal_order }}" {{ old('io_assetcode') == $budget->internal_order ? 'selected' : '' }}>{{ $budget->internal_order }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -203,7 +206,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="matl_group">{{ __('Matl Group') }}</label>
+                                <label for="matl_group">{{ __('Material Group') }}</label>
                                 <input class="form-control" type="text" id="matl_group" name="matl_group" value="{{ old('matl_group') }}">
                                 @error('matl_group')
                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>
