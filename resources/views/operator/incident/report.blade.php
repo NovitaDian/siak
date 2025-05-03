@@ -6,8 +6,8 @@
     <div class="container-fluid ">
         <h2 class="text-black font-weight-bolder text-center">INCIDENT & ACCIDENT REPORT</h2>
     </div>
-    <div class="container-fluid py-4">
-        <div class="card mx-auto w-100" style="max-width: 95%;">
+    <div class="container-fluid py-4 px-0">
+        <div class="card mx-auto w-100" style="max-width: 150%; ">
             <div class="card-header pb-0 px-3">
                 <h6 class="mb-0">{{ __('DATA UMUM') }}</h6>
             </div>
@@ -1250,175 +1250,175 @@
                 secondDropdown.innerHTML = '<option value="">Pilih Sub-Kategori</option>';
 
                 const options = {
-                  
-    "LEADERSHIP": [
-        "Purpose and Values",
-        "Goals",
-        "Policy",
-        "Strategy",
-        "Stakeholder Engagement",
-        "Business Processes",
-        "Business Risks",
-        "Accountabilities",
-        "Management Commitment",
-        "Process Safety Leadership"
-    ],
-    "PLANNING AND ADMINISTRATION": [
-        "Business Planning",
-        "Work Planning and Control",
-        "Action Tracking",
-        "Management System Documentation",
-        "Records",
-        "Process Safety Planning"
-    ],
-    "RISK EVALUATION": [
-        "Health Hazard Identification and Evaluation",
-        "Safety Hazard Identification and Evaluation",
-        "Security Hazard Identification and Evaluation",
-        "Environmental Hazards Identification and Evaluation",
-        "Customer Expectations Identification and Evaluation",
-        "Task Risk Evaluation",
-        "Process Safety Information",
-        "Process Hazard Analysis"
-    ],
-    "HUMAN RESOURCES": [
-        "Human Resources System",
-        "Recruitment",
-        "Managing Individual Performance",
-        "Recognition and Discipline",
-        "Leaving the Organization",
-        "Management of Organizational Change",
-        "Process Safety Human Resources"
-    ],
-    "COMPLIANCE ASSURANCE": [
-        "Regulations",
-        "External Authorizations to Operate",
-        "Industry Codes and Standards",
-        "Reporting to Authorities",
-        "Information Security",
-        "Product Stewardship",
-        "Compliance Assessment",
-        "Process Safety Regulations",
-        "Security of Process Information"
-   
-    ],
-    "PROJECT MANAGEMENT": [
-        "Project Co-ordination",
-        "Project Planning",
-        "Project Execution",
-        "Project Control",
-        "Project Close Out",
-        "Process Safety Project Reviews"
-    ],
-    "TRAINING AND COMPETENCE": [
-        "Training System",
-        "Training Needs Analysis",
-        "Instructor Competence",
-        "Delivery of Training",
-        "Leadership Orientation/Induction",
-        "General Orientation/Induction",
-        "Job Orientation/Induction",
-        "Training Systems Evaluation"
-    ],
-    "COMMUNICATION AND PROMOTION": [
-        "Communication System",
-        "Meeting Co-ordination",
-        "Management Meetings",
-        "Group Meetings",
-        "Joint Committee/Council",
-        "Coaching",
-        "Recognition",
-        "Promotion Campaigns",
-        "Away from Work Safety",
-        "Process Safety Awareness"
-    ],
-    "RISK CONTROL": [
-        "Health Hazards Controls",
-        "Safety Hazards Controls",
-        "Security Controls",
-        "Environmental Hazard Controls",
-        "Quality Control of Materials and Products",
-        "Process Control and Operating Products",
-        "Rules",
-        "Work Permits",
-        "Warning Signs and Notices",
-        "Personal Protective Equipment",
-        "Process Hazard Controls",
-        "Operating Procedures for Controlling Process Risk",
-        "Major Hazard Reports"
-    ],
-    "ASSET MANAGEMENT": [
-        "Maintenance Program",
-        "Maintenance Planning and Scheduling",
-        "Execution of Maintenance",
-        "Maintenance Review",
-        "General Conditions Inspections",
-        "Physical Condition Tour",
-        "Special Equipment Inspections",
-        "Pre-Use Equipment Inspections",
-        "Engineering Change Management",
-        "Inspections, Measuring, Test Equipment",
-        "Acquisition and Sale",
-        "Asset Integrity Program",
-        "Process Safety Inspection"
-    ],
-    "CONTRACTOR MANAGEMENT / PURCHASING": [
-        "Contractor/Supplier Selection",
-        "Contractor Operations",
-        "Contractor/Supplier Assurance",
-        "Supply Chain and Purchasing",
-        "Logistics",
-        "Managing Contractors in Process Area"
-    ],
-    "EMERGENCY PREPAREDNESS": [
-        "Emergency Needs Assessment",
-        "Site Emergency Plan",
-        "Off-Site Emergency Plan",
-        "Crisis Plan",
-        "Business Continuity Plan",
-        "Emergency Continuity Plan",
-        "Emergency Communication",
-        "Emergency Protection System",
-        "Energy Control",
-        "Emergency Teams",
-        "Drills and Exercises",
-        "First Aid",
-        "Medical Support",
-        "Organized Outside Help and Mutual Aid",
-        "Preparedness for Major Accidents"
-    ],
-    "LEARNING FROM EVENTS": [
-        "Learning from Events System",
-        "Learning from Success",
-        "Participation in Investigations",
-        "Near-Miss and Substandard Conditions",
-        "Complaints Management",
-        "Event Announcements",
-        "Away-from-Work Accidents",
-        "Action Follow-Up",
-        "LFE Reporting Verification",
-        "Event Analysis",
-        "Improvement Teams"
-    ],
-    "RISK MONITORING": [
-        "Health Hazard Monitoring",
-        "Safety Hazard Monitoring",
-        "Security Hazard Monitoring",
-        "Environmental Hazard Monitoring",
-        "Customer Satisfaction",
-        "Effectiveness of Monitoring",
-        "Perception Surveys",
-        "Behavioral Observation",
-        "Task Observations",
-        "Audits",
-        "Process Hazard Monitoring"
-    ],
-    "RESULTS AND REVIEW": [
-        "Business Results",
-        "Management Review",
-        "Reporting to Stakeholders",
-        "Residual Risk Management"
-    ]
+
+                    "LEADERSHIP": [
+                        "Purpose and Values",
+                        "Goals",
+                        "Policy",
+                        "Strategy",
+                        "Stakeholder Engagement",
+                        "Business Processes",
+                        "Business Risks",
+                        "Accountabilities",
+                        "Management Commitment",
+                        "Process Safety Leadership"
+                    ],
+                    "PLANNING AND ADMINISTRATION": [
+                        "Business Planning",
+                        "Work Planning and Control",
+                        "Action Tracking",
+                        "Management System Documentation",
+                        "Records",
+                        "Process Safety Planning"
+                    ],
+                    "RISK EVALUATION": [
+                        "Health Hazard Identification and Evaluation",
+                        "Safety Hazard Identification and Evaluation",
+                        "Security Hazard Identification and Evaluation",
+                        "Environmental Hazards Identification and Evaluation",
+                        "Customer Expectations Identification and Evaluation",
+                        "Task Risk Evaluation",
+                        "Process Safety Information",
+                        "Process Hazard Analysis"
+                    ],
+                    "HUMAN RESOURCES": [
+                        "Human Resources System",
+                        "Recruitment",
+                        "Managing Individual Performance",
+                        "Recognition and Discipline",
+                        "Leaving the Organization",
+                        "Management of Organizational Change",
+                        "Process Safety Human Resources"
+                    ],
+                    "COMPLIANCE ASSURANCE": [
+                        "Regulations",
+                        "External Authorizations to Operate",
+                        "Industry Codes and Standards",
+                        "Reporting to Authorities",
+                        "Information Security",
+                        "Product Stewardship",
+                        "Compliance Assessment",
+                        "Process Safety Regulations",
+                        "Security of Process Information"
+
+                    ],
+                    "PROJECT MANAGEMENT": [
+                        "Project Co-ordination",
+                        "Project Planning",
+                        "Project Execution",
+                        "Project Control",
+                        "Project Close Out",
+                        "Process Safety Project Reviews"
+                    ],
+                    "TRAINING AND COMPETENCE": [
+                        "Training System",
+                        "Training Needs Analysis",
+                        "Instructor Competence",
+                        "Delivery of Training",
+                        "Leadership Orientation/Induction",
+                        "General Orientation/Induction",
+                        "Job Orientation/Induction",
+                        "Training Systems Evaluation"
+                    ],
+                    "COMMUNICATION AND PROMOTION": [
+                        "Communication System",
+                        "Meeting Co-ordination",
+                        "Management Meetings",
+                        "Group Meetings",
+                        "Joint Committee/Council",
+                        "Coaching",
+                        "Recognition",
+                        "Promotion Campaigns",
+                        "Away from Work Safety",
+                        "Process Safety Awareness"
+                    ],
+                    "RISK CONTROL": [
+                        "Health Hazards Controls",
+                        "Safety Hazards Controls",
+                        "Security Controls",
+                        "Environmental Hazard Controls",
+                        "Quality Control of Materials and Products",
+                        "Process Control and Operating Products",
+                        "Rules",
+                        "Work Permits",
+                        "Warning Signs and Notices",
+                        "Personal Protective Equipment",
+                        "Process Hazard Controls",
+                        "Operating Procedures for Controlling Process Risk",
+                        "Major Hazard Reports"
+                    ],
+                    "ASSET MANAGEMENT": [
+                        "Maintenance Program",
+                        "Maintenance Planning and Scheduling",
+                        "Execution of Maintenance",
+                        "Maintenance Review",
+                        "General Conditions Inspections",
+                        "Physical Condition Tour",
+                        "Special Equipment Inspections",
+                        "Pre-Use Equipment Inspections",
+                        "Engineering Change Management",
+                        "Inspections, Measuring, Test Equipment",
+                        "Acquisition and Sale",
+                        "Asset Integrity Program",
+                        "Process Safety Inspection"
+                    ],
+                    "CONTRACTOR MANAGEMENT / PURCHASING": [
+                        "Contractor/Supplier Selection",
+                        "Contractor Operations",
+                        "Contractor/Supplier Assurance",
+                        "Supply Chain and Purchasing",
+                        "Logistics",
+                        "Managing Contractors in Process Area"
+                    ],
+                    "EMERGENCY PREPAREDNESS": [
+                        "Emergency Needs Assessment",
+                        "Site Emergency Plan",
+                        "Off-Site Emergency Plan",
+                        "Crisis Plan",
+                        "Business Continuity Plan",
+                        "Emergency Continuity Plan",
+                        "Emergency Communication",
+                        "Emergency Protection System",
+                        "Energy Control",
+                        "Emergency Teams",
+                        "Drills and Exercises",
+                        "First Aid",
+                        "Medical Support",
+                        "Organized Outside Help and Mutual Aid",
+                        "Preparedness for Major Accidents"
+                    ],
+                    "LEARNING FROM EVENTS": [
+                        "Learning from Events System",
+                        "Learning from Success",
+                        "Participation in Investigations",
+                        "Near-Miss and Substandard Conditions",
+                        "Complaints Management",
+                        "Event Announcements",
+                        "Away-from-Work Accidents",
+                        "Action Follow-Up",
+                        "LFE Reporting Verification",
+                        "Event Analysis",
+                        "Improvement Teams"
+                    ],
+                    "RISK MONITORING": [
+                        "Health Hazard Monitoring",
+                        "Safety Hazard Monitoring",
+                        "Security Hazard Monitoring",
+                        "Environmental Hazard Monitoring",
+                        "Customer Satisfaction",
+                        "Effectiveness of Monitoring",
+                        "Perception Surveys",
+                        "Behavioral Observation",
+                        "Task Observations",
+                        "Audits",
+                        "Process Hazard Monitoring"
+                    ],
+                    "RESULTS AND REVIEW": [
+                        "Business Results",
+                        "Management Review",
+                        "Reporting to Stakeholders",
+                        "Residual Risk Management"
+                    ]
 
 
                 };

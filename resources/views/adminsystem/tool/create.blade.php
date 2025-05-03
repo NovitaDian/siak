@@ -4,10 +4,10 @@
 
 <div>
     <div class="container-fluid">
-        <h2 class="text-black font-weight-bolder text-center">TAMBAH LAPORAN K3</h2>
+        <h2 class="text-black font-weight-bolder text-center">TAMBAH LAPORAN PENGECEKAN ALAT</h2>
     </div>
-    <div class="container-fluid py-4">
-        <div class="card mx-auto w-100" style="max-width: 95%;">
+    <div class="container-fluid py-4 px-0">
+        <div class="card mx-auto w-100" style="max-width: 150%; ">
             <div class="card-header pb-0 px-3">
                 <h6 class="mb-0">{{ __('DATA LAPORAN PENGECEKAN ALAT') }}</h6>
             </div>
@@ -23,63 +23,39 @@
                     </div>
                     @endif
                     <div class="row">
+                        <!-- Alat ID -->
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="alat_terpakai">{{ __('Alat yang Digunakan') }}</label>
-                                <input class="form-control" type="text" id="alat_terpakai" name="alat_terpakai" value="{{ old('alat_terpakai') }}" required>
-                                @error('alat_terpakai')
-                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="kondisi_fisik">{{ __('Kondisi Fisik') }}</label>
-                                <input class="form-control" type="text" id="kondisi_fisik" name="kondisi_fisik" value="{{ old('kondisi_fisik') }}" required>
-                                @error('kondisi_fisik')
-                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="fungsi_kerja">{{ __('Fungsi Alat') }}</label>
-                                <input class="form-control" type="text" id="fungsi_kerja" name="fungsi_kerja" value="{{ old('fungsi_kerja') }}" required>
-                                @error('fungsi_kerja')
-                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="sertifikasi">{{ __('Sertifikasi Alat') }}</label>
-                                <select class="form-control" id="sertifikasi" name="sertifikasi" required>
-                                    <option value="Ada" {{ old('sertifikasi') == 'Ada' ? 'selected' : '' }}>Ada</option>
-                                    <option value="Tidak Ada" {{ old('sertifikasi') == 'Tidak Ada' ? 'selected' : '' }}>Tidak Ada</option>
+                                <label for="alat_id">{{ __('Alat') }}</label>
+                                <select class="form-control" name="alat_id" id="alat_id" required>
+                                    <option value="">Pilih Alat</option>
+                                    @foreach($alats as $alat)
+                                    <option value="{{ $alat->id }}" {{ old('alat_id') == $alat->id ? 'selected' : '' }}>{{ $alat->nama_alat }}-{{ $alat->nomor }}</option>
+                                    @endforeach
                                 </select>
-                                @error('sertifikasi')
+                                @error('alat_id')
                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                 @enderror
                             </div>
                         </div>
-                    </div>
 
-                    <div class="row">
+                        <!-- HSE Inspector ID -->
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="kebersihan">{{ __('Kebersihan Alat') }}</label>
-                                <select class="form-control" id="kebersihan" name="kebersihan" required>
-                                    <option value="Bersih" {{ old('kebersihan') == 'Bersih' ? 'selected' : '' }}>Bersih</option>
-                                    <option value="Kotor" {{ old('kebersihan') == 'Kotor' ? 'selected' : '' }}>Kotor</option>
+                                <label for="hse_inspector_id">{{ __('HSE Inspector') }}</label>
+                                <select class="form-control" name="hse_inspector_id" id="hse_inspector_id" required>
+                                    <option value="">Pilih HSE Inspector</option>
+                                    @foreach($inspectors as $inspector)
+                                    <option value="{{ $inspector->id }}" {{ old('hse_inspector_id') == $inspector->id ? 'selected' : '' }}>{{ $inspector->name }}</option>
+                                    @endforeach
                                 </select>
-                                @error('kebersihan')
+                                @error('hse_inspector_id')
                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                 @enderror
                             </div>
                         </div>
+
+                        <!-- Tanggal Pemeriksaan -->
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="tanggal_pemeriksaan">{{ __('Tanggal Pemeriksaan') }}</label>
@@ -89,49 +65,24 @@
                                 @enderror
                             </div>
                         </div>
-                    </div>
 
-                    <div class="row">
+                        <!-- Status_pemeriksaan -->
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="label_petunjuk">{{ __('Label Petunjuk') }}</label>
-                                <input class="form-control" type="text" id="label_petunjuk" name="label_petunjuk" value="{{ old('label_petunjuk') }}" required>
-                                @error('label_petunjuk')
-                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="pemeliharaan">{{ __('Pemeliharaan') }}</label>
-                                <input class="form-control" type="text" id="pemeliharaan" name="pemeliharaan" value="{{ old('pemeliharaan') }}" required>
-                                @error('pemeliharaan')
+                                <label for="status_pemeriksaan">{{ __('Status_pemeriksaan') }}</label>
+                                <select class="form-control" name="status_pemeriksaan" id="status_pemeriksaan" required>
+                                    <option value="">Pilih Status_pemeriksaan</option>
+                                    <option value="Layak operasi" {{ old('status_pemeriksaan') == 'Layak operasi' ? 'selected' : '' }}>Layak Operasi</option>
+                                    <option value="Layak operasi dengan catatan" {{ old('status_pemeriksaan') == 'Layak operasi dengan catatan' ? 'selected' : '' }}>Layak Operasi Dengan Catatan</option>
+                                    <option value="Tidak layak operasi" {{ old('status_pemeriksaan') == 'Tidak layak operasi' ? 'selected' : '' }}>Tidak Layak Operasi</option>
+                                </select>
+                                @error('status_pemeriksaan')
                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                 @enderror
                             </div>
                         </div>
                     </div>
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="keamanan_pengguna">{{ __('Keamanan Pengguna') }}</label>
-                                <input class="form-control" type="text" id="keamanan_pengguna" name="keamanan_pengguna" value="{{ old('keamanan_pengguna') }}" required>
-                                @error('keamanan_pengguna')
-                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="catatan">{{ __('Catatan') }}</label>
-                        <textarea class="form-control" id="catatan" name="catatan" rows="4">{{ old('catatan') }}</textarea>
-                        @error('catatan')
-                        <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                        @enderror
-                    </div>
-
+                    <!-- Submit Button -->
                     <div class="d-flex justify-content-end">
                         <button type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">{{ __('Simpan Laporan') }}</button>
                     </div>

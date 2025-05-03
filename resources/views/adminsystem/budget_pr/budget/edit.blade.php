@@ -6,8 +6,8 @@
     <div class="container-fluid">
         <h2 class="text-black font-weight-bolder text-center">EDIT GL ACCOUNT</h2>
     </div>
-    <div class="container-fluid py-4">
-        <div class="card mx-auto w-100" style="max-width: 95%;">
+    <div class="container-fluid py-4 px-0">
+        <div class="card mx-auto w-100" style="max-width: 150%; ">
             <div class="card-header pb-0 px-3">
                 <h6 class="mb-0">{{ __('EDIT DATA GL ACCOUNT') }}</h6>
             </div>
@@ -101,7 +101,7 @@
     function calculateTotal(month) {
         // Get price per unit
         var pricePerUnit = parseFloat(document.getElementById('price_per_unit').value);
-        
+
         if (!pricePerUnit) {
             alert("Please enter the price per unit");
             return;
@@ -109,7 +109,7 @@
 
         // Get quantity for the month
         var qty = parseFloat(document.getElementById(month + '_qty').value);
-        
+
         // Calculate total for the month
         if (!isNaN(qty)) {
             var total = qty * pricePerUnit;
@@ -127,7 +127,7 @@
         months.forEach(function(month) {
             var qty = parseFloat(document.getElementById(month + '_qty').value);
             var total = parseFloat(document.getElementById(month + '_total').value);
-            
+
             if (!isNaN(qty)) totalYearQty += qty;
             if (!isNaN(total)) totalYearPrice += total;
         });

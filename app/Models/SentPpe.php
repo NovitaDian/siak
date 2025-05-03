@@ -15,6 +15,7 @@ class SentPpe extends Model
     protected $fillable = [
         'tanggal_shift_kerja',
         'shift_kerja',
+        'status_ppe',
         'nama_hse_inspector',
         'jam_pengawasan',
         'zona_pengawasan',
@@ -36,5 +37,9 @@ class SentPpe extends Model
     ];
     public function requests() {
         return $this->hasMany(PpeRequest::class);
+    }
+    public function nonCompliants()
+    {
+        return $this->hasMany(NonCompliant::class, 'id_ppe', 'id');
     }
 }

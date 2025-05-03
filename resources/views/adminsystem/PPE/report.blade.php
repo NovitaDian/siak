@@ -6,8 +6,8 @@
     <div class="container-fluid ">
         <h2 class="text-black font-weight-bolder text-center">SAFETY BEHAVIOR & PPE COMPLIANCE</h2>
     </div>
-    <div class="container-fluid py-4">
-        <div class="card mx-auto w-100" style="max-width: 95%;">
+    <div class="container-fluid py-4 px-0">
+        <div class="card mx-auto w-100" style="max-width: 150%; ">
             <div class="card-header pb-0 px-3">
                 <h6 class="mb-0">{{ __('DATA UMUM') }}</h6>
             </div>
@@ -59,9 +59,15 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="nama_hse_inspector">{{ __('Nama HSE Inspector') }}</label>
-                                <input class="form-control" type="text" id="nama_hse_inspector" name="nama_hse_inspector" value="{{ old('nama_hse_inspector') }}" required>
-                                @error('nama_hse_inspector')
+                                <label for="nama_hse_inspector">{{ __('Safety Officer') }}</label>
+                                <select class="form-control" id="nama_hse_inspector" name="nama_hse_inspector">
+                                    <option value="" disabled selected>Pilih Safety Officer</option>
+                                    @foreach($officers as $officer)
+                                    <option value="{{ $officer->name }}" {{ old('nama_hse_inspector') == $officer->name ? 'selected' : '' }}>
+                                        {{ $officer->name }}
+                                    </option>
+                                    @endforeach
+                                </select>                                @error('nama_hse_inspector')
                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                 @enderror
                             </div>
@@ -78,6 +84,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="zona_pengawasan">{{ __('Zona Pengawasan') }}</label>
+                                <!-- bikin master -->
                                 <select class="form-control" id="zona_pengawasan" name="zona_pengawasan" required>
                                     <option value="" {{ old('zona_pengawasan') == '' ? 'selected' : '' }}>Pilih Zona</option>
                                     <option value="ZONA I (OFFICE, SECURITY)" {{ old('zona_pengawasan') == 'ZONA I (OFFICE, SECURITY)' ? 'selected' : '' }}>ZONA I (OFFICE, SECURITY)</option>

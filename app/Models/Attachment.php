@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Laravel\Prompts\Note;
 
 class Attachment extends Model
@@ -17,8 +18,8 @@ class Attachment extends Model
         'file_path',
     ];
 
-    public function note()
+    public function note(): BelongsTo
     {
-        return $this->belongsTo(Note::class);
+        return $this->belongsTo(Note::class, 'note_id');
     }
 }

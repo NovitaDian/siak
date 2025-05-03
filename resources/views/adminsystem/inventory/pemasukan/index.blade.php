@@ -16,9 +16,9 @@
             <div class="card-header pb-0">
                 <h6>Data Pemasukan</h6>
             </div>
-            <div class="card-body px-0 pt-0 pb-2">
+            <div class="card-body px-4 pt-4 pb-4">
                 <div class="table-responsive p-0">
-                    <table class="table align-items-center mb-0">
+                    <table class="table align-items-center mb-0" id="dataTable">
                         <thead>
                             <tr>
                                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Kode Barang</th>
@@ -35,7 +35,7 @@
                                 <td class="text-center">
                                     <p class="text-xs font-weight-bold mb-0">{{ $pemasukan->barang_id }}</p>
                                 </td>
-                                
+
                                 <td class="text-center">
                                     <div class="d-flex justify-content-center align-items-center px-2 py-1">
                                         <div class="d-flex flex-column justify-content-center">
@@ -97,4 +97,20 @@
 
     </div>
 </div>
+<link href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" rel="stylesheet">
+<script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#dataTable').DataTable({
+            "pageLength": 10,
+            "lengthMenu": [10, 25, 50, 100],
+            "ordering": true,
+            "searching": true,
+            "info": true,
+            "paging": true,
+            "responsive": true
+        });
+    });
+</script>
 @endsection

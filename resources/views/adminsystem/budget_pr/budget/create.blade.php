@@ -6,8 +6,8 @@
     <div class="container-fluid ">
         <h2 class="text-black font-weight-bolder text-center">CREATE BUDGET PLAN</h2>
     </div>
-    <div class="container-fluid py-4">
-        <div class="card mx-auto w-100" style="max-width: 95%;">
+    <div class="container-fluid py-4 px-0">
+        <div class="card mx-auto w-100" style="max-width: 150%; ">
             <div class="card-header pb-0 px-3">
                 <h6 class="mb-0">{{ __('DATA BUDGET PLAN') }}</h6>
             </div>
@@ -62,7 +62,7 @@
                     </div>
 
 
-                  
+
 
                     <div class="row">
                         <div class="col-md-6">
@@ -72,19 +72,19 @@
                                     <option value="APEX">APEX</option>
                                     <option value="OPEX">OPEX</option>
                                     <option value="Consumable">Consumable</option>
-                                    </select>
+                                </select>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="setahun_qty">{{ __('Total Jumlah Setahun') }}</label>
-                                <input class="form-control" type="text" id="setahun_qty" name="setahun_qty" value="{{ old('setahun_qty') }}" >
+                                <input class="form-control" type="text" id="setahun_qty" name="setahun_qty" value="{{ old('setahun_qty') }}">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="setahun_total">{{ __('Total Harga Setahun') }}</label>
-                                <input class="form-control" type="text" id="setahun_total" name="setahun_total" value="{{ old('setahun_total') }}" >
+                                <input class="form-control" type="text" id="setahun_total" name="setahun_total" value="{{ old('setahun_total') }}">
                             </div>
                         </div>
                     </div>

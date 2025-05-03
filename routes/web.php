@@ -1,20 +1,29 @@
 <?php
 
+use App\Http\Controllers\AlatController;
+use App\Http\Controllers\BagianController;
 use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\ChangePasswordController;
+use App\Http\Controllers\GLAccountController;
 use App\Http\Controllers\ReferencesController;
 use App\Http\Controllers\DailyController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\HseInspectorController;
 use App\Http\Controllers\IncidentController;
 use App\Http\Controllers\InfoUserController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\NcrController;
 use App\Http\Controllers\PpeController;
 use App\Http\Controllers\RegisterController;
-use App\Http\Controllers\ReportController;
+use App\Http\Controllers\MasterController;
+use App\Http\Controllers\MaterialGroupController;
+use App\Http\Controllers\NonCompliantController;
+use App\Http\Controllers\PerusahaanController;
+use App\Http\Controllers\PurchasingGroupController;
 use App\Http\Controllers\ResetController;
 use App\Http\Controllers\SessionsController;
 use App\Http\Controllers\ToolController;
+use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
 use App\Models\Ppe;
 use Illuminate\Http\Request;
@@ -115,9 +124,29 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::post('/approve/{id}', [PpeController::class, 'approve'])->name('approve');
 			Route::post('/reject/{id}', [PpeController::class, 'reject'])->name('reject');
 		});
+		Route::prefix('adminsystem/non_compliant')->name('adminsystem.non_compliant.')->group(function () {
+			Route::get('/', [NonCompliantController::class, 'index'])->name('index');
+			Route::get('/create/{id_ppe}', [NonCompliantController::class, 'create'])->name('create');
+			Route::post('/', [NonCompliantController::class, 'store'])->name('store');
+			Route::get('/{id}/edit', [NonCompliantController::class, 'edit'])->name('edit');
+			Route::put('/{id}', [NonCompliantController::class, 'update'])->name('update');
+			Route::get('/{id}', [NonCompliantController::class, 'show'])->name('show');
+			Route::delete('/{id}', [NonCompliantController::class, 'destroy'])->name('destroy');
+			Route::get('/search', [NonCompliantController::class, 'search'])->name('search');
+			Route::get('/sent_edit/{id}', [NonCompliantController::class, 'sent_edit'])->name('sent_edit');
+			Route::put('/sent_update/{id}', [NonCompliantController::class, 'sent_update'])->name('sent_update');
+			Route::delete('/sent_destroy/{id}', [NonCompliantController::class, 'sent_destroy'])->name('sent_destroy');
+			Route::post('/non_comliant-request', [NonCompliantController::class, 'storeRequest'])->name('storeRequest');
+			Route::post('/request', [NonCompliantController::class, 'submitRequest'])->name('request');
+			Route::post('/approve/{id}', [NonCompliantController::class, 'approve'])->name('approve');
+			Route::post('/reject/{id}', [NonCompliantController::class, 'reject'])->name('reject');
+			Route::get('/get-bagian/{perusahaan_name}', [NonCompliantController::class, 'getBagian'])->name('getBagian');
+		});
 		Route::prefix('adminsystem/ncr')->name('adminsystem.ncr.')->group(function () {
 			Route::get('/', [NcrController::class, 'index'])->name('index');
 			Route::get('/create', [NcrController::class, 'create'])->name('create');
+			Route::get('/close/{id}', [NcrController::class, 'close'])->name('close');
+			Route::put('/closed/{id}', [NcrController::class, 'close_ncr'])->name('close_ncr');
 			Route::post('/', [NcrController::class, 'store'])->name('store');
 			Route::get('/edit/{id}', [NcrController::class, 'edit'])->name('edit');
 			Route::get('/sent_edit/{id}', [NcrController::class, 'sent_edit'])->name('sent_edit');
@@ -134,21 +163,43 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('/get-bagian/{perusahaan_name}', [NcrController::class, 'getBagian'])->name('getBagian');
 		});
 		Route::get('adminsystem/master/ncr', [NcrController::class, 'master'])->name('adminsystem.ncr.master');
-		Route::prefix('adminsystem/ncr/master/perusahaan')->name('adminsystem.ncr.')->group(function () {
-			Route::get('/create', [NcrController::class, 'Perusahaancreate'])->name('Perusahaancreate');
-			Route::post('/', [NcrController::class, 'Perusahaanstore'])->name('Perusahaanstore');
-			Route::get('/{id}/edit', [NcrController::class, 'Perusahaanedit'])->name('Perusahaanedit');
-			Route::put('/{id}', [NcrController::class, 'Perusahaanupdate'])->name('Perusahaanupdate');
-			Route::get('/{id}', [NcrController::class, 'Perusahaanshow'])->name('Perusahaanshow');
-			Route::delete('/{id}', [NcrController::class, 'Perusahaandestroy'])->name('Perusahaandestroy');
+
+		Route::prefix('adminsystem/master/perusahaan')->name('adminsystem.perusahaan.')->group(function () {
+			Route::get('/', [PerusahaanController::class, 'index'])->name('index');
+			Route::get('/create', [PerusahaanController::class, 'create'])->name('create');
+			Route::post('/', [PerusahaanController::class, 'store'])->name('store');
+			Route::get('/edit/{perusahaan_code}', [PerusahaanController::class, 'edit'])->name('edit');
+			Route::put('/{id}', [PerusahaanController::class, 'update'])->name('update');
+			Route::get('/{id}', [PerusahaanController::class, 'show'])->name('show');
+			Route::delete('/{id}', [PerusahaanController::class, 'destroy'])->name('destroy');
 		});
-		Route::prefix('adminsystem/ncr/master/bagian')->name('adminsystem.bagian.')->group(function () {
-			Route::get('/create', [NcrController::class, 'bagian_create'])->name('create');
-			Route::post('/', [NcrController::class, 'bagian_store'])->name('store');
-			Route::get('/{id}/edit', [NcrController::class, 'bagian_edit'])->name('edit');
-			Route::put('/{id}', [NcrController::class, 'bagian_update'])->name('update');
-			Route::get('/{id}', [NcrController::class, 'bagian_show'])->name('show');
-			Route::delete('/{id}', [NcrController::class, 'bagian_destroy'])->name('destroy');
+		Route::prefix('adminsystem/master/bagian')->name('adminsystem.bagian.')->group(function () {
+			Route::get('/', [BagianController::class, 'index'])->name('index');
+			Route::get('/create', [BagianController::class, 'create'])->name('create');
+			Route::post('/', [BagianController::class, 'store'])->name('store');
+			Route::get('/{id}/edit', [BagianController::class, 'edit'])->name('edit');
+			Route::put('/{id}', [BagianController::class, 'update'])->name('update');
+			Route::get('/{id}', [BagianController::class, 'show'])->name('show');
+			Route::delete('/{id}', [BagianController::class, 'destroy'])->name('destroy');
+		});
+		Route::prefix('adminsystem/master/detail-alat')->name('adminsystem.detail_alat.')->group(function () {
+			Route::get('/create', [AlatController::class, 'alat_create'])->name('create');
+			Route::post('/', [AlatController::class, 'alat_store'])->name('store');
+			Route::get('/{id}/edit', [AlatController::class, 'alat_edit'])->name('edit');
+			Route::put('/{id}', [AlatController::class, 'alat_update'])->name('update');
+			Route::get('/{id}', [AlatController::class, 'alat_show'])->name('show');
+			Route::delete('/{id}', [AlatController::class, 'alat_destroy'])->name('destroy');
+		});
+		Route::prefix('adminsystem/master/nama-alat')->name('adminsystem.nama_alat.')->group(function () {
+			Route::get('/create', [AlatController::class, 'nama_alat_create'])->name('create');
+			Route::post('/', [AlatController::class, 'nama_alat_store'])->name('store');
+			Route::get('/{id}/edit', [AlatController::class, 'nama_alat_edit'])->name('edit');
+			Route::put('/{id}', [AlatController::class, 'nama_alat_update'])->name('update');
+			Route::get('/{id}', [AlatController::class, 'nama_alat_show'])->name('show');
+			Route::delete('/{id}', [AlatController::class, 'nama_alat_destroy'])->name('destroy');
+		});
+		Route::prefix('adminsystem/master/alat')->name('adminsystem.alat.')->group(function () {
+			Route::get('/', [AlatController::class, 'index'])->name('index');
 		});
 		Route::prefix('adminsystem/daily')->name('adminsystem.daily.')->group(function () {
 			Route::get('/', [DailyController::class, 'index'])->name('index');
@@ -196,44 +247,53 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('/{id}/edit', [BudgetController::class, 'pr_edit'])->name('edit');
 		});
 		Route::prefix('adminsystem/material_group')->name('adminsystem.material_group.')->group(function () {
-			Route::get('/', [BudgetController::class, 'material_group_index'])->name('index');
-			Route::get('/master', [BudgetController::class, 'material_group_master'])->name('master');
-			Route::post('/', [BudgetController::class, 'material_group_store'])->name('store');
-			Route::delete('/{document}', [BudgetController::class, 'material_group_destroy'])->name('destroy');
-			Route::get('/search', [BudgetController::class, 'material_group_search'])->name('search');
-			Route::get('/create', [BudgetController::class, 'material_group_create'])->name('create');
-			Route::get('/{id}/edit', [BudgetController::class, 'material_group_edit'])->name('edit');
-			Route::put('/{id}', [BudgetController::class, 'material_group_update'])->name('update');
+			Route::get('/', [MaterialGroupController::class, 'index'])->name('index');
+			Route::get('/master', [MaterialGroupController::class, 'master'])->name('master');
+			Route::post('/', [MaterialGroupController::class, 'store'])->name('store');
+			Route::delete('/{document}', [MaterialGroupController::class, 'destroy'])->name('destroy');
+			Route::get('/search', [MaterialGroupController::class, 'search'])->name('search');
+			Route::get('/create', [MaterialGroupController::class, 'create'])->name('create');
+			Route::get('/{id}/edit', [MaterialGroupController::class, 'edit'])->name('edit');
+			Route::put('/{id}', [MaterialGroupController::class, 'update'])->name('update');
 		});
 		Route::prefix('adminsystem/unit')->name('adminsystem.unit.')->group(function () {
-			Route::get('/', [BudgetController::class, 'unit_index'])->name('index');
-			Route::get('/master', [BudgetController::class, 'unit_master'])->name('master');
-			Route::post('/', [BudgetController::class, 'unit_store'])->name('store');
-			Route::delete('/{document}', [BudgetController::class, 'unit_destroy'])->name('destroy');
-			Route::get('/search', [BudgetController::class, 'unit_search'])->name('search');
-			Route::get('/create', [BudgetController::class, 'unit_create'])->name('create');
-			Route::get('/{id}/edit', [BudgetController::class, 'unit_edit'])->name('edit');
-			Route::put('/{id}', [BudgetController::class, 'unit_update'])->name('update');
+			Route::get('/', [UnitController::class, 'index'])->name('index');
+			Route::get('/master', [UnitController::class, 'master'])->name('master');
+			Route::post('/', [UnitController::class, 'store'])->name('store');
+			Route::delete('/{document}', [UnitController::class, 'destroy'])->name('destroy');
+			Route::get('/search', [UnitController::class, 'search'])->name('search');
+			Route::get('/create', [UnitController::class, 'create'])->name('create');
+			Route::get('/{id}/edit', [UnitController::class, 'edit'])->name('edit');
+			Route::put('/{id}', [UnitController::class, 'update'])->name('update');
+		});
+		Route::prefix('adminsystem/hse_inspector')->name('adminsystem.hse_inspector.')->group(function () {
+			Route::get('/', [HseInspectorController::class, 'index'])->name('index');
+			Route::post('/', [HseInspectorController::class, 'store'])->name('store');
+			Route::delete('/{document}', [HseInspectorController::class, 'destroy'])->name('destroy');
+			Route::get('/search', [HseInspectorController::class, 'search'])->name('search');
+			Route::get('/create', [HseInspectorController::class, 'create'])->name('create');
+			Route::get('/{id}/edit', [HseInspectorController::class, 'edit'])->name('edit');
+			Route::put('/{id}', [HseInspectorController::class, 'update'])->name('update');
 		});
 		Route::prefix('adminsystem/glaccount')->name('adminsystem.glaccount.')->group(function () {
-			Route::get('/', [BudgetController::class, 'glaccount_index'])->name('index');
-			Route::get('/master', [BudgetController::class, 'glaccount_master'])->name('master');
-			Route::post('/', [BudgetController::class, 'glaccount_store'])->name('store');
-			Route::delete('/{document}', [BudgetController::class, 'glaccount_destroy'])->name('destroy');
-			Route::get('/search', [BudgetController::class, 'glaccount_search'])->name('search');
-			Route::get('/create', [BudgetController::class, 'glaccount_create'])->name('create');
-			Route::get('/{id}/edit', [BudgetController::class, 'glaccount_edit'])->name('edit');
-			Route::put('/{id}', [BudgetController::class, 'glaccount_update'])->name('update');
+			Route::get('/', [GLAccountController::class, 'index'])->name('index');
+			Route::get('/master', [GLAccountController::class, 'master'])->name('master');
+			Route::post('/', [GLAccountController::class, 'store'])->name('store');
+			Route::delete('/{document}', [GLAccountController::class, 'destroy'])->name('destroy');
+			Route::get('/search', [GLAccountController::class, 'search'])->name('search');
+			Route::get('/create', [GLAccountController::class, 'create'])->name('create');
+			Route::get('/{id}/edit', [GLAccountController::class, 'edit'])->name('edit');
+			Route::put('/{id}', [GLAccountController::class, 'update'])->name('update');
 		});
 		Route::prefix('adminsystem/purchasinggroup')->name('adminsystem.purchasinggroup.')->group(function () {
-			Route::get('/', [BudgetController::class, 'purchasinggroup_index'])->name('index');
-			Route::get('/master', [BudgetController::class, 'purchasinggroup_master'])->name('master');
-			Route::post('/', [BudgetController::class, 'purchasinggroup_store'])->name('store');
-			Route::delete('/{document}', [BudgetController::class, 'purchasinggroup_destroy'])->name('destroy');
-			Route::get('/search', [BudgetController::class, 'purchasinggroup_search'])->name('search');
-			Route::get('/create', [BudgetController::class, 'purchasinggroup_create'])->name('create');
-			Route::get('/{id}/edit', [BudgetController::class, 'purchasinggroup_edit'])->name('edit');
-			Route::put('/{id}', [BudgetController::class, 'purchasinggroup_update'])->name('update');
+			Route::get('/', [PurchasingGroupController::class, 'index'])->name('index');
+			Route::get('/master', [PurchasingGroupController::class, 'master'])->name('master');
+			Route::post('/', [PurchasingGroupController::class, 'store'])->name('store');
+			Route::delete('/{document}', [PurchasingGroupController::class, 'destroy'])->name('destroy');
+			Route::get('/search', [PurchasingGroupController::class, 'search'])->name('search');
+			Route::get('/create', [PurchasingGroupController::class, 'create'])->name('create');
+			Route::get('/{id}/edit', [PurchasingGroupController::class, 'edit'])->name('edit');
+			Route::put('/{id}', [PurchasingGroupController::class, 'update'])->name('update');
 		});
 		Route::prefix('adminsystem/budget')->name('adminsystem.budget.')->group(function () {
 			Route::get('/', [BudgetController::class, 'budget_index'])->name('index');
@@ -306,7 +366,9 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::prefix('adminsystem/tool')->name('adminsystem.tool.')->group(function () {
 			Route::get('/', [ToolController::class, 'index'])->name('index');
 			Route::post('/', [ToolController::class, 'store'])->name('store');
-			Route::post('/', [ToolController::class, 'storeRequest'])->name('storeRequest');
+			Route::post('/request', [ToolController::class, 'storeRequest'])->name('storeRequest');
+			Route::post('/approve/{id}', [ToolController::class, 'approve'])->name('approve');
+			Route::post('/reject/{id}', [ToolController::class, 'reject'])->name('reject');
 			Route::delete('/{id}', [ToolController::class, 'destroy'])->name('destroy');
 			Route::get('/search', [ToolController::class, 'search'])->name('search');
 			Route::get('/create', [ToolController::class, 'create'])->name('create');
@@ -314,15 +376,15 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('/detail/{id}', [ToolController::class, 'detail'])->name('detail');
 			Route::put('/{id}', [ToolController::class, 'update'])->name('update');
 			Route::get('/{id}', [ToolController::class, 'show'])->name('show');
+			Route::get('/sent_edit/{id}', [ToolController::class, 'sent_edit'])->name('sent_edit');
+			Route::put('/sent_update/{id}', [ToolController::class, 'sent_update'])->name('sent_update');
+			Route::delete('/sent_destroy/{id}', [ToolController::class, 'sent_destroy'])->name('sent_destroy');
 		});
 
 
 
- 		Route::prefix('adminsystem/report')->name('adminsystem.report.')->group(function () {
-			Route::get('/', [ReportController::class, 'index'])->name('index');
-			Route::get('/incident', [ReportController::class, 'incident'])->name('incident');
-			Route::get('/ppe', [ReportController::class, 'ppe'])->name('ppe');
-			Route::get('/ncr', [ReportController::class, 'ncr'])->name('ncr');
+		Route::prefix('adminsystem/master')->name('adminsystem.master.')->group(function () {
+			Route::get('/', [MasterController::class, 'index'])->name('index');
 		});
 
 		// Admin dashboard
@@ -420,10 +482,10 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::delete('/{document}', [ReferencesController::class, 'destroy'])->name('destroy');
 			Route::get('/search', [ReferencesController::class, 'search'])->name('search');
 		});
-		Route::prefix('operator/report')->name('operator.report.')->group(function () {
-			Route::get('/incident', [ReportController::class, 'incident'])->name('incident');
-			Route::get('/ppe', [ReportController::class, 'ppe'])->name('ppe');
-			Route::get('/ncr', [ReportController::class, 'ncr'])->name('ncr');
+		Route::prefix('operator/master')->name('operator.master.')->group(function () {
+			Route::get('/incident', [MasterController::class, 'incident'])->name('incident');
+			Route::get('/ppe', [MasterController::class, 'ppe'])->name('ppe');
+			Route::get('/ncr', [MasterController::class, 'ncr'])->name('ncr');
 		});
 
 		// Admin dashboard
@@ -448,6 +510,5 @@ Route::group(['middleware' => 'guest'], function () {
 });
 
 Route::get('/', function () {
-    return view('session/login-session');
+	return view('session/login-session');
 })->name('login');
-

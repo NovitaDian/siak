@@ -13,6 +13,8 @@ class Ppe extends Model
 
     // Daftar kolom yang dapat diisi secara massal
     protected $fillable = [
+        'writer',
+        'status_ppe',
         'tanggal_shift_kerja',
         'shift_kerja',
         'nama_hse_inspector',

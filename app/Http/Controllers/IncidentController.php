@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bagian;
+use App\Models\HseInspector;
 use App\Models\Incident;
 use App\Models\IncidentRequest;
 use App\Models\Perusahaan;
@@ -27,8 +28,9 @@ class IncidentController extends Controller
     public function create()
     {
         $perusahaans = Perusahaan::all();
+        $officers = HseInspector::all();
         $bagians = Bagian::all();
-        return view('adminsystem.incident.report', compact('perusahaans', 'bagians'));
+        return view('adminsystem.incident.report', compact('perusahaans', 'bagians', 'officers'));
     }
 
     // Menyimpan data baru (store)

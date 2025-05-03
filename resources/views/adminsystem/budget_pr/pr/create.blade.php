@@ -6,8 +6,8 @@
     <div class="container-fluid ">
         <h2 class="text-black font-weight-bolder text-center">CREATE PURCHASE REQUEST</h2>
     </div>
-    <div class="container-fluid py-4">
-        <div class="card mx-auto w-100" style="max-width: 95%;">
+    <div class="container-fluid py-4 px-0">
+        <div class="card mx-auto w-100" style="max-width: 150%; ">
             <div class="card-header pb-0 px-3">
                 <h6 class="mb-0">{{ __('DATA UMUM') }}</h6>
             </div>

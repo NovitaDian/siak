@@ -69,8 +69,6 @@
                                 @enderror
                             </div>
                         </div>
-
-                        <!-- H&S Officer 2 / Auditor -->
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="nama_hs_officer_2">{{ __('Nama H&S Officer 2 / Auditor') }}</label>
@@ -80,10 +78,6 @@
                                 @enderror
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Tanggal Audit / Pengawasan -->
-                    <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="tanggal_audit">{{ __('Tanggal Audit / Pengawasan') }}</label>
@@ -104,10 +98,8 @@
                                 @enderror
                             </div>
                         </div>
-                    </div>
 
                     <!-- Dropdown Perusahaan -->
-                    <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="perusahaan">{{ __('Perusahaan') }}</label>
@@ -142,10 +134,9 @@
                                 @enderror
                             </div>
                         </div>
-                    </div>
+                
 
                     <!-- Element / Referensi NCR -->
-                    <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="element_referensi_ncr">{{ __('Element / Referensi NCR') }}</label>
@@ -171,10 +162,9 @@
                                 @enderror
                             </div>
                         </div>
-                    </div>
+                 
 
                     <!-- Deskripsi Ketidaksesuaian -->
-                    <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="deskripsi_ketidaksesuaian">{{ __('Deskripsi Ketidaksesuaian') }}</label>
@@ -184,7 +174,7 @@
                                 @enderror
                             </div>
                         </div>
-                    </div>
+                  
 
                     <!-- Submit Button -->
                     <div class="d-flex justify-content-end">

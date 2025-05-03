@@ -4,10 +4,10 @@
 
 <div>
     <div class="container-fluid">
-        <h2 class="text-black font-weight-bolder text-center">SAFETY BEHAVIOR & PPE COMPLIANCE</h2>
+        <h2 class="text-black font-weight-bolder text-center">NONCONFORMITY REPORT AND CORRECTIVE/PREVENTIVE ACTION REQUEST</h2>
     </div>
-    <div class="container-fluid py-4">
-        <div class="card mx-auto w-100" style="max-width: 95%;">
+    <div class="container-fluid py-4 px-0">
+        <div class="card mx-auto w-100" style="max-width: 150%; ">
             <div class="card-header pb-0 px-3">
                 <h6 class="mb-0">{{ __('DATA UMUM') }}</h6>
             </div>
@@ -58,10 +58,7 @@
                                 @enderror
                             </div>
                         </div>
-                    </div>
 
-                    <!-- H&S Officer 1 / Lead Auditor -->
-                    <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="nama_hs_officer_1">{{ __('Nama H&S Officer 1 / Lead Auditor') }}</label>
@@ -71,21 +68,19 @@
                                 @enderror
                             </div>
                         </div>
-
-                        <!-- H&S Officer 2 / Auditor -->
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="nama_hs_officer_2">{{ __('Nama H&S Officer  2 / Auditor') }}</label>
+                                <label for="nama_hs_officer_2">{{ __('Nama H&S Officer 2 / Auditor') }}</label>
                                 <input class="form-control" type="text" id="nama_hs_officer_2" name="nama_hs_officer_2" value="{{ old('nama_hs_officer_2') }}" required>
                                 @error('nama_hs_officer_2')
                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                 @enderror
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Tanggal Audit / Pengawasan -->
-                    <div class="row">
+
+                        <!-- Tanggal Audit / Pengawasan -->
+
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="tanggal_audit">{{ __('Tanggal Audit / Pengawasan') }}</label>
@@ -106,10 +101,10 @@
                                 @enderror
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Dropdown Perusahaan -->
-                    <div class="row">
+
+                        <!-- Dropdown Perusahaan -->
+
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="perusahaan">{{ __('Perusahaan') }}</label>
@@ -139,10 +134,10 @@
                                 @enderror
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Element / Referensi NCR -->
-                    <div class="row">
+
+                        <!-- Element / Referensi NCR -->
+
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="element_referensi_ncr">{{ __('Element / Referensi NCR') }}</label>
@@ -153,7 +148,8 @@
                             </div>
                         </div>
 
-                        <!-- Kategori Ketidaksesuaian -->
+
+
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="kategori_ketidaksesuaian">{{ __('Kategori Ketidaksesuaian') }}</label>
@@ -168,11 +164,12 @@
                                 @enderror
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Deskripsi Ketidaksesuaian -->
-                    <div class="row">
-                        <div class="col-md-12">
+
+
+                        <!-- Deskripsi Ketidaksesuaian -->
+
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label for="deskripsi_ketidaksesuaian">{{ __('Deskripsi Ketidaksesuaian') }}</label>
                                 <textarea class="form-control" id="deskripsi_ketidaksesuaian" name="deskripsi_ketidaksesuaian" rows="4" required>{{ old('deskripsi_ketidaksesuaian') }}</textarea>
@@ -181,12 +178,12 @@
                                 @enderror
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Submit Button -->
-                    <div class="d-flex justify-content-end">
-                        <button type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">{{ __('Save Report') }}</button>
-                    </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">{{ __('Save Report') }}</button>
+                        </div>
                 </form>
             </div>
         </div>

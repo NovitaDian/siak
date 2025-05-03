@@ -10,18 +10,22 @@ class SentToolReport extends Model
     use HasFactory;
 
 
-    protected $table = 'tool_report_fix';
+    protected $table = 'tool_inspections_fix';
 
-   
+
     protected $fillable = [
-        'alat_terpakai',
-        'kondisi_fisik',
-        'fungsi_kerja',
-        'sertifikasi',
-        'kebersihan',
-        'tanggal_pemeriksaan',
-        'catatan',
+        'draft_id',
         'writer',
+        'alat_id',
+        'nama_alat',
+        'hse_inspector_id',
+        'hse_inspector',
+        'tanggal_pemeriksaan',
+        'status_pemeriksaan',
+        'status',
     ];
-
+    public function inspector()
+    {
+        return $this->belongsTo(HseInspector::class, 'hse_inspector_id');
+    }
 }

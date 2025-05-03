@@ -42,11 +42,11 @@
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link {{ Request::is('adminsystem/report') ? 'active' : '' }}" href="{{ url('adminsystem/report') }}">
+        <a class="nav-link {{ Request::is('adminsystem/master') ? 'active' : '' }}" href="{{ url('adminsystem/master') }}">
           <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-            <img src="{{ asset('../assets/img/newspaper.png') }}" alt="report" width="16" height="16">
+            <img src="{{ asset('../assets/img/newspaper.png') }}" alt="master" width="16" height="16">
           </div>
-          <span class="nav-link-text ms-1">Report</span>
+          <span class="nav-link-text ms-1">Master</span>
         </a>
       </li>
       <li class="nav-item">

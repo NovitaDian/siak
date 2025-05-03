@@ -28,35 +28,43 @@
     <div class="col-xl-4 col-sm-6 mb-4">
         <div class="overflow-hidden position-relative border-radius-lg bg-cover h-100">
             <div class="card d-flex flex-row">
+                <img src="../assets/img/noncompliance.png" alt="Non Complisnce Logo" class="img-fluid" style="width: 100px; height: 100px; object-fit: cover; margin-top: 30px; margin-left: 30px;">
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <h5 class="font-weight-bolder text-center">NON COMPLIANCE</h5>
+                    <br>
+                    <button class="btn btn-primary w-100" onclick="location.href='{{ route('adminsystem.non_compliant.index') }}'">GO</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-4 col-sm-6 mb-4">
+        <div class="overflow-hidden position-relative border-radius-lg bg-cover h-100">
+            <div class="card d-flex flex-row">
                 <img src="../assets/img/lab-test.png" alt="NCR Logo" class="img-fluid" style="width: 100px; height: 100px; object-fit: cover; margin-top: 30px; margin-left: 30px;">
                 <div class="card-body d-flex flex-column justify-content-between">
-                    <h5 class="font-weight-bolder text-center">NCR</h5>
-                    <br>
+                    <h5 class="font-weight-bolder text-center">NON CONFORMITY REPORT</h5>
                     <button class="btn btn-primary w-100" onclick="location.href='{{ route('adminsystem.ncr.index') }}'">GO</button>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="row mt-4 justify-content-center">
-        <!-- Second row with 2 columns -->
-        <div class="col-xl-4 col-sm-6 mb-4">
-            <div class="card d-flex flex-row">
-                <img src="../assets/img/settings.png" alt="Tool Inspection Logo" class="img-fluid" style="width: 100px; height: 100px; object-fit: cover; margin-top: 30px; margin-left: 30px;">
-                <div class="card-body d-flex flex-column justify-content-between">
-                    <h5 class="font-weight-bolder text-center">TOOL & EQUIPMENT INSPECTION</h5>
-                    <button class="btn btn-primary w-100" onclick="window.location.href='{{ route('adminsystem.tool.index') }}';">Go</button>
-                </div>
+    <div class="col-xl-4 col-sm-6 mb-4">
+        <div class="card d-flex flex-row">
+            <img src="../assets/img/settings.png" alt="Tool Inspection Logo" class="img-fluid" style="width: 100px; height: 100px; object-fit: cover; margin-top: 30px; margin-left: 30px;">
+            <div class="card-body d-flex flex-column justify-content-between">
+                <h5 class="font-weight-bolder text-center">TOOL & EQUIPMENT INSPECTION</h5>
+                <button class="btn btn-primary w-100" onclick="window.location.href='{{ route('adminsystem.tool.index') }}';">Go</button>
             </div>
         </div>
+    </div>
 
-        <div class="col-xl-4 col-sm-6 mb-4">
-            <div class="card d-flex flex-row">
-                <img src="../assets/img/daily.png" alt="Daily Activities Logo" class="img-fluid" style="width: 100px; height: 100px; object-fit: cover; margin-top: 30px; margin-left: 30px;">
-                <div class="card-body d-flex flex-column justify-content-between">
-                    <h5 class="font-weight-bolder text-center">DAILY ACTIVITIES & IMPROVEMENT</h5>
-                    <button class="btn btn-primary w-100" onclick="location.href='{{ route('adminsystem.daily.index') }}'">Go</button>
-                </div>
+    <div class="col-xl-4 col-sm-6 mb-4">
+        <div class="card d-flex flex-row">
+            <img src="../assets/img/daily.png" alt="Daily Activities Logo" class="img-fluid" style="width: 100px; height: 100px; object-fit: cover; margin-top: 30px; margin-left: 30px;">
+            <div class="card-body d-flex flex-column justify-content-between">
+                <h5 class="font-weight-bolder text-center">DAILY ACTIVITIES & IMPROVEMENT</h5>
+                <br>
+                <button class="btn btn-primary w-100" onclick="location.href='{{ route('adminsystem.daily.index') }}'">Go</button>
             </div>
         </div>
     </div>
@@ -146,25 +154,26 @@
 
         .timeline-content {
             padding: 10px;
+            width: 100%;
+            margin-bottom: 10px;
+            margin-left: 5px;
+            margin-right: 10px;
+
+
         }
 
-        /* Tambahkan style berikut untuk responsif */
         #timeline-container {
             display: flex;
             flex-direction: column;
-            /* Timeline vertikal */
         }
 
         .timeline-item {
-            width: 250%;
-            /* Lebar item timeline 100% */
+            width: 100%;
         }
 
-        /* Style tambahan untuk layar kecil */
         @media (max-width: 768px) {
             .timeline-item {
                 flex-direction: column;
-                /* Item timeline vertikal di layar kecil */
             }
         }
     </style>

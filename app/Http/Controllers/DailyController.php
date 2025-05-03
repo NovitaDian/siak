@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Auth;
 use App\Models\Daily;
 use App\Models\DailyRequest;
 use App\Models\SentDaily;
@@ -14,7 +14,7 @@ class DailyController extends Controller
     // Menampilkan semua data observasi
     public function index()
     {
-        $user = auth()->user(); // Get the currently authenticated user
+        $user = Auth::user(); // Get the currently authenticated user
         $dailys = Daily::where('writer', $user->name)->get();
         $daily_fixs = SentDaily::all();
         $requests = DailyRequest::all();
@@ -40,7 +40,7 @@ class DailyController extends Controller
 
         // Add the 'writer' field to the validated data
         $validatedData = $request->all();
-        $validatedData['writer'] = auth()->user()->name;
+        $validatedData['writer'] = Auth::user()->name;
 
         // Create a new record in the Daily model with the validated data
         Daily::create($validatedData);
@@ -79,7 +79,7 @@ class DailyController extends Controller
     
         // Add the 'writer' field to the validated data
         $validatedData = $request->all();
-        $validatedData['writer'] = auth()->user()->name;
+        $validatedData['writer'] = Auth::user()->name;
     
         // Update the existing record with the validated data
         $daily->update($validatedData);
@@ -120,17 +120,17 @@ class DailyController extends Controller
     {
         // Validate input
         $request->validate([
-            'sent_daily_id' => 'required|exists:daily_fix,id', // Validate that the sent_daily_id exists in the daily_fix table
-            'type' => 'required|string', // Ensure 'type' is required and is a string
-            'reason' => 'required|string', // Ensure 'reason' is required and is a string
+            'sent_daily_id' => 'required|exists:daily_fix,id', 
+            'type' => 'required|string',
+            'reason' => 'required|string', 
         ]);
     
         // Save request to the daily_request table
         DailyRequest::create([
-            'sent_daily_id' => $request->sent_daily_id, // Reference to the daily_fix record
-            'type' => $request->type, // Request type
-            'reason' => $request->reason, // Request reason
-            'nama_pengirim' => auth()->user()->name, // The name of the user sending the request
+            'sent_daily_id' => $request->sent_daily_id, 
+            'type' => $request->type, 
+            'reason' => $request->reason, 
+            'nama_pengirim' => Auth::user()->name,
         ]);
     
         // Return JSON response with a 201 status code (Created)
@@ -159,7 +159,7 @@ class DailyController extends Controller
         $daily->update($request->all());
         // Add the 'writer' field to the validated data
         $validatedData = $request->all();
-        $validatedData['writer'] = auth()->user()->name;
+        $validatedData['writer'] = Auth::user()->name;
 
         // Create a new record in the Daily model
         Daily::create($validatedData);
@@ -204,7 +204,7 @@ class DailyController extends Controller
     // Menampilkan semua data observasi
     public function operator_index()
     {
-        $user = auth()->user(); // Get the currently authenticated user
+        $user = Auth::user(); // Get the currently authenticated user
         $dailys = Daily::where('writer', $user->name)->get();
         $daily_fixs = SentDaily::where('writer', $user->name)->get();
         $requests = DailyRequest::all();
@@ -230,7 +230,7 @@ class DailyController extends Controller
 
         // Add the 'writer' field to the validated data
         $validatedData = $request->all();
-        $validatedData['writer'] = auth()->user()->name;
+        $validatedData['writer'] = Auth::user()->name;
 
         // Create a new record in the Daily model with the validated data
         Daily::create($validatedData);
@@ -269,7 +269,7 @@ class DailyController extends Controller
     
         // Add the 'writer' field to the validated data
         $validatedData = $request->all();
-        $validatedData['writer'] = auth()->user()->name;
+        $validatedData['writer'] = Auth::user()->name;
     
         // Update the existing record with the validated data
         $daily->update($validatedData);
@@ -320,7 +320,7 @@ class DailyController extends Controller
             'sent_daily_id' => $request->sent_daily_id, // Reference to the daily_fix record
             'type' => $request->type, // Request type
             'reason' => $request->reason, // Request reason
-            'nama_pengirim' => auth()->user()->name, // The name of the user sending the request
+            'nama_pengirim' => Auth::user()->name, // The name of the user sending the request
         ]);
     
         // Return JSON response with a 201 status code (Created)
@@ -349,7 +349,7 @@ class DailyController extends Controller
         $daily->update($request->all());
         // Add the 'writer' field to the validated data
         $validatedData = $request->all();
-        $validatedData['writer'] = auth()->user()->name;
+        $validatedData['writer'] = Auth::user()->name;
 
         // Create a new record in the Daily model
         Daily::create($validatedData);

@@ -10,20 +10,20 @@ class ToolReport extends Model
     use HasFactory;
 
 
-    protected $table = 'tool_report_draft';
+    protected $table = 'tool_inspections_draft';
 
-   
+
     protected $fillable = [
-        'alat_terpakai',
-        'kondisi_fisik',
-        'fungsi_kerja',
-        'sertifikasi',
-        'kebersihan',
+        'writer',
+        'nama_alat',
+        'alat_id',
+        'hse_inspector_id',
+        'hse_inspector',
         'tanggal_pemeriksaan',
-        'label_petunjuk',
-        'pemeliharaan',
-        'keamanan_pengguna',
-        'catatan',
+        'status',
     ];
-
+    public function inspector()
+    {
+        return $this->belongsTo(HseInspector::class, 'hse_inspector_id');
+    }
 }

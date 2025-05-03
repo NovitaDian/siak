@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class NcrRequest extends Model
 {
     use HasFactory;
+    protected $table = 'ncr_request';
 
     protected $fillable = [
         'sent_ncr_id',

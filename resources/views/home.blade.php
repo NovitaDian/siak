@@ -52,6 +52,23 @@
             <div class="overflow-hidden position-relative border-radius-lg bg-cover h-100">
                 <span class="mask bg-gradient-dark"></span>
                 <div class="card-body position-relative z-index-1 d-flex flex-column h-100 p-3">
+                    <h5 class="text-white font-weight-bolder mb-4 pt-2 text-center">NON COMPLIANCE</h5>
+                    <div class="mb-3 text-center">
+                        <img src="../assets/img/lab-test.png" alt="Falling Down Logo" class="img-fluid" style="max-width: 100px;">
+                    </div> <button class="btn btn-primary text-sm font-weight-bold mb-0 icon-move-right mt-auto" onclick="window.location.href='page.html';">
+                        Go
+                        <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true"></i>
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="card h-100 p-3">
+            <div class="overflow-hidden position-relative border-radius-lg bg-cover h-100">
+                <span class="mask bg-gradient-dark"></span>
+                <div class="card-body position-relative z-index-1 d-flex flex-column h-100 p-3">
                     <h5 class="text-white font-weight-bolder mb-4 pt-2 text-center">NCR</h5>
                     <!-- Logo ditambahkan di bawah judul -->
                     <div class="mb-3 text-center">

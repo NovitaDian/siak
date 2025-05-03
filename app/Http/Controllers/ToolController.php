@@ -2,147 +2,224 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Alat;
 use App\Models\Daily;
+use App\Models\HseInspector;
 use App\Models\ToolReport;
 use App\Models\SentToolReport;
 use App\Models\ToolRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class ToolController extends Controller
 {
-    // Menampilkan daftar laporan K3
+
     public function index()
     {
-        $tools = ToolReport::all();
+
+        $user = Auth::user();
+        $tools = ToolReport::where('writer', $user->name)->get();
         $tool_fixs = SentToolReport::all();
         $requests = ToolRequest::all();
-        return view('adminsystem.tool.index', compact('tools','requests','tool_fixs'));
-    }
 
-    // Menampilkan form untuk menambah laporan K3
+        return view('adminsystem.tool.index', compact('tools', 'tool_fixs', 'requests'));
+    }
     public function create()
     {
-        return view('adminsystem.tool.create');
+        $alats = Alat::all();
+        $inspectors = HseInspector::all();
+        return view('adminsystem.tool.create', compact('alats', 'inspectors'));
     }
 
-    // Menyimpan laporan K3 yang baru
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'alat_terpakai' => 'required|string',
-            'kondisi_fisik' => 'required|string',
-            'fungsi_kerja' => 'required|string',
-            'sertifikasi' => 'required|string',
-            'kebersihan' => 'required|string',
-            'pemeliharaan' => 'required|string',
-            'label_petunjuk' => 'required|string',
-            'keamanan_pengguna' => 'required|string',
+        $request->validate([
+            'alat_id' => 'required|exists:alats,id',
+            'hse_inspector_id' => 'required|exists:hse_inspector,id',
             'tanggal_pemeriksaan' => 'required|date',
-            'catatan' => 'nullable|string',
+            'status_pemeriksaan' => 'required|in:Layak operasi,Layak operasi dengan catatan,Tidak layak operasi',
         ]);
 
-        $data = $request->all();
-        $data['writer'] = auth()->user()->name; // atau auth()->user()->id tergantung kebutuhan
+        $alat = Alat::findOrFail($request->alat_id);
+        $inspector = HseInspector::findOrFail($request->hse_inspector_id);
 
-        ToolReport::create($data);
+        ToolReport::create([
+            'alat_id' => $alat->id,
+            'nama_alat' => $alat->nama_alat,
+            'hse_inspector_id' => $inspector->id,
+            'hse_inspector' => $inspector->name,
+            'tanggal_pemeriksaan' => $request->tanggal_pemeriksaan,
+            'status_pemeriksaan' => $request->status_pemeriksaan,
+            'writer' => Auth::user()->name,
+        ]);
 
-
-        return redirect()->route('adminsystem.tool.index')->with('success', 'Laporan K3 berhasil ditambahkan.');
+        return redirect()->route('adminsystem.tool.index')->with('success', 'Data pemeriksaan berhasil disimpan.');
     }
-
-    // Menampilkan halaman edit untuk laporan K3 tertentu
-    public function edit($id)
-    {
-        $toolReport = ToolReport::findOrFail($id);
-        return view('adminsystem.tool.edit', compact('toolReport'));
-    }
-
-    // Memperbarui laporan K3
     public function update(Request $request, $id)
     {
-        $validated = $request->validate([
-            'alat_terpakai' => 'required|string',
-            'kondisi_fisik' => 'required|string',
-            'fungsi_kerja' => 'required|string',
-            'sertifikasi' => 'required|string',
-            'kebersihan' => 'required|string',
-            'label_petunjuk' => 'required|string',
-            'pemeliharaan' => 'required|string',
-            'keamanan_pengguna' => 'required|string',
+        $request->validate([
+            'alat_id' => 'required|exists:alats,id',
+            'hse_inspector_id' => 'required|exists:hse_inspector,id',
             'tanggal_pemeriksaan' => 'required|date',
-            'catatan' => 'nullable|string',
+            'status_pemeriksaan' => 'required|in:Layak operasi,Layak operasi dengan catatan,Tidak layak operasi',
         ]);
 
         $toolReport = ToolReport::findOrFail($id);
-        $toolReport->update($validated);
+        $alat = Alat::findOrFail($request->alat_id);
+        $inspector = HseInspector::findOrFail($request->hse_inspector_id);
 
-        return redirect()->route('adminsystem.tool.index')->with('success', 'Laporan K3 berhasil diperbarui.');
-    }
-
-    // Menghapus laporan K3
-    public function destroy($id)
-    {
-        // Ambil data PPE berdasarkan ID
-        $tool = ToolReport::findOrFail($id);
-
-        // Menyiapkan data untuk dimasukkan ke tool_fix, pastikan data diubah menjadi array
-        $dataToInsert = $tool->toArray();
-
-        // Memastikan created_at dan updated_at ditambahkan (jika tabel tool_fix memerlukannya)
-        $dataToInsert['created_at'] = $tool->created_at;
-        $dataToInsert['updated_at'] = $tool->updated_at;
-
-        // Cek apakah data sudah ada di tool_fix berdasarkan ID atau kolom unik lainnya
-        $exists = DB::table('tool_report_fix')->where('id', $tool->id)->exists();
-
-        if (!$exists) {
-            // Insert data hanya jika belum ada
-            DB::table('tool_report_fix')->insert($dataToInsert);
-        }
-
-        // Hapus data tool asli
-        $tool->delete();
-
-        // Redirect dengan notifikasi
-        return redirect()->route('adminsystem.tool.index')->with('notification', 'Laporan berhasil terkirim!');
-    }
-    public function storeRequest(Request $request)
-    {
-        // Validasi input
-        $request->validate([
-            'sent_tool_id' => 'required|exists:tool_report_fix,id', // Pastikan NCR ID ada
-            'type' => 'required|in:edit,delete', // Validasi jenis permintaan
-            'reason' => 'required|string', // Validasi alasan
+        $toolReport->update([
+            'alat_id' => $alat->id,
+            'nama_alat' => $alat->nama_alat,
+            'hse_inspector_id' => $inspector->id,
+            'hse_inspector' => $inspector->name,
+            'tanggal_pemeriksaan' => $request->tanggal_pemeriksaan,
+            'status_pemeriksaan' => $request->status_pemeriksaan,
+            'writer' => Auth::user()->name, // Jika ingin mengganti pencatat setiap edit
         ]);
 
-        // Simpan request ke dalam tabel tool_request
-        $toolRequest = ToolRequest::create([
+        return redirect()->route('adminsystem.tool.index')->with('success', 'Data pemeriksaan berhasil diperbarui.');
+    }
+    public function sent_update(Request $request, $id)
+    {
+        $request->validate([
+            'alat_id' => 'required|exists:alats,id',
+            'hse_inspector_id' => 'required|exists:hse_inspector,id',
+            'tanggal_pemeriksaan' => 'required|date',
+            'status_pemeriksaan' => 'required|in:Layak operasi,Layak operasi dengan catatan,Tidak layak operasi',
+        ]);
+
+        $tool_fixs = SentToolReport::findOrFail($id);
+        $alat = Alat::findOrFail($request->alat_id);
+        $inspector = HseInspector::findOrFail($request->hse_inspector_id);
+
+        $tool_fixs->update([
+            'alat_id' => $alat->id,
+            'nama_alat' => $alat->nama_alat,
+            'hse_inspector_id' => $inspector->id,
+            'hse_inspector' => $inspector->name,
+            'tanggal_pemeriksaan' => $request->tanggal_pemeriksaan,
+            'status_pemeriksaan' => $request->status_pemeriksaan,
+            'writer' => Auth::user()->name,
+        ]);
+
+        return redirect()->route('adminsystem.tool.index')->with('success', 'Data pemeriksaan berhasil diperbarui.');
+    }
+
+
+    public function edit($id)
+    {
+        $tools = ToolReport::findOrFail($id);
+        $alats = Alat::all();
+        $inspectors = HseInspector::all();
+        return view('adminsystem.tool.edit', compact('alats', 'inspectors', 'tools'));
+    }
+    public function sent_edit($id)
+    {
+        $tool_fixs = SentToolReport::findOrFail($id);
+        $alats = Alat::all();
+        $inspectors = HseInspector::all();
+        return view('adminsystem.tool.sent_edit', compact('alats', 'inspectors', 'tool_fixs'));
+    }
+    public function show($id)
+    {
+        $tools = ToolReport::find($id);
+        return view('adminsystem.tool.show', compact('alats', 'inspectors', 'tools'));
+    }
+
+
+    public function destroy($id)
+    {
+        $tool = ToolReport::findOrFail($id);
+
+        // Pindahkan data ke tabel tool_fix
+        SentToolReport::create([
+            'draft_id' => $tool->id,
+            'writer' => $tool->writer,
+            'alat_id' => $tool->alat_id,
+            'nama_alat' => $tool->nama_alat,
+            'hse_inspector_id' => $tool->hse_inspector_id,
+            'hse_inspector' => $tool->hse_inspector,
+            'tanggal_pemeriksaan' => $tool->tanggal_pemeriksaan,
+            'status_pemeriksaan' => $tool->status_pemeriksaan,
+
+        ]);
+
+        // Hapus data dari tool
+        $tool->delete();
+
+        return redirect()->route('adminsystem.tool.index')->with('success', 'Data berhasil dikirim.');
+    }
+
+    public function storeRequest(Request $request)
+    {
+        // Validate input
+        $request->validate([
+            'sent_tool_id' => 'required|exists:tool_inspections_fix,id', // Perhatikan penulisan plural
+            'type' => 'required|string',
+            'reason' => 'required|string',
+        ]);
+
+        // Simpan ke tabel request
+        ToolRequest::create([
             'sent_tool_id' => $request->sent_tool_id,
             'type' => $request->type,
             'reason' => $request->reason,
-            'nama_pengirim' => auth()->user()->name, // Menambahkan nama pengirim
+            'nama_pengirim' => Auth::user()->name,
+            'status' => 'Pending',
         ]);
 
-        // Redirect dengan pesan sukses
-        return view('adminsystem.tool.index');
+        // ✅ Update status tool_inspections_fixs
+        SentToolReport::where('id', $request->sent_tool_id)->update([
+            'status' => 'Pending',
+        ]);
+
+        // Cek jika AJAX
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Request berhasil dikirim dan status diperbarui.',
+            ]);
+        }
+
+        return redirect()->route('adminsystem.tool.index')->with('success', 'Request berhasil dikirim.');
     }
+
+
+
     public function approve($id)
     {
-        $request = ToolRequest::find($id);
+        $request = ToolRequest::findOrFail($id);
         $request->status = 'Approved';
         $request->save();
 
+        // Update juga tool_inspections_fixs jika perlu
+        SentToolReport::where('id', $request->sent_tool_id)->update([
+            'status' => 'Approved',
+        ]);
+
         return response()->json(['success' => true]);
     }
+
 
     public function reject($id)
     {
         $request = ToolRequest::find($id);
         $request->status = 'Rejected';
         $request->save();
-
+        // Update juga tool_inspections_fixs jika perlu
+        SentToolReport::where('id', $request->sent_tool_id)->update([
+            'status' => 'Rejected',
+        ]);
         return response()->json(['success' => true]);
     }
-
+    public function sent_destroy($id)
+    {
+        // Ambil data PPE berdasarkan ID
+        $tool_fixs = SentToolReport::findOrFail($id);
+        $tool_fixs->delete();
+        // Redirect dengan notifikasi
+        return redirect()->route('adminsystem.tool.index')->with('notification', 'NCR berhasil dikirim!');
+    }
 }

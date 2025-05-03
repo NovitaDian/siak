@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ToolRequest extends Model
 {
     use HasFactory;
+    protected $table = 'tool_inspections_request';
 
     protected $fillable = [
         'sent_tool_id',
@@ -19,9 +20,8 @@ class ToolRequest extends Model
     
     public function tool()
     {
-        return $this->belongsTo(SentPpe::class, 'sent_tool_id'); // Pastikan 'ppe_id' adalah nama kolom foreign key di tabel ppe_requests
+        return $this->belongsTo(SentPpe::class, 'sent_tool_id'); 
     }
-
     // Relasi dengan model User
     public function user()
     {

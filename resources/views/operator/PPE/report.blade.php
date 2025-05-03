@@ -6,8 +6,8 @@
     <div class="container-fluid ">
         <h2 class="text-black font-weight-bolder text-center">SAFETY BEHAVIOR & PPE COMPLIANCE</h2>
     </div>
-    <div class="container-fluid py-4">
-        <div class="card mx-auto w-100" style="max-width: 95%;">
+    <div class="container-fluid py-4 px-0">
+        <div class="card mx-auto w-100" style="max-width: 150%; ">
             <div class="card-header pb-0 px-3">
                 <h6 class="mb-0">{{ __('DATA UMUM') }}</h6>
             </div>
@@ -58,7 +58,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                        <div class="form-group">
+                            <div class="form-group">
                                 <label for="nama_hse_inspector">{{ __('Nama HSE Inspector') }}</label>
                                 <input class="form-control" type="text" id="nama_hse_inspector" name="nama_hse_inspector" value="{{ old('nama_hse_inspector') }}" required>
                                 @error('nama_hse_inspector')
@@ -76,7 +76,7 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                        <div class="form-group">
+                            <div class="form-group">
                                 <label for="zona_pengawasan">{{ __('Zona Pengawasan') }}</label>
                                 <select class="form-control" id="zona_pengawasan" name="zona_pengawasan" required>
                                     <option value="" {{ old('zona_pengawasan') == '' ? 'selected' : '' }}>Pilih Zona</option>
@@ -101,113 +101,113 @@
                             </div>
                         </div>
                         <h6 class="mb-0">{{ __('JUMLAH PATUH APD') }}</h6>
-                       
-    <!-- Jumlah Patuh APD -->
-    <div class="row mt-3">
-        <div class="col-md-4">
-            <label>{{ __('Jumlah Patuh APD') }}</label>
-        </div>
-        <div class="col-md-4">
-            <input class="form-control" type="number" id="jumlah_patuh_apd_karyawan" name="jumlah_patuh_apd_karyawan" min="0" placeholder="Karyawan" required>
-        </div>
-        <div class="col-md-4">
-            <input class="form-control" type="number" id="jumlah_patuh_apd_kontraktor" name="jumlah_patuh_apd_kontraktor" min="0" placeholder="Kontraktor" required>
-        </div>
-    </div>
 
-    <!-- Jumlah Tidak Patuh Helm -->
-    <div class="row mt-3">
-        <div class="col-md-4">
-            <label>{{ __('Jumlah Tidak Patuh Helm') }}</label>
-        </div>
-        <div class="col-md-4">
-            <input class="form-control" type="number" id="jumlah_tidak_patuh_helm_karyawan" name="jumlah_tidak_patuh_helm_karyawan" min="0" placeholder="Karyawan" required>
-        </div>
-        <div class="col-md-4">
-            <input class="form-control" type="number" id="jumlah_tidak_patuh_helm_kontraktor" name="jumlah_tidak_patuh_helm_kontraktor" min="0" placeholder="Kontraktor" required>
-        </div>
-    </div>
+                        <!-- Jumlah Patuh APD -->
+                        <div class="row mt-3">
+                            <div class="col-md-4">
+                                <label>{{ __('Jumlah Patuh APD') }}</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input class="form-control" type="number" id="jumlah_patuh_apd_karyawan" name="jumlah_patuh_apd_karyawan" min="0" placeholder="Karyawan" required>
+                            </div>
+                            <div class="col-md-4">
+                                <input class="form-control" type="number" id="jumlah_patuh_apd_kontraktor" name="jumlah_patuh_apd_kontraktor" min="0" placeholder="Kontraktor" required>
+                            </div>
+                        </div>
 
-    <!-- Jumlah Tidak Patuh Sepatu -->
-    <div class="row mt-3">
-        <div class="col-md-4">
-            <label>{{ __('Jumlah Tidak Patuh Sepatu') }}</label>
-        </div>
-        <div class="col-md-4">
-            <input class="form-control" type="number" id="jumlah_tidak_patuh_sepatu_karyawan" name="jumlah_tidak_patuh_sepatu_karyawan" min="0" placeholder="Karyawan" required>
-        </div>
-        <div class="col-md-4">
-            <input class="form-control" type="number" id="jumlah_tidak_patuh_sepatu_kontraktor" name="jumlah_tidak_patuh_sepatu_kontraktor" min="0" placeholder="Kontraktor" required>
-        </div>
-    </div>
+                        <!-- Jumlah Tidak Patuh Helm -->
+                        <div class="row mt-3">
+                            <div class="col-md-4">
+                                <label>{{ __('Jumlah Tidak Patuh Helm') }}</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input class="form-control" type="number" id="jumlah_tidak_patuh_helm_karyawan" name="jumlah_tidak_patuh_helm_karyawan" min="0" placeholder="Karyawan" required>
+                            </div>
+                            <div class="col-md-4">
+                                <input class="form-control" type="number" id="jumlah_tidak_patuh_helm_kontraktor" name="jumlah_tidak_patuh_helm_kontraktor" min="0" placeholder="Kontraktor" required>
+                            </div>
+                        </div>
 
-    <!-- Jumlah Tidak Patuh Pelindung Mata -->
-    <div class="row mt-3">
-        <div class="col-md-4">
-            <label>{{ __('Jumlah Tidak Patuh Pelindung Mata') }}</label>
-        </div>
-        <div class="col-md-4">
-            <input class="form-control" type="number" id="jumlah_tidak_patuh_pelindung_mata_karyawan" name="jumlah_tidak_patuh_pelindung_mata_karyawan" min="0" placeholder="Karyawan" required>
-        </div>
-        <div class="col-md-4">
-            <input class="form-control" type="number" id="jumlah_tidak_patuh_pelindung_mata_kontraktor" name="jumlah_tidak_patuh_pelindung_mata_kontraktor" min="0" placeholder="Kontraktor" required>
-        </div>
-    </div>
+                        <!-- Jumlah Tidak Patuh Sepatu -->
+                        <div class="row mt-3">
+                            <div class="col-md-4">
+                                <label>{{ __('Jumlah Tidak Patuh Sepatu') }}</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input class="form-control" type="number" id="jumlah_tidak_patuh_sepatu_karyawan" name="jumlah_tidak_patuh_sepatu_karyawan" min="0" placeholder="Karyawan" required>
+                            </div>
+                            <div class="col-md-4">
+                                <input class="form-control" type="number" id="jumlah_tidak_patuh_sepatu_kontraktor" name="jumlah_tidak_patuh_sepatu_kontraktor" min="0" placeholder="Kontraktor" required>
+                            </div>
+                        </div>
 
-    <!-- Jumlah Tidak Patuh Safety Harness -->
-    <div class="row mt-3">
-        <div class="col-md-4">
-            <label>{{ __('Jumlah Tidak Patuh Safety Harness') }}</label>
-        </div>
-        <div class="col-md-4">
-            <input class="form-control" type="number" id="jumlah_tidak_patuh_safety_harness_karyawan" name="jumlah_tidak_patuh_safety_harness_karyawan" min="0" placeholder="Karyawan" required>
-        </div>
-        <div class="col-md-4">
-            <input class="form-control" type="number" id="jumlah_tidak_patuh_safety_harness_kontraktor" name="jumlah_tidak_patuh_safety_harness_kontraktor" min="0" placeholder="Kontraktor" required>
-        </div>
-    </div>
+                        <!-- Jumlah Tidak Patuh Pelindung Mata -->
+                        <div class="row mt-3">
+                            <div class="col-md-4">
+                                <label>{{ __('Jumlah Tidak Patuh Pelindung Mata') }}</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input class="form-control" type="number" id="jumlah_tidak_patuh_pelindung_mata_karyawan" name="jumlah_tidak_patuh_pelindung_mata_karyawan" min="0" placeholder="Karyawan" required>
+                            </div>
+                            <div class="col-md-4">
+                                <input class="form-control" type="number" id="jumlah_tidak_patuh_pelindung_mata_kontraktor" name="jumlah_tidak_patuh_pelindung_mata_kontraktor" min="0" placeholder="Kontraktor" required>
+                            </div>
+                        </div>
 
-    <!-- Jumlah Tidak Patuh APD Lainnya -->
-    <div class="row mt-3">
-        <div class="col-md-4">
-            <label>{{ __('Jumlah Tidak Patuh APD Lainnya') }}</label>
-        </div>
-        <div class="col-md-4">
-            <input class="form-control" type="number" id="jumlah_tidak_patuh_apd_lainnya_karyawan" name="jumlah_tidak_patuh_apd_lainnya_karyawan" min="0" placeholder="Karyawan" required>
-        </div>
-        <div class="col-md-4">
-            <input class="form-control" type="number" id="jumlah_tidak_patuh_apd_lainnya_kontraktor" name="jumlah_tidak_patuh_apd_lainnya_kontraktor" min="0" placeholder="Kontraktor" required>
-        </div>
-    </div>
+                        <!-- Jumlah Tidak Patuh Safety Harness -->
+                        <div class="row mt-3">
+                            <div class="col-md-4">
+                                <label>{{ __('Jumlah Tidak Patuh Safety Harness') }}</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input class="form-control" type="number" id="jumlah_tidak_patuh_safety_harness_karyawan" name="jumlah_tidak_patuh_safety_harness_karyawan" min="0" placeholder="Karyawan" required>
+                            </div>
+                            <div class="col-md-4">
+                                <input class="form-control" type="number" id="jumlah_tidak_patuh_safety_harness_kontraktor" name="jumlah_tidak_patuh_safety_harness_kontraktor" min="0" placeholder="Kontraktor" required>
+                            </div>
+                        </div>
 
-    <!-- Keterangan Tidak Patuh -->
-    <div class="row mt-3">
-        <div class="col-md-4">
-            <label>{{ __('Keterangan Tidak Patuh') }}</label>
-        </div>
-        <div class="col-md-8">
-            <textarea class="form-control" id="keterangan_tidak_patuh" name="keterangan_tidak_patuh" rows="3" ></textarea>
-        </div>
-        
-    </div>
+                        <!-- Jumlah Tidak Patuh APD Lainnya -->
+                        <div class="row mt-3">
+                            <div class="col-md-4">
+                                <label>{{ __('Jumlah Tidak Patuh APD Lainnya') }}</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input class="form-control" type="number" id="jumlah_tidak_patuh_apd_lainnya_karyawan" name="jumlah_tidak_patuh_apd_lainnya_karyawan" min="0" placeholder="Karyawan" required>
+                            </div>
+                            <div class="col-md-4">
+                                <input class="form-control" type="number" id="jumlah_tidak_patuh_apd_lainnya_kontraktor" name="jumlah_tidak_patuh_apd_lainnya_kontraktor" min="0" placeholder="Kontraktor" required>
+                            </div>
+                        </div>
 
+                        <!-- Keterangan Tidak Patuh -->
+                        <div class="row mt-3">
+                            <div class="col-md-4">
+                                <label>{{ __('Keterangan Tidak Patuh') }}</label>
+                            </div>
+                            <div class="col-md-8">
+                                <textarea class="form-control" id="keterangan_tidak_patuh" name="keterangan_tidak_patuh" rows="3"></textarea>
+                            </div>
 
                         </div>
-                       
 
 
-                        <div class="d-flex justify-content-end">
-                            <button type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">{{ __('Save Report') }}</button>
-                        </div>
+                    </div>
+
+
+
+                    <div class="d-flex justify-content-end">
+                        <button type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">{{ __('Save Report') }}</button>
+                    </div>
                 </form>
             </div>
 
-      
 
 
-        
+
+
         </div>
-   
+
 
 
     </div>

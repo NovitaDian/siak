@@ -14,6 +14,7 @@ class SentNcr extends Model
 
     // Kolom yang dapat diisi (mass assignable)
     protected $fillable = [
+        'draft_id',
         'writer',
         'tanggal_shift_kerja',
         'shift_kerja',
@@ -26,7 +27,10 @@ class SentNcr extends Model
         'element_referensi_ncr',
         'kategori_ketidaksesuaian',
         'deskripsi_ketidaksesuaian',
-        'status'
+        'status',
+        'status_ncr',
+        'status_note',
+        'durasi_ncr'
     ];
 
     // Menentukan tipe data untuk tanggal agar bisa otomatis di-convert menjadi format date
@@ -34,7 +38,8 @@ class SentNcr extends Model
         'tanggal_shift_kerja',
         'tanggal_audit',
     ];
-    public function requests() {
+    public function requests()
+    {
         return $this->hasMany(NcrRequest::class);
     }
 }
