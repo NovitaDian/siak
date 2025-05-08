@@ -463,7 +463,7 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('/', [DailyController::class, 'operator_index'])->name('index');
 			Route::get('/create', [DailyController::class, 'operator_create'])->name('create');
 			Route::post('/', [DailyController::class, 'operator_store'])->name('store');
-			Route::get('/{id}/edit', [DailyController::class, 'operator_edit'])->name('edit');
+			Route::get('/edit/{id}', [DailyController::class, 'operator_edit'])->name('edit');
 			Route::put('/{id}', [DailyController::class, 'operator_update'])->name('update');
 			Route::get('/{id}', [DailyController::class, 'operator_show'])->name('show');
 			Route::delete('/{id}', [DailyController::class, 'operator_destroy'])->name('destroy');

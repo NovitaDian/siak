@@ -4,7 +4,7 @@
 
 <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg">
     <div class="container-fluid py-4">
-\
+        \
         <div class="nav-item d-flex align-self-end">
             <form action="{{ route('operator.daily.create') }}" method="GET" style="display:inline;">
                 @csrf
@@ -58,7 +58,8 @@
                                                 id="editBtn"
                                                 onclick="editAction();"
                                                 style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right, #FFA500, #FF6347); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px; margin-right: 8px;">
-                                                <i style="margin-right: 4px; font-size: 12px;" class="fa fa-edit"></i> Edit
+                                                <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit
+
                                             </a>
 
                                             <!-- Tombol Send (Delete Action) -->
@@ -70,7 +71,7 @@
                                                     onclick="return confirm('Anda yakin akan mengirim dokumen?')"
                                                     title="Kirim"
                                                     style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right, #28A745, #2E8B57); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;">
-                                                    <i style="margin-right: 4px; font-size: 12px;" class="fa fa-paper-plane"></i> Send
+                                                    <i style="margin-right: 4px; font-size: 12px;"></i> Send
                                                 </button>
                                             </form>
 
@@ -92,90 +93,90 @@
                         </div>
                     </div>
                 </div>
-            <div class="row">
-                <div class="col-12">
-                    <div class="card mb-4">
-                        <div class="card-header pb-0">
-                            <h6>Sent Daily Activities & Improvement Report</h6>
-                        </div>
-                        <div class="card-body px-0 pt-0 pb-2">
-                            <div class="table-responsive p-0">
-                                <table class="table align-items-center mb-0">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal Shift Kerja</th>
-                                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Shift Kerja</th>
-                                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">HSE Inspector</th>
-                                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Rincian</th>
-                                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Opsi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($daily_fixs as $daily_fix)
-                                        <tr>
-                                            <td class="text-center">
-                                                <div class="d-flex justify-content-center align-items-center px-2 py-1">
-                                                    <div class="d-flex flex-column justify-content-center">
-                                                        <h6 class="mb-0 text-sm">{{ \Carbon\Carbon::parse($daily_fix->tanggal_shift_kerja)->format('d/m/Y') }}</h6>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card mb-4">
+                            <div class="card-header pb-0">
+                                <h6>Sent Daily Activities & Improvement Report</h6>
+                            </div>
+                            <div class="card-body px-0 pt-0 pb-2">
+                                <div class="table-responsive p-0">
+                                    <table class="table align-items-center mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal Shift Kerja</th>
+                                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Shift Kerja</th>
+                                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">HSE Inspector</th>
+                                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Rincian</th>
+                                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Opsi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($daily_fixs as $daily_fix)
+                                            <tr>
+                                                <td class="text-center">
+                                                    <div class="d-flex justify-content-center align-items-center px-2 py-1">
+                                                        <div class="d-flex flex-column justify-content-center">
+                                                            <h6 class="mb-0 text-sm">{{ \Carbon\Carbon::parse($daily_fix->tanggal_shift_kerja)->format('d/m/Y') }}</h6>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </td>
-                                            <td class="text-center">
-                                                <p class="text-xs font-weight-bold mb-0">{{ $daily_fix->shift_kerja }}</p>
-                                            </td>
-                                            <td class="text-center">
-                                                <p class="text-xs font-weight-bold mb-0">{{ $daily_fix->nama_hs_officer }}</p>
-                                            </td>
-                                            <td class="text-center">
-                                                <p class="text-xs font-weight-bold mb-0">{{ $daily_fix->rincian_laporan }}</p>
-                                            </td>
+                                                </td>
+                                                <td class="text-center">
+                                                    <p class="text-xs font-weight-bold mb-0">{{ $daily_fix->shift_kerja }}</p>
+                                                </td>
+                                                <td class="text-center">
+                                                    <p class="text-xs font-weight-bold mb-0">{{ $daily_fix->nama_hs_officer }}</p>
+                                                </td>
+                                                <td class="text-center">
+                                                    <p class="text-xs font-weight-bold mb-0">{{ $daily_fix->rincian_laporan }}</p>
+                                                </td>
 
 
-                                            <td class="align-middle text-center">
-                                                @if ($daily_fix->status == 'Nothing')
-                                                <button class="btn btn-success btn-sm" style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right,rgb(154, 155, 160),rgb(43, 46, 44)); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;" onclick="showRequestModal('{{ $daily_fix->id }}')">Request</button>
-                                                @elseif ($daily_fix->status == 'Pending')
-                                                <span class="text-warning">Pending</span>
-                                                @elseif ($daily_fix->status == 'Approved')
-                                                @php
-                                                // Fetch the corresponding request based on sent_daily_id
-                                                $request = $requests->firstWhere('sent_daily_id', $daily_fix->id);
-                                                \Log::info('Incident Fix ID: ' . $daily_fix->id . ' Looking for Request with sent_daily_id: ' . $daily_fix->id);
-                                                \Log::info('Requests: ', $requests->toArray());
-                                                @endphp
-                                                @if ($request)
-                                                @if ($request->type == 'Edit')
-                                                <a href="javascript:;" id="editBtn" onclick="sentEditAction({{ $daily_fix->id }});" style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right, #28A745, #2E8B57); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;" class="btn btn-warning btn-sm">Edit</a>
-                                                @elseif ($request->type == 'Delete')
-                                                <form action="{{ route('operator.daily.sent_destroy', $daily_fix->id) }}" method="POST" style="display:inline;">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm" style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right,rgb(167, 40, 40),rgb(139, 46, 46)); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;" onclick="return confirm('Are you sure you want to delete this?')">Delete</button>
-                                                </form>
-                                                @endif
-                                                @else
-                                                <span class="text-danger">No corresponding request found</span>
-                                                @endif
-                                                @elseif ($daily_fix->status == 'Rejected')
-                                                <span class="text-danger">Request Rejected</span>
-                                                @endif
-                                                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+                                                <td class="align-middle text-center">
+                                                    @if ($daily_fix->status == 'Nothing')
+                                                    <button class="btn btn-success btn-sm" style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right,rgb(154, 155, 160),rgb(43, 46, 44)); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;" onclick="showRequestModal('{{ $daily_fix->id }}')">Request</button>
+                                                    @elseif ($daily_fix->status == 'Pending')
+                                                    <span class="text-warning">Pending</span>
+                                                    @elseif ($daily_fix->status == 'Approved')
+                                                    @php
+                                                    // Fetch the corresponding request based on sent_daily_id
+                                                    $request = $requests->firstWhere('sent_daily_id', $daily_fix->id);
+                                                    \Log::info('Incident Fix ID: ' . $daily_fix->id . ' Looking for Request with sent_daily_id: ' . $daily_fix->id);
+                                                    \Log::info('Requests: ', $requests->toArray());
+                                                    @endphp
+                                                    @if ($request)
+                                                    @if ($request->type == 'Edit')
+                                                    <a href="javascript:;" id="editBtn" onclick="sentEditAction({{ $daily_fix->id }});" style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right, #28A745, #2E8B57); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;" class="btn btn-warning btn-sm">Edit</a>
+                                                    @elseif ($request->type == 'Delete')
+                                                    <form action="{{ route('operator.daily.sent_destroy', $daily_fix->id) }}" method="POST" style="display:inline;">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-danger btn-sm" style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right,rgb(167, 40, 40),rgb(139, 46, 46)); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;" onclick="return confirm(' Anda yakin akan menghapus data ini?')">Delete</button>
+                                                    </form>
+                                                    @endif
+                                                    @else
+                                                    <span class="text-danger">No corresponding request found</span>
+                                                    @endif
+                                                    @elseif ($daily_fix->status == 'Rejected')
+                                                    <span class="text-danger">Request Rejected</span>
+                                                    @endif
+                                                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-                                            </td>
+                                                </td>
 
 
-                                        </tr>
-                                        @endforeach
-                                    </tbody>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
 
-                                </table>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
     </div>
     <div class="modal fade" id="requestModal" tabindex="-1" role="dialog" aria-labelledby="requestModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">

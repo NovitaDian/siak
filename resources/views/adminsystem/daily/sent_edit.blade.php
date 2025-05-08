@@ -12,7 +12,7 @@
                 <h6 class="mb-0">{{ __('EDIT DATA UMUM') }}</h6>
             </div>
             <div class="card-body pt-4 p-3">
-                <form action="{{ route('adminsystem.daily.update', $daily->id) }}" method="POST" role="form text-left">
+                <form action="{{ route('adminsystem.daily.sent_update', $daily_fix->id) }}" method="POST" role="form text-left">
                     @csrf
                     @method('PUT')
 
@@ -37,7 +37,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="tanggal_shift_kerja">{{ __('Tanggal Shift Kerja') }}</label>
-                                <input class="form-control" type="date" id="tanggal_shift_kerja" name="tanggal_shift_kerja" value="{{ old('tanggal_shift_kerja', $daily->tanggal_shift_kerja) }}" required>
+                                <input class="form-control" type="date" id="tanggal_shift_kerja" name="tanggal_shift_kerja" value="{{ old('tanggal_shift_kerja', $daily_fix->tanggal_shift_kerja) }}" required>
                                 @error('tanggal_shift_kerja')
                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                 @enderror
@@ -48,11 +48,11 @@
                             <div class="form-group">
                                 <label for="shift_kerja">{{ __('Shift Kerja') }}</label>
                                 <select class="form-control" id="shift_kerja" name="shift_kerja" required>
-                                    <option value="" {{ old('shift_kerja', $daily->shift_kerja) == '' ? 'selected' : '' }}>Pilih Shift</option>
-                                    <option value="Shift 1" {{ old('shift_kerja', $daily->shift_kerja) == 'Shift 1' ? 'selected' : '' }}>SHIFT I</option>
-                                    <option value="Shift 2" {{ old('shift_kerja', $daily->shift_kerja) == 'Shift 2' ? 'selected' : '' }}>SHIFT II</option>
-                                    <option value="Shift 3" {{ old('shift_kerja', $daily->shift_kerja) == 'Shift 3' ? 'selected' : '' }}>SHIFT III</option>
-                                    <option value="Nonshift" {{ old('shift_kerja', $daily->shift_kerja) == 'Nonshift' ? 'selected' : '' }}>NONSHIFT</option>
+                                    <option value="" {{ old('shift_kerja', $daily_fix->shift_kerja) == '' ? 'selected' : '' }}>Pilih Shift</option>
+                                    <option value="Shift 1" {{ old('shift_kerja', $daily_fix->shift_kerja) == 'Shift 1' ? 'selected' : '' }}>SHIFT I</option>
+                                    <option value="Shift 2" {{ old('shift_kerja', $daily_fix->shift_kerja) == 'Shift 2' ? 'selected' : '' }}>SHIFT II</option>
+                                    <option value="Shift 3" {{ old('shift_kerja', $daily_fix->shift_kerja) == 'Shift 3' ? 'selected' : '' }}>SHIFT III</option>
+                                    <option value="Nonshift" {{ old('shift_kerja', $daily_fix->shift_kerja) == 'Nonshift' ? 'selected' : '' }}>NONSHIFT</option>
                                 </select>
                                 @error('shift_kerja')
                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>
@@ -68,7 +68,7 @@
                                 <option value="">Pilih HSE Inspector</option>
                                 @foreach($inspectors as $inspector)
                                 <option value="{{ $inspector->id }}"
-                                    {{ (old('hse_inspector_id', $daily->hse_inspector_id) == $inspector->id) ? 'selected' : '' }}>
+                                    {{ (old('hse_inspector_id', $daily_fix->hse_inspector_id) == $inspector->id) ? 'selected' : '' }}>
                                     {{ $inspector->name }}
                                 </option>
                                 @endforeach
@@ -84,7 +84,7 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="rincian_laporan">{{ __('Rincian Laporan') }}</label>
-                                <textarea class="form-control" id="rincian_laporan" name="rincian_laporan" rows="4">{{ old('rincian_laporan', $daily->rincian_laporan) }}</textarea>
+                                <textarea class="form-control" id="rincian_laporan" name="rincian_laporan" rows="4">{{ old('rincian_laporan', $daily_fix->rincian_laporan) }}</textarea>
                                 @error('rincian_laporan')
                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                 @enderror

@@ -48,7 +48,7 @@
                                     <td class="text-center">
                                         <p class="text-xs font-weight-bold mb-0">{{ $budget->internal_order }}</p>
                                     </td>
-                                   
+
                                     <td class="text-center">
                                         <p class="text-xs font-weight-bold mb-0">{{ $budget->setahun_qty }}</p>
                                     </td>
@@ -60,7 +60,8 @@
                                         <!-- Tombol Edit -->
                                         <a href="{{ route('adminsystem.budget.edit', $budget->id) }}"
                                             style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right, #FFA500, #FF6347); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px; margin-right: 8px;">
-                                            <i style="margin-right: 4px; font-size: 12px;" class="fa fa-edit"></i> Edit
+                                            <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit
+
                                         </a>
 
                                         <!-- Tombol Send (Delete Action) -->
@@ -72,7 +73,7 @@
                                                 onclick="return confirm('Anda yakin akan menghapus dokumen?')"
                                                 title="Kirim"
                                                 style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right,rgb(240, 57, 57),rgb(171, 57, 57)); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;">
-                                                <i style="margin-right: 4px; font-size: 12px;" class="fa fa-trash"></i> Hapus
+                                                <i style="margin-right: 4px; font-size: 12px;"></i> Hapus
                                             </button>
                                         </form>
                                     </td>

@@ -28,4 +28,8 @@ class SentToolReport extends Model
     {
         return $this->belongsTo(HseInspector::class, 'hse_inspector_id');
     }
+    public function alat()
+{
+    return $this->belongsTo(Alat::class, 'alat_id');
+}
 }

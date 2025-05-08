@@ -39,30 +39,32 @@
 
 
                                         <td class="align-middle text-center">
-                                            <!-- Tombol Edit -->
-                                            <a href="javascript:;"
-                                                id="editBtn"
-                                                onclick="editAction();"
-                                                style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right, #FFA500, #FF6347); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px; margin-right: 8px;">
-                                                <i style="margin-right: 4px; font-size: 12px;" class="fa fa-edit"></i> Edit
-                                            </a>
+                                            <div style="display: flex; justify-content: center; align-items: center;">
+                                                <!-- Tombol Edit -->
+                                                <a href="javascript:;"
+                                                    id="editBtn"
+                                                    class="btn btn-warning"
+                                                    onclick="editAction();">
+                                                    <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit
+                                                </a>
 
-                                            <!-- Tombol Delete (Send Action) -->
-                                            <form action="{{ route('adminsystem.nama_alat.destroy', $nama->id) }}" method="POST" style="display:inline;">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit"
-                                                    class="btn btn-danger"
-                                                    onclick="return confirm('Anda yakin akan menghapus nama alat ini?')"
-                                                    title="Hapus nama alat"
-                                                    style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right,rgb(175, 48, 48),rgb(139, 46, 46)); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;">
-                                                    <i style="margin-right: 4px; font-size: 12px;" class="fa fa-trash"></i> Delete
-                                                </button>
-                                            </form>
+                                                <!-- Tombol Delete -->
+                                                <form action="{{ route('adminsystem.nama_alat.destroy', $nama->id) }}" method="POST" style="margin: 0;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit"
+                                                        class="btn btn-danger"
+                                                        onclick="return confirm('Anda yakin akan menghapus nama alat ini?')"
+                                                        title="Hapus nama alat">
+                                                        <i class="fas fa-trash-alt me-1" style="font-size: 12px;"></i> Delete
+                                                    </button>
+                                                </form>
+                                            </div>
 
-                                            <!-- Tambahkan font-awesome untuk ikon -->
+                                            <!-- Font Awesome (pindahkan ke layout utama jika sudah dimuat global) -->
                                             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
                                         </td>
+
 
                                         <script>
                                             function editAction() {
@@ -129,32 +131,38 @@
                                         <td class="text-center">
                                             <p class="text-xs font-weight-bold mb-0">{{ $alat->status }}</p>
                                         </td>
-
                                         <td class="align-middle text-center">
-                                            <!-- Tombol Edit -->
-                                            <a href="javascript:;"
-                                                id="editBtn"
-                                                onclick="editAction();"
-                                                style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right, #FFA500, #FF6347); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px; margin-right: 8px;">
-                                                <i style="margin-right: 4px; font-size: 12px;" class="fa fa-edit"></i> Edit
-                                            </a>
+    <div style="display: flex; justify-content: center; align-items: center; gap: 8px;">
+        <!-- Tombol Edit -->
+        <a href="javascript:;"
+            id="editBtn"
+            class="btn btn-warning"
+            onclick="editAction();">
+            <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit
+        </a>
 
-                                            <!-- Tombol Delete (Send Action) -->
-                                            <form action="{{ route('adminsystem.detail_alat.destroy', $alat->id) }}" method="POST" style="display:inline;">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit"
-                                                    class="btn btn-danger"
-                                                    onclick="return confirm('Anda yakin akan menghapus alat ini?')"
-                                                    title="Hapus Alat"
-                                                    style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right,rgb(175, 48, 48),rgb(139, 46, 46)); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;">
-                                                    <i style="margin-right: 4px; font-size: 12px;" class="fa fa-trash"></i> Delete
-                                                </button>
-                                            </form>
+        <!-- Tombol Delete -->
+        <form action="{{ route('adminsystem.detail_alat.destroy', $alat->id) }}" method="POST" style="margin: 0;">
+            @csrf
+            @method('DELETE')
+            <button type="submit"
+                class="btn btn-danger"
+                onclick="return confirm('Anda yakin akan menghapus alat ini?')"
+                title="Hapus Alat">
+                <i class="fas fa-trash-alt me-1" style="font-size: 12px;"></i> Delete
+            </button>
+        </form>
 
-                                            <!-- Tambahkan font-awesome untuk ikon -->
-                                            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-                                        </td>
+        <!-- Tombol Show -->
+        <a href="{{ route('adminsystem.detail_alat.show', $alat->id) }}"
+            class="btn btn-info">
+            <i class="fas fa-eye me-1" style="font-size: 12px;"></i> Show
+        </a>
+    </div>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</td>
+
 
                                         <script>
                                             function editAction() {
@@ -174,7 +182,7 @@
             </div>
         </div>
     </div>
-  
+
 
 
 </main>

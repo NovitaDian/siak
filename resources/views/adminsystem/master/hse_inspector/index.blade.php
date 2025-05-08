@@ -45,7 +45,8 @@
                                             <!-- Tombol Edit -->
                                             <a href="{{ route('adminsystem.hse_inspector.edit', $inspector->id) }}"
                                                 style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right, #FFA500, #FF6347); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px; margin-right: 8px;">
-                                                <i style="margin-right: 4px; font-size: 12px;" class="fa fa-edit"></i> Edit
+                                                <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit
+
                                             </a>
 
                                             <!-- Tombol Delete -->
@@ -55,7 +56,7 @@
                                                 <button type="submit"
                                                     onclick="return confirm('Anda yakin ingin menghapus data ini?')"
                                                     style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right,rgb(175, 48, 48),rgb(139, 46, 46)); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;">
-                                                    <i style="margin-right: 4px; font-size: 12px;" class="fa fa-trash"></i> Delete
+                                                    <i style="margin-right: 4px; font-size: 12px;"></i> Delete
                                                 </button>
                                             </form>
 

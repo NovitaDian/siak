@@ -71,7 +71,7 @@
                             <div class="form-group">
                                 <label for="status_pemeriksaan">{{ __('Status_pemeriksaan') }}</label>
                                 <select class="form-control" name="status_pemeriksaan" id="status_pemeriksaan" required>
-                                    <option value="">Pilih Status_pemeriksaan</option>
+                                    <option value="">Pilih Status pemeriksaan</option>
                                     <option value="Layak operasi" {{ old('status_pemeriksaan') == 'Layak operasi' ? 'selected' : '' }}>Layak Operasi</option>
                                     <option value="Layak operasi dengan catatan" {{ old('status_pemeriksaan') == 'Layak operasi dengan catatan' ? 'selected' : '' }}>Layak Operasi Dengan Catatan</option>
                                     <option value="Tidak layak operasi" {{ old('status_pemeriksaan') == 'Tidak layak operasi' ? 'selected' : '' }}>Tidak Layak Operasi</option>

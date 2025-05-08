@@ -71,7 +71,8 @@
                                                 id="editBtn"
                                                 onclick="editAction();"
                                                 style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right, #FFA500, #FF6347); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px; margin-right: 8px;">
-                                                <i style="margin-right: 4px; font-size: 12px;" class="fa fa-edit"></i> Edit
+                                                <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit
+
                                             </a>
 
                                             <!-- Tombol Send (Delete Action) -->
@@ -83,7 +84,7 @@
                                                     onclick="return confirm('Anda yakin akan mengirim dokumen?')"
                                                     title="Kirim"
                                                     style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right, #28A745, #2E8B57); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;">
-                                                    <i style="margin-right: 4px; font-size: 12px;" class="fa fa-paper-plane"></i> Send
+                                                    <i style="margin-right: 4px; font-size: 12px;"></i> Send
                                                 </button>
                                             </form>
 
@@ -179,7 +180,7 @@
                                             <form action="{{ route('operator.ppe.sent_destroy', $ppe_fix->id) }}" method="POST" style="display:inline;">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm" style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right,rgb(167, 40, 40),rgb(139, 46, 46)); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;" onclick="return confirm('Are you sure you want to delete this?')">Delete</button>
+                                                <button type="submit" class="btn btn-danger btn-sm" style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right,rgb(167, 40, 40),rgb(139, 46, 46)); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;" onclick="return confirm(' Anda yakin akan menghapus data ini?')">Delete</button>
                                             </form>
                                             @endif
                                             @else

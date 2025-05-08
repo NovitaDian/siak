@@ -20,10 +20,15 @@ class ToolReport extends Model
         'hse_inspector_id',
         'hse_inspector',
         'tanggal_pemeriksaan',
+        'status_pemeriksaan',
         'status',
     ];
     public function inspector()
     {
         return $this->belongsTo(HseInspector::class, 'hse_inspector_id');
     }
+    public function alat()
+{
+    return $this->belongsTo(Alat::class, 'alat_id');
+}
 }

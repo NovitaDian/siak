@@ -155,75 +155,75 @@
                 <div class="card-body px-0 pt-0 pb-2">
                     <div class="table-responsive p-3">
                         <table class="table align-items-center mb-0" id="sentNcrTable">
-                        <thead>
-                                    <tr>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal Shift Kerja</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Shift Kerja</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">HSE Inspector</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal Audit</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Auditee</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Durasi NCR</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Aksi</th>
-                                        <th class="text-secondary opacity-7"></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($ncr_fixs as $ncr_fix)
-                                    <tr class="sent-ncr-row" data-ncr-id="{{ $ncr_fix->id }}">
-                                        <td class="text-center text-xs">{{ \Carbon\Carbon::parse($ncr_fix->tanggal_shift_kerja)->format('d/m/Y') }}</td>
-                                        <td class="text-center text-xs">{{ $ncr_fix->shift_kerja }}</td>
-                                        <td class="align-middle text-center text-sm">
-                                            <span class="badge badge-sm {{ $ncr_fix->status_ncr == 'Closed' ? 'bg-gradient-warning' : 'bg-gradient-success' }}">
-                                                {{ $ncr_fix->status_ncr == 'Closed' ? 'Closed' : 'Open' }}
-                                            </span>
-                                        </td>
-                                        <td class="text-center text-xs">{{ $ncr_fix->nama_hs_officer_1 }}</td>
-                                        <td class="text-center text-xs">{{ \Carbon\Carbon::parse($ncr_fix->tanggal_audit)->format('d/m/Y') }}</td>
-                                        <td class="text-center text-xs">{{ $ncr_fix->nama_auditee }}</td>
-                                        <td class="text-center text-xs">{{ $ncr_fix->durasi_ncr }}</td>
-                                        <td class="align-middle text-center text-xs">
-                                            @if ($ncr_fix->status == 'Nothing')
-                                            <button class="btn btn-success btn-sm"
-                                                style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right,rgb(154, 155, 160),rgb(43, 46, 44)); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;"
-                                                onclick="showRequestModal('{{ $ncr_fix->id }}')">Request</button>
+                            <thead>
+                                <tr>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal Shift Kerja</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Shift Kerja</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">HSE Inspector</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal Audit</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Auditee</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Durasi NCR</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Aksi</th>
+                                    <th class="text-secondary opacity-7"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($ncr_fixs as $ncr_fix)
+                                <tr class="sent-ncr-row" data-ncr-id="{{ $ncr_fix->id }}">
+                                    <td class="text-center text-xs">{{ \Carbon\Carbon::parse($ncr_fix->tanggal_shift_kerja)->format('d/m/Y') }}</td>
+                                    <td class="text-center text-xs">{{ $ncr_fix->shift_kerja }}</td>
+                                    <td class="align-middle text-center text-sm">
+                                        <span class="badge badge-sm {{ $ncr_fix->status_ncr == 'Closed' ? 'bg-gradient-warning' : 'bg-gradient-success' }}">
+                                            {{ $ncr_fix->status_ncr == 'Closed' ? 'Closed' : 'Open' }}
+                                        </span>
+                                    </td>
+                                    <td class="text-center text-xs">{{ $ncr_fix->nama_hs_officer_1 }}</td>
+                                    <td class="text-center text-xs">{{ \Carbon\Carbon::parse($ncr_fix->tanggal_audit)->format('d/m/Y') }}</td>
+                                    <td class="text-center text-xs">{{ $ncr_fix->nama_auditee }}</td>
+                                    <td class="text-center text-xs">{{ $ncr_fix->durasi_ncr }}</td>
+                                    <td class="align-middle text-center text-xs">
+                                        @if ($ncr_fix->status == 'Nothing')
+                                        <button class="btn btn-success btn-sm"
+                                            style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right,rgb(154, 155, 160),rgb(43, 46, 44)); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;"
+                                            onclick="showRequestModal('{{ $ncr_fix->id }}')">Request</button>
 
-                                            @elseif ($ncr_fix->status == 'Pending')
-                                            <span class="text-warning">Pending</span>
+                                        @elseif ($ncr_fix->status == 'Pending')
+                                        <span class="text-warning">Pending</span>
 
-                                            @elseif ($ncr_fix->status == 'Approved')
-                                            @if ($request)
-                                            @if ($request->type == 'Edit')
-                                            <a href="javascript:;" id="editBtn" onclick="sentEditAction('{{ $ncr_fix->id }}');"
-                                                style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right, #28A745, #2E8B57); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;"
-                                                class="btn btn-warning btn-sm">Edit</a>
-                                            @elseif ($request->type == 'Delete')
-                                            <form action="{{ route('adminsystem.ncr.sent_destroy', $ncr_fix->id) }}" method="POST"
-                                                style="display:inline;">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm"
-                                                    style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right,rgb(167, 40, 40),rgb(139, 46, 46)); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;"
-                                                    onclick="return confirm('Are you sure you want to delete this?')">Delete</button>
-                                            </form>
-                                            @endif
-                                            @endif
+                                        @elseif ($ncr_fix->status == 'Approved')
+                                        @if ($request)
+                                        @if ($request->type == 'Edit')
+                                        <a href="javascript:;" id="editBtn" onclick="sentEditAction('{{ $ncr_fix->id }}');"
+                                            style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right, #28A745, #2E8B57); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;"
+                                            class="btn btn-warning btn-sm">Edit</a>
+                                        @elseif ($request->type == 'Delete')
+                                        <form action="{{ route('adminsystem.ncr.sent_destroy', $ncr_fix->id) }}" method="POST"
+                                            style="display:inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm"
+                                                style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right,rgb(167, 40, 40),rgb(139, 46, 46)); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;"
+                                                onclick="return confirm(' Anda yakin akan menghapus data ini?')">Delete</button>
+                                        </form>
+                                        @endif
+                                        @endif
 
-                                            @elseif ($ncr_fix->status == 'Rejected')
-                                            <span class="text-danger">Request Rejected</span>
-                                            @endif
+                                        @elseif ($ncr_fix->status == 'Rejected')
+                                        <span class="text-danger">Request Rejected</span>
+                                        @endif
 
-                                            @if ($ncr_fix->status_ncr == 'Open')
-                                            <a href="{{ route('adminsystem.ncr.close', $ncr_fix->id) }}"
-                                                class="btn btn-secondary btn-sm"
-                                                style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right,#6c757d,#5a6268); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;">Close</a>
-                                            @endif
+                                        @if ($ncr_fix->status_ncr == 'Open')
+                                        <a href="{{ route('adminsystem.ncr.close', $ncr_fix->id) }}"
+                                            class="btn btn-secondary btn-sm"
+                                            style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right,#6c757d,#5a6268); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;">Close</a>
+                                        @endif
 
-                                        </td>
+                                    </td>
 
-                                    </tr>
-                                    @endforeach
-                                </tbody>
+                                </tr>
+                                @endforeach
+                            </tbody>
                         </table>
                     </div>
                 </div>

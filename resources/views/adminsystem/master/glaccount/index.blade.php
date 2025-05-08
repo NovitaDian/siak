@@ -2,9 +2,9 @@
 
 @section('content')
 @if (session('success'))
-    <div class="alert alert-success alert-dismissible fade show" role="alert" style="background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 10px; margin: 10px;">
-        {{ session('success') }}
-    </div>
+<div class="alert alert-success alert-dismissible fade show" role="alert" style="background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 10px; margin: 10px;">
+    {{ session('success') }}
+</div>
 @endif
 
 <div class="nav-item d-flex align-self-end">
@@ -50,7 +50,8 @@
                                     <!-- Tombol Edit -->
                                     <a href="{{ route('adminsystem.glaccount.edit', $glAccount->id) }}"
                                         style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right, #FFA500, #FF6347); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px; margin-right: 8px;">
-                                        <i style="margin-right: 4px; font-size: 12px;" class="fa fa-edit"></i> Edit
+                                        <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit
+
                                     </a>
 
                                     <!-- Tombol Send (Delete Action) -->
@@ -62,7 +63,7 @@
                                             onclick="return confirm('Anda yakin akan menghapus dokumen?')"
                                             title="Kirim"
                                             style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right,rgb(240, 57, 57),rgb(171, 57, 57)); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;">
-                                            <i style="margin-right: 4px; font-size: 12px;" class="fa fa-trash"></i> Hapus
+                                            <i style="margin-right: 4px; font-size: 12px;"></i> Hapus
                                         </button>
                                     </form>
                                 </td>

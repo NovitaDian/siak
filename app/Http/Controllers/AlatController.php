@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Alat;
 use App\Models\NamaAlat;
+use App\Models\SentToolReport;
 use Illuminate\Http\Request;
 
 class AlatController extends Controller
@@ -17,11 +18,11 @@ class AlatController extends Controller
         $nama_alats = NamaAlat::all();
 
         // Mengirim data ke view
-        return view('adminsystem.master.alat.index', compact('alats','nama_alats'));
+        return view('adminsystem.master.alat.index', compact('alats', 'nama_alats'));
     }
 
     // DETAIL ALAT (table alats)
-    
+
 
     public function alat_create()
     {
@@ -38,9 +39,9 @@ class AlatController extends Controller
             'durasi_inspeksi' => 'required|integer|min:0',
             'status' => 'nullable|string|max:255'
         ]);
-        
+
         $namaAlat = NamaAlat::findOrFail($request->nama_alat_id);
-        
+
         Alat::create([
             'nama_alat_id' => $namaAlat->id,
             'nama_alat' => $namaAlat->nama_alat,
@@ -49,7 +50,7 @@ class AlatController extends Controller
             'durasi_inspeksi' => $request->durasi_inspeksi,
             'status' => $request->status,
         ]);
-        
+
 
         return redirect()->route('adminsystem.alat.index')->with('success', 'Alat berhasil ditambahkan.');
     }
@@ -88,8 +89,10 @@ class AlatController extends Controller
 
     public function alat_show($id)
     {
-        $alat = Alat::with('namaAlat')->findOrFail($id);
-        return view('adminsystem.master.alat.alat.show', compact('alat'));
+        $tool_fixs = SentToolReport::where('alat_id', $id)
+            ->orderByDesc('tanggal_pemeriksaan')
+            ->get();
+        return view('adminsystem.master.alat.alat.show', compact('tool_fixs'));
     }
 
     public function alat_destroy($id)
@@ -100,9 +103,10 @@ class AlatController extends Controller
         return redirect()->route('adminsystem.alat.index')->with('success', 'Alat berhasil dihapus.');
     }
 
+
     // NAMA ALAT MASTER
 
- 
+
 
     public function nama_alat_create()
     {
@@ -151,8 +155,4 @@ class AlatController extends Controller
 
         return redirect()->route('adminsystem.alat.index')->with('success', 'Nama alat berhasil dihapus.');
     }
-
-   
 }
-
-

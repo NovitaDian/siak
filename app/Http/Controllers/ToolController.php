@@ -19,8 +19,10 @@ class ToolController extends Controller
     {
 
         $user = Auth::user();
-        $tools = ToolReport::where('writer', $user->name)->get();
-        $tool_fixs = SentToolReport::all();
+        $tools = ToolReport::with('alat')
+            ->where('writer', $user->name)
+            ->get();
+        $tool_fixs = SentToolReport::with('alat')->get();
         $requests = ToolRequest::all();
 
         return view('adminsystem.tool.index', compact('tools', 'tool_fixs', 'requests'));
@@ -66,17 +68,15 @@ class ToolController extends Controller
         ]);
 
         $toolReport = ToolReport::findOrFail($id);
-        $alat = Alat::findOrFail($request->alat_id);
-        $inspector = HseInspector::findOrFail($request->hse_inspector_id);
 
         $toolReport->update([
-            'alat_id' => $alat->id,
-            'nama_alat' => $alat->nama_alat,
-            'hse_inspector_id' => $inspector->id,
-            'hse_inspector' => $inspector->name,
+            'alat_id' => $request->alat_id,
+            'nama_alat' => Alat::find($request->alat_id)?->nama_alat,
+            'hse_inspector_id' => $request->hse_inspector_id,
+            'hse_inspector' => HseInspector::find($request->hse_inspector_id)?->name,
             'tanggal_pemeriksaan' => $request->tanggal_pemeriksaan,
             'status_pemeriksaan' => $request->status_pemeriksaan,
-            'writer' => Auth::user()->name, // Jika ingin mengganti pencatat setiap edit
+            'writer' => Auth::user()->name,
         ]);
 
         return redirect()->route('adminsystem.tool.index')->with('success', 'Data pemeriksaan berhasil diperbarui.');
@@ -101,19 +101,23 @@ class ToolController extends Controller
             'hse_inspector' => $inspector->name,
             'tanggal_pemeriksaan' => $request->tanggal_pemeriksaan,
             'status_pemeriksaan' => $request->status_pemeriksaan,
+            'status' => 'Nothing',
             'writer' => Auth::user()->name,
         ]);
-
+        $alat->update([
+            'waktu_inspeksi' => $tool_fixs->tanggal_pemeriksaan,
+            'status' => $tool_fixs->status_pemeriksaan,
+        ]);
         return redirect()->route('adminsystem.tool.index')->with('success', 'Data pemeriksaan berhasil diperbarui.');
     }
 
 
     public function edit($id)
     {
-        $tools = ToolReport::findOrFail($id);
+        $toolReport = ToolReport::findOrFail($id);
         $alats = Alat::all();
         $inspectors = HseInspector::all();
-        return view('adminsystem.tool.edit', compact('alats', 'inspectors', 'tools'));
+        return view('adminsystem.tool.edit', compact('alats', 'inspectors', 'toolReport'));
     }
     public function sent_edit($id)
     {
@@ -145,7 +149,12 @@ class ToolController extends Controller
             'status_pemeriksaan' => $tool->status_pemeriksaan,
 
         ]);
+        $alat = Alat::findOrFail($tool->alat_id);
+        $alat->update([
+            'waktu_inspeksi' => $tool->tanggal_pemeriksaan,
+            'status' => $tool->status_pemeriksaan,
 
+        ]);
         // Hapus data dari tool
         $tool->delete();
 
@@ -170,7 +179,7 @@ class ToolController extends Controller
             'status' => 'Pending',
         ]);
 
-        // ✅ Update status tool_inspections_fixs
+        // Update status tool_inspections_fixs
         SentToolReport::where('id', $request->sent_tool_id)->update([
             'status' => 'Pending',
         ]);

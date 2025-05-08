@@ -14,7 +14,8 @@ class Daily extends Model
     protected $fillable = [
         'tanggal_shift_kerja',
         'shift_kerja',
-        'nama_hs_officer',
+        'hse_inspector_id',
+        'nama_hse_inspector',
         'rincian_laporan',
         'writer'
     ];

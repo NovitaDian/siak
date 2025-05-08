@@ -1,4 +1,4 @@
-@extends('layouts.user_type.adminsystem')
+@extends('layouts.user_type.auth')
 
 @section('content')
 
@@ -59,17 +59,20 @@
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-md-6">
+                    <div class="col-md-6">
                             <div class="form-group">
-                                <label for="nama_hs_officer">{{ __('Nama H&S Officer') }}</label>
-                                <input class="form-control" type="text" id="nama_hs_officer" name="nama_hs_officer" value="{{ old('nama_hs_officer') }}" required>
-                                @error('nama_hs_officer')
+                                <label for="hse_inspector_id">{{ __('HSE Inspector') }}</label>
+                                <select class="form-control" name="hse_inspector_id" id="hse_inspector_id" required>
+                                    <option value="">Pilih HSE Inspector</option>
+                                    @foreach($inspectors as $inspector)
+                                    <option value="{{ $inspector->id }}" {{ old('hse_inspector_id') == $inspector->id ? 'selected' : '' }}>{{ $inspector->name }}</option>
+                                    @endforeach
+                                </select>
+                                @error('hse_inspector_id')
                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                 @enderror
                             </div>
                         </div>
-                    </div>
 
                     <div class="row">
                         <div class="col-md-12">
