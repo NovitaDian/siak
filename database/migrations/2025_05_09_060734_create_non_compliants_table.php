@@ -10,7 +10,7 @@ class CreateNonCompliantsTable extends Migration
     {
         Schema::create('non_compliants', function (Blueprint $table) {
             $table->id();
-            $table->Integer('id_ppe');
+            $table->unsignedBigInteger('id_ppe');
             $table->string('nama_hse_inspector', 100);
             $table->string('shift_kerja', 100);
             $table->string('jam_pengawasan', 100);
@@ -22,7 +22,7 @@ class CreateNonCompliantsTable extends Migration
             $table->string('perusahaan', 100);
             $table->string('nama_bagian', 100);
             $table->text('tindakan')->nullable();
-            $table->string('writter', 100);
+            $table->string('writer', 100);
             $table->timestamps();
 
             $table->foreign('id_ppe')->references('id')->on('ppe_fix')->onDelete('cascade');

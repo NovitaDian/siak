@@ -22,8 +22,7 @@ class MaterialGroupController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'material_group_code' => 'required|string',
-            'description' => 'required|string'
+            'material_group' => 'required|string'
         ]);
 
         MaterialGroup::create($request->all());
@@ -42,8 +41,7 @@ class MaterialGroupController extends Controller
         $material_group = MaterialGroup::findOrFail($id);
 
         $request->validate([
-            'material_group_code' => 'required|string',
-            'description' => 'required|string',
+            'material_group' => 'required|string',
         ]);
 
         $material_group->update($request->all());

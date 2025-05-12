@@ -98,14 +98,32 @@
                                 <td class="text-center text-xs">{{ $ppe->jam_pengawasan }}</td>
                                 <td class="text-center text-xs">{{ $ppe->zona_pengawasan }}</td>
                                 <td class="text-center text-xs">{{ $ppe->lokasi_observasi }}</td>
-                                <td class="text-center text-xs">
-                                    <a href="javascript:;" onclick="editAction('{{ $ppe->id }}');" class="btn btn-warning btn-sm">Edit</a>
-                                    <form action="{{ route('adminsystem.ppe.destroy', $ppe->id) }}" method="POST" style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Anda yakin akan mengirim dokumen?')">Send</button>
-                                    </form>
+                                <td class="align-middle text-center">
+                                    <div style="display: flex; justify-content: center; align-items: center;">
+                                        <!-- Tombol Edit -->
+                                        <a href="javascript:;"
+                                            id="editBtn"
+                                            class="btn btn-warning"
+                                            onclick="editAction();">
+                                            <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit
+                                        </a>
+
+                                        <!-- Tombol Delete -->
+                                        <form action="{{ route('adminsystem.ppe.destroy', $ppe->id) }}" method="POST" style="margin: 0;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                class="btn btn-info"
+                                                onclick="return confirm('Anda yakin akan mengirim dokumen?')"
+                                                title="Kirim"> <i class="fas fa-paper-plane me-1" style="margin-right: 4px; font-size: 12px;"></i> Send
+                                            </button>
+                                        </form>
+                                    </div>
+
+                                    <!-- Font Awesome (pindahkan ke layout utama jika sudah dimuat global) -->
+                                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
                                 </td>
+
                                 @empty
                             <tr>
                                 <td colspan="7" class="px-6 py-4 text-center text-gray-500">Data tidak ditemukan.</td>
@@ -189,7 +207,7 @@
                                     @endif
 
                                     @if ($ppe_fix->status_ppe == 'Non-Compliant')
-                                    <a href="{{ route('adminsystem.non_compliant.create', $ppe_fix->id) }}"
+                                    <a href="{{ route('adminsystem.ppe.show', $ppe_fix->id) }}"
                                         class="btn btn-primary btn-sm"
                                         style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right,#007bff,#0056b3); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px; margin-top: 5px;">
                                         <i class="fas fa-flag"></i>&nbsp; Report

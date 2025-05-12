@@ -18,6 +18,7 @@ class Ppe extends Model
         'tanggal_shift_kerja',
         'shift_kerja',
         'nama_hse_inspector',
+        'hse_inspector_id',
         'jam_pengawasan',
         'zona_pengawasan',
         'lokasi_observasi',

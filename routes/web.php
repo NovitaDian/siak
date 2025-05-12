@@ -105,6 +105,8 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::post('/approve/{id}', [IncidentController::class, 'approve'])->name('approve');
 			Route::post('/reject/{id}', [IncidentController::class, 'reject'])->name('reject');
 			Route::get('/get-bagian/{perusahaan_name}', [IncidentController::class, 'getBagian'])->name('getBagian');
+			Route::get('/incident/export', [IncidentController::class, 'export'])->name('export');
+			Route::get('/incident/export-pdf', [IncidentController::class, 'exportPdf'])->name('exportPdf');
 		});
 
 		Route::prefix('adminsystem/ppe')->name('adminsystem.ppe.')->group(function () {
@@ -126,7 +128,7 @@ Route::group(['middleware' => 'auth'], function () {
 		});
 		Route::prefix('adminsystem/non_compliant')->name('adminsystem.non_compliant.')->group(function () {
 			Route::get('/', [NonCompliantController::class, 'index'])->name('index');
-			Route::get('/create/{id_ppe}', [NonCompliantController::class, 'create'])->name('create');
+			Route::get('/create/{id}', [NonCompliantController::class, 'create'])->name('create');
 			Route::post('/', [NonCompliantController::class, 'store'])->name('store');
 			Route::get('/{id}/edit', [NonCompliantController::class, 'edit'])->name('edit');
 			Route::put('/{id}', [NonCompliantController::class, 'update'])->name('update');
@@ -217,6 +219,8 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::post('/request', [DailyController::class, 'submitRequest'])->name('request');
 			Route::post('/approve/{id}', [DailyController::class, 'approve'])->name('approve');
 			Route::post('/reject/{id}', [DailyController::class, 'reject'])->name('reject');
+			Route::get('/export', [DailyController::class, 'export'])->name('export');
+			Route::get('/export-pdf', [DailyController::class, 'exportPdf'])->name('exportPdf');
 		});
 		Route::prefix('adminsystem/references')->name('adminsystem.references.')->group(function () {
 			Route::get('/', [ReferencesController::class, 'index'])->name('index');

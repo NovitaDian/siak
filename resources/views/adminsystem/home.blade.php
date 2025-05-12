@@ -155,7 +155,7 @@
         .timeline-content {
             padding: 10px;
             width: 100%;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
             margin-left: 5px;
             margin-right: 10px;
 

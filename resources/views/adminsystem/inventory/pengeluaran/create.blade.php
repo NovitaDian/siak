@@ -78,9 +78,9 @@
 
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="remark">{{ __('Remark') }}</label>
-                            <textarea class="form-control" id="remark" name="remark" rows="3">{{ old('remark') }}</textarea>
-                            @error('remark')
+                            <label for="keterangan">{{ __('Keterangan') }}</label>
+                            <textarea class="form-control" id="keterangan" name="keterangan" rows="3">{{ old('keterangan') }}</textarea>
+                            @error('keterangan')
                             <p class="text-danger text-xs mt-2">{{ $message }}</p>
                             @enderror
                         </div>

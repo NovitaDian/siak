@@ -20,7 +20,7 @@ class MaterialGroup extends Model
      public $timestamps = false;
     protected $fillable = [
         'id',
-        'description',
+        'material_group',
     ];
    
 

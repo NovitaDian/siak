@@ -2,27 +2,43 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\DailyExport;
+use App\Mail\DailyRequestNotification;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Daily;
 use App\Models\DailyRequest;
 use App\Models\HseInspector;
 use App\Models\SentDaily;
-use App\Models\SentPpe;
+use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Mail;
 
 class DailyController extends Controller
 {
 
     // Menampilkan semua data observasi
-    public function index()
-    {
-        $user = Auth::user(); // Get the currently authenticated user
-        $dailys = Daily::where('writer', $user->name)->get();
+   public function index(Request $request)
+{
+    $user = Auth::user();
+    $dailys = Daily::where('writer', $user->name)->get();
+
+    $start = $request->start_date;
+    $end = $request->end_date;
+
+    // Jika filter tanggal diisi, gunakan whereBetween
+    if ($start && $end) {
+        $daily_fixs = SentDaily::whereBetween('tanggal_shift_kerja', [$start, $end])->get();
+    } else {
         $daily_fixs = SentDaily::all();
-        $requests = DailyRequest::all();
-        return view('adminsystem.daily.index', compact('dailys', 'daily_fixs', 'requests'));
     }
+
+    $requests = DailyRequest::all();
+    return view('adminsystem.daily.index', compact('dailys', 'daily_fixs', 'requests'));
+}
+
 
     // Menampilkan form untuk membuat data baru
     public function create()
@@ -134,15 +150,13 @@ class DailyController extends Controller
 
     public function storeRequest(Request $request)
     {
-        // Validate input
         $request->validate([
-            'sent_daily_id' => 'required|exists:daily_fix,id',
+            'sent_daily_id' => 'required|exists:daily_inspections_fix,id',
             'type' => 'required|string',
             'reason' => 'required|string',
         ]);
 
-        // Simpan ke tabel request
-        DailyRequest::create([
+        $dailyRequest = DailyRequest::create([
             'sent_daily_id' => $request->sent_daily_id,
             'type' => $request->type,
             'reason' => $request->reason,
@@ -150,12 +164,25 @@ class DailyController extends Controller
             'status' => 'Pending',
         ]);
 
-        // Update status daily_fix
         SentDaily::where('id', $request->sent_daily_id)->update([
             'status' => 'Pending',
         ]);
-    }
 
+        // Kirim email ke semua adminsystem
+        $admins = User::where('role', 'adminsystem')->get();
+        foreach ($admins as $admin) {
+            Mail::to($admin->email)->send(new DailyRequestNotification($dailyRequest));
+        }
+
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Request berhasil dikirim dan email telah dikirim ke admin.',
+            ]);
+        }
+
+        return redirect()->route('adminsystem.daily.index')->with('success', 'Request berhasil dikirim dan email telah dikirim ke admin.');
+    }
     public function sent_edit($id)
     {
         // Retrieve the NCR record by ID
@@ -227,7 +254,17 @@ class DailyController extends Controller
         ]);
         return response()->json(['success' => true]);
     }
+    public function export(Request $request)
+    {
+        return Excel::download(new DailyExport($request->start_date, $request->end_date), 'daily.xlsx');
+    }
+    public function exportPdf(Request $request)
+    {
+        $dailys = Daily::whereBetween('tanggal_shift_kerja', [$request->start_date, $request->end_date])->get();
 
+        $pdf = Pdf::loadView('adminsystem.daily.pdf', compact('dailys'));
+        return $pdf->download('daily.pdf');
+    }
 
 
 

@@ -171,7 +171,32 @@
                 <div class="card mb-4">
                     <div class="card-header pb-0">
                         <h6>Sent Document</h6>
+                        <br>
+                        <form action="{{ route('adminsystem.incident.index') }}" method="GET" class="row px-4 mb-3">
+                            <div class="col-md-3">
+                                <label for="start_date">Tanggal Mulai</label>
+                                <input type="date" name="start_date" id="start_date" class="form-control" value="{{ request('start_date') }}">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="end_date">Tanggal Selesai</label>
+                                <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request('end_date') }}">
+                            </div>
+                            <div class="col-md-3 d-flex align-items-end">
+                                <button type="submit"  class="btn btn-sm btn-primary ">Filter</button>
+                            </div>
+                            <div class="d-flex justify-content-end mb-3 px-4">
+                                <a href="{{ route('adminsystem.incident.export', request()->all()) }}" class="btn btn-sm btn-primary me-2" style="display: inline-flex; align-items: center;">
+                                    <i class="fas fa-file-excel me-1"></i> Excel
+                                </a>
+                                <a href="{{ route('adminsystem.incident.exportPdf', request()->all()) }}" class="btn btn-sm btn-danger" style="display: inline-flex; align-items: center;">
+                                    <i class="fas fa-file-pdf me-1"></i> PDF
+                                </a>
+                            </div>
+
+                        </form>
+
                     </div>
+
                     <div class="card-body px-0 pt-0 pb-2">
                         <div class="table-responsive p-0">
                             <table class="table align-items-center mb-0">

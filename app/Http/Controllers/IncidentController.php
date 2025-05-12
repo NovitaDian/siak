@@ -2,16 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\IncidentExport;
+use App\Mail\IncidentRequestNotification;
+use App\Mail\ToolRequestNotification;
 use App\Models\Bagian;
 use App\Models\HseInspector;
 use App\Models\Incident;
 use App\Models\IncidentRequest;
 use App\Models\Perusahaan;
 use App\Models\SentIncident;
+use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Mail;
+
+
 
 class IncidentController extends Controller
 {
@@ -376,23 +386,38 @@ class IncidentController extends Controller
 
     public function storeRequest(Request $request)
     {
-        // Validate input
         $request->validate([
-            'sent_incident_id' => 'required|exists:incidents_fix,id',
+            'sent_incident_id' => 'required|exists:incident_inspections_fix,id',
             'type' => 'required|string',
             'reason' => 'required|string',
         ]);
 
-        // Save request to the incident_request table
-        IncidentRequest::create([
+        $incidentRequest = IncidentRequest::create([
             'sent_incident_id' => $request->sent_incident_id,
             'type' => $request->type,
             'reason' => $request->reason,
-            'nama_pengirim' => auth()->user()->name,
+            'nama_pengirim' => Auth::user()->name,
+            'status' => 'Pending',
         ]);
 
-        // Return JSON response
-        return response()->json(['success' => true, 'message' => 'Request submitted successfully.']);
+        SentIncident::where('id', $request->sent_incident_id)->update([
+            'status' => 'Pending',
+        ]);
+
+        // Kirim email ke semua adminsystem
+        $admins = User::where('role', 'adminsystem')->get();
+        foreach ($admins as $admin) {
+            Mail::to($admin->email)->send(new IncidentRequestNotification($incidentRequest));
+        }
+
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Request berhasil dikirim dan email telah dikirim ke admin.',
+            ]);
+        }
+
+        return redirect()->route('adminsystem.incident.index')->with('success', 'Request berhasil dikirim dan email telah dikirim ke admin.');
     }
     public function approve($id)
     {
@@ -421,6 +446,17 @@ class IncidentController extends Controller
         $pers = Perusahaan::all();
         $bagians = Bagian::all();
         return view('adminsystem.incident.master', compact('pers', 'bagians'));
+    }
+    public function export(Request $request)
+    {
+        return Excel::download(new IncidentExport($request->start_date, $request->end_date), 'incident_report.xlsx');
+    }
+    public function exportPdf(Request $request)
+    {
+        $incidents = SentIncident::whereBetween('shift_date', [$request->start_date, $request->end_date])->get();
+
+        $pdf = Pdf::loadView('adminsystem.incident.pdf', compact('incidents'));
+        return $pdf->download('incident_report.pdf');
     }
 
 

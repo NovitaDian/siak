@@ -101,7 +101,7 @@
                                                     id="editBtn"
                                                     class="btn btn-warning"
                                                     onclick="editAction();">
-                                                <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit
+                                                    <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit
                                                 </a>
 
                                                 <!-- Tombol Delete -->
@@ -109,12 +109,10 @@
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit"
-                                                    class="btn btn-sm"
-                                                    onclick="return confirm('Anda yakin akan mengirim dokumen?')"
-                                                    title="Kirim"
-                                                    style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right, #28A745, #2E8B57); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;">
-                                                    <i style="margin-right: 4px; font-size: 12px;"></i> Send
-                                                </button>
+                                                        class="btn btn-info"
+                                                        onclick="return confirm('Anda yakin akan mengirim dokumen?')"
+                                                        title="Kirim"> <i class="fas fa-paper-plane me-1" style="margin-right: 4px; font-size: 12px;"></i> Send
+                                                    </button>
                                                 </form>
                                             </div>
 

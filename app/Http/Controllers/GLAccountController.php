@@ -35,7 +35,7 @@ class GLAccountController extends Controller
         ]);
 
         // Redirect back with a success message
-        return redirect()->route('adminsystem.master.glaccount.index')->with('success', ' berhasil dibuat.');
+        return redirect()->route('adminsystem.glaccount.index')->with('success', ' berhasil dibuat.');
     }
 
 

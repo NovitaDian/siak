@@ -26,7 +26,7 @@ class NonCompliant extends Model
         'perusahaan',
         'nama_bagian',
         'tindakan',
-        'writter',
+        'writer',
     ];
 
     // Definisikan relasi dengan model PpeFix (foreign key)

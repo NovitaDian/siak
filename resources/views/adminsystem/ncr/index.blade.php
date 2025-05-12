@@ -41,11 +41,6 @@
                                             <button class="btn btn-success btn-sm" style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right,rgb(167, 40, 40),rgb(139, 46, 46)); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;" onclick="approveRequest('{{ $request->id }}')">Approve</button>
                                             <button class="btn btn-danger btn-sm" style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right, #28A745, #2E8B57); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;" onclick="rejectRequest('{{ $request->id }}')">Reject</button>
                                             @endif
-                                            <form action="{{ route('adminsystem.ncr.show', ['id' => $request->id]) }}" method="GET" style="display:inline;">
-                                                <button type="submit" style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right,rgb(67, 116, 206),rgb(46, 54, 139)); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;" class="btn btn-primary active mb-0 text-white" role="button" aria-pressed="true">
-                                                    Show
-                                                </button>
-                                            </form>
                                         </td>
                                     </tr>
                                     @endforeach

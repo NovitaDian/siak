@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\PPERequestNotification;
 use Illuminate\Support\Facades\Auth;
 use App\Models\HseInspector;
+use App\Models\NonCompliant;
 use Illuminate\Http\Request;
 use App\Models\Ppe;
 use App\Models\PpeRequest;
 use App\Models\SentPpe;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class PpeController extends Controller
 {
@@ -25,18 +29,18 @@ class PpeController extends Controller
     // Menampilkan form untuk membuat data baru
     public function create()
     {
-        $officers = HseInspector::all();
-        return view('adminsystem.ppe.report', compact('officers'));
+        $inspectors = HseInspector::all();
+        return view('adminsystem.ppe.report', compact('inspectors'));
     }
 
     // Menyimpan data baru ke database
     public function store(Request $request)
     {
-        // Validate the incoming request data
+        // Validasi input
         $request->validate([
             'tanggal_shift_kerja' => 'required|date',
             'shift_kerja' => 'required|string|max:50',
-            'nama_hse_inspector' => 'required|string|max:100',
+            'hse_inspector_id' => 'required|exists:hse_inspector,id',
             'jam_pengawasan' => 'required',
             'zona_pengawasan' => 'required|string|max:100',
             'lokasi_observasi' => 'required|string|max:100',
@@ -55,9 +59,10 @@ class PpeController extends Controller
             'keterangan_tidak_patuh' => 'nullable|string|max:255',
         ]);
 
-        // Add the 'writer' field to the validated data
-        $validatedData = $request->all();
-        $validatedData['writer'] = Auth::user()->name;
+        // Ambil data HSE Inspector
+        $inspector = HseInspector::findOrFail($request->hse_inspector_id);
+
+        // Hitung total tidak patuh
         $total_tidak_patuh =
             ($request->jumlah_tidak_patuh_helm_karyawan ?? 0) +
             ($request->jumlah_tidak_patuh_sepatu_karyawan ?? 0) +
@@ -70,21 +75,43 @@ class PpeController extends Controller
             ($request->jumlah_tidak_patuh_safety_harness_kontraktor ?? 0) +
             ($request->jumlah_tidak_patuh_apd_lainnya_kontraktor ?? 0);
 
-        // Set status_ppe
-        $validatedData['status_ppe'] = ($total_tidak_patuh == 0) ? 'Compliant' : 'Non-Compliant';
-        // Create a new record in the Ppe model
-        Ppe::create($validatedData);
+        // Simpan data ke tabel Ppe
+        Ppe::create([
+            'tanggal_shift_kerja' => $request->tanggal_shift_kerja,
+            'shift_kerja' => $request->shift_kerja,
+            'hse_inspector_id' => $inspector->id,
+            'nama_hse_inspector' => $inspector->name,
+            'jam_pengawasan' => $request->jam_pengawasan,
+            'zona_pengawasan' => $request->zona_pengawasan,
+            'lokasi_observasi' => $request->lokasi_observasi,
+            'jumlah_patuh_apd_karyawan' => $request->jumlah_patuh_apd_karyawan,
+            'jumlah_tidak_patuh_helm_karyawan' => $request->jumlah_tidak_patuh_helm_karyawan,
+            'jumlah_tidak_patuh_sepatu_karyawan' => $request->jumlah_tidak_patuh_sepatu_karyawan,
+            'jumlah_tidak_patuh_pelindung_mata_karyawan' => $request->jumlah_tidak_patuh_pelindung_mata_karyawan,
+            'jumlah_tidak_patuh_safety_harness_karyawan' => $request->jumlah_tidak_patuh_safety_harness_karyawan,
+            'jumlah_tidak_patuh_apd_lainnya_karyawan' => $request->jumlah_tidak_patuh_apd_lainnya_karyawan,
+            'jumlah_patuh_apd_kontraktor' => $request->jumlah_patuh_apd_kontraktor,
+            'jumlah_tidak_patuh_helm_kontraktor' => $request->jumlah_tidak_patuh_helm_kontraktor,
+            'jumlah_tidak_patuh_sepatu_kontraktor' => $request->jumlah_tidak_patuh_sepatu_kontraktor,
+            'jumlah_tidak_patuh_pelindung_mata_kontraktor' => $request->jumlah_tidak_patuh_pelindung_mata_kontraktor,
+            'jumlah_tidak_patuh_safety_harness_kontraktor' => $request->jumlah_tidak_patuh_safety_harness_kontraktor,
+            'jumlah_tidak_patuh_apd_lainnya_kontraktor' => $request->jumlah_tidak_patuh_apd_lainnya_kontraktor,
+            'keterangan_tidak_patuh' => $request->keterangan_tidak_patuh,
+            'writer' => Auth::user()->name,
+            'status_ppe' => ($total_tidak_patuh == 0) ? 'Compliant' : 'Non-Compliant',
+        ]);
 
-        // Redirect with a success message
         return redirect()->route('adminsystem.ppe.index')->with('success', 'Data berhasil disimpan!');
     }
+
 
 
     // Menampilkan detail data
     public function show($id)
     {
-        $ppe = Ppe::findOrFail($id);
-        return view('ppe.show', compact('ppe'));
+        $ppeFix = SentPpe::findOrFail($id);
+        $nonCompliants = NonCompliant::all();
+        return view('adminsystem.ppe.show', compact('ppeFix','nonCompliants'));
     }
 
     // Menampilkan form edit data
@@ -97,31 +124,32 @@ class PpeController extends Controller
     // Mengupdate data ke database
     public function update(Request $request, $id)
     {
+        // Validasi input
         $request->validate([
             'tanggal_shift_kerja' => 'required|date',
             'shift_kerja' => 'required|string|max:50',
-            'nama_hse_inspector' => 'required|string|max:100',
+            'hse_inspector_id' => 'required|exists:hse_inspector,id',
             'jam_pengawasan' => 'required',
             'zona_pengawasan' => 'required|string|max:100',
             'lokasi_observasi' => 'required|string|max:100',
-            'jumlah_patuh_apd_karyawan' => 'required|integer|min:0',
-            'jumlah_tidak_patuh_helm_karyawan' => 'required|integer|min:0',
-            'jumlah_tidak_patuh_sepatu_karyawan' => 'required|integer|min:0',
-            'jumlah_tidak_patuh_pelindung_mata_karyawan' => 'required|integer|min:0',
-            'jumlah_tidak_patuh_safety_harness_karyawan' => 'required|integer|min:0',
-            'jumlah_tidak_patuh_apd_lainnya_karyawan' => 'required|integer|min:0',
-            'keterangan_tidak_patuh_karyawan' => 'nullable|string|max:255',
-            'jumlah_patuh_apd_kontraktor' => 'required|integer|min:0',
-            'jumlah_tidak_patuh_helm_kontraktor' => 'required|integer|min:0',
-            'jumlah_tidak_patuh_sepatu_kontraktor' => 'required|integer|min:0',
-            'jumlah_tidak_patuh_pelindung_mata_kontraktor' => 'required|integer|min:0',
-            'jumlah_tidak_patuh_safety_harness_kontraktor' => 'required|integer|min:0',
-            'jumlah_tidak_patuh_apd_lainnya_kontraktor' => 'required|integer|min:0',
+            'jumlah_patuh_apd_karyawan' => 'nullable|integer|min:0',
+            'jumlah_tidak_patuh_helm_karyawan' => 'nullable|integer|min:0',
+            'jumlah_tidak_patuh_sepatu_karyawan' => 'nullable|integer|min:0',
+            'jumlah_tidak_patuh_pelindung_mata_karyawan' => 'nullable|integer|min:0',
+            'jumlah_tidak_patuh_safety_harness_karyawan' => 'nullable|integer|min:0',
+            'jumlah_tidak_patuh_apd_lainnya_karyawan' => 'nullable|integer|min:0',
+            'jumlah_patuh_apd_kontraktor' => 'nullable|integer|min:0',
+            'jumlah_tidak_patuh_helm_kontraktor' => 'nullable|integer|min:0',
+            'jumlah_tidak_patuh_sepatu_kontraktor' => 'nullable|integer|min:0',
+            'jumlah_tidak_patuh_pelindung_mata_kontraktor' => 'nullable|integer|min:0',
+            'jumlah_tidak_patuh_safety_harness_kontraktor' => 'nullable|integer|min:0',
+            'jumlah_tidak_patuh_apd_lainnya_kontraktor' => 'nullable|integer|min:0',
             'keterangan_tidak_patuh' => 'nullable|string|max:255',
         ]);
-        $validatedData = $request->all();
 
-        // Hitung total ketidakpatuhan
+        $ppe = Ppe::findOrFail($id);
+        $inspector = HseInspector::findOrFail($request->hse_inspector_id);
+
         $total_tidak_patuh =
             ($request->jumlah_tidak_patuh_helm_karyawan ?? 0) +
             ($request->jumlah_tidak_patuh_sepatu_karyawan ?? 0) +
@@ -133,43 +161,92 @@ class PpeController extends Controller
             ($request->jumlah_tidak_patuh_pelindung_mata_kontraktor ?? 0) +
             ($request->jumlah_tidak_patuh_safety_harness_kontraktor ?? 0) +
             ($request->jumlah_tidak_patuh_apd_lainnya_kontraktor ?? 0);
-    
-        // Set status_ppe
-        $validatedData['status_ppe'] = ($total_tidak_patuh == 0) ? 'Compliant' : 'Non-Compliant';
-    
-        // Update data
-        $ppe = Ppe::findOrFail($id);
-        $ppe->update($validatedData);
-        return redirect()->route('adminsystem.ppe.index')->with('success', 'Data berhasil diupdate!');
+
+        $ppe->update([
+            'tanggal_shift_kerja' => $request->tanggal_shift_kerja,
+            'shift_kerja' => $request->shift_kerja,
+            'hse_inspector_id' => $inspector->id,
+            'nama_hse_inspector' => $inspector->name,
+            'jam_pengawasan' => $request->jam_pengawasan,
+            'zona_pengawasan' => $request->zona_pengawasan,
+            'lokasi_observasi' => $request->lokasi_observasi,
+            'jumlah_patuh_apd_karyawan' => $request->jumlah_patuh_apd_karyawan,
+            'jumlah_tidak_patuh_helm_karyawan' => $request->jumlah_tidak_patuh_helm_karyawan,
+            'jumlah_tidak_patuh_sepatu_karyawan' => $request->jumlah_tidak_patuh_sepatu_karyawan,
+            'jumlah_tidak_patuh_pelindung_mata_karyawan' => $request->jumlah_tidak_patuh_pelindung_mata_karyawan,
+            'jumlah_tidak_patuh_safety_harness_karyawan' => $request->jumlah_tidak_patuh_safety_harness_karyawan,
+            'jumlah_tidak_patuh_apd_lainnya_karyawan' => $request->jumlah_tidak_patuh_apd_lainnya_karyawan,
+            'jumlah_patuh_apd_kontraktor' => $request->jumlah_patuh_apd_kontraktor,
+            'jumlah_tidak_patuh_helm_kontraktor' => $request->jumlah_tidak_patuh_helm_kontraktor,
+            'jumlah_tidak_patuh_sepatu_kontraktor' => $request->jumlah_tidak_patuh_sepatu_kontraktor,
+            'jumlah_tidak_patuh_pelindung_mata_kontraktor' => $request->jumlah_tidak_patuh_pelindung_mata_kontraktor,
+            'jumlah_tidak_patuh_safety_harness_kontraktor' => $request->jumlah_tidak_patuh_safety_harness_kontraktor,
+            'jumlah_tidak_patuh_apd_lainnya_kontraktor' => $request->jumlah_tidak_patuh_apd_lainnya_kontraktor,
+            'keterangan_tidak_patuh' => $request->keterangan_tidak_patuh,
+            'writer' => Auth::user()->name,
+            'status_ppe' => ($total_tidak_patuh == 0) ? 'Compliant' : 'Non-Compliant',
+        ]);
+
+        return redirect()->route('adminsystem.ppe.index')->with('success', 'Data berhasil diperbarui!');
     }
+
 
     // Menghapus data dari database
     public function destroy($id)
     {
-        // Ambil data PPE berdasarkan ID
         $ppe = Ppe::findOrFail($id);
 
-        // Menyiapkan data untuk dimasukkan ke ppe_fix, pastikan data diubah menjadi array
-        $dataToInsert = $ppe->toArray();
+        // Hitung total tidak patuh
+        $total_tidak_patuh =
+            ($ppe->jumlah_tidak_patuh_helm_karyawan ?? 0) +
+            ($ppe->jumlah_tidak_patuh_sepatu_karyawan ?? 0) +
+            ($ppe->jumlah_tidak_patuh_pelindung_mata_karyawan ?? 0) +
+            ($ppe->jumlah_tidak_patuh_safety_harness_karyawan ?? 0) +
+            ($ppe->jumlah_tidak_patuh_apd_lainnya_karyawan ?? 0) +
+            ($ppe->jumlah_tidak_patuh_helm_kontraktor ?? 0) +
+            ($ppe->jumlah_tidak_patuh_sepatu_kontraktor ?? 0) +
+            ($ppe->jumlah_tidak_patuh_pelindung_mata_kontraktor ?? 0) +
+            ($ppe->jumlah_tidak_patuh_safety_harness_kontraktor ?? 0) +
+            ($ppe->jumlah_tidak_patuh_apd_lainnya_kontraktor ?? 0);
 
-        // Memastikan created_at dan updated_at ditambahkan (jika tabel ppe_fix memerlukannya)
-        $dataToInsert['created_at'] = $ppe->created_at;
-        $dataToInsert['updated_at'] = $ppe->updated_at;
+        // Set status PPE
+        $status_ppe = ($total_tidak_patuh == 0) ? 'Compliant' : 'Non-Compliant';
 
-        // Cek apakah data sudah ada di ppe_fix berdasarkan ID atau kolom unik lainnya
-        $exists = DB::table('ppe_fix')->where('id', $ppe->id)->exists();
+        // Pindahkan data ke tabel ppe_fix
+        SentPpe::create([
+            'draft_id' => $ppe->id,
+            'writer' => $ppe->writer,
+            'tanggal_shift_kerja' => $ppe->tanggal_shift_kerja,
+            'shift_kerja' => $ppe->shift_kerja,
+            'nama_hse_inspector' => $ppe->nama_hse_inspector,
+            'hse_inspector_id' => $ppe->hse_inspector_id,
+            'jam_pengawasan' => $ppe->jam_pengawasan,
+            'zona_pengawasan' => $ppe->zona_pengawasan,
+            'lokasi_observasi' => $ppe->lokasi_observasi,
+            'jumlah_patuh_apd_karyawan' => $ppe->jumlah_patuh_apd_karyawan,
+            'jumlah_tidak_patuh_helm_karyawan' => $ppe->jumlah_tidak_patuh_helm_karyawan,
+            'jumlah_tidak_patuh_sepatu_karyawan' => $ppe->jumlah_tidak_patuh_sepatu_karyawan,
+            'jumlah_tidak_patuh_pelindung_mata_karyawan' => $ppe->jumlah_tidak_patuh_pelindung_mata_karyawan,
+            'jumlah_tidak_patuh_safety_harness_karyawan' => $ppe->jumlah_tidak_patuh_safety_harness_karyawan,
+            'jumlah_tidak_patuh_apd_lainnya_karyawan' => $ppe->jumlah_tidak_patuh_apd_lainnya_karyawan,
+            'jumlah_patuh_apd_kontraktor' => $ppe->jumlah_patuh_apd_kontraktor,
+            'jumlah_tidak_patuh_helm_kontraktor' => $ppe->jumlah_tidak_patuh_helm_kontraktor,
+            'jumlah_tidak_patuh_sepatu_kontraktor' => $ppe->jumlah_tidak_patuh_sepatu_kontraktor,
+            'jumlah_tidak_patuh_pelindung_mata_kontraktor' => $ppe->jumlah_tidak_patuh_pelindung_mata_kontraktor,
+            'jumlah_tidak_patuh_safety_harness_kontraktor' => $ppe->jumlah_tidak_patuh_safety_harness_kontraktor,
+            'jumlah_tidak_patuh_apd_lainnya_kontraktor' => $ppe->jumlah_tidak_patuh_apd_lainnya_kontraktor,
+            'keterangan_tidak_patuh' => $ppe->keterangan_tidak_patuh,
+            'durasi_ppe' => $ppe->durasi_ppe,
+            'status_note' => $ppe->status_note,
+            'status_ppe' => $status_ppe,
+        ]);
 
-        if (!$exists) {
-            // Insert data hanya jika belum ada
-            DB::table('ppe_fix')->insert($dataToInsert);
-        }
-
-        // Hapus data PPE asli
+        // Hapus data dari tabel ppe_draft
         $ppe->delete();
 
-        // Redirect dengan notifikasi
         return redirect()->route('adminsystem.ppe.index')->with('notification', 'PPE berhasil dipindahkan ke ppe_fix!');
     }
+
     public function storeRequest(Request $request)
     {
         // Validate input
@@ -186,6 +263,19 @@ class PpeController extends Controller
             'reason' => $request->reason,
             'nama_pengirim' => Auth::user()->name,
         ]);
+         // Kirim email ke semua adminsystem
+        $admins = User::where('role', 'adminsystem')->get();
+        foreach ($admins as $admin) {
+            Mail::to($admin->email)->send(new PPERequestNotification($request));
+        }
+
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Request berhasil dikirim dan email telah dikirim ke admin.',
+            ]);
+        }
+
 
         // Return JSON response
         return response()->json(['success' => true, 'message' => 'Request submitted successfully.']);
@@ -198,62 +288,82 @@ class PpeController extends Controller
     }
     public function sent_update(Request $request, $id)
     {
+        // Validasi input
         $request->validate([
             'tanggal_shift_kerja' => 'required|date',
             'shift_kerja' => 'required|string|max:50',
-            'nama_hse_inspector' => 'required|string|max:100',
+            'hse_inspector_id' => 'required|exists:hse_inspector,id',
             'jam_pengawasan' => 'required',
             'zona_pengawasan' => 'required|string|max:100',
             'lokasi_observasi' => 'required|string|max:100',
-            'jumlah_patuh_apd_karyawan' => 'required|integer|min:0',
-            'jumlah_tidak_patuh_helm_karyawan' => 'required|integer|min:0',
-            'jumlah_tidak_patuh_sepatu_karyawan' => 'required|integer|min:0',
-            'jumlah_tidak_patuh_pelindung_mata_karyawan' => 'required|integer|min:0',
-            'jumlah_tidak_patuh_safety_harness_karyawan' => 'required|integer|min:0',
-            'jumlah_tidak_patuh_apd_lainnya_karyawan' => 'required|integer|min:0',
-            'keterangan_tidak_patuh_karyawan' => 'nullable|string|max:255',
-            'jumlah_patuh_apd_kontraktor' => 'required|integer|min:0',
-            'jumlah_tidak_patuh_helm_kontraktor' => 'required|integer|min:0',
-            'jumlah_tidak_patuh_sepatu_kontraktor' => 'required|integer|min:0',
-            'jumlah_tidak_patuh_pelindung_mata_kontraktor' => 'required|integer|min:0',
-            'jumlah_tidak_patuh_safety_harness_kontraktor' => 'required|integer|min:0',
-            'jumlah_tidak_patuh_apd_lainnya_kontraktor' => 'required|integer|min:0',
+            'jumlah_patuh_apd_karyawan' => 'nullable|integer|min:0',
+            'jumlah_tidak_patuh_helm_karyawan' => 'nullable|integer|min:0',
+            'jumlah_tidak_patuh_sepatu_karyawan' => 'nullable|integer|min:0',
+            'jumlah_tidak_patuh_pelindung_mata_karyawan' => 'nullable|integer|min:0',
+            'jumlah_tidak_patuh_safety_harness_karyawan' => 'nullable|integer|min:0',
+            'jumlah_tidak_patuh_apd_lainnya_karyawan' => 'nullable|integer|min:0',
+            'jumlah_patuh_apd_kontraktor' => 'nullable|integer|min:0',
+            'jumlah_tidak_patuh_helm_kontraktor' => 'nullable|integer|min:0',
+            'jumlah_tidak_patuh_sepatu_kontraktor' => 'nullable|integer|min:0',
+            'jumlah_tidak_patuh_pelindung_mata_kontraktor' => 'nullable|integer|min:0',
+            'jumlah_tidak_patuh_safety_harness_kontraktor' => 'nullable|integer|min:0',
+            'jumlah_tidak_patuh_apd_lainnya_kontraktor' => 'nullable|integer|min:0',
             'keterangan_tidak_patuh' => 'nullable|string|max:255',
+            'durasi_ppe' => 'nullable|string|max:50',
+            'status_note' => 'nullable|string|max:100',
         ]);
 
-        $ppe_fixs = Ppe::findOrFail($id);
+        $sent = SentPpe::findOrFail($id);
+        $inspector = HseInspector::findOrFail($request->hse_inspector_id);
 
-        // Hitung total ketidakpatuhan
         $total_tidak_patuh =
-            $request->jumlah_tidak_patuh_helm_karyawan +
-            $request->jumlah_tidak_patuh_sepatu_karyawan +
-            $request->jumlah_tidak_patuh_pelindung_mata_karyawan +
-            $request->jumlah_tidak_patuh_safety_harness_karyawan +
-            $request->jumlah_tidak_patuh_apd_lainnya_karyawan +
-            $request->jumlah_tidak_patuh_helm_kontraktor +
-            $request->jumlah_tidak_patuh_sepatu_kontraktor +
-            $request->jumlah_tidak_patuh_pelindung_mata_kontraktor +
-            $request->jumlah_tidak_patuh_safety_harness_kontraktor +
-            $request->jumlah_tidak_patuh_apd_lainnya_kontraktor;
+            ($request->jumlah_tidak_patuh_helm_karyawan ?? 0) +
+            ($request->jumlah_tidak_patuh_sepatu_karyawan ?? 0) +
+            ($request->jumlah_tidak_patuh_pelindung_mata_karyawan ?? 0) +
+            ($request->jumlah_tidak_patuh_safety_harness_karyawan ?? 0) +
+            ($request->jumlah_tidak_patuh_apd_lainnya_karyawan ?? 0) +
+            ($request->jumlah_tidak_patuh_helm_kontraktor ?? 0) +
+            ($request->jumlah_tidak_patuh_sepatu_kontraktor ?? 0) +
+            ($request->jumlah_tidak_patuh_pelindung_mata_kontraktor ?? 0) +
+            ($request->jumlah_tidak_patuh_safety_harness_kontraktor ?? 0) +
+            ($request->jumlah_tidak_patuh_apd_lainnya_kontraktor ?? 0);
 
-        // Tentukan status_ppe
-        $status_ppe = ($total_tidak_patuh == 0) ? 'Compliant' : 'Non-Compliant';
+        $sent->update([
+            'tanggal_shift_kerja' => $request->tanggal_shift_kerja,
+            'shift_kerja' => $request->shift_kerja,
+            'hse_inspector_id' => $inspector->id,
+            'nama_hse_inspector' => $inspector->name,
+            'jam_pengawasan' => $request->jam_pengawasan,
+            'zona_pengawasan' => $request->zona_pengawasan,
+            'lokasi_observasi' => $request->lokasi_observasi,
+            'jumlah_patuh_apd_karyawan' => $request->jumlah_patuh_apd_karyawan,
+            'jumlah_tidak_patuh_helm_karyawan' => $request->jumlah_tidak_patuh_helm_karyawan,
+            'jumlah_tidak_patuh_sepatu_karyawan' => $request->jumlah_tidak_patuh_sepatu_karyawan,
+            'jumlah_tidak_patuh_pelindung_mata_karyawan' => $request->jumlah_tidak_patuh_pelindung_mata_karyawan,
+            'jumlah_tidak_patuh_safety_harness_karyawan' => $request->jumlah_tidak_patuh_safety_harness_karyawan,
+            'jumlah_tidak_patuh_apd_lainnya_karyawan' => $request->jumlah_tidak_patuh_apd_lainnya_karyawan,
+            'jumlah_patuh_apd_kontraktor' => $request->jumlah_patuh_apd_kontraktor,
+            'jumlah_tidak_patuh_helm_kontraktor' => $request->jumlah_tidak_patuh_helm_kontraktor,
+            'jumlah_tidak_patuh_sepatu_kontraktor' => $request->jumlah_tidak_patuh_sepatu_kontraktor,
+            'jumlah_tidak_patuh_pelindung_mata_kontraktor' => $request->jumlah_tidak_patuh_pelindung_mata_kontraktor,
+            'jumlah_tidak_patuh_safety_harness_kontraktor' => $request->jumlah_tidak_patuh_safety_harness_kontraktor,
+            'jumlah_tidak_patuh_apd_lainnya_kontraktor' => $request->jumlah_tidak_patuh_apd_lainnya_kontraktor,
+            'keterangan_tidak_patuh' => $request->keterangan_tidak_patuh,
+            'durasi_ppe' => $request->durasi_ppe,
+            'status_note' => $request->status_note,
+            'status_ppe' => ($total_tidak_patuh == 0) ? 'Compliant' : 'Non-Compliant',
+            'writer' => Auth::user()->name,
+        ]);
 
-        // Update semua data + status_ppe
-        $data = $request->all();
-        $data['status_ppe'] = $status_ppe;
-
-        $ppe_fixs->update($data);
-
-        return redirect()->route('adminsystem.ppe.index')->with('success', 'Data berhasil diupdate!');
+        return redirect()->route('adminsystem.sent_ppe.index')->with('success', 'Data PPE telah diperbarui di sent_ppe!');
     }
+
 
     public function sent_destroy($id)
     {
         // Ambil data PPE berdasarkan ID
         $ppe_fixs = SentPpe::findOrFail($id);
         $ppe_fixs->delete();
-        // Redirect dengan notifikasi
         return redirect()->route('adminsystem.ppe.index')->with('notification', 'NCR berhasil dikirim!');
     }
     public function approve($id)

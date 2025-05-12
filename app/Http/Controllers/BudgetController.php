@@ -24,18 +24,15 @@ class BudgetController extends Controller
         $danaTerpakai = Budget::all();
         $danaTersisa = Budget::all();
         $prs = PurchaseRequest::with(['glAccount', 'budget'])->get();
-        return view('adminsystem.budget_pr.index', compact('budgets', 'danaTerpakai', 'danaTersisa', 'prs','budget_fixs'));
+        return view('adminsystem.budget_pr.index', compact('budgets', 'danaTerpakai', 'danaTersisa', 'prs', 'budget_fixs'));
     }
 
     public function create()
     {
-        // Fetch data for GL Account, PR, and Budget tables
-        $gl_accounts = Gl_Account::all(); // Fetch all GL accounts
-        $material_groups = MaterialGroup::all(); // Assuming you have a MaterialGroup model
-        $units = Unit::all(); // Assuming you have a Unit model
-        $purs = PurchasingGroup::all(); // Assuming you have a Purchasing Group model
-
-        // Return the view with the fetched data
+        $gl_accounts = Gl_Account::all();
+        $material_groups = MaterialGroup::all();
+        $units = Unit::all();
+        $purs = PurchasingGroup::all();
         return view('adminsystem.budget_pr.create', compact('gl_accounts', 'material_groups', 'units', 'purs'));
     }
 
@@ -45,40 +42,40 @@ class BudgetController extends Controller
         // Validate the form data
         $request->validate([
             'gl_code' => 'required|string|max:255',
-            'internal_order' => 'required|string|max:255',
+            'io_assetcode' => 'required|string|max:255',
             'description' => 'required|string|max:255',
-            'bg_approve' => 'required|boolean',
+            'bg_approve' => 'required|numeric',
             'usage' => 'required|numeric',
             'plan' => 'required|numeric',
             'percentage_usage' => 'required|numeric',
             'year' => 'required|integer',
         ]);
 
-        // Fetch relevant data from PR and Budget tables for calculation
-        $gl_account = Gl_Account::where('gl_code', $request->gl_code)->first();
-        $pr = PurchaseRequest::where('gl_account', $request->gl_code)->first();  // Assumes PR table has gl_account column
-        $budget = Budget::where('gl_code', $request->gl_code)->first();
-
-        // Calculate the percentage_usage
+        // Hitung persentase pemakaian
         $percentage_usage = ($request->usage / $request->bg_approve) * 100;
 
-        // Save the new Purchase Request in the database
-        // Assuming a PurchaseRequest model exists to store the data
+        // Simpan ke tabel PurchaseRequest
         PurchaseRequest::create([
             'gl_code' => $request->gl_code,
-            'internal_order' => $request->internal_order,
+            'io_assetcode' => $request->io_assetcode,
             'description' => $request->description,
             'bg_approve' => $request->bg_approve,
             'usage' => $request->usage,
             'plan' => $request->plan,
             'percentage_usage' => $percentage_usage,
             'year' => $request->year,
-            // Add other fields as needed
         ]);
 
-        // Redirect back with success message
-        return redirect()->route('adminsystem.budget_pr.create')->with('success', 'Purchase Request successfully created!');
+        // Update budget_fix berdasarkan internal_order
+        BudgetFix::where('internal_order', $request->io_assetcode)
+            ->update([
+                'usage' => $request->plan
+            ]);
+
+        return redirect()->route('adminsystem.budget_pr.create')
+            ->with('success', 'Purchase Request successfully created!');
     }
+
 
     public function destroy(Document $document)
     {
@@ -125,7 +122,14 @@ class BudgetController extends Controller
             'kategori' => $request->kategori,
             'year' => $request->year
         ]);
-          
+        BudgetFix::create([
+            'internal_order'   => $request->internal_order,
+            'gl_code'          => $request->gl_code,
+            'gl_name'          => $request->gl_name,
+            'year'             => $request->year,
+            'kategori'         => $request->kategori,
+            'bg_approve'       => $request->setahun_qty,
+        ]);
         return redirect()->route('adminsystem.budget.index')->with('success', 'Dokumen berhasil diunggah.');
     }
 
@@ -146,7 +150,7 @@ class BudgetController extends Controller
             'setahun_total' => 'required|numeric',
             'setahun_qty' => 'required|numeric',
             'kategori' => 'required|string|max:100',
-           
+
         ]);
         $budget->update($request->all());
 
@@ -191,7 +195,7 @@ class BudgetController extends Controller
 
     public function pr_store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'pr_date' => 'required|date',
             'pr_no' => 'required|string|unique:pr,pr_no',
             'pr_category' => 'required|string',
@@ -210,10 +214,30 @@ class BudgetController extends Controller
             'purchasing_group' => 'required|string',
         ]);
 
-        PurchaseRequest::create($request->all());
+        // Simpan PR
+        PurchaseRequest::create($validated);
+
+        // Update BudgetFix jika io_assetcode tersedia
+        if (!empty($validated['io_assetcode'])) {
+            $budgetFix = BudgetFix::where('internal_order', $validated['io_assetcode'])->first();
+
+            if ($budgetFix) {
+                $bg_approve = $budgetFix->bg_approve; // Pastikan field ini ada di tabel
+                $usage = $validated['valuation_price'];
+                $gl_account = $validated['gl_account'];
+                $percentage_usage = ($bg_approve > 0) ? ($usage / $bg_approve) * 100 : 0;
+
+                $budgetFix->update([
+                    'usage' => $usage,
+                    'gl_account' => $gl_account,
+                    'percentage_usage' => $percentage_usage,
+                ]);
+            }
+        }
 
         return redirect()->route('adminsystem.pr.index')->with('success', 'Purchase Request berhasil dibuat.');
     }
+
 
     public function pr_edit($id)
     {
@@ -257,11 +281,3 @@ class BudgetController extends Controller
         return redirect()->route('adminsystem.budget_pr.pr.index')->with('success', 'Purchase Request berhasil dihapus.');
     }
 }
-
-   
-
-   
-   
-   
-  
-    

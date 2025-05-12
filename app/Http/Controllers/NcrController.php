@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\NcrRequestNotification;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Bagian;
 use App\Models\Ncr;
 use App\Models\NcrRequest;
 use App\Models\Perusahaan;
 use App\Models\SentNcr;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class NcrController extends Controller
 {
@@ -56,7 +59,7 @@ class NcrController extends Controller
     // Menampilkan detail data NCR berdasarkan ID
     public function show($id)
     {
-        $ncr = Ncr::find($id);
+        $ncr = Ncr::findOrFail($id);
 
         if (!$ncr) {
             return response()->json(['message' => 'Data NCR tidak ditemukan'], 404);
@@ -206,9 +209,9 @@ class NcrController extends Controller
             'element_referensi_ncr' => $ncr->element_referensi_ncr,
             'kategori_ketidaksesuaian' => $ncr->kategori_ketidaksesuaian,
             'deskripsi_ketidaksesuaian' => $ncr->deskripsi_ketidaksesuaian,
-            'status' => 'Nothing', 
+            'status' => 'Nothing',
             'status_note' => null,
-            'status_ncr' => 'Open', 
+            'status_ncr' => 'Open',
             'durasi_ncr' => null,
         ]);
 
@@ -229,23 +232,36 @@ class NcrController extends Controller
 
     public function storeRequest(Request $request)
     {
-        // Validasi input
+        // Validate input
         $request->validate([
-            'sent_ncr_id' => 'required|exists:ncr_fix,id', // Pastikan NCR ID ada
-            'type' => 'required|in:edit,delete', // Validasi jenis permintaan
-            'reason' => 'required|string', // Validasi alasan
+            'sent_ncr_id' => 'required|exists:ncr_fix,id',
+            'type' => 'required|string',
+            'reason' => 'required|string',
         ]);
 
-        // Simpan request ke dalam tabel ncr_request
-        $ncrRequest = NcrRequest::create([
+        // Save request to the ncr_request table
+        NcrRequest::create([
             'sent_ncr_id' => $request->sent_ncr_id,
             'type' => $request->type,
             'reason' => $request->reason,
-            'nama_pengirim' => auth()->user()->name, // Menambahkan nama pengirim
+            'nama_pengirim' => Auth::user()->name,
         ]);
+         // Kirim email ke semua adminsystem
+        $admins = User::where('role', 'adminsystem')->get();
+        foreach ($admins as $admin) {
+            Mail::to($admin->email)->send(new NcrRequestNotification($request));
+        }
 
-        // Redirect dengan pesan sukses
-        return view('adminsystem.ncr.index');
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Request berhasil dikirim dan email telah dikirim ke admin.',
+            ]);
+        }
+
+
+        // Return JSON response
+        return response()->json(['success' => true, 'message' => 'Request submitted successfully.']);
     }
     public function approve($id)
     {

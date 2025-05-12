@@ -21,9 +21,9 @@ class NonCompliantController extends Controller
     }
 
     // Menampilkan form untuk membuat NonCompliant baru
-    public function create($id_ppe)
+    public function create($id)
     {
-        $ppeFix = SentPpe::findOrFail($id_ppe);
+        $ppeFix = SentPpe::findOrFail($id);
         $perusahaans = Perusahaan::all();
         $bagians = Bagian::all();
 
@@ -38,76 +38,91 @@ class NonCompliantController extends Controller
     // Menyimpan data NonCompliant baru
     public function store(Request $request)
     {
-        // Validasi data input
         $request->validate([
-            'tipe_observasi' => 'required|array',
-            'tipe_observasi.*' => 'required|string',
-            'nama_pelanggar' => 'required|array',
-            'nama_pelanggar.*' => 'required|string',
-            'perusahaan' => 'required|array',
-            'nama_bagian' => 'required|array',
-            'deskripsi_ketidaksesuaian' => 'nullable|array',
-            'tindakan' => 'nullable|array',
+            'id_ppe' => 'required|integer',
+            'tipe_observasi' => 'required|string',
+            'nama_pelanggar' => 'required|string',
+            'perusahaan' => 'required|string',
+            'nama_bagian' => 'required|string',
+            'nama_hse_inspector' => 'required|string',
+            'shift_kerja' => 'required|string',
+            'jam_pengawasan' => 'required|string',
+            'zona_pengawasan' => 'required|string',
+            'lokasi_observasi' => 'required|string',
         ]);
-
-        // Menyimpan data PPE Fix
-        foreach ($request->nama_pelanggar as $index => $nama_pelanggar) {
-            NonCompliant::create([
-                'nama_hse_inspector' => $request->nama_hse_inspector,
-                'shift_kerja' => $request->shift_kerja,
-                'jam_pengawasan' => $request->jam_pengawasan,
-                'zona_pengawasan' => $request->zona_pengawasan,
-                'lokasi_observasi' => $request->lokasi_observasi,
-                'tipe_observasi' => $request->tipe_observasi[$index],
-                'nama_pelanggar' => $nama_pelanggar,
-                'perusahaan' => $request->perusahaan[$index],
-                'nama_bagian' => $request->nama_bagian[$index],
-                'deskripsi_ketidaksesuaian' => $request->deskripsi_ketidaksesuaian[$index] ?? null,
-                'tindakan' => $request->tindakan[$index] ?? null,
-                'writter' => Auth::user()->name,
-
-            ]);
-        }
-
-        return redirect()->route('adminsystem.non_compliant.index')->with('success', 'Data berhasil disimpan.');
+    
+        NonCompliant::create([
+            'id_ppe' => $request->id_ppe,
+            'nama_hse_inspector' => $request->nama_hse_inspector,
+            'shift_kerja' => $request->shift_kerja,
+            'jam_pengawasan' => $request->jam_pengawasan,
+            'zona_pengawasan' => $request->zona_pengawasan,
+            'lokasi_observasi' => $request->lokasi_observasi,
+            'tipe_observasi' => $request->tipe_observasi,
+            'nama_pelanggar' => $request->nama_pelanggar,
+            'perusahaan' => $request->perusahaan,
+            'nama_bagian' => $request->nama_bagian,
+            'deskripsi_ketidaksesuaian' => $request->deskripsi_ketidaksesuaian,
+            'tindakan' => $request->tindakan,
+            'writer' => Auth::user()->name,
+        ]);
+    
+        return redirect()->route('adminsystem.ppe.index')->with('success', 'Data berhasil disimpan.');
     }
+    
+    
+    
+    
 
 
 
     // Menampilkan form untuk mengedit NonCompliant
     public function edit($id)
     {
-        $nonCompliant = NonCompliant::findOrFail($id);
-        $ppeFixes = SentPpe::all(); // Ambil semua data PPE Fix
-        return view('adminsystem.non_compliant.edit', compact('nonCompliant', 'ppeFixes'));
+        $ppeFix = SentPpe::findOrFail($id); 
+        $nonCompliant = NonCompliant::where('id_ppe', $ppeFix->id)->first(); // Get the first matching record, assuming one exists.
+        $perusahaans = Perusahaan::all();
+        $bagians = Bagian::all();
+        return view('adminsystem.non_compliant.edit', compact('nonCompliant', 'ppeFix','perusahaans','bagians'));
     }
 
     // Mengupdate data NonCompliant
     public function update(Request $request, $id)
-    {
-        // Validasi input
-        $request->validate([
-            'id_ppe' => 'required|exists:ppe_fix,id',
-            'nama_hse_inspector' => 'required|string|max:100',
-            'shift_kerja' => 'required|string|max:100',
-            'jam_pengawasan' => 'required|string|max:100',
-            'zona_pengawasan' => 'required|string|max:100',
-            'lokasi_observasi' => 'required|string|max:100',
-            'tipe_observasi' => 'required|string|max:100',
-            'deskripsi_ketidaksesuaian' => 'required|string',
-            'nama_pelanggar' => 'required|string|max:100',
-            'perusahaan' => 'required|string|max:100',
-            'bagian' => 'required|string|max:100',
-            'tindakan' => 'nullable|string',
-            'writter' => 'required|string|max:100',
-        ]);
+{
+    $request->validate([
+        'id_ppe' => 'required|integer',
+        'tipe_observasi' => 'required|string',
+        'nama_pelanggar' => 'required|string',
+        'perusahaan' => 'required|string',
+        'nama_bagian' => 'required|string',
+        'nama_hse_inspector' => 'required|string',
+        'shift_kerja' => 'required|string',
+        'jam_pengawasan' => 'required|string',
+        'zona_pengawasan' => 'required|string',
+        'lokasi_observasi' => 'required|string',
+    ]);
 
-        // Temukan NonCompliant dan update
-        $nonCompliant = NonCompliant::findOrFail($id);
-        $nonCompliant->update($request->all());
+    $nonCompliant = NonCompliant::findOrFail($id);
 
-        return redirect()->route('adminsystem.non_compliant.index')->with('success', 'Non-Compliant updated successfully!');
-    }
+    $nonCompliant->update([
+        'id_ppe' => $request->id_ppe,
+        'nama_hse_inspector' => $request->nama_hse_inspector,
+        'shift_kerja' => $request->shift_kerja,
+        'jam_pengawasan' => $request->jam_pengawasan,
+        'zona_pengawasan' => $request->zona_pengawasan,
+        'lokasi_observasi' => $request->lokasi_observasi,
+        'tipe_observasi' => $request->tipe_observasi,
+        'nama_pelanggar' => $request->nama_pelanggar,
+        'perusahaan' => $request->perusahaan,
+        'nama_bagian' => $request->nama_bagian,
+        'deskripsi_ketidaksesuaian' => $request->deskripsi_ketidaksesuaian,
+        'tindakan' => $request->tindakan,
+        'writer' => Auth::user()->name,
+    ]);
+
+    return redirect()->route('adminsystem.ppe.index')->with('success', 'Data berhasil diperbarui.');
+}
+
 
     // Menghapus NonCompliant
     public function destroy($id)

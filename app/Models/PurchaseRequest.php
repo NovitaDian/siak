@@ -15,12 +15,21 @@ class PurchaseRequest extends Model
         'pr_date',
         'plant',
         'pr_no',
+        'pr_category',
+        'account_assignment',
+        'item_category',
+        'purchase_for',
         'material_code',
         'short_text',
         'quantity',
         'unit',
         'valuation_price',
         'gl_account',
+        'cost_center',
+        'matl_group',
+        'purchasing_group',
+                'total_price',
+        'io_assetcode',
     ];
 
     protected $dates = ['pr_date'];

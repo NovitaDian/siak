@@ -100,9 +100,16 @@
 
     <div class="col-12">
         <div class="card h-100 p-3">
-            <div class="card-header pb-0 px-3">
-                <h6 class="mb-0">Transaksi</h6>
-            </div>
+        <div class="card-header pb-0 d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0">Barang</h6>
+                    <form action="{{ route('adminsystem.barang.create') }}" method="GET" style="display:inline;">
+                        @csrf
+                        <button type="submit" class="btn btn-primary active mb-0 text-white" role="button" aria-pressed="true">
+                            Tambah
+                        </button>
+                    </form>
+                </div>
+          
 
             <div class="card-body pt-4 p-3">
                 <div class="table-responsive p-0">

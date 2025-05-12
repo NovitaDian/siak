@@ -148,13 +148,10 @@
 
     // Fungsi untuk mengedit item
     function editAction(id) {
-        window.location.href = "{{ url('adminsystem/ppe/edit') }}/" + id; // Menggunakan URL Laravel
+        window.location.href = "{{ url('adminsystem/non_compliant/edit') }}/" + id; 
     }
 
-    // Fungsi untuk mengedit item yang telah dikirim
-    function sentEditAction(id) {
-        window.location.href = "{{ url('adminsystem/ppe/sent_edit') }}/" + id; // Menggunakan URL Laravel
-    }
+   
 </script>
 
 <script>

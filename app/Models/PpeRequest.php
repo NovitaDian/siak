@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class PpeRequest extends Model
 {
     use HasFactory;
+    protected $table = 'ppe_request';
 
     protected $fillable = [
         'sent_ppe_id',

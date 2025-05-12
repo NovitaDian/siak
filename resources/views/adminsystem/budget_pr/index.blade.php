@@ -44,12 +44,13 @@
                         <thead>
                             <tr>
                                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Internal Order</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Year</th>
                                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">GL Account</th>
                                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Description</th>
                                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">BG Approve</th>
                                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">USAGE</th>
-                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Plan</th>
                                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">% Usage</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Kategori</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -60,10 +61,13 @@
                                     <p class="text-xs font-weight-bold mb-0">{{ $budget_fix->internal_order }}</p>
                                 </td>
                                 <td class="text-center">
-                                    <p class="text-xs font-weight-bold mb-0">{{ $budget_fix->gl_account }}</p>
+                                    <p class="text-xs font-weight-bold mb-0">{{ $budget_fix->year }}</p>
                                 </td>
                                 <td class="text-center">
-                                    <p class="text-xs font-weight-bold mb-0">{{ $budget_fix->glAccount->description ?? 'No description' }}</p>
+                                    <p class="text-xs font-weight-bold mb-0">{{ $budget_fix->gl_code }}</p>
+                                </td>
+                                <td class="text-center">
+                                    <p class="text-xs font-weight-bold mb-0">{{ $budget_fix->description ?? 'No description' }}</p>
                                 </td>
 
                                 <!-- bg_approve field -->
@@ -73,20 +77,18 @@
 
                                 <!-- Total price from the total_price table -->
                                 <td class="text-center">
-                                    <p class="text-xs font-weight-bold mb-0">{{ $budget_fix->totalPrice->total_price ?? 'No price' }}</p>
+                                    <p class="text-xs font-weight-bold mb-0">{{ $budget_fix->usage  }}</p>
+                                </td>
+                                <td class="text-center">
+                                    <p class="text-xs font-weight-bold mb-0">{{ $budget_fix->presentage_usage  }}</p>
+                                </td>
+                                <td class="text-center">
+                                    <p class="text-xs font-weight-bold mb-0">{{ $budget_fix->kategori  }}</p>
                                 </td>
 
-                                <!-- Plan from the budget table (setahun_total) -->
-                                <td class="text-center">
-                                    <p class="text-xs font-weight-bold mb-0">{{ $budget_fix->budget->setahun_total ?? 'No plan' }}</p>
-                                </td>
+                               
 
-                                <!-- Percentage usage calculation -->
-                                <td class="text-center">
-                                    <p class="text-xs font-weight-bold mb-0">
-                                        {{ $budget_fix->bg_approve > 0 ? ($budget_fix->usage / $budget_fix->bg_approve) * 100 : 0 }}%
-                                    </p>
-                                </td>
+                        
                             </tr>
                             @endforeach
                         </tbody>

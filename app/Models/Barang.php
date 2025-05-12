@@ -12,7 +12,7 @@ class Barang extends Model
     protected $primaryKey = 'id'; // Primary key tabel
 
     protected $fillable = [
-        'material_code', 'material_group', 'description', 'image', 'material_type', 'remark', 'quantity', 'unit'
+        'material_code', 'material_group','material_group_id', 'description', 'image', 'material_type', 'remark', 'quantity', 'unit','unit_id'
     ];
 
     public function transactions()
@@ -21,14 +21,5 @@ class Barang extends Model
     }
 
     // Fungsi untuk menambahkan atau mengurangi quantity barang
-    public function updateQuantity($quantity, $type)
-    {
-        if ($type == 'pemasukan') {
-            $this->quantity += $quantity;
-        } else if ($type == 'pengeluaran') {
-            $this->quantity -= $quantity;
-        }
-
-        $this->save();
-    }
+    
 }

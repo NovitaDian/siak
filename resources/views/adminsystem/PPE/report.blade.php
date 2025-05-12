@@ -59,15 +59,14 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="nama_hse_inspector">{{ __('Safety Officer') }}</label>
-                                <select class="form-control" id="nama_hse_inspector" name="nama_hse_inspector">
-                                    <option value="" disabled selected>Pilih Safety Officer</option>
-                                    @foreach($officers as $officer)
-                                    <option value="{{ $officer->name }}" {{ old('nama_hse_inspector') == $officer->name ? 'selected' : '' }}>
-                                        {{ $officer->name }}
-                                    </option>
+                                <label for="hse_inspector_id">{{ __('HSE Inspector') }}</label>
+                                <select class="form-control" name="hse_inspector_id" id="hse_inspector_id" required>
+                                    <option value="">Pilih HSE Inspector</option>
+                                    @foreach($inspectors as $inspector)
+                                    <option value="{{ $inspector->id }}" {{ old('hse_inspector_id') == $inspector->id ? 'selected' : '' }}>{{ $inspector->name }}</option>
                                     @endforeach
-                                </select>                                @error('nama_hse_inspector')
+                                </select>
+                                @error('hse_inspector_id')
                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                 @enderror
                             </div>

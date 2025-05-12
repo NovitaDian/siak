@@ -44,8 +44,15 @@
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="material_group">{{ __('Grup Material') }}</label>
-                                <input class="form-control" type="text" id="material_group" name="material_group" value="{{ old('material_group') }}" required>
+                                <label for="material_group_id">{{ __('Grup Material') }}</label>
+                                <select class="form-control" id="material_group_id" name="material_group_id" required>
+                                    <option value="">Pilih Grup Material</option>
+                                    @foreach($material_groups as $material_group)
+                                    <option value="{{ $material_group->id }}" {{ old('id') == $material_group->id ? 'selected' : '' }}>
+                                        {{ $material_group->material_group }}
+                                    </option>
+                                    @endforeach
+                                </select> 
                                 @error('material_group')
                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                 @enderror
@@ -82,12 +89,12 @@
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="unit">{{ __('Unit') }}</label>
-                                <select class="form-control" id="unit" name="unit" required>
-                                    <option value="">Pilih Barang</option>
+                                <label for="unit_id">{{ __('Unit') }}</label>
+                                <select class="form-control" id="unit_id" name="unit_id" required>
+                                    <option value="">Pilih Unit</option>
                                     @foreach($units as $unit)
-                                    <option value="{{ $unit->unit }}" {{ old('unit') == $unit->unit ? 'selected' : '' }}>
-                                        {{ $unit->unit }}
+                                    <option value="{{ $unit->id }}" {{ old('id') == $unit->id ? 'selected' : '' }}>
+                                        {{ $unit->unit}}
                                     </option>
                                     @endforeach
                                 </select>

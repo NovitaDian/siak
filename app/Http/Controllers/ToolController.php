@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ToolRequestNotification;
 use App\Models\Alat;
 use App\Models\Daily;
 use App\Models\HseInspector;
 use App\Models\ToolReport;
 use App\Models\SentToolReport;
 use App\Models\ToolRequest;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Mail;
 class ToolController extends Controller
 {
 
@@ -163,15 +165,13 @@ class ToolController extends Controller
 
     public function storeRequest(Request $request)
     {
-        // Validate input
         $request->validate([
-            'sent_tool_id' => 'required|exists:tool_inspections_fix,id', // Perhatikan penulisan plural
+            'sent_tool_id' => 'required|exists:tool_inspections_fix,id',
             'type' => 'required|string',
             'reason' => 'required|string',
         ]);
 
-        // Simpan ke tabel request
-        ToolRequest::create([
+        $toolRequest = ToolRequest::create([
             'sent_tool_id' => $request->sent_tool_id,
             'type' => $request->type,
             'reason' => $request->reason,
@@ -179,20 +179,24 @@ class ToolController extends Controller
             'status' => 'Pending',
         ]);
 
-        // Update status tool_inspections_fixs
         SentToolReport::where('id', $request->sent_tool_id)->update([
             'status' => 'Pending',
         ]);
 
-        // Cek jika AJAX
+        // Kirim email ke semua adminsystem
+        $admins = User::where('role', 'adminsystem')->get();
+        foreach ($admins as $admin) {
+            Mail::to($admin->email)->send(new ToolRequestNotification($toolRequest));
+        }
+
         if ($request->ajax()) {
             return response()->json([
                 'success' => true,
-                'message' => 'Request berhasil dikirim dan status diperbarui.',
+                'message' => 'Request berhasil dikirim dan email telah dikirim ke admin.',
             ]);
         }
 
-        return redirect()->route('adminsystem.tool.index')->with('success', 'Request berhasil dikirim.');
+        return redirect()->route('adminsystem.tool.index')->with('success', 'Request berhasil dikirim dan email telah dikirim ke admin.');
     }
 
 
