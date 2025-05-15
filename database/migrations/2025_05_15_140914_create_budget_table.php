@@ -13,10 +13,9 @@ return new class extends Migration
     {
         Schema::create('budget', function (Blueprint $table) {
             $table->id();
-            $table->string('internal_order', 255)->unique();
+            $table->string('internal_order', 255)->nullable();
             $table->string('gl_code', 255);
             $table->string('gl_name', 255);
-            $table->decimal('setahun_qty', 15, 2)->nullable();
             $table->decimal('setahun_total', 15, 2)->nullable();
             $table->string('kategori', 255);
             $table->string('year', 100);

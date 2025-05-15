@@ -21,11 +21,12 @@ class BudgetFix extends Model
      protected $fillable = [
         'internal_order',
         'gl_code',
-        'description',
+        'gl_name',
         'bg_approve',
         'usage',
         'percentage_usage',
         'kategori',
+        'sisa',
         'year',
     ];
 

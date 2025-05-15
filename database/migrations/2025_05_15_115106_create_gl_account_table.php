@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('gl_code', 50)->unique();
             $table->string('gl_name', 100);
-            $table->string('description', 255);
             $table->timestamps();
         });
     }

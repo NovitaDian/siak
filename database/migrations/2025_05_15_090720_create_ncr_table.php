@@ -11,10 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ncr_fix', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('draft_id');
-            $table->string('writer');
+        Schema::create('ncr', function (Blueprint $table) {
+            $table->id(); 
+            $table->string('writer', 255);
             $table->date('tanggal_shift_kerja');
             $table->text('shift_kerja');
             $table->text('nama_hs_officer_1');
@@ -26,12 +25,15 @@ return new class extends Migration
             $table->text('element_referensi_ncr');
             $table->text('kategori_ketidaksesuaian');
             $table->text('deskripsi_ketidaksesuaian');
-            $table->string('status', 30)->default('Nothing');
             $table->text('status_note')->nullable();
             $table->string('status_ncr', 50)->default('Open');
-            $table->text('durasi_ncr')->nullable();
-            $table->timestamps();
+            $table->integer('durasi_ncr')->nullable();
+            $table->date('estimasi')->nullable();
+            $table->text('tindak_lanjut')->nullable();
+            $table->binary('foto')->nullable();
+            $table->timestamps(); 
         });
+        
     }
 
     /**
@@ -39,6 +41,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ncr_fix');
+        Schema::dropIfExists('ncr');
     }
 };

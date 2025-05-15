@@ -13,22 +13,17 @@ class PurchaseRequest extends Model
 
     protected $fillable = [
         'pr_date',
-        'plant',
         'pr_no',
         'pr_category',
-        'account_assignment',
-        'item_category',
         'purchase_for',
-        'material_code',
-        'short_text',
+        'material',
         'quantity',
         'unit',
         'valuation_price',
-        'gl_account',
+        'gl_code',
+        'gl_name',
         'cost_center',
-        'matl_group',
-        'purchasing_group',
-                'total_price',
+        'total_price',
         'io_assetcode',
     ];
 

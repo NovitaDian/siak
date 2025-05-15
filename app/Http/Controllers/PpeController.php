@@ -6,6 +6,7 @@ use App\Mail\PPERequestNotification;
 use Illuminate\Support\Facades\Auth;
 use App\Models\HseInspector;
 use App\Models\NonCompliant;
+use App\Models\NonCompliantRequest;
 use Illuminate\Http\Request;
 use App\Models\Ppe;
 use App\Models\PpeRequest;
@@ -41,7 +42,8 @@ class PpeController extends Controller
             'tanggal_shift_kerja' => 'required|date',
             'shift_kerja' => 'required|string|max:50',
             'hse_inspector_id' => 'required|exists:hse_inspector,id',
-            'jam_pengawasan' => 'required',
+            'jam_mulai' => 'required',
+            'jam_selesai' => 'required',
             'zona_pengawasan' => 'required|string|max:100',
             'lokasi_observasi' => 'required|string|max:100',
             'jumlah_patuh_apd_karyawan' => 'nullable|integer|min:0',
@@ -76,12 +78,13 @@ class PpeController extends Controller
             ($request->jumlah_tidak_patuh_apd_lainnya_kontraktor ?? 0);
 
         // Simpan data ke tabel Ppe
-        Ppe::create([
+        SentPpe::create([
             'tanggal_shift_kerja' => $request->tanggal_shift_kerja,
             'shift_kerja' => $request->shift_kerja,
             'hse_inspector_id' => $inspector->id,
             'nama_hse_inspector' => $inspector->name,
-            'jam_pengawasan' => $request->jam_pengawasan,
+            'jam_mulai' => $request->jam_mulai,
+            'jam_selesai' => $request->jam_selesai,
             'zona_pengawasan' => $request->zona_pengawasan,
             'lokasi_observasi' => $request->lokasi_observasi,
             'jumlah_patuh_apd_karyawan' => $request->jumlah_patuh_apd_karyawan,
@@ -111,7 +114,8 @@ class PpeController extends Controller
     {
         $ppeFix = SentPpe::findOrFail($id);
         $nonCompliants = NonCompliant::all();
-        return view('adminsystem.ppe.show', compact('ppeFix','nonCompliants'));
+        $requests = NonCompliantRequest::all();
+        return view('adminsystem.ppe.show', compact('ppeFix', 'requests', 'nonCompliants'));
     }
 
     // Menampilkan form edit data
@@ -129,7 +133,8 @@ class PpeController extends Controller
             'tanggal_shift_kerja' => 'required|date',
             'shift_kerja' => 'required|string|max:50',
             'hse_inspector_id' => 'required|exists:hse_inspector,id',
-            'jam_pengawasan' => 'required',
+            'jam_mulai' => 'required',
+            'jam_selesai' => 'required',
             'zona_pengawasan' => 'required|string|max:100',
             'lokasi_observasi' => 'required|string|max:100',
             'jumlah_patuh_apd_karyawan' => 'nullable|integer|min:0',
@@ -161,13 +166,15 @@ class PpeController extends Controller
             ($request->jumlah_tidak_patuh_pelindung_mata_kontraktor ?? 0) +
             ($request->jumlah_tidak_patuh_safety_harness_kontraktor ?? 0) +
             ($request->jumlah_tidak_patuh_apd_lainnya_kontraktor ?? 0);
+        $status_ppe = ($total_tidak_patuh == 0) ? 'Compliant' : 'Non-Compliant';
 
         $ppe->update([
             'tanggal_shift_kerja' => $request->tanggal_shift_kerja,
             'shift_kerja' => $request->shift_kerja,
             'hse_inspector_id' => $inspector->id,
             'nama_hse_inspector' => $inspector->name,
-            'jam_pengawasan' => $request->jam_pengawasan,
+            'jam_mulai' => $request->jam_mulai,
+            'jam_selesai' => $request->jam_selesai,
             'zona_pengawasan' => $request->zona_pengawasan,
             'lokasi_observasi' => $request->lokasi_observasi,
             'jumlah_patuh_apd_karyawan' => $request->jumlah_patuh_apd_karyawan,
@@ -184,7 +191,7 @@ class PpeController extends Controller
             'jumlah_tidak_patuh_apd_lainnya_kontraktor' => $request->jumlah_tidak_patuh_apd_lainnya_kontraktor,
             'keterangan_tidak_patuh' => $request->keterangan_tidak_patuh,
             'writer' => Auth::user()->name,
-            'status_ppe' => ($total_tidak_patuh == 0) ? 'Compliant' : 'Non-Compliant',
+            'status_ppe' => $status_ppe
         ]);
 
         return redirect()->route('adminsystem.ppe.index')->with('success', 'Data berhasil diperbarui!');
@@ -220,7 +227,8 @@ class PpeController extends Controller
             'shift_kerja' => $ppe->shift_kerja,
             'nama_hse_inspector' => $ppe->nama_hse_inspector,
             'hse_inspector_id' => $ppe->hse_inspector_id,
-            'jam_pengawasan' => $ppe->jam_pengawasan,
+            'jam_mulai' => $ppe->jam_mulai,
+            'jam_selesai' => $ppe->jam_selesai,
             'zona_pengawasan' => $ppe->zona_pengawasan,
             'lokasi_observasi' => $ppe->lokasi_observasi,
             'jumlah_patuh_apd_karyawan' => $ppe->jumlah_patuh_apd_karyawan,
@@ -263,7 +271,7 @@ class PpeController extends Controller
             'reason' => $request->reason,
             'nama_pengirim' => Auth::user()->name,
         ]);
-         // Kirim email ke semua adminsystem
+        // Kirim email ke semua adminsystem
         $admins = User::where('role', 'adminsystem')->get();
         foreach ($admins as $admin) {
             Mail::to($admin->email)->send(new PPERequestNotification($request));
@@ -293,7 +301,8 @@ class PpeController extends Controller
             'tanggal_shift_kerja' => 'required|date',
             'shift_kerja' => 'required|string|max:50',
             'hse_inspector_id' => 'required|exists:hse_inspector,id',
-            'jam_pengawasan' => 'required',
+            'jam_mulai' => 'required',
+            'jam_selesai' => 'required',
             'zona_pengawasan' => 'required|string|max:100',
             'lokasi_observasi' => 'required|string|max:100',
             'jumlah_patuh_apd_karyawan' => 'nullable|integer|min:0',
@@ -333,7 +342,8 @@ class PpeController extends Controller
             'shift_kerja' => $request->shift_kerja,
             'hse_inspector_id' => $inspector->id,
             'nama_hse_inspector' => $inspector->name,
-            'jam_pengawasan' => $request->jam_pengawasan,
+            'jam_mulai' => $request->jam_mulai,
+            'jam_selesai' => $request->jam_selesai,
             'zona_pengawasan' => $request->zona_pengawasan,
             'lokasi_observasi' => $request->lokasi_observasi,
             'jumlah_patuh_apd_karyawan' => $request->jumlah_patuh_apd_karyawan,
@@ -414,7 +424,8 @@ class PpeController extends Controller
             'tanggal_shift_kerja' => 'required|date',
             'shift_kerja' => 'required|string|max:50',
             'nama_hse_inspector' => 'required|string|max:100',
-            'jam_pengawasan' => 'required',
+            'jam_mulai' => 'required',
+            'jam_selesai' => 'required',
             'zona_pengawasan' => 'required|string|max:100',
             'lokasi_observasi' => 'required|string|max:100',
             'jumlah_patuh_apd_karyawan' => 'required|integer|min:0',
@@ -466,7 +477,8 @@ class PpeController extends Controller
             'tanggal_shift_kerja' => 'required|date',
             'shift_kerja' => 'required|string|max:50',
             'nama_hse_inspector' => 'required|string|max:100',
-            'jam_pengawasan' => 'required',
+            'jam_mulai' => 'required',
+            'jam_selesai' => 'required',
             'zona_pengawasan' => 'required|string|max:100',
             'lokasi_observasi' => 'required|string|max:100',
             'jumlah_patuh_apd_karyawan' => 'required|integer|min:0',
@@ -550,7 +562,8 @@ class PpeController extends Controller
             'tanggal_shift_kerja' => 'required|date',
             'shift_kerja' => 'required|string|max:50',
             'nama_hse_inspector' => 'required|string|max:100',
-            'jam_pengawasan' => 'required',
+            'jam_mulai' => 'required',
+            'jam_selesai' => 'required',
             'zona_pengawasan' => 'required|string|max:100',
             'lokasi_observasi' => 'required|string|max:100',
             'jumlah_patuh_apd_karyawan' => 'required|integer|min:0',

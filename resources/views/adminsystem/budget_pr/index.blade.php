@@ -33,7 +33,7 @@
 
 <div class="row mt-4">
     <!-- Left Column: Budget Monitoring Table -->
-    <div class="col-xl-8 col-sm-12 mb-xl-0 mb-4">
+    <div class="col">
         <div class="card h-100 p-3">
             <div class="card-header pb-0 px-3">
                 <h6 class="mb-0">HSE Budget Monitoring</h6>
@@ -43,13 +43,13 @@
                     <table class="table align-items-center mb-0">
                         <thead>
                             <tr>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">GL Account</th>
                                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Internal Order</th>
                                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Year</th>
-                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">GL Account</th>
-                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Description</th>
                                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">BG Approve</th>
                                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">USAGE</th>
                                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">% Usage</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Sisa</th>
                                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Kategori</th>
                             </tr>
                         </thead>
@@ -58,37 +58,33 @@
                             <tr>
                                 <!-- Data from gl_account table -->
                                 <td class="text-center">
-                                    <p class="text-xs font-weight-bold mb-0">{{ $budget_fix->internal_order }}</p>
+                                    <p class="text-xs font-weight-bold mb-0">{{ $budget_fix->gl_code }} - {{ $budget_fix->gl_name }}</p>
+                                </td>
+                                <td class="text-center">
+                                    <p class="text-xs font-weight-bold mb-0">{{ $budget_fix->internal_order ?? '-' }}</p>
                                 </td>
                                 <td class="text-center">
                                     <p class="text-xs font-weight-bold mb-0">{{ $budget_fix->year }}</p>
                                 </td>
                                 <td class="text-center">
-                                    <p class="text-xs font-weight-bold mb-0">{{ $budget_fix->gl_code }}</p>
-                                </td>
-                                <td class="text-center">
-                                    <p class="text-xs font-weight-bold mb-0">{{ $budget_fix->description ?? 'No description' }}</p>
-                                </td>
-
-                                <!-- bg_approve field -->
-                                <td class="text-center">
                                     <p class="text-xs font-weight-bold mb-0">{{ $budget_fix->bg_approve }}</p>
                                 </td>
-
-                                <!-- Total price from the total_price table -->
                                 <td class="text-center">
                                     <p class="text-xs font-weight-bold mb-0">{{ $budget_fix->usage  }}</p>
                                 </td>
                                 <td class="text-center">
-                                    <p class="text-xs font-weight-bold mb-0">{{ $budget_fix->presentage_usage  }}</p>
+                                    <p class="text-xs font-weight-bold mb-0">{{ $budget_fix->percentage_usage  }}</p>
+                                </td>
+                                <td class="text-center">
+                                    <p class="text-xs font-weight-bold mb-0">{{ $budget_fix->sisa  }}</p>
                                 </td>
                                 <td class="text-center">
                                     <p class="text-xs font-weight-bold mb-0">{{ $budget_fix->kategori  }}</p>
                                 </td>
 
-                               
 
-                        
+
+
                             </tr>
                             @endforeach
                         </tbody>
@@ -104,61 +100,9 @@
             </div>
         </div>
     </div>
-
-    <!-- Right Column: Chart -->
-    <div class="col-xl-4 col-sm-12 mb-xl-0 mb-4">
-        <div class="card h-100 p-3">
-            <div class="card-header pb-0 px-3">
-                <h6 class="mb-0">Dana Terpakai Tahun Ini</h6>
-            </div>
-            <div class="card-body pt-4 p-3">
-                <canvas id="prChart" width="250" height="250"></canvas>
-            </div>
-        </div>
-    </div>
 </div>
 
-<!-- Chart.js Script -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    const ctx = document.getElementById('prChart').getContext('2d');
-    const prChart = new Chart(ctx, {
-        type: 'pie',
-        data: {
-            labels: ['Dana Terpakai', 'Dana Tersisa'],
-            datasets: [{
-                label: 'Dana Terpakai Tahun Ini',
-                data: [{
-                    {
-                        $danaTerpakai
-                    }
-                }, {
-                    {
-                        $danaTersisa
-                    }
-                }], // Pass data dynamically from the controller
-                backgroundColor: ['#FF6347', '#2D8B4D'], // Example colors
-                borderColor: ['#FF6347', '#2D8B4D'],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'top',
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(tooltipItem) {
-                            return tooltipItem.label + ': ' + tooltipItem.raw.toLocaleString() + ' IDR';
-                        }
-                    }
-                }
-            }
-        }
-    });
-</script>
+
 
 <style>
     /* Optional style adjustments */

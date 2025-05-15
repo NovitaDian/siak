@@ -43,17 +43,6 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="plant">{{ __('Plant') }}</label>
-                                <input class="form-control" type="text" id="plant" name="plant" value="{{ old('plant') }}" required>
-                                @error('plant')
-                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
                                 <label for="pr_no">{{ __('Nomor PR') }}</label>
                                 <input class="form-control" type="text" id="pr_no" name="pr_no" value="{{ old('pr_no') }}" required>
                                 @error('pr_no')
@@ -61,42 +50,7 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="pr_category">{{ __('Kategori PR') }}</label>
-                                <select class="form-control" id="pr_category" name="pr_category" required>
-                                    <option value="" disabled selected>Pilih Kategori PR</option>
-                                    <option value="Stock: PTD" {{ old('pr_category') == 'Stock: PTD' ? 'selected' : '' }}>Stock: PTD</option>
-                                    <option value="Non Stock: PTD" {{ old('pr_category') == 'Non Stock: PTD' ? 'selected' : '' }}>Non Stock: PTD</option>
-                                </select>
-                                @error('pr_category')
-                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                                @enderror
-                            </div>
-                        </div>
 
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="account_assignment">{{ __('Account Assignment') }}</label>
-                                <input class="form-control" type="text" id="account_assignment" name="account_assignment" value="{{ old('account_assignment') }}" required>
-                                @error('account_assignment')
-                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="item_category">{{ __('Kategori Item') }}</label>
-                                <input class="form-control" type="text" id="item_category" name="item_category" value="{{ old('item_category') }}" required>
-                                @error('item_category')
-                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="purchase_for">{{ __('Dibeli Untuk') }}</label>
@@ -109,25 +63,10 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="material_code">{{ __('Kode Material') }}</label>
-                                <select class="form-control" id="material_code" name="material_code" required>
-                                    <option value="">Pilih Material</option>
-                                    @foreach($materials as $material)
-                                    <option value="{{ $material->material_code }}" {{ old('material') == $material->material_code ? 'selected' : '' }}>{{ $material->material_code }}-{{ $material->description }}</option>
-                                    @endforeach
-                                </select>
-                                @error('material_code')
-                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="short_text">{{ __('Deskripsi Singkat') }}</label>
-                                <input class="form-control" type="text" id="short_text" name="short_text" value="{{ old('short_text') }}" required>
-                                @error('short_text')
+                                <label for="material">{{ __('Deskripsi Material/jasa') }}</label>
+                                <input class="form-control" type="text" id="material" name="material" value="{{ old('material') }}" required>
+
+                                @error('material')
                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                 @enderror
                             </div>
@@ -141,8 +80,6 @@
                                 @enderror
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="unit">{{ __('Satuan') }}</label>
@@ -166,73 +103,36 @@
                                 @enderror
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="io_assetcode">{{ __('IO / Assetcode') }}</label>
-                                <select class="form-control" id="io_assetcode" name="io_assetcode" required>
+                                <select class="form-control" id="io_assetcode" name="io_assetcode">
                                     <option value="">Pilih Internal Order</option>
                                     @foreach($budgets as $budget)
+                                    @if(!empty($budget->internal_order))
                                     <option value="{{ $budget->internal_order }}" {{ old('io_assetcode') == $budget->internal_order ? 'selected' : '' }}>{{ $budget->internal_order }}</option>
+                                    @endif
                                     @endforeach
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="gl_account">{{ __('GL Account') }}</label>
-                                <select class="form-control" id="gl_account" name="gl_account" required>
+                                <label for="gl_code">{{ __('GL Account') }}</label>
+                                <select class="form-control" id="gl_code" name="gl_code" required>
                                     <option value="">Pilih GL Account</option>
                                     @foreach($gls as $gl)
-                                    <option value="{{ $gl->gl_code }}" {{ old('gl_account') == $gl->gl_code ? 'selected' : '' }}>{{ $gl->gl_code }}-{{ $gl->gl_name }}</option>
+                                    <option value="{{ $gl->gl_code }}" {{ old('gl_code') == $gl->gl_code ? 'selected' : '' }}>{{ $gl->gl_code }}-{{ $gl->gl_name }}</option>
                                     @endforeach
                                 </select>
-                                @error('gl_account')
+                                @error('gl_code')
                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                 @enderror
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="cost_center">{{ __('Cost Center') }}</label>
-                                <input class="form-control" type="text" id="cost_center" name="cost_center" value="{{ old('cost_center') }}">
-                                @error('cost_center')
-                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                                @enderror
-                            </div>
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">{{ __('Simpan PR') }}</button>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="matl_group">{{ __('Material Group') }}</label>
-                                <input class="form-control" type="text" id="matl_group" name="matl_group" value="{{ old('matl_group') }}">
-                                @error('matl_group')
-                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="purchasing_group">{{ __('Group Pembelian') }}</label>
-                                <select class="form-control" id="purchasing_group" name="purchasing_group" required>
-                                    <option value="">Pilih Group Pembelian</option>
-                                    @foreach($purs as $group)
-                                    <option value="{{ $group->pur_grp }}" {{ old('purchasing_group') == $group->pur_grp ? 'selected' : '' }}>{{ $group->pur_grp }}</option>
-                                    @endforeach
-                                </select>
-                                @error('purchasing_group')
-                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-end">
-                        <button type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">{{ __('Simpan PR') }}</button>
-                    </div>
                 </form>
             </div>
         </div>

@@ -23,7 +23,6 @@ class Budget extends Model
         'gl_code',
         'gl_name',
         'setahun_total',
-        'setahun_qty',
         'kategori',
         'year',
         

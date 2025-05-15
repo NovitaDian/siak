@@ -25,7 +25,10 @@ class Ncr extends Model
         'bagian',
         'element_referensi_ncr',
         'kategori_ketidaksesuaian',
-        'deskripsi_ketidaksesuaian'
+        'deskripsi_ketidaksesuaian',
+        'estimasi',
+        'foto',
+        'tindak_lanjut'
     ];
 
     // Menentukan tipe data untuk tanggal agar bisa otomatis di-convert menjadi format date
@@ -33,5 +36,4 @@ class Ncr extends Model
         'tanggal_shift_kerja',
         'tanggal_audit',
     ];
-    
 }

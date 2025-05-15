@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Bagian;
 use App\Models\Ncr;
 use App\Models\NcrRequest;
+use App\Models\NonCompliant;
 use App\Models\Perusahaan;
 use App\Models\SentNcr;
 use App\Models\User;
@@ -120,17 +121,25 @@ class NcrController extends Controller
             'bagian' => 'nullable|string|max:255',
             'element_referensi_ncr' => 'required|string|max:255',
             'kategori_ketidaksesuaian' => 'required|string|max:255',
-            'deskripsi_ketidaksesuaian' => 'required|string',
+            'estimasi' => 'required|string',
+            'tindak_lanjut' => 'required|string',
+            'foto' => 'required|file|mimes:pdf,jpeg,png,jpg,gif|max:2048',
         ]);
 
-        // Menambahkan kolom 'writer' dengan user yang sedang login
         $data = $request->all();
-        $data['writer'] = Auth::user()->name; // atau auth()->user()->id tergantung kebutuhan
+        $data['writer'] = Auth::user()->name;
+
+        if ($request->hasFile('foto')) {
+            $foto = $request->file('foto');
+            $fotoPath = $foto->store('uploads/foto', 'public');
+            $data['foto'] = $fotoPath;
+        }
 
         Ncr::create($data);
 
         return redirect()->route('adminsystem.ncr.index')->with('success', 'Data berhasil disimpan!');
     }
+
 
     // Memperbarui data NCR yang ada
     public function update(Request $request, $id)
@@ -209,6 +218,9 @@ class NcrController extends Controller
             'element_referensi_ncr' => $ncr->element_referensi_ncr,
             'kategori_ketidaksesuaian' => $ncr->kategori_ketidaksesuaian,
             'deskripsi_ketidaksesuaian' => $ncr->deskripsi_ketidaksesuaian,
+            'estimasi' => $ncr->estimasi,
+            'foto' => $ncr->foto,
+            'tindak_lanjut' => $ncr->tindak_lanjut,
             'status' => 'Nothing',
             'status_note' => null,
             'status_ncr' => 'Open',
@@ -246,7 +258,8 @@ class NcrController extends Controller
             'reason' => $request->reason,
             'nama_pengirim' => Auth::user()->name,
         ]);
-         // Kirim email ke semua adminsystem
+
+        // Kirim email ke semua adminsystem
         $admins = User::where('role', 'adminsystem')->get();
         foreach ($admins as $admin) {
             Mail::to($admin->email)->send(new NcrRequestNotification($request));
@@ -261,7 +274,7 @@ class NcrController extends Controller
 
 
         // Return JSON response
-        return response()->json(['success' => true, 'message' => 'Request submitted successfully.']);
+        return response()->json(['success', 'Request submitted successfully.']);
     }
     public function approve($id)
     {
@@ -321,6 +334,7 @@ class NcrController extends Controller
             'kategori_ketidaksesuaian' => 'required|string|max:255',
             'deskripsi_ketidaksesuaian' => 'required|string',
             'status_note' => 'required|string',
+
         ]);
 
         // Hitung durasi
@@ -354,6 +368,10 @@ class NcrController extends Controller
             'status_ncr' => 'Closed',
             'status_note' => $request->status_note,
             'durasi_ncr' => $durasi,
+            'estimasi' => $request->estimasi,
+            'foto' => $request->foto,
+            'foto_closed' => $request->foto_closed,
+            'tindak_lanjut' => $request->tindak_lanjut,
         ]);
 
         return redirect()->route('adminsystem.ncr.index')->with('success', 'NCR berhasil di-close!');

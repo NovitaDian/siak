@@ -23,6 +23,7 @@ class SentToolReport extends Model
         'tanggal_pemeriksaan',
         'status_pemeriksaan',
         'status',
+        'foto',
     ];
     public function inspector()
     {

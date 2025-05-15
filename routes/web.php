@@ -205,6 +205,8 @@ Route::group(['middleware' => 'auth'], function () {
 		});
 		Route::prefix('adminsystem/daily')->name('adminsystem.daily.')->group(function () {
 			Route::get('/', [DailyController::class, 'index'])->name('index');
+			Route::get('/export', [DailyController::class, 'export'])->name('export');
+			Route::get('/export-pdf', [DailyController::class, 'exportPdf'])->name('exportPdf');
 			Route::get('/create', [DailyController::class, 'create'])->name('create');
 			Route::post('/', [DailyController::class, 'store'])->name('store');
 			Route::get('/{id}/edit', [DailyController::class, 'edit'])->name('edit');
@@ -219,8 +221,6 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::post('/request', [DailyController::class, 'submitRequest'])->name('request');
 			Route::post('/approve/{id}', [DailyController::class, 'approve'])->name('approve');
 			Route::post('/reject/{id}', [DailyController::class, 'reject'])->name('reject');
-			Route::get('/export', [DailyController::class, 'export'])->name('export');
-			Route::get('/export-pdf', [DailyController::class, 'exportPdf'])->name('exportPdf');
 		});
 		Route::prefix('adminsystem/references')->name('adminsystem.references.')->group(function () {
 			Route::get('/', [ReferencesController::class, 'index'])->name('index');

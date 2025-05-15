@@ -17,7 +17,8 @@ class NonCompliant extends Model
         'id_ppe',
         'nama_hse_inspector',
         'shift_kerja',
-        'jam_pengawasan',
+        'jam_mulai',
+        'jam_selesai',
         'zona_pengawasan',
         'lokasi_observasi',
         'tipe_observasi',
@@ -27,6 +28,8 @@ class NonCompliant extends Model
         'nama_bagian',
         'tindakan',
         'writer',
+        'foto',
+        'status',
     ];
 
     // Definisikan relasi dengan model PpeFix (foreign key)

@@ -14,20 +14,13 @@ return new class extends Migration
             $table->string('nama_pengirim', 100);
             $table->string('type', 100);
             $table->text('reason');
-            $table->string('status', 100);
-            $table->unsignedBigInteger('user_id');
+            $table->string('status', 255)->default('Pending');
             $table->timestamps();
 
             // Foreign key ke tabel non_compliants
             $table->foreign('sent_non_compliant_id')
                 ->references('id')
                 ->on('non_compliants')
-                ->onDelete('cascade');
-
-            // Foreign key ke tabel users
-            $table->foreign('user_id')
-                ->references('id')
-                ->on('users')
                 ->onDelete('cascade');
         });
     }

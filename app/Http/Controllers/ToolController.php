@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+
 class ToolController extends Controller
 {
 
@@ -43,10 +44,17 @@ class ToolController extends Controller
             'hse_inspector_id' => 'required|exists:hse_inspector,id',
             'tanggal_pemeriksaan' => 'required|date',
             'status_pemeriksaan' => 'required|in:Layak operasi,Layak operasi dengan catatan,Tidak layak operasi',
+            'foto' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+
         ]);
 
         $alat = Alat::findOrFail($request->alat_id);
         $inspector = HseInspector::findOrFail($request->hse_inspector_id);
+
+        if ($request->hasFile('foto')) {
+            $fotoPath = $request->file('foto')->store('pelanggar/foto', 'public');
+            $data['foto'] = $fotoPath;
+        }
 
         ToolReport::create([
             'alat_id' => $alat->id,
@@ -55,7 +63,9 @@ class ToolController extends Controller
             'hse_inspector' => $inspector->name,
             'tanggal_pemeriksaan' => $request->tanggal_pemeriksaan,
             'status_pemeriksaan' => $request->status_pemeriksaan,
+            'foto' => $request->foto,
             'writer' => Auth::user()->name,
+
         ]);
 
         return redirect()->route('adminsystem.tool.index')->with('success', 'Data pemeriksaan berhasil disimpan.');
@@ -149,6 +159,7 @@ class ToolController extends Controller
             'hse_inspector' => $tool->hse_inspector,
             'tanggal_pemeriksaan' => $tool->tanggal_pemeriksaan,
             'status_pemeriksaan' => $tool->status_pemeriksaan,
+            'foto' => $tool->foto,
 
         ]);
         $alat = Alat::findOrFail($tool->alat_id);

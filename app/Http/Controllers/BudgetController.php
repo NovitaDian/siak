@@ -23,7 +23,6 @@ class BudgetController extends Controller
         $budget_fixs = BudgetFix::all();
         $danaTerpakai = Budget::all();
         $danaTersisa = Budget::all();
-        $prs = PurchaseRequest::with(['glAccount', 'budget'])->get();
         return view('adminsystem.budget_pr.index', compact('budgets', 'danaTerpakai', 'danaTersisa', 'prs', 'budget_fixs'));
     }
 
@@ -107,7 +106,6 @@ class BudgetController extends Controller
             'gl_code' => 'required|string|max:50',
             'gl_name' => 'required|string|max:100',
             'setahun_total' => 'required|numeric',
-            'setahun_qty' => 'required|numeric',
             'kategori' => 'required|string|max:100',
             'year' => 'required|string|max:100',
         ]);
@@ -118,7 +116,6 @@ class BudgetController extends Controller
             'gl_code' => $request->gl_code,
             'gl_name' => $request->gl_name,
             'setahun_total' => $request->setahun_total,
-            'setahun_qty' => $request->setahun_qty,
             'kategori' => $request->kategori,
             'year' => $request->year
         ]);
@@ -128,7 +125,8 @@ class BudgetController extends Controller
             'gl_name'          => $request->gl_name,
             'year'             => $request->year,
             'kategori'         => $request->kategori,
-            'bg_approve'       => $request->setahun_qty,
+            'bg_approve'       => $request->setahun_total,
+            'sisa'       => $request->setahun_total,
         ]);
         return redirect()->route('adminsystem.budget.index')->with('success', 'Dokumen berhasil diunggah.');
     }
@@ -142,20 +140,51 @@ class BudgetController extends Controller
     }
     public function budget_update(Request $request, $id)
     {
-        $budget = PurchaseRequest::findOrFail($id);
-
+        // Validasi input
         $request->validate([
+            'internal_order' => 'nullable|string|max:50',
             'gl_code' => 'required|string|max:50',
             'gl_name' => 'required|string|max:100',
             'setahun_total' => 'required|numeric',
-            'setahun_qty' => 'required|numeric',
             'kategori' => 'required|string|max:100',
-
+            'year' => 'required|string|max:100',
         ]);
-        $budget->update($request->all());
 
-        return redirect()->route('adminsystem.budget_pr.pr.index')->with('success', 'Purchase Request berhasil diperbarui.');
+        // Cari dan update data di tabel Budget
+        $budget = Budget::findOrFail($id);
+        $budget->update([
+            'internal_order' => $request->internal_order,
+            'gl_code'        => $request->gl_code,
+            'gl_name'        => $request->gl_name,
+            'setahun_total'  => $request->setahun_total,
+            'kategori'       => $request->kategori,
+            'year'           => $request->year,
+        ]);
+
+        // Cari BudgetFix yang cocok berdasarkan GL Code dan Year
+        $budgetFix = BudgetFix::where('gl_code', $request->gl_code)
+            ->where('year', $request->year)
+            ->latest()
+            ->first();
+
+        if ($budgetFix) {
+            // Update budget_fix sesuai data baru
+            $used = $budgetFix->usage ?? 0;
+            $bgApprove = $request->setahun_total;
+            $sisa = $bgApprove - $used;
+
+            $budgetFix->update([
+                'internal_order' => $request->internal_order,
+                'gl_name'        => $request->gl_name,
+                'bg_approve'     => $bgApprove,
+                'sisa'           => $sisa,
+                'kategori'       => $request->kategori,
+            ]);
+        }
+
+        return redirect()->route('adminsystem.budget.index')->with('success', 'Data budget berhasil diperbarui.');
     }
+
     public function getGlName($gl_code)
     {
         $gl = Gl_Account::where('gl_code', $gl_code)->first(); // Assuming Gl_Account is your model
@@ -194,50 +223,69 @@ class BudgetController extends Controller
     }
 
     public function pr_store(Request $request)
-    {
-        $validated = $request->validate([
-            'pr_date' => 'required|date',
-            'pr_no' => 'required|string|unique:pr,pr_no',
-            'pr_category' => 'required|string',
-            'account_assignment' => 'required|string',
-            'item_category' => 'required|string',
-            'purchase_for' => 'required|string',
-            'material_code' => 'required|string',
-            'short_text' => 'required|string',
-            'quantity' => 'required|numeric',
-            'unit' => 'required|string',
-            'valuation_price' => 'required|numeric',
-            'io_assetcode' => 'nullable|string',
-            'gl_account' => 'required|string',
-            'cost_center' => 'required|string',
-            'matl_group' => 'required|string',
-            'purchasing_group' => 'required|string',
-        ]);
+{
+    // Validasi input
+    $validated = $request->validate([
+        'pr_date' => 'required|date',
+        'pr_no' => 'required|string|unique:pr,pr_no',
+        'purchase_for' => 'required|string',
+        'material' => 'required|string',
+        'quantity' => 'required|numeric',
+        'unit' => 'required|string',
+        'valuation_price' => 'required|numeric',
+        'io_assetcode' => 'nullable|string',
+        'gl_code' => 'required|string',
+        'description' => 'nullable|string',
+    ]);
 
-        // Simpan PR
-        PurchaseRequest::create($validated);
+    // Cari data GL Account, jika tidak ketemu akan gagal
+    $glaccount = Gl_Account::where('gl_code', $validated['gl_code'])->firstOrFail();
 
-        // Update BudgetFix jika io_assetcode tersedia
-        if (!empty($validated['io_assetcode'])) {
-            $budgetFix = BudgetFix::where('internal_order', $validated['io_assetcode'])->first();
+    // Simpan PR
+    PurchaseRequest::create($validated);
 
-            if ($budgetFix) {
-                $bg_approve = $budgetFix->bg_approve; // Pastikan field ini ada di tabel
-                $usage = $validated['valuation_price'];
-                $gl_account = $validated['gl_account'];
-                $percentage_usage = ($bg_approve > 0) ? ($usage / $bg_approve) * 100 : 0;
+    // Proses BudgetFix jika ada GL Code
+    $budgetFix = BudgetFix::where('gl_code', $validated['gl_code'])->latest()->first();
 
-                $budgetFix->update([
-                    'usage' => $usage,
-                    'gl_account' => $gl_account,
-                    'percentage_usage' => $percentage_usage,
-                ]);
-            }
+    if ($budgetFix) {
+        $usage = $validated['valuation_price'];
+        $bg_approve = $budgetFix->bg_approve ?? 0;
+        $internal_order = $validated['io_assetcode'] ?? null;
+        $sisa_usage = $budgetFix->sisa - $usage;
+        $percentage_usage = ($bg_approve > 0) ? ($usage / $bg_approve) * 100 : 0;
+
+        if ($budgetFix->usage > 0) {
+            // Jika sudah ada usage sebelumnya, buat baris baru
+            BudgetFix::create([
+                'gl_code' => $validated['gl_code'],
+                'usage' => $usage,
+                'internal_order' => $internal_order,
+                'gl_name' => $glaccount->gl_name,
+                'percentage_usage' => $percentage_usage,
+                'sisa' => $sisa_usage, // simpan sisa terbaru
+                'description' => $validated['description'] ?? null,
+                'bg_approve' => $budgetFix->bg_approve,
+                'plan' => $budgetFix->plan,
+                'kategori' => $budgetFix->kategori,
+                'year' => $budgetFix->year,
+            ]);
+            // Update sisa pada record sebelumnya (budgetFix lama)
+            $budgetFix->update([
+                'sisa' => $sisa_usage,
+            ]);
+        } else {
+            // Jika usage belum pernah diisi, update baris sekarang
+            $budgetFix->update([
+                'usage' => $usage,
+                'internal_order' => $internal_order,
+                'percentage_usage' => $percentage_usage,
+                'sisa' => $sisa_usage, // update dengan sisa yang benar
+            ]);
         }
-
-        return redirect()->route('adminsystem.pr.index')->with('success', 'Purchase Request berhasil dibuat.');
     }
 
+    return redirect()->route('adminsystem.pr.index')->with('success', 'Purchase Request berhasil dibuat.');
+}
 
     public function pr_edit($id)
     {
@@ -247,31 +295,69 @@ class BudgetController extends Controller
 
     public function pr_update(Request $request, $id)
     {
-        $pr = PurchaseRequest::findOrFail($id);
-
-        $request->validate([
+        // Validasi input
+        $validated = $request->validate([
             'pr_date' => 'required|date',
-            'pr_no' => 'required|string|unique:pr,pr_no',
-            'pr_category' => 'required|string',
-            'account_assignment' => 'required|string',
-            'item_category' => 'required|string',
+            'pr_no' => 'required|string|unique:pr,pr_no,' . $id, // abaikan unique untuk ID ini
             'purchase_for' => 'required|string',
-            'material_code' => 'required|string',
-            'short_text' => 'required|string',
+            'material' => 'required|string',
             'quantity' => 'required|numeric',
             'unit' => 'required|string',
             'valuation_price' => 'required|numeric',
             'io_assetcode' => 'nullable|string',
-            'gl_account' => 'required|string',
-            'cost_center' => 'required|string',
-            'matl_group' => 'required|string',
-            'purchasing_group' => 'required|string',
+            'gl_code' => 'required|string',
+            'description' => 'nullable|string',
         ]);
 
-        $pr->update($request->all());
+        $pr = PurchaseRequest::findOrFail($id);
 
-        return redirect()->route('adminsystem.budget_pr.pr.index')->with('success', 'Purchase Request berhasil diperbarui.');
+        // Simpan nilai lama untuk perhitungan ulang budget jika valuation_price berubah
+        $oldValuation = $pr->valuation_price;
+        $pr->update($validated);
+
+        // Proses BudgetFix
+        $budgetFix = BudgetFix::where('gl_code', $validated['gl_code'])->latest()->first();
+        $glaccount = Gl_Account::where('gl_code', $validated['gl_code'])->firstOrFail();
+
+        if ($budgetFix) {
+            $newUsage = $validated['valuation_price'];
+            $diffUsage = $newUsage - $oldValuation;
+
+            $bg_approve = $budgetFix->bg_approve ?? 0;
+            $internal_order = $validated['io_assetcode'] ?? null;
+
+            $newSisa = $budgetFix->sisa - $diffUsage;
+            $newPercentageUsage = ($bg_approve > 0) ? (($budgetFix->usage + $diffUsage) / $bg_approve) * 100 : 0;
+
+            if ($budgetFix->usage > 0 && $diffUsage != 0) {
+                // Jika usage sudah pernah ada dan ada perubahan nilai
+                BudgetFix::create([
+                    'gl_code' => $validated['gl_code'],
+                    'usage' => $newUsage,
+                    'internal_order' => $internal_order,
+                    'gl_name' => $glaccount->gl_name,
+                    'percentage_usage' => $newPercentageUsage,
+                    'sisa' => $newSisa,
+                    'description' => $validated['description'] ?? null,
+                    'bg_approve' => $budgetFix->bg_approve,
+                    'plan' => $budgetFix->plan,
+                    'kategori' => $budgetFix->kategori,
+                    'year' => $budgetFix->year,
+                ]);
+            } elseif ($budgetFix->usage == 0) {
+                // Jika belum ada usage, update baris yang sama
+                $budgetFix->update([
+                    'usage' => $newUsage,
+                    'internal_order' => $internal_order,
+                    'percentage_usage' => $newPercentageUsage,
+                    'sisa' => $newSisa,
+                ]);
+            }
+        }
+
+        return redirect()->route('adminsystem.pr.index')->with('success', 'Purchase Request berhasil diperbarui.');
     }
+
 
     public function pr_destroy($id)
     {

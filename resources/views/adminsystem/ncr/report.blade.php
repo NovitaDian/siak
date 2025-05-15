@@ -12,7 +12,7 @@
                 <h6 class="mb-0">{{ __('DATA UMUM') }}</h6>
             </div>
             <div class="card-body pt-4 p-3">
-                <form action="{{ route('adminsystem.ncr.store') }}" method="POST" role="form text-left">
+                <form action="{{ route('adminsystem.ncr.store') }}"  method="POST" enctype="multipart/form-data" role="form text-left">
                     @csrf
                     @if($errors->any())
                     <div class="mt-3 alert alert-primary alert-dismissible fade show" role="alert">
@@ -94,7 +94,7 @@
                         <!-- Nama Auditee -->
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="nama_auditee">{{ __('Nama Auditee') }}</label>
+                                <label for="nama_auditee">{{ __('Nama Auditee/Owner Area') }}</label>
                                 <input class="form-control" type="text" id="nama_auditee" name="nama_auditee" value="{{ old('nama_auditee') }}" required>
                                 @error('nama_auditee')
                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>
@@ -125,7 +125,7 @@
                         <!-- Dropdown Bagian -->
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="nama_bagian">{{ __('Bagian') }}</label>
+                                <label for="nama_bagian">{{ __('Bagian/Department') }}</label>
                                 <select class="form-control" id="nama_bagian" name="nama_bagian" required>
                                     <option value="" disabled selected>Pilih Bagian</option>
                                 </select>
@@ -147,9 +147,6 @@
                                 @enderror
                             </div>
                         </div>
-
-
-
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="kategori_ketidaksesuaian">{{ __('Kategori Ketidaksesuaian') }}</label>
@@ -174,6 +171,40 @@
                                 <label for="deskripsi_ketidaksesuaian">{{ __('Deskripsi Ketidaksesuaian') }}</label>
                                 <textarea class="form-control" id="deskripsi_ketidaksesuaian" name="deskripsi_ketidaksesuaian" rows="4" required>{{ old('deskripsi_ketidaksesuaian') }}</textarea>
                                 @error('deskripsi_ketidaksesuaian')
+                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="tindak_lanjut">{{ __('Tindak Lanjut') }}</label>
+                                <textarea class="form-control" id="tindak_lanjut" name="tindak_lanjut" rows="4" required>{{ old('tindak_lanjut') }}</textarea>
+                                @error('tindak_lanjut')
+                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="estimasi">{{ __('Estimasi Penyelesaian') }}</label>
+                                <input class="form-control" type="date" id="estimasi" name="estimasi" value="{{ old('estimasi') }}" required>
+                                @error('estimasi')
+                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="foto">{{ __('Foto') }}</label>
+                                <input
+                                    class="form-control @error('foto') is-invalid @enderror"
+                                    type="file"
+                                    id="foto"
+                                    name="foto"
+                                    accept="image/*"
+                                    capture="environment"
+                                    required>
+                                @error('foto')
                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                 @enderror
                             </div>

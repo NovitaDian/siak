@@ -20,24 +20,24 @@ class DailyController extends Controller
 {
 
     // Menampilkan semua data observasi
-   public function index(Request $request)
-{
-    $user = Auth::user();
-    $dailys = Daily::where('writer', $user->name)->get();
+    public function index(Request $request)
+    {
+        $user = Auth::user();
+        $dailys = Daily::where('writer', $user->name)->get();
 
-    $start = $request->start_date;
-    $end = $request->end_date;
+        $start = $request->start_date;
+        $end = $request->end_date;
 
-    // Jika filter tanggal diisi, gunakan whereBetween
-    if ($start && $end) {
-        $daily_fixs = SentDaily::whereBetween('tanggal_shift_kerja', [$start, $end])->get();
-    } else {
-        $daily_fixs = SentDaily::all();
+        // Jika filter tanggal diisi, gunakan whereBetween
+        if ($start && $end) {
+            $daily_fixs = SentDaily::whereBetween('tanggal_shift_kerja', [$start, $end])->get();
+        } else {
+            $daily_fixs = SentDaily::all();
+        }
+
+        $requests = DailyRequest::all();
+        return view('adminsystem.daily.index', compact('dailys', 'daily_fixs', 'requests'));
     }
-
-    $requests = DailyRequest::all();
-    return view('adminsystem.daily.index', compact('dailys', 'daily_fixs', 'requests'));
-}
 
 
     // Menampilkan form untuk membuat data baru
@@ -256,13 +256,29 @@ class DailyController extends Controller
     }
     public function export(Request $request)
     {
-        return Excel::download(new DailyExport($request->start_date, $request->end_date), 'daily.xlsx');
+        $start = $request->start_date;
+        $end = $request->end_date;
+
+        if ($start && $end) {
+            return Excel::download(new DailyExport($start, $end), 'daily_filtered.xlsx');
+        } else {
+            return Excel::download(new DailyExport(null, null), 'daily_all.xlsx');
+        }
     }
+
     public function exportPdf(Request $request)
     {
-        $dailys = Daily::whereBetween('tanggal_shift_kerja', [$request->start_date, $request->end_date])->get();
+        $start = $request->start_date;
+        $end = $request->end_date;
 
-        $pdf = Pdf::loadView('adminsystem.daily.pdf', compact('dailys'));
+        if ($start && $end) {
+            $daily_fixs = SentDaily::whereBetween('tanggal_shift_kerja', [$start, $end])->get();
+        } else {
+            $daily_fixs = SentDaily::all();
+        }
+
+        $pdf = Pdf::loadView('adminsystem.daily.pdf', compact('daily_fixs'));
+
         return $pdf->download('daily.pdf');
     }
 

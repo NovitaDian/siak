@@ -25,18 +25,7 @@
         </div>
     </div>
 
-    <div class="col-xl-4 col-sm-6 mb-4">
-        <div class="overflow-hidden position-relative border-radius-lg bg-cover h-100">
-            <div class="card d-flex flex-row">
-                <img src="../assets/img/noncompliance.png" alt="Non Complisnce Logo" class="img-fluid" style="width: 100px; height: 100px; object-fit: cover; margin-top: 30px; margin-left: 30px;">
-                <div class="card-body d-flex flex-column justify-content-between">
-                    <h5 class="font-weight-bolder text-center">NON COMPLIANCE</h5>
-                    <br>
-                    <button class="btn btn-primary w-100" onclick="location.href='{{ route('adminsystem.non_compliant.index') }}'">GO</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    
     <div class="col-xl-4 col-sm-6 mb-4">
         <div class="overflow-hidden position-relative border-radius-lg bg-cover h-100">
             <div class="card d-flex flex-row">

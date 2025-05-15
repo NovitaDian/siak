@@ -6,17 +6,19 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('tool_inspections_draft', function (Blueprint $table) {
+        Schema::create('tool_inspections_fix', function (Blueprint $table) {
             $table->id();
             $table->string('writer', 255);
+            $table->unsignedBigInteger('draft_id');
             $table->unsignedBigInteger('alat_id');
             $table->string('nama_alat');
             $table->unsignedBigInteger('hse_inspector_id');
             $table->string('hse_inspector');
             $table->date('tanggal_pemeriksaan');
+            $table->binary('foto');
             $table->enum('status_pemeriksaan', ['Layak operasi', 'Layak operasi dengan catatan', 'Tidak layak operasi']);
+            $table->string('status', 30)->default('Nothing');
             $table->timestamps();
-
             $table->foreign('alat_id')->references('id')->on('alats')->onDelete('cascade');
             $table->foreign('hse_inspector_id')->references('id')->on('hse_inspector')->onDelete('cascade');
         });
@@ -24,6 +26,6 @@ return new class extends Migration {
 
     public function down(): void
     {
-        Schema::dropIfExists('tool_inspections_draft');
+        Schema::dropIfExists('tool_inspections_fix');
     }
 };

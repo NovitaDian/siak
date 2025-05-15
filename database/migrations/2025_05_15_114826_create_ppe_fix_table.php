@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('ppe_fix', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('draft_id');
             $table->string('writer');
             $table->date('tanggal_shift_kerja');
             $table->string('shift_kerja', 50);
             $table->unsignedBigInteger('hse_inspector_id');
             $table->string('nama_hse_inspector', 100);
-            $table->time('jam_pengawasan');
+            $table->time('jam_mulai');
+            $table->time('jam_selesai');
             $table->string('zona_pengawasan', 100);
             $table->string('lokasi_observasi', 100);
             $table->integer('jumlah_patuh_apd_karyawan')->default(0);

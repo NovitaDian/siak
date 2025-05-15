@@ -401,7 +401,7 @@
 
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="masa_kerja">{{ __('Masa Kerja') }}</label>
+                                        <label for="masa_kerja">{{ __('Masa Kerja (Tahun)') }}</label>
                                         <input class="form-control" type="text" id="masa_kerja" name="masa_kerja" value="{{ old('masa_kerja') }}">
                                         @error('masa_kerja')
                                         <p class="text-danger text-xs mt-2">{{ $message }}</p>

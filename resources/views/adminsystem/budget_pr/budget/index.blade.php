@@ -16,11 +16,19 @@
     </form>
 </div>
 <br>
+
 <div class="row">
     <div class="col-12">
         <div class="card mb-4">
             <div class="card-header pb-0">
-                <h6>BUDGET PLAN</h6>
+                <div class="d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0">Budget</h6>
+                    <form action="{{ route('adminsystem.budget.create') }}" method="GET">
+                        <button type="submit" class="btn btn-primary mb-0">
+                            Tambah
+                        </button>
+                    </form>
+                </div>
             </div>
             <div class="card-body px-0 pt-0 pb-2">
                 <div class="table-responsive p-0">
@@ -31,7 +39,6 @@
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Kode GL Account</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama GL Account</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Internal Order</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Kuantitas 1 Tahun</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Total 1 Tahun</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Aksi</th>
                                 </tr>
@@ -46,11 +53,7 @@
                                         <p class="text-xs font-weight-bold mb-0">{{ $budget->gl_name }}</p>
                                     </td>
                                     <td class="text-center">
-                                        <p class="text-xs font-weight-bold mb-0">{{ $budget->internal_order }}</p>
-                                    </td>
-
-                                    <td class="text-center">
-                                        <p class="text-xs font-weight-bold mb-0">{{ $budget->setahun_qty }}</p>
+                                        <p class="text-xs font-weight-bold mb-0">{{ $budget->internal_order ??'-'}}</p>
                                     </td>
                                     <td class="text-center">
                                         <p class="text-xs font-weight-bold mb-0">{{ $budget->setahun_total}}</p>

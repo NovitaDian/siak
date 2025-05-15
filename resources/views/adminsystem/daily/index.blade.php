@@ -122,26 +122,29 @@
                                             <p class="text-xs font-weight-bold mb-0">{{ $daily->rincian_laporan }}</p>
                                         </td>
                                         <td class="align-middle text-center">
-                                            <div style="display: flex; justify-content: center; align-items: center; gap: 8px;">
-
+                                            <div style="display: flex; justify-content: center; align-items: center;">
                                                 <!-- Tombol Edit -->
-                                                <a href="{{ route('adminsystem.daily.edit', $daily->id) }}"
-                                                    style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right, #FFA500, #FF6347); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px; margin-right: 8px;">
+                                                <a href="javascript:;"
+                                                    id="editBtn"
+                                                    class="btn btn-warning"
+                                                    onclick="editAction();">
                                                     <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit
-
                                                 </a>
 
-                                                <!-- Tombol Send -->
-                                                <form action="{{ route('adminsystem.daily.destroy', $daily->id) }}" method="POST" style="display:inline;">
+                                                <!-- Tombol Delete -->
+                                                <form action="{{ route('adminsystem.daily.destroy', $daily->id) }}" method="POST" style="margin: 0;">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit"
+                                                        class="btn btn-info"
                                                         onclick="return confirm('Anda yakin akan mengirim dokumen?')"
-                                                        style="display: inline-flex; align-items: center; justify-content: center; padding: 4px 8px;  background: linear-gradient(to right, #28A745, #2E8B57); color: white; border: none; border-radius: 5px; font-weight: bold; font-size: 10px;">
-                                                        <i style="margin-right: 4px; font-size: 12px;"></i> Send
+                                                        title="Kirim"> <i class="fas fa-paper-plane me-1" style="margin-right: 4px; font-size: 12px;"></i> Send
                                                     </button>
                                                 </form>
                                             </div>
+
+                                            <!-- Font Awesome (pindahkan ke layout utama jika sudah dimuat global) -->
+                                            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
                                         </td>
 
 
@@ -166,29 +169,38 @@
                         <div class="card-header pb-0">
                             <h6>Sent Daily Activities & Improvement Report</h6>
                             <br>
-                            <form action="{{ route('adminsystem.daily.index') }}" method="GET" class="row px-4 mb-3">
-                            <div class="col-md-3">
-                                <label for="start_date">Tanggal Mulai</label>
-                                <input type="date" name="start_date" id="start_date" class="form-control" value="{{ request('start_date') }}">
-                            </div>
-                            <div class="col-md-3">
-                                <label for="end_date">Tanggal Selesai</label>
-                                <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request('end_date') }}">
-                            </div>
-                            <div class="col-md-3 d-flex align-items-end">
-                                <button type="submit"  class="btn btn-sm btn-primary ">Filter</button>
-                            </div>
-                            <div class="d-flex justify-content-end mb-3 px-4">
-                                <a href="{{ route('adminsystem.daily.export', request()->all()) }}" class="btn btn-sm btn-primary me-2" style="display: inline-flex; align-items: center;">
-                                    <i class="fas fa-file-excel me-1"></i> Excel
-                                </a>
-                                <a href="{{ route('adminsystem.daily.exportPdf', request()->all()) }}" class="btn btn-sm btn-danger" style="display: inline-flex; align-items: center;">
-                                    <i class="fas fa-file-pdf me-1"></i> PDF
-                                </a>
-                            </div>
 
-                        </form>
+                            <form action="{{ route('adminsystem.daily.index') }}" method="GET" class="row align-items-end gx-2 mb-3">
+                                <div class="col-md-3">
+                                    <label for="start_date" class="form-label mb-0">Start Date</label>
+                                    <input type="date" id="start_date" name="start_date" class="form-control form-control-sm"
+                                        value="{{ request('start_date') }}">
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label for="end_date" class="form-label mb-0">End Date</label>
+                                    <input type="date" id="end_date" name="end_date" class="form-control form-control-sm"
+                                        value="{{ request('end_date') }}">
+                                </div>
+
+                                <div class="col-md-6 d-flex gap-2">
+                                    <button type="submit" class="btn btn-success btn-sm w-auto">
+                                        <i class="fas fa-filter me-1"></i> Filter
+                                    </button>
+
+                                    <a href="{{ route('adminsystem.daily.export', request()->all()) }}" class="btn btn-primary btn-sm w-auto">
+                                        <i class="fas fa-file-excel me-1"></i> Excel
+                                    </a>
+
+                                    <a href="{{ route('adminsystem.daily.exportPdf', request()->all()) }}" class="btn btn-danger btn-sm w-auto">
+                                        <i class="fas fa-file-pdf me-1"></i> PDF
+                                    </a>
+                                </div>
+                            </form>
+
+
                         </div>
+
                         <div class="card-body px-4 pt-4 pb-4">
                             <div class="table-responsive p-0">
                                 <table class="table align-items-center mb-0" id="dataTableSent">
@@ -271,9 +283,6 @@
                                                     </a>
                                                 </div>
                                             </td>
-
-
-
                                         </tr>
                                         @endforeach
                                     </tbody>

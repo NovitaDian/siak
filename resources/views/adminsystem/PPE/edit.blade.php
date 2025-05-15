@@ -68,11 +68,20 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <div class="form-group">
-                                <label for="jam_pengawasan">{{ __('Jam Pengawasan') }}</label>
-                                <input class="form-control" type="time" id="jam_pengawasan" name="jam_pengawasan" value="{{ old('jam_pengawasan', $ppeReport->jam_pengawasan) }}" required>
-                                @error('jam_pengawasan')
+                                <label for="jam_mulai">{{ __('Jam Mulai Pengawasan') }}</label>
+                                <input class="form-control" type="time" id="jam_mulai" name="jam_mulai" value="{{ old('jam_mulai', $ppeReport->jam_mulai) }}" required>
+                                @error('jam_mulai')
+                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="jam_selesai">{{ __('Jam Selesai Pengawasan') }}</label>
+                                <input class="form-control" type="time" id="jam_selesai" name="jam_selesai" value="{{ old('jam_selesai', $ppeReport->jam_selesai) }}" required>
+                                @error('jam_selesai')
                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                 @enderror
                             </div>

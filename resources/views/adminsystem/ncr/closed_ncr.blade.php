@@ -99,7 +99,7 @@
                             </div>
                         </div>
 
-                    <!-- Dropdown Perusahaan -->
+                        <!-- Dropdown Perusahaan -->
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="perusahaan">{{ __('Perusahaan') }}</label>
@@ -134,9 +134,9 @@
                                 @enderror
                             </div>
                         </div>
-                
 
-                    <!-- Element / Referensi NCR -->
+
+                        <!-- Element / Referensi NCR -->
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="element_referensi_ncr">{{ __('Element / Referensi NCR') }}</label>
@@ -162,14 +162,78 @@
                                 @enderror
                             </div>
                         </div>
-                 
 
-                    <!-- Deskripsi Ketidaksesuaian -->
-                        <div class="col-md-12">
+
+                        <!-- Deskripsi Ketidaksesuaian -->
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label for="deskripsi_ketidaksesuaian">{{ __('Deskripsi Ketidaksesuaian') }}</label>
-                                <textarea class="form-control" id="deskripsi_ketidaksesuaian" name="deskripsi_ketidaksesuaian" rows="4" readonly required>{{ old('deskripsi_ketidaksesuaian', $ncr_fixs->deskripsi_ketidaksesuaian) }}</textarea>
+                                <textarea class="form-control" id="deskripsi_ketidaksesuaian" name="deskripsi_ketidaksesuaian" rows="4" readonly>{{ old('deskripsi_ketidaksesuaian', $ncr_fixs->deskripsi_ketidaksesuaian) }}</textarea>
                                 @error('deskripsi_ketidaksesuaian')
+                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="tindak_lanjut">{{ __('Tindak Lanjut') }}</label>
+                                <textarea class="form-control" id="tindak_lanjut" name="tindak_lanjut" rows="4" readonly>{{ old('tindak_lanjut', $ncr_fixs->tindak_lanjut) }}</textarea>
+                                @error('tindak_lanjut')
+                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="estimasi">{{ __('Estimasi Penyelesaian') }}</label>
+                                <input
+                                    class="form-control"
+                                    type="date"
+                                    id="estimasi"
+                                    name="estimasi"
+                                    value="{{ old('estimasi', $ncr_fixs->estimasi) }}"
+                                    readonly>
+                                @error('estimasi')
+                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="foto">{{ __('Foto') }}</label><br>
+                                @if ($ncr_fixs->foto)
+                                <img src="{{ asset('storage/' . $ncr_fixs->foto) }}" alt="Foto Sebelumnya" width="200" class="mb-2">
+                                @endif
+                                <input
+                                    class="form-control @error('foto') is-invalid @enderror"
+                                    type="file"
+                                    id="foto"
+                                    name="foto"
+                                    accept="image/*"
+                                    capture="environment"
+                                    readonly>
+
+                                @error('foto')
+                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                                @enderror
+
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="foto_closed">{{ __('Foto Close') }}</label>
+                                <input
+                                    class="form-control @error('foto_closed') is-invalid @enderror"
+                                    type="file"
+                                    id="foto_closed"
+                                    name="foto_closed"
+                                    accept="image/*"
+                                    capture="environment"
+                                    required>
+                                @error('foto_closed')
                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                 @enderror
                             </div>
@@ -183,12 +247,12 @@
                                 @enderror
                             </div>
                         </div>
-                  
 
-                    <!-- Submit Button -->
-                    <div class="d-flex justify-content-end">
-                        <button type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">{{ __('Update Report') }}</button>
-                    </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">{{ __('Update Report') }}</button>
+                        </div>
                 </form>
             </div>
         </div>

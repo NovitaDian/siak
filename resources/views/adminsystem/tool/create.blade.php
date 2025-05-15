@@ -12,7 +12,7 @@
                 <h6 class="mb-0">{{ __('DATA LAPORAN PENGECEKAN ALAT') }}</h6>
             </div>
             <div class="card-body pt-4 p-3">
-                <form action="{{ route('adminsystem.tool.store') }}" method="POST" role="form text-left">
+                <form action="{{ route('adminsystem.tool.store') }}" method="POST" enctype="multipart/form-data" role="form text-left">
                     @csrf
                     @if($errors->any())
                     <div class="mt-3 alert alert-primary alert-dismissible fade show" role="alert">
@@ -77,6 +77,22 @@
                                     <option value="Tidak layak operasi" {{ old('status_pemeriksaan') == 'Tidak layak operasi' ? 'selected' : '' }}>Tidak Layak Operasi</option>
                                 </select>
                                 @error('status_pemeriksaan')
+                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="foto">{{ __('Foto Report') }}</label>
+                                <input
+                                    class="form-control @error('foto') is-invalid @enderror"
+                                    type="file"
+                                    id="foto"
+                                    name="foto"
+                                    accept="image/*"
+                                    capture="environment"
+                                    required>
+                                @error('foto')
                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                 @enderror
                             </div>

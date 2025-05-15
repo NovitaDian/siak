@@ -18,7 +18,8 @@ return new class extends Migration
             $table->string('shift_kerja', 50);
             $table->unsignedBigInteger('hse_inspector_id');
             $table->string('nama_hse_inspector', 100);
-            $table->time('jam_pengawasan');
+            $table->time('jam_mulai');
+            $table->time('jam_selesai');
             $table->string('zona_pengawasan', 100);
             $table->string('lokasi_observasi', 100);
             $table->integer('jumlah_patuh_apd_karyawan')->default(0);
@@ -37,7 +38,7 @@ return new class extends Migration
             $table->string('durasi_ppe')->nullable();
             $table->string('status_note', 100)->nullable();
             $table->string('status_ppe', 100)->nullable();
-            $table->timestamps(); 
+            $table->timestamps();
             $table->foreign('hse_inspector_id')->references('id')->on('hse_inspector')->onDelete('cascade');
         });
     }

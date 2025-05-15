@@ -68,6 +68,27 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="foto">{{ __('Foto') }}</label><br>
+                                @if ($ncr_fixs->foto)
+                                <img src="{{ asset('storage/' . $ncr_fixs->foto) }}" alt="Foto Sebelumnya" width="200" class="mb-2">
+                                @endif
+                                <input
+                                    class="form-control @error('foto') is-invalid @enderror"
+                                    type="file"
+                                    id="foto"
+                                    name="foto"
+                                    accept="image/*"
+                                    capture="environment"
+                                    readonly>
+
+                                @error('foto')
+                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                                @enderror
+
+                            </div>
+                        </div>
                     </div>
                     <div class="d-flex justify-content-end">
                         <button type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">{{ __('Update Laporan') }}</button>

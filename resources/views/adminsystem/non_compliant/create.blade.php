@@ -5,47 +5,53 @@
 <div>
 
     <h6 class="mb-0 mt-4">{{ __('DATA PPE FIX') }}</h6>
-    <form action="{{ route('adminsystem.non_compliant.store') }}" method="POST">
+    <form action="{{ route('adminsystem.non_compliant.store') }}" enctype="multipart/form-data" method="POST">
         @csrf
         <input type="hidden" name="id_ppe" value="{{ $ppeFix->id }}">
 
-    <div class="row">
-        <div class="col-md-4">
-            <div class="form-group">
-                <label>Nama HSE Inspector</label>
-                <input type="text" name="nama_hse_inspector" class="form-control" value="{{ $ppeFix->nama_hse_inspector ?? '' }}" readonly>
+        <div class="row">
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label>Nama HSE Inspector</label>
+                    <input type="text" name="nama_hse_inspector" class="form-control" value="{{ $ppeFix->nama_hse_inspector ?? '' }}" readonly>
+                </div>
             </div>
-        </div>
-        <div class="col-md-2">
-            <div class="form-group">
-                <label>Shift Kerja</label>
-                <input type="text" name="shift_kerja" class="form-control" value="{{ $ppeFix->shift_kerja ?? '' }}" readonly>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label>Shift Kerja</label>
+                    <input type="text" name="shift_kerja" class="form-control" value="{{ $ppeFix->shift_kerja ?? '' }}" readonly>
+                </div>
             </div>
-        </div>
-        <div class="col-md-2">
-            <div class="form-group">
-                <label>Jam Pengawasan</label>
-                <input type="text" name="jam_pengawasan" class="form-control" value="{{ $ppeFix->jam_pengawasan ?? '' }}" readonly>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label>Jam Mulai</label>
+                    <input type="text" name="jam_mulai" class="form-control" value="{{ $ppeFix->jam_mulai ?? '' }}" readonly>
+                </div>
             </div>
-        </div>
-        <div class="col-md-2">
-            <div class="form-group">
-                <label>Zona Pengawasan</label>
-                <input type="text" name="zona_pengawasan" class="form-control" value="{{ $ppeFix->zona_pengawasan ?? '' }}" readonly>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label>Jam Selesai</label>
+                    <input type="text" name="jam_selesai" class="form-control" value="{{ $ppeFix->jam_selesai ?? '' }}" readonly>
+                </div>
             </div>
-        </div>
-        <div class="col-md-2">
-            <div class="form-group">
-                <label>Lokasi Observasi</label>
-                <input type="text" name="lokasi_observasi" class="form-control" value="{{ $ppeFix->lokasi_observasi ?? '' }}" readonly>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label>Zona Pengawasan</label>
+                    <input type="text" name="zona_pengawasan" class="form-control" value="{{ $ppeFix->zona_pengawasan ?? '' }}" readonly>
+                </div>
             </div>
-        </div>
-    </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label>Lokasi Observasi</label>
+                    <input type="text" name="lokasi_observasi" class="form-control" value="{{ $ppeFix->lokasi_observasi ?? '' }}" readonly>
+                </div>
+            </div>
+                 </div>
 
-    <h6 class="mb-0 mt-4">{{ __('DATA PELANGGAR') }}</h6>
+        <h6 class="mb-0 mt-4">{{ __('DATA PELANGGAR') }}</h6>
 
-    <!-- Form Start -->
-    
+        <!-- Form Start -->
+
         <div id="pelanggar-wrapper">
             <div class="row pelanggar-entry">
                 <div class="row">
@@ -103,6 +109,22 @@
                         <label>Tindakan</label>
                         <input type="text" name="tindakan" class="form-control">
                     </div>
+                    <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="foto">{{ __('Foto') }}</label>
+                                <input
+                                    class="form-control @error('foto') is-invalid @enderror"
+                                    type="file"
+                                    id="foto"
+                                    name="foto"
+                                    accept="image/*"
+                                    capture="environment"
+                                    required>
+                                @error('foto')
+                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
                 </div>
             </div>
         </div>

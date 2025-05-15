@@ -13,7 +13,8 @@ class CreateNonCompliantsTable extends Migration
             $table->unsignedBigInteger('id_ppe');
             $table->string('nama_hse_inspector', 100);
             $table->string('shift_kerja', 100);
-            $table->string('jam_pengawasan', 100);
+            $table->time('jam_mulai');
+            $table->time('jam_selesai');
             $table->string('zona_pengawasan', 100);
             $table->string('lokasi_observasi', 100);
             $table->string('tipe_observasi', 100);
@@ -23,6 +24,8 @@ class CreateNonCompliantsTable extends Migration
             $table->string('nama_bagian', 100);
             $table->text('tindakan')->nullable();
             $table->string('writer', 100);
+            $table->string('status', 30)->default('Nothing');
+            $table->binary('foto', 100);
             $table->timestamps();
 
             $table->foreign('id_ppe')->references('id')->on('ppe_fix')->onDelete('cascade');

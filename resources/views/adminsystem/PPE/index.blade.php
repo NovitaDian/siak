@@ -64,7 +64,7 @@
 
 
         <!-- DRAFT TABLE -->
-        <div class="card mb-4">
+        <!-- <div class="card mb-4">
             <div class="card-header d-flex justify-content-between align-items-center pb-0">
                 <h6 class="mb-0">Draft</h6>
                 <form action="{{ route('adminsystem.ppe.create') }}" method="GET" class="mb-0">
@@ -101,15 +101,15 @@
                                 <td class="align-middle text-center">
                                     <div style="display: flex; justify-content: center; align-items: center;">
                                         <!-- Tombol Edit -->
-                                        <a href="javascript:;"
+                                        <!-- <a href="javascript:;"
                                             id="editBtn"
                                             class="btn btn-warning"
                                             onclick="editAction();">
                                             <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit
-                                        </a>
+                                        </a> -->
 
                                         <!-- Tombol Delete -->
-                                        <form action="{{ route('adminsystem.ppe.destroy', $ppe->id) }}" method="POST" style="margin: 0;">
+                                        <!-- <form action="{{ route('adminsystem.ppe.destroy', $ppe->id) }}" method="POST" style="margin: 0;">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit"
@@ -121,7 +121,7 @@
                                     </div>
 
                                     <!-- Font Awesome (pindahkan ke layout utama jika sudah dimuat global) -->
-                                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+                                    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
                                 </td>
 
                                 @empty
@@ -133,12 +133,16 @@
                     </table>
                 </div>
             </div>
-        </div>
+        </div>  -->
 
         <!-- SENT DOCUMENT TABLE -->
         <div class="card mb-4">
-            <div class="card-header pb-0">
-                <h6>Sent Document</h6>
+            <div class="card-header d-flex justify-content-between align-items-center pb-0">
+                <h6 class="mb-0">SAFETY BEHAVIOR & PPE COMPLIANCE</h6>
+                <form action="{{ route('adminsystem.ppe.create') }}" method="GET" class="mb-0">
+                    @csrf
+                    <button type="submit" class="btn btn-primary">Tambah</button>
+                </form>
             </div>
 
 

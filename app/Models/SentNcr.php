@@ -30,7 +30,11 @@ class SentNcr extends Model
         'status',
         'status_ncr',
         'status_note',
-        'durasi_ncr'
+        'durasi_ncr',
+        'estimasi',
+        'foto',
+        'foto_closed',
+        'tindak_lanjut'
     ];
 
     // Menentukan tipe data untuk tanggal agar bisa otomatis di-convert menjadi format date
