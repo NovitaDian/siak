@@ -1205,23 +1205,26 @@
         document.getElementById('bagian_tubuh_luka3')
     ];
 
-    let currentFormIndex = 0;
+    // Fungsi untuk mengisi input kosong pertama
+    function fillNextEmptyInput(value) {
+        for (let i = 0; i < formInputs.length; i++) {
+            if (!formInputs[i].value) {
+                formInputs[i].value = value;
+                return;
+            }
+        }
+        alert('Semua form sudah terisi!');
+    }
 
     hotspots.forEach(hotspot => {
-        // Event klik pada hotspot
+        const value = hotspot.getAttribute('data-value');
+
         hotspot.addEventListener('click', () => {
-            const value = hotspot.getAttribute('data-value');
-            if (currentFormIndex < formInputs.length) {
-                formInputs[currentFormIndex].value = value;
-                currentFormIndex++;
-            } else {
-                alert('Semua form sudah terisi!');
-            }
+            fillNextEmptyInput(value);
         });
 
         // Tooltip saat hover
         hotspot.addEventListener('mouseover', (event) => {
-            const value = hotspot.getAttribute('data-value');
             tooltip.textContent = value;
             tooltip.style.left = event.pageX + 10 + 'px';
             tooltip.style.top = event.pageY + 10 + 'px';
@@ -1232,7 +1235,16 @@
             tooltip.style.display = 'none';
         });
     });
+
+    // Update currentFormIndex if user clears an input (optional)
+    formInputs.forEach((input, index) => {
+        input.addEventListener('input', () => {
+            // Do nothing if user types manually
+            // You can enhance this to reset if you want stricter behavior
+        });
+    });
 </script>
+
 
 <script>
     function updatePeningkatanDropdown(phase) {

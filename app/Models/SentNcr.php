@@ -23,7 +23,7 @@ class SentNcr extends Model
         'tanggal_audit',
         'nama_auditee',
         'perusahaan',
-        'bagian',
+        'nama_bagian',
         'element_referensi_ncr',
         'kategori_ketidaksesuaian',
         'deskripsi_ketidaksesuaian',

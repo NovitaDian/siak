@@ -3433,6 +3433,13 @@ textarea.form-control-lg {
   color: #fff;
   background-color: #86cc6c;
   border-color: #07b444;
+align-items: center; 
+padding: 6px 8px; 
+text-decoration: none; 
+border-radius: 5px; 
+font-weight: bold; 
+font-size: 10px; 
+margin-right: 8px;
 }
 .btn-primary:hover {
   color: #fff;
@@ -3463,6 +3470,13 @@ textarea.form-control-lg {
   color: #000;
   background-color: #8392AB;
   border-color: #8392AB;
+  align-items: center; 
+padding: 6px 8px; 
+text-decoration: none; 
+border-radius: 5px; 
+font-weight: bold; 
+font-size: 10px; 
+margin-right: 8px;
 }
 .btn-secondary:hover {
   color: #000;

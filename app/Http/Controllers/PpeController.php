@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\PpeExport;
 use App\Mail\PPERequestNotification;
 use Illuminate\Support\Facades\Auth;
 use App\Models\HseInspector;
@@ -12,21 +13,32 @@ use App\Models\Ppe;
 use App\Models\PpeRequest;
 use App\Models\SentPpe;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PpeController extends Controller
 {
     // Menampilkan semua data observasi
-    public function index()
+    public function index(Request $request)
     {
-        $user = Auth::user(); // Get the currently authenticated user
+        $user = Auth::user();
         $ppes = Ppe::where('writer', $user->name)->get();
-        $ppe_fixs = SentPpe::all();
+
+        $start = $request->start_date;
+        $end = $request->end_date;
+
+        // Jika filter tanggal diisi, gunakan whereBetween
+        if ($start && $end) {
+            $ppe_fixs = SentPpe::whereBetween('tanggal_shift_kerja', [$start, $end])->get();
+        } else {
+            $ppe_fixs = SentPpe::all();
+        }
+
         $requests = PpeRequest::all();
         return view('adminsystem.ppe.index', compact('ppes', 'ppe_fixs', 'requests'));
     }
-
     // Menampilkan form untuk membuat data baru
     public function create()
     {
@@ -122,7 +134,9 @@ class PpeController extends Controller
     public function edit($id)
     {
         $ppe = Ppe::findOrFail($id);
-        return view('ppe.edit', compact('ppe'));
+        $inspectors = HseInspector::all();
+
+        return view('ppe.edit', compact('ppe', 'inspectors'));
     }
 
     // Mengupdate data ke database
@@ -255,44 +269,13 @@ class PpeController extends Controller
         return redirect()->route('adminsystem.ppe.index')->with('notification', 'PPE berhasil dipindahkan ke ppe_fix!');
     }
 
-    public function storeRequest(Request $request)
-    {
-        // Validate input
-        $request->validate([
-            'sent_ppe_id' => 'required|exists:ppe_fix,id',
-            'type' => 'required|string',
-            'reason' => 'required|string',
-        ]);
-
-        // Save request to the ppe_request table
-        PpeRequest::create([
-            'sent_ppe_id' => $request->sent_ppe_id,
-            'type' => $request->type,
-            'reason' => $request->reason,
-            'nama_pengirim' => Auth::user()->name,
-        ]);
-        // Kirim email ke semua adminsystem
-        $admins = User::where('role', 'adminsystem')->get();
-        foreach ($admins as $admin) {
-            Mail::to($admin->email)->send(new PPERequestNotification($request));
-        }
-
-        if ($request->ajax()) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Request berhasil dikirim dan email telah dikirim ke admin.',
-            ]);
-        }
-
-
-        // Return JSON response
-        return response()->json(['success' => true, 'message' => 'Request submitted successfully.']);
-    }
     public function sent_edit($id)
     {
         // Retrieve the NCR record by ID
-        $ppe_fixs = SentPpe::findOrFail($id);
-        return view('adminsystem.ppe.sent_edit', compact('ppe_fixs'));
+        $ppeFixs = SentPpe::findOrFail($id);
+        $inspectors = HseInspector::all();
+
+        return view('adminsystem.ppe.sent_edit', compact('ppeFixs', 'inspectors'));
     }
     public function sent_update(Request $request, $id)
     {
@@ -376,23 +359,96 @@ class PpeController extends Controller
         $ppe_fixs->delete();
         return redirect()->route('adminsystem.ppe.index')->with('notification', 'NCR berhasil dikirim!');
     }
+    public function storeRequest(Request $request)
+    {
+        $request->validate([
+            'sent_ppe_id' => 'required|exists:ppe_fix,id',
+            'type' => 'required|string',
+            'reason' => 'required|string',
+        ]);
+
+        $ppeRequest = PpeRequest::create([
+            'sent_ppe_id' => $request->sent_ppe_id,
+            'type' => $request->type,
+            'reason' => $request->reason,
+            'nama_pengirim' => Auth::user()->name,
+            'status' => 'Pending',
+        ]);
+
+        SentPpe::where('id', $request->sent_ppe_id)->update([
+            'status' => 'Pending',
+        ]);
+
+        // Kirim email ke semua adminsystem
+        $admins = User::where('role', 'adminsystem')->get();
+        foreach ($admins as $admin) {
+            Mail::to($admin->email)->send(new PpeRequestNotification($ppeRequest));
+        }
+
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Request berhasil dikirim dan email telah dikirim ke admin.',
+            ]);
+        }
+
+        return redirect()->route('adminsystem.ppe.index')->with('success', 'Request berhasil dikirim dan email telah dikirim ke admin.');
+    }
     public function approve($id)
     {
-        $request = PpeRequest::find($id);
+        $request = PpeRequest::findOrFail($id);
         $request->status = 'Approved';
         $request->save();
 
+        // Update juga ppe_fixs jika perlu
+        SentPpe::where('id', $request->sent_ppe_id)->update([
+            'status' => 'Approved',
+        ]);
+
         return response()->json(['success' => true]);
     }
+
 
     public function reject($id)
     {
         $request = PpeRequest::find($id);
         $request->status = 'Rejected';
         $request->save();
-
+        // Update juga ppe_fixs jika perlu
+        SentPpe::where('id', $request->sent_ppe_id)->update([
+            'status' => 'Rejected',
+        ]);
         return response()->json(['success' => true]);
     }
+    public function export(Request $request)
+    {
+        $start = $request->start_date;
+        $end = $request->end_date;
+
+        if ($start && $end) {
+            return Excel::download(new PpeExport($start, $end), 'ppe_filtered.xlsx');
+        } else {
+            return Excel::download(new PpeExport(null, null), 'ppe_all.xlsx');
+        }
+    }
+
+    public function exportPdf(Request $request)
+    {
+        $start = $request->start_date;
+        $end = $request->end_date;
+
+        if ($start && $end) {
+            $ppe_fixs = SentPpe::whereBetween('tanggal_shift_kerja', [$start, $end])->get();
+        } else {
+            $ppe_fixs = SentPpe::all();
+        }
+
+        $pdf = Pdf::loadView('adminsystem.ppe.pdf', compact('ppe_fixs'))
+            ->setPaper('a4', 'landscape');
+
+        return $pdf->download('ppe.pdf');
+    }
+
 
 
 

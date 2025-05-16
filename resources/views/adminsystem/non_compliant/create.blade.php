@@ -4,7 +4,7 @@
 
 <div>
 
-    <h6 class="mb-0 mt-4">{{ __('DATA PPE FIX') }}</h6>
+    <h6 class="mb-0 mt-4">{{ __('DATA PELANGGAR') }}</h6>
     <form action="{{ route('adminsystem.non_compliant.store') }}" enctype="multipart/form-data" method="POST">
         @csrf
         <input type="hidden" name="id_ppe" value="{{ $ppeFix->id }}">

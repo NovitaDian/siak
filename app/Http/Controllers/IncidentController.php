@@ -25,12 +25,20 @@ use Illuminate\Support\Facades\Mail;
 
 class IncidentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = auth()->user();
         $incidents = Incident::where('writer', $user->name)->get();
         $requests = IncidentRequest::all();
-        $incident_fixs = SentIncident::all();
+        $start = $request->start_date;
+        $end = $request->end_date;
+
+        // Jika filter tanggal diisi, gunakan whereBetween
+        if ($start && $end) {
+            $incident_fixs = SentIncident::whereBetween('shift_date', [$start, $end])->get();
+        } else {
+            $incident_fixs = SentIncident::all();
+        }
         return view('adminsystem.incident.index', compact('incidents', 'incident_fixs', 'requests'));
     }
 
@@ -387,7 +395,7 @@ class IncidentController extends Controller
     public function storeRequest(Request $request)
     {
         $request->validate([
-            'sent_incident_id' => 'required|exists:incident_inspections_fix,id',
+            'sent_incident_id' => 'required|exists:incidents_fix,id',
             'type' => 'required|string',
             'reason' => 'required|string',
         ]);

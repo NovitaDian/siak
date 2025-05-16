@@ -148,41 +148,6 @@ class DailyController extends Controller
         return redirect()->route('adminsystem.daily.index')->with('success', 'Data berhasil dikirim.');
     }
 
-    public function storeRequest(Request $request)
-    {
-        $request->validate([
-            'sent_daily_id' => 'required|exists:daily_inspections_fix,id',
-            'type' => 'required|string',
-            'reason' => 'required|string',
-        ]);
-
-        $dailyRequest = DailyRequest::create([
-            'sent_daily_id' => $request->sent_daily_id,
-            'type' => $request->type,
-            'reason' => $request->reason,
-            'nama_pengirim' => Auth::user()->name,
-            'status' => 'Pending',
-        ]);
-
-        SentDaily::where('id', $request->sent_daily_id)->update([
-            'status' => 'Pending',
-        ]);
-
-        // Kirim email ke semua adminsystem
-        $admins = User::where('role', 'adminsystem')->get();
-        foreach ($admins as $admin) {
-            Mail::to($admin->email)->send(new DailyRequestNotification($dailyRequest));
-        }
-
-        if ($request->ajax()) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Request berhasil dikirim dan email telah dikirim ke admin.',
-            ]);
-        }
-
-        return redirect()->route('adminsystem.daily.index')->with('success', 'Request berhasil dikirim dan email telah dikirim ke admin.');
-    }
     public function sent_edit($id)
     {
         // Retrieve the NCR record by ID
@@ -227,6 +192,42 @@ class DailyController extends Controller
         $daily_fixs->delete();
         // Redirect dengan notifikasi
         return redirect()->route('adminsystem.daily.index')->with('notification', 'NCR berhasil dikirim!');
+    }
+    
+    public function storeRequest(Request $request)
+    {
+        $request->validate([
+            'sent_daily_id' => 'required|exists:daily_inspections_fix,id',
+            'type' => 'required|string',
+            'reason' => 'required|string',
+        ]);
+
+        $dailyRequest = DailyRequest::create([
+            'sent_daily_id' => $request->sent_daily_id,
+            'type' => $request->type,
+            'reason' => $request->reason,
+            'nama_pengirim' => Auth::user()->name,
+            'status' => 'Pending',
+        ]);
+
+        SentDaily::where('id', $request->sent_daily_id)->update([
+            'status' => 'Pending',
+        ]);
+
+        // Kirim email ke semua adminsystem
+        $admins = User::where('role', 'adminsystem')->get();
+        foreach ($admins as $admin) {
+            Mail::to($admin->email)->send(new DailyRequestNotification($dailyRequest));
+        }
+
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Request berhasil dikirim dan email telah dikirim ke admin.',
+            ]);
+        }
+
+        return redirect()->route('adminsystem.daily.index')->with('success', 'Request berhasil dikirim dan email telah dikirim ke admin.');
     }
     public function approve($id)
     {

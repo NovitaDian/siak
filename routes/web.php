@@ -91,10 +91,13 @@ Route::group(['middleware' => 'auth'], function () {
 		// Incident management
 		Route::prefix('adminsystem/incident')->name('adminsystem.incident.')->group(function () {
 			Route::get('/', [IncidentController::class, 'index'])->name('index');
+			Route::get('/export', [IncidentController::class, 'export'])->name('export');
+			Route::get('/export-pdf', [IncidentController::class, 'exportPdf'])->name('exportPdf');
 			Route::get('/create', [IncidentController::class, 'create'])->name('create');
 			Route::get('/master', [IncidentController::class, 'master'])->name('master');
 			Route::post('/', [IncidentController::class, 'store'])->name('store');
 			Route::get('/{id}/edit', [IncidentController::class, 'edit'])->name('edit');
+			Route::get('/{id}/sent_edit', [IncidentController::class, 'sent_edit'])->name('sent_edit');
 			Route::put('/{id}', [IncidentController::class, 'update'])->name('update');
 			Route::get('/{id}', [IncidentController::class, 'show'])->name('show');
 			Route::delete('/{id}', [IncidentController::class, 'destroy'])->name('destroy');
@@ -105,12 +108,12 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::post('/approve/{id}', [IncidentController::class, 'approve'])->name('approve');
 			Route::post('/reject/{id}', [IncidentController::class, 'reject'])->name('reject');
 			Route::get('/get-bagian/{perusahaan_name}', [IncidentController::class, 'getBagian'])->name('getBagian');
-			Route::get('/incident/export', [IncidentController::class, 'export'])->name('export');
-			Route::get('/incident/export-pdf', [IncidentController::class, 'exportPdf'])->name('exportPdf');
 		});
 
 		Route::prefix('adminsystem/ppe')->name('adminsystem.ppe.')->group(function () {
 			Route::get('/', [PpeController::class, 'index'])->name('index');
+			Route::get('/export', [PpeController::class, 'export'])->name('export');
+			Route::get('/export-pdf', [PpeController::class, 'exportPdf'])->name('exportPdf');
 			Route::get('/create', [PpeController::class, 'create'])->name('create');
 			Route::post('/', [PpeController::class, 'store'])->name('store');
 			Route::get('/{id}/edit', [PpeController::class, 'edit'])->name('edit');
@@ -135,10 +138,7 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('/{id}', [NonCompliantController::class, 'show'])->name('show');
 			Route::delete('/{id}', [NonCompliantController::class, 'destroy'])->name('destroy');
 			Route::get('/search', [NonCompliantController::class, 'search'])->name('search');
-			Route::get('/sent_edit/{id}', [NonCompliantController::class, 'sent_edit'])->name('sent_edit');
-			Route::put('/sent_update/{id}', [NonCompliantController::class, 'sent_update'])->name('sent_update');
-			Route::delete('/sent_destroy/{id}', [NonCompliantController::class, 'sent_destroy'])->name('sent_destroy');
-			Route::post('/non_comliant-request', [NonCompliantController::class, 'storeRequest'])->name('storeRequest');
+			Route::post('/non_compliant-request', [NonCompliantController::class, 'storeRequest'])->name('storeRequest');
 			Route::post('/request', [NonCompliantController::class, 'submitRequest'])->name('request');
 			Route::post('/approve/{id}', [NonCompliantController::class, 'approve'])->name('approve');
 			Route::post('/reject/{id}', [NonCompliantController::class, 'reject'])->name('reject');
@@ -146,6 +146,11 @@ Route::group(['middleware' => 'auth'], function () {
 		});
 		Route::prefix('adminsystem/ncr')->name('adminsystem.ncr.')->group(function () {
 			Route::get('/', [NcrController::class, 'index'])->name('index');
+			Route::get('/export', [NcrController::class, 'export'])->name('export');
+			Route::get('/export-pdf', [NcrController::class, 'exportPdf'])->name('exportPdf');
+			Route::post('/request', [NcrController::class, 'submitRequest'])->name('request');
+			Route::post('/approve/{id}', [NcrController::class, 'approve'])->name('approve');
+			Route::post('/reject/{id}', [NcrController::class, 'reject'])->name('reject');
 			Route::get('/create', [NcrController::class, 'create'])->name('create');
 			Route::get('/close/{id}', [NcrController::class, 'close'])->name('close');
 			Route::put('/closed/{id}', [NcrController::class, 'close_ncr'])->name('close_ncr');
@@ -154,14 +159,11 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('/sent_edit/{id}', [NcrController::class, 'sent_edit'])->name('sent_edit');
 			Route::put('/{id}', [NcrController::class, 'update'])->name('update');
 			Route::put('/sent_update/{id}', [NcrController::class, 'sent_update'])->name('sent_update');
-			Route::get('/{id}', [NcrController::class, 'show'])->name('show');
+			Route::get('/show{id}', [NcrController::class, 'show'])->name('show');
 			Route::delete('/{id}', [NcrController::class, 'destroy'])->name('destroy');
 			Route::delete('/sent_destroy/{id}', [NcrController::class, 'sent_destroy'])->name('sent_destroy');
 			Route::get('/search', [NcrController::class, 'search'])->name('search');
 			Route::post('/ncr-request', [NcrController::class, 'storeRequest'])->name('storeRequest');
-			Route::post('/request', [NcrController::class, 'submitRequest'])->name('request');
-			Route::post('/approve/{id}', [NcrController::class, 'approve'])->name('approve');
-			Route::post('/reject/{id}', [NcrController::class, 'reject'])->name('reject');
 			Route::get('/get-bagian/{perusahaan_name}', [NcrController::class, 'getBagian'])->name('getBagian');
 		});
 		Route::get('adminsystem/master/ncr', [NcrController::class, 'master'])->name('adminsystem.ncr.master');

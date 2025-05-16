@@ -330,7 +330,6 @@ class InventoryController extends Controller
         $pengeluaran->keterangan = $request->keterangan;
         $pengeluaran->tanggal = $request->tanggal;
         $pengeluaran->save();
-
         $barang = Barang::findOrFail($request->barang_id);
         $barang->quantity -= $request->quantity;
         $barang->save();
@@ -398,8 +397,7 @@ class InventoryController extends Controller
     
         return redirect()->route('adminsystem.pengeluaran.index')->with('success', 'Data Pengeluaran berhasil diperbarui');
     }
-    
-
+   
     public function pengeluaran_destroy($id)
     {
         $pengeluaran = Pengeluaran::find($id);

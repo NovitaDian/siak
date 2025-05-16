@@ -25,7 +25,7 @@
         </div>
     </div>
 
-    
+
     <div class="col-xl-4 col-sm-6 mb-4">
         <div class="overflow-hidden position-relative border-radius-lg bg-cover h-100">
             <div class="card d-flex flex-row">
@@ -37,29 +37,27 @@
             </div>
         </div>
     </div>
-    <div class="col-xl-4 col-sm-6 mb-4">
-        <div class="card d-flex flex-row">
-            <img src="../assets/img/settings.png" alt="Tool Inspection Logo" class="img-fluid" style="width: 100px; height: 100px; object-fit: cover; margin-top: 30px; margin-left: 30px;">
-            <div class="card-body d-flex flex-column justify-content-between">
-                <h5 class="font-weight-bolder text-center">TOOL & EQUIPMENT INSPECTION</h5>
-                <button class="btn btn-primary w-100" onclick="window.location.href='{{ route('adminsystem.tool.index') }}';">Go</button>
+    <div class="row justify-content-center">
+        <div class="col-xl-4 col-sm-6 mb-4">
+            <div class="card d-flex flex-row">
+                <img src="../assets/img/settings.png" alt="Tool Inspection Logo" class="img-fluid" style="width: 100px; height: 100px; object-fit: cover; margin-top: 30px; margin-left: 30px;">
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <h5 class="font-weight-bolder text-center">TOOL & EQUIPMENT INSPECTION</h5>
+                    <button class="btn btn-primary w-100" onclick="window.location.href='{{ route('adminsystem.tool.index') }}';">Go</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-4 col-sm-6 mb-4">
+            <div class="card d-flex flex-row">
+                <img src="../assets/img/daily.png" alt="Daily Activities Logo" class="img-fluid" style="width: 100px; height: 100px; object-fit: cover; margin-top: 30px; margin-left: 30px;">
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <h5 class="font-weight-bolder text-center">DAILY ACTIVITIES & IMPROVEMENT</h5>
+                    <button class="btn btn-primary w-100" onclick="location.href='{{ route('adminsystem.daily.index') }}'">Go</button>
+                </div>
             </div>
         </div>
     </div>
-
-    <div class="col-xl-4 col-sm-6 mb-4">
-        <div class="card d-flex flex-row">
-            <img src="../assets/img/daily.png" alt="Daily Activities Logo" class="img-fluid" style="width: 100px; height: 100px; object-fit: cover; margin-top: 30px; margin-left: 30px;">
-            <div class="card-body d-flex flex-column justify-content-between">
-                <h5 class="font-weight-bolder text-center">DAILY ACTIVITIES & IMPROVEMENT</h5>
-                <br>
-                <button class="btn btn-primary w-100" onclick="location.href='{{ route('adminsystem.daily.index') }}'">Go</button>
-            </div>
-        </div>
-    </div>
-
-
-
     <div class="row mt-4">
         <div class="col-xl-12 col-sm-12 mb-xl-0 mb-4">
             <div class="card h-100 p-3">
@@ -133,12 +131,10 @@
             document.getElementById('new-timeline-item').style.display = 'block';
         }
     </script>
-
     <style>
         .timeline-item {
             border-bottom: 1px solid #ddd;
-            padding-bottom: 20px;
-            margin-bottom: 20px;
+            padding: 10px 0;
         }
 
         .timeline-content {
@@ -151,20 +147,24 @@
 
         }
 
+        .timeline-content .btn {
+            margin-top: 5px;
+        }
+
         #timeline-container {
-            display: flex;
-            flex-direction: column;
+            max-height: 400px;
+            overflow-y: auto;
         }
 
-        .timeline-item {
-            width: 100%;
+        .form-group label {
+            font-size: 0.85rem;
         }
 
-        @media (max-width: 768px) {
-            .timeline-item {
-                flex-direction: column;
-            }
+        .form-group .form-control {
+            font-size: 0.9rem;
+            padding: 4px 8px;
         }
     </style>
+
 
     @endsection

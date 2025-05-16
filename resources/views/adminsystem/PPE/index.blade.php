@@ -34,16 +34,18 @@
                                         <td class="text-center text-xs">{{ $request->type }}</td>
                                         <td class="text-center text-xs">{{ $request->reason }}</td>
                                         <td class="text-center text-xs" id="status-{{$request->id}}">{{ $request->status }}</td>
-                                        <td class="text-center text-xs">
+                                        <td class="text-center">
                                             @if ($request->status == 'Pending')
-                                            <button class="btn btn-success btn-sm" style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right,rgb(167, 40, 40),rgb(139, 46, 46)); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;" onclick="approveRequest('{{ $request->id }}')">Approve</button>
-                                            <button class="btn btn-danger btn-sm" style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right, #28A745, #2E8B57); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;" onclick="rejectRequest('{{ $request->id }}')">Reject</button>
+                                            <button class="btn btn-primary btn-xs" onclick="approveRequest('{{ $request->id }}')">Approve</button>
+                                            <button class="btn btn-danger btn-xs" onclick="rejectRequest('{{ $request->id }}')">Reject</button>
                                             @endif
                                             <form action="{{ route('adminsystem.ppe.show', ['id' => $request->id]) }}" method="GET" style="display:inline;">
-                                                <button type="submit" style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right,rgb(67, 116, 206),rgb(46, 54, 139)); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;" class="btn btn-primary active mb-0 text-white" role="button" aria-pressed="true">
+                                                <button type="submit" class="btn btn-info btn-xs">
                                                     Show
                                                 </button>
                                             </form>
+                                            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
                                         </td>
                                     </tr>
                                     @empty
@@ -101,15 +103,15 @@
                                 <td class="align-middle text-center">
                                     <div style="display: flex; justify-content: center; align-items: center;">
                                         <!-- Tombol Edit -->
-                                        <!-- <a href="javascript:;"
+        <!-- <a href="javascript:;"
                                             id="editBtn"
                                             class="btn btn-warning"
                                             onclick="editAction();">
                                             <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit
                                         </a> -->
 
-                                        <!-- Tombol Delete -->
-                                        <!-- <form action="{{ route('adminsystem.ppe.destroy', $ppe->id) }}" method="POST" style="margin: 0;">
+        <!-- Tombol Delete -->
+        <!-- <form action="{{ route('adminsystem.ppe.destroy', $ppe->id) }}" method="POST" style="margin: 0;">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit"
@@ -121,7 +123,7 @@
                                     </div>
 
                                     <!-- Font Awesome (pindahkan ke layout utama jika sudah dimuat global) -->
-                                    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
                                 </td>
 
                                 @empty
@@ -137,15 +139,42 @@
 
         <!-- SENT DOCUMENT TABLE -->
         <div class="card mb-4">
-            <div class="card-header d-flex justify-content-between align-items-center pb-0">
-                <h6 class="mb-0">SAFETY BEHAVIOR & PPE COMPLIANCE</h6>
-                <form action="{{ route('adminsystem.ppe.create') }}" method="GET" class="mb-0">
-                    @csrf
-                    <button type="submit" class="btn btn-primary">Tambah</button>
-                </form>
+            <div class="card-header pb-0">
+                <div class="d-flex justify-content-between align-items-center">
+                    <!-- Tombol Tambah -->
+                    <form action="{{ route('adminsystem.ppe.create') }}" method="GET" class="mb-0">
+                        @csrf
+                        <button type="submit" class="btn btn-sm btn-primary">Tambah</button>
+                    </form>
+
+                    <!-- Tombol Export -->
+                    <div>
+                        <a href="{{ route('adminsystem.ppe.export', request()->all()) }}" class="btn btn-sm btn-primary me-2">
+                            <i class="fas fa-file-excel me-1"></i> Excel
+                        </a>
+                        <a href="{{ route('adminsystem.ppe.exportPdf', request()->all()) }}" class="btn btn-sm btn-danger">
+                            <i class="fas fa-file-pdf me-1"></i> PDF
+                        </a>
+                    </div>
+                </div>
             </div>
 
-
+            <!-- Filter Form -->
+            <div class="card-header">
+                <form action="{{ route('adminsystem.ppe.index') }}" method="GET" class="row g-3">
+                    <div class="col-md-3">
+                        <label for="start_date">Tanggal Mulai</label>
+                        <input type="date" name="start_date" id="start_date" class="form-control" value="{{ request('start_date') }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="end_date">Tanggal Selesai</label>
+                        <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request('end_date') }}">
+                    </div>
+                    <div class="col-md-3 d-flex align-items-end">
+                        <button type="submit" class="btn btn-sm btn-primary">Filter</button>
+                    </div>
+                </form>
+            </div>
             <div class="card-body px-4 pt-4 pb-4">
                 <div class="table-responsive p-0">
 
@@ -170,7 +199,6 @@
                                 <td class="text-center text-xs">{{ $loop->iteration }}</td>
                                 <td class="text-center text-xs">{{ \Carbon\Carbon::parse($ppe_fix->tanggal_shift_kerja)->format('d/m/Y') }}</td>
                                 <td class="align-middle text-center text-sm">
-                                <td class="align-middle text-center text-sm">
                                     <span class="badge badge-sm {{ $ppe_fix->status_ppe == 'Non-Compliant' ? 'bg-gradient-warning' : 'bg-gradient-success' }}">
                                         {{ $ppe_fix->status_ppe }}
                                     </span>
@@ -179,12 +207,13 @@
                                 </td>
                                 <td class="text-center text-xs">{{ $ppe_fix->shift_kerja }}</td>
                                 <td class="text-center text-xs">{{ $ppe_fix->nama_hse_inspector }}</td>
-                                <td class="text-center text-xs">{{ $ppe_fix->jam_pengawasan }}</td>
+                                <td class="text-center text-xs">{{ $ppe_fix->jam_mulai }}-{{ $ppe_fix->jam_selesai }}</td>
                                 <td class="text-center text-xs">{{ $ppe_fix->zona_pengawasan }}</td>
                                 <td class="text-center text-xs">{{ $ppe_fix->lokasi_observasi }}</td>
                                 <td class="align-middle text-center">
                                     @if ($ppe_fix->status == 'Nothing')
-                                    <button class="btn btn-success btn-sm" style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right,rgb(154, 155, 160),rgb(43, 46, 44)); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;" onclick="showRequestModal('{{ $ppe_fix->id }}')">Request</button>
+                                    <button class="btn btn-secondary btn-xs" onclick="showRequestModal('{{ $ppe_fix->id }}')"> <i></i>&nbsp; Request
+                                    </button>
                                     @elseif ($ppe_fix->status == 'Pending')
                                     <span class="text-warning">Pending</span>
                                     @elseif ($ppe_fix->status == 'Approved')
@@ -211,11 +240,11 @@
                                     @endif
 
                                     @if ($ppe_fix->status_ppe == 'Non-Compliant')
-                                    <a href="{{ route('adminsystem.ppe.show', $ppe_fix->id) }}"
-                                        class="btn btn-primary btn-sm"
-                                        style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right,#007bff,#0056b3); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px; margin-top: 5px;">
-                                        <i class="fas fa-flag"></i>&nbsp; Report
-                                    </a>
+                                    <form action="{{ route('adminsystem.ppe.show', ['id' => $request->id]) }}" method="GET" style="display:inline;">
+                                        <button type="submit" class="btn btn-info btn-xs">
+                                            <i class="fas fa-flag"></i>&nbsp; Report
+                                        </button>
+                                    </form>
                                     @endif
 
                                     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">

@@ -62,7 +62,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="nama_hs_officer_1">{{ __('Nama H&S Officer 1 / Lead Auditor') }}</label>
-                                <input class="form-control" type="text" id="nama_hs_officer_1" name="nama_hs_officer_1" value="{{ old('nama_hs_officer_1') }}" required>
+                                <input class="form-control" type="text" id="nama_hs_officer_1" name="nama_hs_officer_1" value="{{ old('nama_hs_officer_1') }}">
                                 @error('nama_hs_officer_1')
                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                 @enderror
@@ -71,7 +71,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="nama_hs_officer_2">{{ __('Nama H&S Officer 2 / Auditor') }}</label>
-                                <input class="form-control" type="text" id="nama_hs_officer_2" name="nama_hs_officer_2" value="{{ old('nama_hs_officer_2') }}" required>
+                                <input class="form-control" type="text" id="nama_hs_officer_2" name="nama_hs_officer_2" value="{{ old('nama_hs_officer_2') }}">
                                 @error('nama_hs_officer_2')
                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                 @enderror

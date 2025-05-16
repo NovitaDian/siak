@@ -20,7 +20,6 @@ class RegisterController extends Controller
             'name' => ['required', 'max:50'],
             'email' => ['required', 'email', 'max:50', Rule::unique('users', 'email')],
             'password' => ['required', 'min:5', 'max:20'],
-            'role' => ['required', 'max:50'],
             'agreement' => ['accepted']
         ]);
     
@@ -28,7 +27,8 @@ class RegisterController extends Controller
         $attributes = collect($validated)->except('agreement')->toArray();
     
         $attributes['password'] = bcrypt($attributes['password']);
-    
+        $attributes['role'] = 'guest';
+
         // Buat user tanpa login otomatis
         $user = User::create($attributes);
     

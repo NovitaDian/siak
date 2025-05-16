@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\NcrExport;
 use App\Mail\NcrRequestNotification;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Bagian;
@@ -11,68 +12,51 @@ use App\Models\NonCompliant;
 use App\Models\Perusahaan;
 use App\Models\SentNcr;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Maatwebsite\Excel\Facades\Excel;
 
 class NcrController extends Controller
 {
     // Menampilkan semua data NCR
-    public function index()
+    public function index(Request $request)
     {
         $requests = NcrRequest::all();
         $user = Auth::user();
         $ncrs = Ncr::where('writer', $user->name)->get();
 
         // Ambil semua NCR dan hitung warna berdasarkan durasi
-        $ncr_fixs = SentNcr::all()->map(function ($item) {
-            $warna = 'bg-gray-200 text-black'; // default
-            if ($item->durasi_ncr && strpos($item->durasi_ncr, '-') !== false) {
-                $parts = explode('-', $item->durasi_ncr); // 'YYYY-MM-DD HH:MM:SS'
-                if (count($parts) >= 2) {
-                    $tahun = (int)$parts[0];
-                    $bulanHari = explode(' ', $parts[1]);
-                    $bulan = isset($bulanHari[0]) ? (int)$bulanHari[0] : 0;
+        $start = $request->start_date;
+        $end = $request->end_date;
 
-                    $totalBulan = $tahun * 12 + $bulan;
+        // Jika filter tanggal diisi, gunakan whereBetween
+        if ($start && $end) {
+            $ncr_fixs = SentNcr::whereBetween('tanggal_shift_kerja', [$start, $end])->get();
+        } else {
+            $ncr_fixs = SentNcr::all();
+        }
 
-                    if ($totalBulan < 3) {
-                        $warna = 'bg-green-500 text-white';
-                    } elseif ($totalBulan >= 3 && $totalBulan < 6) {
-                        $warna = 'bg-yellow-400 text-black';
-                    } elseif ($totalBulan >= 6 && $totalBulan < 9) {
-                        $warna = 'bg-orange-400 text-white';
-                    } elseif ($totalBulan >= 9 && $totalBulan < 12) {
-                        $warna = 'bg-red-500 text-white';
-                    } else {
-                        $warna = 'bg-black text-white';
-                    }
-                }
-            }
-            $item->warna_durasi = $warna;
-            return $item;
-        });
 
         return view('adminsystem.ncr.index', compact('ncrs', 'ncr_fixs', 'requests'));
     }
 
     // Menampilkan detail data NCR berdasarkan ID
     public function show($id)
-    {
-        $ncr = Ncr::findOrFail($id);
+{
+    $ncr = SentNcr::findOrFail($id);
 
-        if (!$ncr) {
-            return response()->json(['message' => 'Data NCR tidak ditemukan'], 404);
-        }
-        if (is_string($ncr->kategori_ketidaksesuaian)) { // Jika masih string
-            $ncr->kategori_ketidaksesuaian = explode(',', $ncr->kategori_ketidaksesuaian); // Ubah ke array
-        }
-        $tanggalHariIni = Carbon::now()->format('d F Y'); // Format: 11 November 2023
-
-
-        return view('adminsystem.ncr.show', compact('ncr', 'tanggalHariIni'));
+    if (is_string($ncr->kategori_ketidaksesuaian)) {
+        $ncr->kategori_ketidaksesuaian = explode(',', $ncr->kategori_ketidaksesuaian);
     }
+
+    $tanggalHariIni = Carbon::now()->format('d F Y');
+
+    return view('adminsystem.ncr.show', compact('ncr', 'tanggalHariIni'));
+}
+
 
     public function edit($id)
     {
@@ -113,8 +97,8 @@ class NcrController extends Controller
         $request->validate([
             'tanggal_shift_kerja' => 'required|date',
             'shift_kerja' => 'required|string|max:255',
-            'nama_hs_officer_1' => 'required|string|max:255',
-            'nama_hs_officer_2' => 'required|string|max:255',
+            'nama_hs_officer_1' => 'nullable|string|max:255',
+            'nama_hs_officer_2' => 'nullable|string|max:255',
             'tanggal_audit' => 'required|date',
             'nama_auditee' => 'required|string|max:255',
             'perusahaan' => 'required|string|max:255',
@@ -154,8 +138,8 @@ class NcrController extends Controller
         $request->validate([
             'tanggal_shift_kerja' => 'required|date',
             'shift_kerja' => 'required|string|max:255',
-            'nama_hs_officer_1' => 'required|string|max:255',
-            'nama_hs_officer_2' => 'required|string|max:255',
+            'nama_hs_officer_1' => 'nullable|string|max:255',
+            'nama_hs_officer_2' => 'nullable|string|max:255',
             'tanggal_audit' => 'required|date',
             'nama_auditee' => 'required|string|max:255',
             'perusahaan' => 'required|string|max:255',
@@ -182,8 +166,8 @@ class NcrController extends Controller
         $request->validate([
             'tanggal_shift_kerja' => 'required|date',
             'shift_kerja' => 'required|string|max:255',
-            'nama_hs_officer_1' => 'required|string|max:255',
-            'nama_hs_officer_2' => 'required|string|max:255',
+            'nama_hs_officer_1' => 'nullable|string|max:255',
+            'nama_hs_officer_2' => 'nullable|string|max:255',
             'tanggal_audit' => 'required|date',
             'nama_auditee' => 'required|string|max:255',
             'perusahaan' => 'required|string|max:255',
@@ -244,25 +228,28 @@ class NcrController extends Controller
 
     public function storeRequest(Request $request)
     {
-        // Validate input
         $request->validate([
             'sent_ncr_id' => 'required|exists:ncr_fix,id',
             'type' => 'required|string',
             'reason' => 'required|string',
         ]);
 
-        // Save request to the ncr_request table
-        NcrRequest::create([
+        $ncrRequest = NcrRequest::create([
             'sent_ncr_id' => $request->sent_ncr_id,
             'type' => $request->type,
             'reason' => $request->reason,
             'nama_pengirim' => Auth::user()->name,
+            'status' => 'Pending',
+        ]);
+
+        SentNcr::where('id', $request->sent_ncr_id)->update([
+            'status' => 'Pending',
         ]);
 
         // Kirim email ke semua adminsystem
         $admins = User::where('role', 'adminsystem')->get();
         foreach ($admins as $admin) {
-            Mail::to($admin->email)->send(new NcrRequestNotification($request));
+            Mail::to($admin->email)->send(new NcrRequestNotification($ncrRequest));
         }
 
         if ($request->ajax()) {
@@ -272,34 +259,60 @@ class NcrController extends Controller
             ]);
         }
 
-
-        // Return JSON response
-        return response()->json(['success', 'Request submitted successfully.']);
+        return redirect()->route('adminsystem.ncr.index')->with('success', 'Request berhasil dikirim dan email telah dikirim ke admin.');
     }
     public function approve($id)
     {
-        $request = NcrRequest::find($id);
+        $request = NcrRequest::findOrFail($id);
         $request->status = 'Approved';
         $request->save();
 
+        SentNcr::where('id', $request->sent_ncr_id)->update([
+            'status' => 'Approved',
+        ]);
+
         return response()->json(['success' => true]);
     }
+
 
     public function reject($id)
     {
         $request = NcrRequest::find($id);
         $request->status = 'Rejected';
         $request->save();
-
+        // Update juga ncr_fixs jika perlu
+        SentNcr::where('id', $request->sent_ncr_id)->update([
+            'status' => 'Rejected',
+        ]);
         return response()->json(['success' => true]);
     }
-
-    public function getBagian($perusahaan_name)
+    public function export(Request $request)
     {
-        $bagians = Bagian::where('perusahaan_name', $perusahaan_name)->get();
-        return response()->json($bagians);
-    }
+        $start = $request->start_date;
+        $end = $request->end_date;
 
+        if ($start && $end) {
+            return Excel::download(new NcrExport($start, $end), 'ncr_filtered.xlsx');
+        } else {
+            return Excel::download(new NcrExport(null, null), 'ncr_all.xlsx');
+        }
+    }
+    public function exportPdf(Request $request)
+    {
+        $start = $request->start_date;
+        $end = $request->end_date;
+
+        if ($start && $end) {
+            $ncr_fixs = SentNcr::whereBetween('tanggal_shift_kerja', [$start, $end])->get();
+        } else {
+            $ncr_fixs = SentNcr::all();
+        }
+
+        $pdf = Pdf::loadView('adminsystem.ncr.pdf', compact('ncr_fixs'))
+            ->setPaper('a4', 'landscape');;
+
+        return $pdf->download('ncr.pdf');
+    }
     public function close($id)
     {
         // Retrieve the NCR record by ID
@@ -324,8 +337,8 @@ class NcrController extends Controller
         $request->validate([
             'tanggal_shift_kerja' => 'required|date',
             'shift_kerja' => 'required|string|max:255',
-            'nama_hs_officer_1' => 'required|string|max:255',
-            'nama_hs_officer_2' => 'required|string|max:255',
+            'nama_hs_officer_1' => 'nullable|string|max:255',
+            'nama_hs_officer_2' => 'nullable|string|max:255',
             'tanggal_audit' => 'required|date',
             'nama_auditee' => 'required|string|max:255',
             'perusahaan' => 'required|string|max:255',
@@ -375,244 +388,5 @@ class NcrController extends Controller
         ]);
 
         return redirect()->route('adminsystem.ncr.index')->with('success', 'NCR berhasil di-close!');
-    }
-
-
-
-
-
-
-
-
-
-
-
-    // OPERATOR
-    public function operator_index()
-    {
-        $user = auth()->user(); // Get the currently authenticated user
-        $requests = NcrRequest::all();
-        $ncrs = Ncr::where('writer', $user->name)->get(); // Filter NCRs by writer
-        $ncr_fixs = SentNcr::where('writer', $user->name)->get(); // Filter Sent NCRs by writer
-
-        return view('operator.ncr.index', compact('requests', 'ncrs', 'ncr_fixs'));
-    }
-    public function operator_create()
-    {
-        // Retrieve all companies and sections
-        $pers = Perusahaan::all();
-        $bagians = Bagian::all();
-
-        // Return the view for creating a new NCR
-        return view('operator.ncr.report', compact('perusahaans', 'bagians'));
-    }
-    // Menampilkan detail data NCR berdasarkan ID
-    public function operator_show($id)
-    {
-        $ncr = Ncr::find($id);
-
-        if (!$ncr) {
-            return response()->json(['message' => 'Data NCR tidak ditemukan'], 404);
-        }
-        if (is_string($ncr->kategori_ketidaksesuaian)) { // Jika masih string
-            $ncr->kategori_ketidaksesuaian = explode(',', $ncr->kategori_ketidaksesuaian); // Ubah ke array
-        }
-        $tanggalHariIni = Carbon::now()->format('d F Y'); // Format: 11 November 2023
-
-
-        return view('operator.ncr.show', compact('ncr', 'tanggalHariIni'));
-    }
-
-    public function operator_edit($id)
-    {
-        // Retrieve the NCR record by ID
-        $ncr = Ncr::findOrFail($id);
-
-        // Retrieve all companies and sections
-        $perusahaans = Perusahaan::all();
-        $bagians = Bagian::all();
-
-        // Pass the data to the edit view
-        return view('operator.ncr.edit', compact('ncr', 'perusahaans', 'bagians'));
-    }
-    public function operator_sent_edit($id)
-    {
-        // Retrieve the NCR record by ID
-        $ncr_fixs = SentNcr::findOrFail($id);
-
-        // Retrieve all companies and sections
-        $perusahaans = Perusahaan::all();
-        $bagians = Bagian::all();
-
-        // Pass the data to the edit view
-        return view('operator.ncr.sent_edit', compact('ncr_fixs', 'perusahaans', 'bagians'));
-    }
-
-    // Menambahkan data NCR baru
-    public function operator_store(Request $request)
-    {
-        $request->validate([
-            'tanggal_shift_kerja' => 'required|date',
-            'shift_kerja' => 'required|string|max:255',
-            'nama_hs_officer_1' => 'required|string|max:255',
-            'nama_hs_officer_2' => 'required|string|max:255',
-            'tanggal_audit' => 'required|date',
-            'nama_auditee' => 'required|string|max:255',
-            'perusahaan' => 'required|string|max:255',
-            'bagian' => 'nullable|string|max:255',
-            'element_referensi_ncr' => 'required|string|max:255',
-            'kategori_ketidaksesuaian' => 'required|string|max:255',
-            'deskripsi_ketidaksesuaian' => 'required|string',
-        ]);
-
-        // Menambahkan kolom 'writer' dengan user yang sedang login
-        $data = $request->all();
-        $data['writer'] = auth()->user()->name; // atau auth()->user()->id tergantung kebutuhan
-
-        Ncr::create($data);
-
-        return redirect()->route('operator.ncr.index')->with('success', 'Data berhasil disimpan!');
-    }
-
-    // Memperbarui data NCR yang ada
-    public function operator_update(Request $request, $id)
-    {
-        $ncr = Ncr::find($id);
-
-        if (!$ncr) {
-            return response()->json(['message' => 'Data NCR tidak ditemukan'], 404);
-        }
-
-        // Validasi data yang diterima
-        $request->validate([
-            'tanggal_shift_kerja' => 'required|date',
-            'shift_kerja' => 'required|string|max:255',
-            'nama_hs_officer_1' => 'required|string|max:255',
-            'nama_hs_officer_2' => 'required|string|max:255',
-            'tanggal_audit' => 'required|date',
-            'nama_auditee' => 'required|string|max:255',
-            'perusahaan' => 'required|string|max:255',
-            'bagian' => 'nullable|string|max:255',
-            'element_referensi_ncr' => 'required|string|max:255',
-            'kategori_ketidaksesuaian' => 'required|string|max:255',
-            'deskripsi_ketidaksesuaian' => 'required|string',
-        ]);
-
-        $ncr = Ncr::findOrFail($id);
-        $ncr->update($request->all());
-
-        return redirect()->route('operator.ncr.index')->with('success', 'Data berhasil diupdate!');
-    }
-    public function operator_sent_update(Request $request, $id)
-    {
-        $ncr_fixs = SentNcr::find($id);
-
-        if (!$ncr_fixs) {
-            return response()->json(['message' => 'Data NCR tidak ditemukan'], 404);
-        }
-
-        // Validasi data yang diterima
-        $request->validate([
-            'tanggal_shift_kerja' => 'required|date',
-            'shift_kerja' => 'required|string|max:255',
-            'nama_hs_officer_1' => 'required|string|max:255',
-            'nama_hs_officer_2' => 'required|string|max:255',
-            'tanggal_audit' => 'required|date',
-            'nama_auditee' => 'required|string|max:255',
-            'perusahaan' => 'required|string|max:255',
-            'bagian' => 'nullable|string|max:255',
-            'element_referensi_ncr' => 'required|string|max:255',
-            'kategori_ketidaksesuaian' => 'required|string|max:255',
-            'deskripsi_ketidaksesuaian' => 'required|string',
-        ]);
-
-        $ncr_fixs = Ncr::findOrFail($id);
-        $ncr_fixs->update($request->all());
-
-        return redirect()->route('operator.ncr.index')->with('success', 'Data berhasil diupdate!');
-    }
-    // Menghapus data NCR berdasarkan ID
-    public function operator_destroy($id)
-    {
-        // Ambil data PPE berdasarkan ID
-        $ncr = Ncr::findOrFail($id);
-
-        // Menyiapkan data untuk dimasukkan ke ncr_fix, pastikan data diubah menjadi array
-        $dataToInsert = $ncr->toArray();
-
-        // Memastikan created_at dan updated_at ditambahkan (jika tabel ncr_fix memerlukannya)
-        $dataToInsert['created_at'] = $ncr->created_at;
-        $dataToInsert['updated_at'] = $ncr->updated_at;
-
-        // Cek apakah data sudah ada di ncr_fix berdasarkan ID atau kolom unik lainnya
-        $exists = DB::table('ncr_fix')->where('id', $ncr->id)->exists();
-
-        if (!$exists) {
-            // Insert data hanya jika belum ada
-            DB::table('ncr_fix')->insert($dataToInsert);
-        }
-
-        // Hapus data ncr asli
-        $ncr->delete();
-
-        // Redirect dengan notifikasi
-        return redirect()->route('operator.ncr.index')->with('notification', 'NCR berhasil dikirim!');
-    }
-    public function operator_sent_destroy($id)
-    {
-        // Ambil data PPE berdasarkan ID
-        $ncr_fixs = SentNcr::findOrFail($id);
-        $ncr_fixs->delete();
-        // Redirect dengan notifikasi
-        return redirect()->route('operator.ncr.index')->with('notification', 'NCR berhasil dikirim!');
-    }
-    public function operator_Perusahaanshow($id)
-    {
-        $perusahaan = Perusahaan::find($id);
-        if ($perusahaan) {
-            return response()->json($perusahaan);
-        } else {
-            return response()->json(data: ['message' => 'Perusahaan tidak ditemukan']);
-        }
-    }
-    public function operator_getBagian($perusahaan_name)
-    {
-        $bagians = Bagian::where('perusahaan_name', $perusahaan_name)->get();
-        return response()->json($bagians);
-    }
-    public function operator_storeRequest(Request $request)
-    {
-        $request->validate([
-            'sent_ncr_id' => 'required|exists:ncr_fix,id', // Ensure the sent NCR ID exists
-            'type' => 'required|in:Edit,Delete', // Validate the type
-            'reason' => 'required|string|max:255', // Validate the reason
-        ]);
-
-        // Create a new request record or handle the logic as needed
-        $ncrRequest = new NcrRequest();
-        $ncrRequest->sent_ncr_id = $request->sent_ncr_id;
-        $ncrRequest->type = $request->type;
-        $ncrRequest->reason = $request->reason;
-        $ncrRequest->nama_pengirim = auth()->user()->name; // Assuming you want to store the writer's name
-        $ncrRequest->save();
-
-        return redirect()->back()->with('success', 'Request submitted successfully.');
-    }
-    public function operator_approve($id)
-    {
-        $request = NcrRequest::find($id);
-        $request->status = 'Approved';
-        $request->save();
-
-        return response()->json(['success' => true]);
-    }
-
-    public function operator_reject($id)
-    {
-        $request = NcrRequest::find($id);
-        $request->status = 'Rejected';
-        $request->save();
-
-        return response()->json(['success' => true]);
     }
 }

@@ -32,11 +32,18 @@
                                             <td class="text-center text-xs">{{ $request->type }}</td>
                                             <td class="text-center text-xs">{{ $request->reason }}</td>
                                             <td class="text-center" id="status-{{$request->id}}">{{ $request->status }}</td>
-                                            <td class="text-center text-xs">
+                                            <td class="text-center">
                                                 @if ($request->status == 'Pending')
-                                                <button class="btn btn-success btn-sm" style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right,rgb(167, 40, 40),rgb(139, 46, 46)); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;" onclick="approveRequest('{{ $request->id }}')">Approve</button>
-                                                <button class="btn btn-danger btn-sm" style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right, #28A745, #2E8B57); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;" onclick="rejectRequest('{{ $request->id }}')">Reject</button>
+                                                <button class="btn btn-primary btn-xs" onclick="approveRequest('{{ $request->id }}')">Approve</button>
+                                                <button class="btn btn-danger btn-xs" onclick="rejectRequest('{{ $request->id }}')">Reject</button>
                                                 @endif
+                                                <form action="{{ route('adminsystem.non_compliant.show', ['id' => $request->id]) }}" method="GET" style="display:inline;">
+                                                    <button type="submit" class="btn btn-info btn-xs">
+                                                        Show
+                                                    </button>
+                                                </form>
+                                                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
                                             </td>
                                         </tr>
                                         @endforeach
@@ -72,7 +79,7 @@
                     </div>
                     <div class="col-md-6 mb-3">
                         <strong>Jam Pengawasan:</strong><br>
-                        {{ $ppeFix->jam_pengawasan }}
+                        {{ $ppeFix->jam_mulai }} - {{ $ppeFix->jam_selesai }}
                     </div>
                     <div class="col-md-6 mb-3">
                         <strong>Zona Pengawasan:</strong><br>
@@ -93,102 +100,98 @@
                     <button type="submit" class="btn btn-primary">Tambah</button>
                 </form>
             </div>
-            <div class="table-responsive p-0">
-                <table class="table align-items-center mb-0" id="dataTable">
-                    <thead>
-                        <tr>
-                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">No</th>
-                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Pelanggar</th>
-                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Deskripsi Ketidaksesuaian</th>
-                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Perusahaan</th>
-                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Bagian</th>
-                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tindakan</th>
-                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="draftTableBody">
-                        @forelse ($nonCompliants as $nc)
-                        <tr>
-                            <td class="text-center text-xs">{{ $loop->iteration }}</td>
-                            <td class="text-center text-xs">{{ $nc->nama_pelanggar }}</td>
-                            <td class="text-center text-xs">{{ $nc->deskripsi_ketidaksesuaian }}</td>
-                            <td class="text-center text-xs">{{ $nc->perusahaan }}</td>
-                            <td class="text-center text-xs">{{ $nc->nama_bagian }}</td>
-                            <td class="text-center text-xs">{{ $nc->tindakan }}</td>
-                            <td class="align-middle text-center text-xs">
-                                @if ($nc->status == 'Nothing')
-                                <button class="btn btn-success btn-sm"
-                                    style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right,rgb(154, 155, 160),rgb(43, 46, 44)); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;"
-                                    onclick="showRequestModal('{{ $nc->id }}')">Request</button>
+            <div class="card-body px-0 pt-0 pb-2">
+                <div class="table-responsive p-0">
+                    <div class="card-header pb-0">
+                        <table class="table align-items-center mb-0" id="dataTable">
+                            <thead>
+                                <tr>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">No</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Pelanggar</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Deskripsi Ketidaksesuaian</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Perusahaan</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Bagian</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tindakan</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="draftTableBody">
+                                @forelse ($nonCompliants as $nc)
+                                <tr>
+                                    <td class="text-center text-xs">{{ $loop->iteration }}</td>
+                                    <td class="text-center text-xs">{{ $nc->nama_pelanggar }}</td>
+                                    <td class="text-center text-xs">{{ $nc->deskripsi_ketidaksesuaian }}</td>
+                                    <td class="text-center text-xs">{{ $nc->perusahaan }}</td>
+                                    <td class="text-center text-xs">{{ $nc->nama_bagian }}</td>
+                                    <td class="text-center text-xs">{{ $nc->tindakan }}</td>
+                                    <td class="align-middle text-center text-xs">
+                                        @if ($nc->status == 'Nothing')
+                                        <button class="btn btn-secondary btn-xs" onclick="showRequestModal('{{ $nc->id }}')"> <i></i>&nbsp; Request
+                                        </button>
+                                        @elseif ($nc->status == 'Pending')
+                                        <span class="text-warning">Pending</span>
 
-                                @elseif ($nc->status == 'Pending')
-                                <span class="text-warning">Pending</span>
+                                        @elseif ($nc->status == 'Approved')
+                                        @if ($request)
+                                        @if ($request->type == 'Edit')
+                                        <a href="{{ route('adminsystem.non_compliant.edit', $nc->id) }}" class="btn btn-warning">
+                                            <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit
+                                        </a>
+                                        @elseif ($request->type == 'Delete')
+                                        <form action="{{ route('adminsystem.non_compliant.destroy', $nc->id) }}" method="POST"
+                                            style="display:inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm"
+                                                style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right,rgb(167, 40, 40),rgb(139, 46, 46)); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;"
+                                                onclick="return confirm(' Anda yakin akan menghapus data ini?')">Delete</button>
+                                        </form>
+                                        @endif
+                                        @endif
 
-                                @elseif ($nc->status == 'Approved')
-                                @if ($request)
-                                @if ($request->type == 'Edit')
-                                <a href="javascript:;" id="editBtn" onclick="sentEditAction('{{ $nc->id }}');"
-                                    style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right, #28A745, #2E8B57); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;"
-                                    class="btn btn-warning btn-sm">Edit</a>
-                                @elseif ($request->type == 'Delete')
-                                <form action="{{ route('adminsystem.ncr.sent_destroy', $nc->id) }}" method="POST"
-                                    style="display:inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm"
-                                        style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right,rgb(167, 40, 40),rgb(139, 46, 46)); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;"
-                                        onclick="return confirm(' Anda yakin akan menghapus data ini?')">Delete</button>
-                                </form>
-                                @endif
-                                @endif
+                                        @elseif ($nc->status == 'Rejected')
+                                        <span class="text-danger">Request Rejected</span>
+                                        @endif
 
-                                @elseif ($nc->status == 'Rejected')
-                                <span class="text-danger">Request Rejected</span>
-                                @endif
+                                    </td>
 
-                                @if ($nc->status_ncr == 'Open')
-                                <a href="{{ route('adminsystem.ncr.close', $nc->id) }}"
-                                    class="btn btn-secondary btn-sm"
-                                    style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right,#6c757d,#5a6268); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;">Close</a>
-                                @endif
-
-                            </td>
-
-                            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="13" class="text-center text-muted">Data tidak ditemukan.</td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-   <div class="modal fade" id="requestModal" tabindex="-1" role="dialog" aria-labelledby="requestModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="requestModalLabel">Request Edit/Delete</h5>
+                                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="13" class="text-center text-muted">Data tidak ditemukan.</td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <div class="modal-body">
-                    <form id="requestForm" method="POST" action="{{ route('adminsystem.non_compliant.storeRequest') }}">
-                        @csrf
-                        <input type="hidden" id="sentNonCompliantId" name="sent_non_compliant_id">
-                        <div class="form-group">
-                            <label for="requestType">Request Type</label><br>
-                            <input type="radio" id="Edit" name="type" value="Edit" required>
-                            <label for="Edit">Edit</label>
-                            <input type="radio" id="Delete" name="type" value="Delete" required>
-                            <label for="Delete">Delete</label>
+            </div>
+            <div class="modal fade" id="requestModal" tabindex="-1" role="dialog" aria-labelledby="requestModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="requestModalLabel">Request Edit/Delete</h5>
                         </div>
-                        <div class="form-group">
-                            <label for="reason">Reason for Request</label>
-                            <textarea class="form-control" id="reason" name="reason" required></textarea>
+                        <div class="modal-body">
+                            <form id="requestForm" method="POST" action="{{ route('adminsystem.non_compliant.storeRequest') }}">
+                                @csrf
+                                <input type="hidden" id="sentNonCompliantId" name="sent_non_compliant_id">
+                                <div class="form-group">
+                                    <label for="requestType">Request Type</label><br>
+                                    <input type="radio" id="Edit" name="type" value="Edit" required>
+                                    <label for="Edit">Edit</label>
+                                    <input type="radio" id="Delete" name="type" value="Delete" required>
+                                    <label for="Delete">Delete</label>
+                                </div>
+                                <div class="form-group">
+                                    <label for="reason">Reason for Request</label>
+                                    <textarea class="form-control" id="reason" name="reason" required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Submit Request</button>
+                            </form>
                         </div>
-                        <button type="submit" class="btn btn-primary">Submit Request</button>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -282,11 +285,6 @@
     function editAction(id) {
         window.location.href = "{{ url('adminsystem/non_compliant/edit') }}/" + id; // Menggunakan URL Laravel
     }
-
-    // Fungsi untuk mengedit item yang telah dikirim
-    function sentEditAction(id) {
-        window.location.href = "{{ url('adminsystem/non_compliant/sent_edit') }}/" + id; // Menggunakan URL Laravel
-    }
 </script>
 
 <script>
@@ -312,7 +310,5 @@
             "responsive": true
         });
     });
-    
-
 </script>
 @endsection
