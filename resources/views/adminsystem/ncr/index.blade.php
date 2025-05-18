@@ -29,7 +29,7 @@
                                     </tr>
                                 </thead>
                                 <tbody id="notificationTableBody">
-                                    @foreach ($requests as $request)
+                                    @foreach ($allRequests as $request)
                                     <tr>
                                         <td class="text-center text-xs">{{ $request->nama_pengirim }}</td>
                                         <td class="text-center text-xs">{{ $request->created_at->format('d/m/Y') }}</td>
@@ -194,6 +194,7 @@
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal Audit</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Auditee</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Durasi NCR</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ststus</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Aksi</th>
                                     <th class="text-secondary opacity-7"></th>
                                 </tr>
@@ -212,55 +213,76 @@
                                     <td class="text-center text-xs">{{ \Carbon\Carbon::parse($ncr_fix->tanggal_audit)->format('d/m/Y') }}</td>
                                     <td class="text-center text-xs">{{ $ncr_fix->nama_auditee }}</td>
                                     <td class="text-center text-xs">{{ $ncr_fix->durasi_ncr }}</td>
+                                    <td class="text-center text-xs">{{ $ncr_fix->status }}</td>
                                     <td class="align-middle text-center text-xs">
                                         <div class="d-flex flex-wrap gap-1 justify-content-center">
+                                            {{-- Ambil request yang cocok --}}
+                                            @php
+                                            $matchedRequest = $allRequests->firstWhere('sent_ncr_id', $ncr_fix->id);
+                                            $isDeleteRequest = $matchedRequest && $matchedRequest->type === 'Delete';
+                                            $isEditRequest = $matchedRequest && $matchedRequest->type === 'Edit';
+                                            @endphp
 
-                                            @if ($ncr_fix->status == 'Nothing')
-                                            <button class="btn btn-success btn-sm"
-                                                style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right,rgb(154, 155, 160),rgb(43, 46, 44)); color: white; border-radius: 5px; font-weight: bold; font-size: 10px;"
-                                                onclick="showRequestModal('{{ $ncr_fix->id }}')">Request</button>
+                                            {{-- STATUS: Nothing --}}
+                                            @if ($ncr_fix->status === 'Nothing')
+                                            <button class="btn btn-secondary btn-xs" onclick="showRequestModal('{{ $ncr_fix->id }}')">
+                                                Request
+                                            </button>
 
-                                            @elseif ($ncr_fix->status == 'Pending')
+                                            {{-- STATUS: Pending --}}
+                                            @elseif ($ncr_fix->status === 'Pending')
                                             <span class="text-warning align-self-center">Pending</span>
 
-                                            @elseif ($ncr_fix->status == 'Approved')
-                                            @if ($request)
-                                            @if ($request->type == 'Edit')
-                                            <a href="{{ route('adminsystem.non_compliant.sent_edit', $ncr_fix->id) }}" class="btn btn-warning btn-sm">
-                                                <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit
-                                            </a>
-                                            @elseif ($request->type == 'Delete')
+                                            {{-- STATUS: Approved --}}
+                                            @elseif ($ncr_fix->status === 'Approved')
+
+                                            {{-- DELETE REQUEST --}}
+                                            @if ($isDeleteRequest)
                                             <form action="{{ route('adminsystem.ncr.sent_destroy', $ncr_fix->id) }}" method="POST" style="display:inline;">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm"
-                                                    style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right,rgb(167, 40, 40),rgb(139, 46, 46)); color: white; border-radius: 5px; font-weight: bold; font-size: 10px;"
-                                                    onclick="return confirm('Anda yakin akan menghapus data ini?')">Delete</button>
+                                                <button type="submit" class="btn btn-danger btn-xs" onclick="return confirm('Anda yakin akan menghapus data ini?')">
+                                                    Delete
+                                                </button>
                                             </form>
+
+                                            {{-- EDIT REQUEST --}}
+                                            @elseif ($isEditRequest)
+                                            @if ($ncr_fix->status_ncr === 'Closed')
+                                            <a href="{{ route('adminsystem.ncr.edit_closed', $ncr_fix->id) }}" class="btn btn-warning btn-xs">
+                                                <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit Close
+                                            </a>
+                                            @elseif ($ncr_fix->status_ncr === 'Open')
+                                            <a href="{{ route('adminsystem.ncr.sent_edit', $ncr_fix->id) }}" class="btn btn-warning btn-xs">
+                                                <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit
+                                            </a>
                                             @endif
                                             @endif
 
-                                            @elseif ($ncr_fix->status == 'Rejected')
+                                            {{-- STATUS: Rejected --}}
+                                            @elseif ($ncr_fix->status === 'Rejected')
                                             <span class="text-danger align-self-center">Request Rejected</span>
                                             @endif
 
-                                            @if ($ncr_fix->status_ncr == 'Open')
-                                            <a href="{{ route('adminsystem.ncr.close', $ncr_fix->id) }}"
-                                                class="btn btn-secondary btn-sm"
-                                                style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right,#6c757d,#5a6268); color: white; border-radius: 5px; font-weight: bold; font-size: 10px;">Close</a>
-                                            @elseif ($ncr_fix->status_ncr == 'Closed')
-                                            @if(!empty($ncr_fix) && !empty($ncr_fix->id))
+                                            {{-- Tombol Close atau Show tetap ditampilkan terlepas dari request --}}
+                                            @if ($ncr_fix->status_ncr === 'Open')
+                                            <a href="{{ route('adminsystem.ncr.close', $ncr_fix->id) }}" class="btn btn-secondary btn-sm"
+                                                style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right, #6c757d, #5a6268); color: white; border-radius: 5px; font-weight: bold; font-size: 10px;">
+                                                Close
+                                            </a>
+                                            @elseif ($ncr_fix->status_ncr === 'Closed')
                                             <form action="{{ route('adminsystem.ncr.show', ['id' => $ncr_fix->id]) }}" method="GET" class="m-0">
                                                 <button type="submit" class="btn btn-info btn-xs d-flex align-items-center">
                                                     <i class="fas fa-eye me-1" style="font-size: 12px;"></i> Show
                                                 </button>
                                             </form>
                                             @endif
-
-                                            @endif
-
                                         </div>
                                     </td>
+
+
+
+
 
 
                                 </tr>

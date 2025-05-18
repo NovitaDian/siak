@@ -9,7 +9,7 @@
                 <h6 class="mb-0">{{ __('EDIT DATA UMUM') }}</h6>
             </div>
             <div class="card-body pt-4 p-3">
-                <form action="{{ route('adminsystem.ncr.close_ncr', $ncr_fixs->id) }}" method="POST" enctype="multipart/form-data"  role="form text-left">
+                <form action="{{ route('adminsystem.ncr.update_closed', $ncr_fixs->id) }}" method="POST" enctype="multipart/form-data" role="form text-left">
                     @csrf
                     @method('PUT')
                     @if($errors->any())
@@ -223,20 +223,15 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="foto_closed">{{ __('Foto Close') }}</label>
-                                <input
-                                    class="form-control @error('foto_closed') is-invalid @enderror"
-                                    type="file"
-                                    id="foto_closed"
-                                    name="foto_closed"
-                                    accept="image/*"
-                                    capture="environment"
-                                    required>
-                                @error('foto_closed')
-                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                                @enderror
-                            </div>
+                            <label for="foto_closed">Foto (biarkan kosong jika tidak ingin ubah)</label>
+                            <input
+                                type="file"
+                                name="foto_closed"
+                                id="foto_closed"
+                                class="form-control"
+                                accept="image/*"
+                                @if (!$ncr_fixs->foto_closed) required @endif
+                            >
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
