@@ -168,31 +168,28 @@
                     <div class="card mb-4">
                         <div class="card-header pb-0">
                             <h6>Sent Daily Activities & Improvement Report</h6>
-                            <br>
 
-                            <form action="{{ route('adminsystem.daily.index') }}" method="GET" class="row align-items-end gx-2 mb-3">
-                                <div class="col-md-3">
-                                    <label for="start_date" class="form-label mb-0">Start Date</label>
-                                    <input type="date" id="start_date" name="start_date" class="form-control form-control-sm"
-                                        value="{{ request('start_date') }}">
+
+                            <form action="{{ route('adminsystem.daily.index') }}" method="GET" class="row g-3 px-4 mb-3">
+                                <div class="col-12 col-md-3">
+                                    <label for="start_date" class="form-label">Tanggal Mulai</label>
+                                    <input type="date" name="start_date" id="start_date" class="form-control" value="{{ request('start_date') }}">
                                 </div>
 
-                                <div class="col-md-3">
-                                    <label for="end_date" class="form-label mb-0">End Date</label>
-                                    <input type="date" id="end_date" name="end_date" class="form-control form-control-sm"
-                                        value="{{ request('end_date') }}">
+                                <div class="col-12 col-md-3">
+                                    <label for="end_date" class="form-label">Tanggal Selesai</label>
+                                    <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request('end_date') }}">
                                 </div>
 
-                                <div class="col-md-6 d-flex gap-2">
-                                    <button type="submit" class="btn btn-success btn-sm w-auto">
-                                        <i class="fas fa-filter me-1"></i> Filter
-                                    </button>
+                                <div class="col-12 col-md-3 d-flex align-items-end">
+                                    <button type="submit" class="btn btn-sm btn-primary w-50">Filter</button>
+                                </div>
 
-                                    <a href="{{ route('adminsystem.daily.export', request()->all()) }}" class="btn btn-primary btn-sm w-auto">
+                                <div class="col-12 col-md-3 d-flex justify-content-md-end justify-content-start align-items-end gap-2">
+                                    <a href="{{ route('adminsystem.daily.export', request()->all()) }}" class="btn btn-sm btn-success w-100 w-md-auto">
                                         <i class="fas fa-file-excel me-1"></i> Excel
                                     </a>
-
-                                    <a href="{{ route('adminsystem.daily.exportPdf', request()->all()) }}" class="btn btn-danger btn-sm w-auto">
+                                    <a href="{{ route('adminsystem.daily.exportPdf', request()->all()) }}" class="btn btn-sm btn-danger w-100 w-md-auto">
                                         <i class="fas fa-file-pdf me-1"></i> PDF
                                     </a>
                                 </div>
@@ -235,53 +232,49 @@
 
 
                                             <td class="align-middle text-center">
-                                                <div style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 6px;">
-                                                    @if ($daily_fix->status == 'Nothing')
-                                                    <button onclick="showRequestModal('{{ $daily_fix->id }}')"
-                                                        style="display: flex; align-items: center; gap: 4px; padding: 4px 8px; background: linear-gradient(to right, #9a9ba0, #2b2e2c); color: white; border: none; border-radius: 5px; font-size: 10px; font-weight: bold;">
-                                                        <i style="font-size: 12px;"></i>Request
-                                                    </button>
-                                                    @elseif ($daily_fix->status == 'Pending')
-                                                    <span style="display: flex; align-items: center; justify-content: center; padding: 4px 8px; background: #ffc107; color: #212529; border-radius: 5px; font-size: 10px; font-weight: bold;">
-                                                        Pending
-                                                    </span>
-                                                    @elseif ($daily_fix->status == 'Approved')
-                                                    @php
-                                                    $request = $requests->firstWhere('sent_daily_id', $daily_fix->id);
-                                                    @endphp
-                                                    @if ($request)
-                                                    @if ($request->type == 'Edit')
-                                                    <a href="javascript:;" onclick="sentEditAction('{{ $daily_fix->id }}')"
-                                                        style="display: flex; align-items: center; gap: 4px; padding: 4px 8px; background: linear-gradient(to right, #28A745, #2E8B57); color: white; border-radius: 5px; font-size: 10px; font-weight: bold;">
-                                                        <i style="font-size: 12px;"></i>Edit
-                                                    </a>
-                                                    @elseif ($request->type == 'Delete')
-                                                    <form action="{{ route('adminsystem.daily.sent_destroy', $daily_fix->id) }}" method="POST" style="margin: 0;">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" onclick="return confirm(' Anda yakin akan menghapus data ini?')"
-                                                            style="display: flex; align-items: center; gap: 4px; padding: 4px 8px; background: linear-gradient(to right, #a72828, #8b2e2e); color: white; border: none; border-radius: 5px; font-size: 10px; font-weight: bold;">
-                                                            <i style="font-size: 12px;"></i>Delete
-                                                        </button>
-                                                    </form>
-                                                    @endif
-                                                    @else
-                                                    <span style="display: flex; align-items: center; justify-content: center; padding: 4px 8px; background: #dc3545; color: white; border-radius: 5px; font-size: 10px; font-weight: bold;">
-                                                        No Request
-                                                    </span>
-                                                    @endif
-                                                    @elseif ($daily_fix->status == 'Rejected')
-                                                    <span style="display: flex; align-items: center; justify-content: center; padding: 4px 8px; background: #dc3545; color: white; border-radius: 5px; font-size: 10px; font-weight: bold;">
-                                                        Rejected
-                                                    </span>
-                                                    @endif
+                                                @if ($daily_fix->status == 'Nothing')
+                                                <a href="{{ route('adminsystem.daily.show', $daily_fix->id) }}"
+                                                    class="btn btn-info btn-xs"> <i class="fas fa-eye me-1" style="font-size: 12px;"></i> Show
+                                                </a>
 
-                                                    {{-- Show button (selalu tampil) --}}
-                                                    <a href="{{ route('adminsystem.daily.show', $daily_fix->id) }}"
-                                                        style="display: flex; align-items: center; gap: 4px; padding: 4px 8px; background: linear-gradient(to right, #4374ce, #2e368b); color: white; border-radius: 5px; font-size: 10px; font-weight: bold;">
-                                                        <i style="font-size: 12px;"></i> Show
-                                                    </a>
-                                                </div>
+                                                <button class="btn btn-secondary btn-xs"
+                                                    onclick="showRequestModal('{{ $daily_fix->id }}')">Request</button>
+
+                                                @elseif ($daily_fix->status == 'Pending')
+                                                <span class="text-warning">Pending</span>
+
+                                                @elseif ($daily_fix->status == 'Approved')
+                                                @php
+                                                // Cari request: prioritaskan 'Delete', jika tidak ada ambil 'Edit'
+                                                $request = $requests->where('sent_daily_id', $daily_fix->id)->firstWhere('type', 'Delete')
+                                                ?? $requests->where('sent_daily_id', $daily_fix->id)->firstWhere('type', 'Edit');
+                                                @endphp
+
+                                                @if ($request)
+                                                @if (strcasecmp($request->type, 'Edit') === 0)
+                                                <a href="{{ route('adminsystem.daily.sent_edit', $daily_fix->id) }}"
+                                                    class="btn btn-warning btn-xs"> <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit
+                                                </a>
+                                                @elseif (strcasecmp($request->type, 'Delete') === 0)
+                                                <form action="{{ route('adminsystem.daily.sent_destroy', $daily_fix->id) }}" method="POST" style="display:inline;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit"
+                                                        class="btn btn-danger btn-xs"
+                                                        onclick="return confirm('Anda yakin akan menghapus data ini?')">
+                                                        <i class="fas fa-trash-alt me-1" style="font-size: 12px;"></i> Delete
+                                                    </button>
+                                                </form>
+                                                @else
+                                                <span class="text-danger">Unknown request type</span>
+                                                @endif
+                                                @else
+                                                <span class="text-danger">No corresponding request found</span>
+                                                @endif
+
+                                                @elseif ($daily_fix->status == 'Rejected')
+                                                <span class="text-danger">Request Rejected</span>
+                                                @endif
                                             </td>
                                         </tr>
                                         @endforeach

@@ -40,7 +40,7 @@
             </div>
             <div class="card-body pt-4 p-3">
                 <div class="table-responsive p-0">
-                    <table class="table align-items-center mb-0">
+                    <table class="table align-items-center mb-0" id="dataTable">
                         <thead>
                             <tr>
                                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">GL Account</th>
@@ -81,28 +81,25 @@
                                 <td class="text-center">
                                     <p class="text-xs font-weight-bold mb-0">{{ $budget_fix->kategori  }}</p>
                                 </td>
-
-
-
-
                             </tr>
                             @endforeach
                         </tbody>
 
                     </table>
 
-                    @if($budget_fixs->isEmpty())
-                    <div class="text-center p-4">
-                        <p class="text-secondary">Tidak ada data GL Account.</p>
-                    </div>
-                    @endif
+                    
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+<link href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" rel="stylesheet">
+<script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
 
 <style>
     /* Optional style adjustments */
@@ -122,5 +119,17 @@
         border-bottom: 1px solid #ddd;
     }
 </style>
-
+<script>
+    $(document).ready(function() {
+        $('#dataTable').DataTable({
+            "pageLength": 10,
+            "lengthMenu": [10, 25, 50, 100],
+            "ordering": true,
+            "searching": true,
+            "info": true,
+            "paging": true,
+            "responsive": true
+        });
+    });
+ </script>
 @endsection

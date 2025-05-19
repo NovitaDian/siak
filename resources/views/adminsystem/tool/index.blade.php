@@ -17,7 +17,7 @@
                 <div class="card-body px-0 pt-0 pb-2">
                     <div class="table-responsive p-0">
                         <div class="card-header pb-0">
-                            <table class="table align-items-center mb-0" id="requestTable">
+                            <table class="table align-items-center mb-0" id="dataTableReq">
                                 <thead>
                                     <tr>
                                         <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Pengirim</th>
@@ -38,11 +38,18 @@
                                         <td class="text-center" id="status-{{$request->id}}">{{ $request->status }}</td>
                                         <td class="text-center">
                                             @if ($request->status == 'Pending')
-                                            <button class="btn btn-success btn-sm" style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right,rgb(167, 40, 40),rgb(139, 46, 46)); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;" onclick="approveRequest('{{ $request->id }}')">Approve</button>
-                                            <button class="btn btn-danger btn-sm" style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right, #28A745, #2E8B57); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;" onclick="rejectRequest('{{ $request->id }}')">Reject</button>
+                                            <form action="{{ route('adminsystem.tool.approve', $request->id) }}" method="POST" style="display:inline;">
+                                                @csrf
+                                                <button type="submit" class="btn btn-primary btn-xs">Approve</button>
+                                            </form>
+
+                                            <form action="{{ route('adminsystem.tool.reject', $request->id) }}" method="POST" style="display:inline;">
+                                                @csrf
+                                                <button type="submit" class="btn btn-danger btn-xs">Reject</button>
+                                            </form>
                                             @endif
-                                            <form action="{{ route('adminsystem.tool.show', ['id' => $request->id]) }}" method="GET" style="display:inline;">
-                                                <button type="submit" style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right,rgb(67, 116, 206),rgb(46, 54, 139)); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;" class="btn btn-primary active mb-0 text-white" role="button" aria-pressed="true">
+                                            <form action="{{ route('adminsystem.tool.show', ['id' => $request->sent_tool_id]) }}" method="GET" style="display:inline;">
+                                                <button type="submit" class="btn btn-info btn-xs">
                                                     Show
                                                 </button>
                                             </form>
@@ -75,7 +82,7 @@
                 <div class="card-body px-0 pt-0 pb-2">
                     <div class="table-responsive p-0">
                         <div class="card-header pb-0">
-                            <table class="table align-items-center mb-0" id="draftToolTable">
+                            <table class="table align-items-center mb-0" id="dataTableDraft">
                                 <thead>
                                     <tr>
 
@@ -97,12 +104,11 @@
                                         <td class="align-middle text-center">
                                             <div style="display: flex; justify-content: center; align-items: center;">
                                                 <!-- Tombol Edit -->
-                                                <a href="javascript:;"
-                                                    id="editBtn"
-                                                    class="btn btn-warning"
-                                                    onclick="editAction();">
+                                                <a href="{{ route('adminsystem.tool.edit', $tool->id) }}"
+                                                    class="btn btn-warning">
                                                     <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit
                                                 </a>
+
 
                                                 <!-- Tombol Delete -->
                                                 <form action="{{ route('adminsystem.tool.destroy', $tool->id) }}" method="POST" style="margin: 0;">
@@ -135,77 +141,101 @@
         <div class="col-12">
             <div class="card mb-4">
                 <div class="card-header pb-0">
-                    <h6>Sent tool</h6>
-                </div>
-                <div class="card-body px-0 pt-0 pb-2">
-                    <div class="table-responsive p-3">
-                        <table class="table align-items-center mb-0" id="sentToolTable">
-                            <thead>
-                                <tr>
+                    <h6>Sent Tool</h6>
+                    <form action="{{ route('adminsystem.tool.index') }}" method="GET" class="row g-3 px-4 mb-3">
+                        <div class="col-12 col-md-3">
+                            <label for="start_date" class="form-label">Tanggal Mulai</label>
+                            <input type="date" name="start_date" id="start_date" class="form-control" value="{{ request('start_date') }}">
+                        </div>
 
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Alat</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Hse Inspector</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal Pemeriksaan</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Opsi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($tool_fixs as $tool_fix)
-                                <tr>
-                                    <td class="text-center text-xs">{{ $tool_fix->nama_alat }}-{{ $tool_fix->alat->nomor ?? '-' }}</td>
-                                    <td class="text-center text-xs">{{ $tool_fix->hse_inspector }}</td>
-                                    <td class="text-center text-xs">{{ \Carbon\Carbon::parse($tool_fix->tanggal_pemeriksaan)->format('d/m/Y') }}</td>
-                                    <td class="text-center text-xs">{{ $tool_fix->status_pemeriksaan }}</td>
+                        <div class="col-12 col-md-3">
+                            <label for="end_date" class="form-label">Tanggal Selesai</label>
+                            <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request('end_date') }}">
+                        </div>
 
-                                    <td class="align-middle text-center">
-                                        @if ($tool_fix->status == 'Nothing')
-                                        <button class="btn btn-success btn-sm"
-                                            style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right, rgb(154, 155, 160), rgb(43, 46, 44)); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;"
-                                            onclick="showRequestModal('{{ $tool_fix->id }}')">Request</button>
+                        <div class="col-12 col-md-3 d-flex align-items-end">
+                            <button type="submit" class="btn btn-sm btn-primary w-50">Filter</button>
+                        </div>
 
-                                        @elseif ($tool_fix->status == 'Pending')
-                                        <span class="text-warning">Pending</span>
+                        <div class="col-12 col-md-3 d-flex justify-content-md-end justify-content-start align-items-end gap-2">
+                            <a href="{{ route('adminsystem.tool.export', request()->all()) }}" class="btn btn-sm btn-success w-100 w-md-auto">
+                                <i class="fas fa-file-excel me-1"></i> Excel
+                            </a>
+                            <a href="{{ route('adminsystem.tool.exportPdf', request()->all()) }}" class="btn btn-sm btn-danger w-100 w-md-auto">
+                                <i class="fas fa-file-pdf me-1"></i> PDF
+                            </a>
+                        </div>
+                    </form>
+                    <div class="card-body px-0 pt-0 pb-2">
+                        <div class="table-responsive p-3">
+                            <table class="table align-items-center mb-0" id="dataTableSent">
+                                <thead>
+                                    <tr>
 
-                                        @elseif ($tool_fix->status == 'Approved')
-                                        @php
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Alat</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Hse Inspector</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal Pemeriksaan</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Opsi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($tool_fixs as $tool_fix)
+                                    <tr>
+                                        <td class="text-center text-xs">{{ $tool_fix->nama_alat }}-{{ $tool_fix->alat->nomor ?? '-' }}</td>
+                                        <td class="text-center text-xs">{{ $tool_fix->hse_inspector }}</td>
+                                        <td class="text-center text-xs">{{ \Carbon\Carbon::parse($tool_fix->tanggal_pemeriksaan)->format('d/m/Y') }}</td>
+                                        <td class="text-center text-xs">{{ $tool_fix->status_pemeriksaan }}</td>
+                                         <td class="align-middle text-center">
+                                                @if ($tool_fix->status == 'Nothing')
+                                                <a href="{{ route('adminsystem.tool.show', $tool_fix->id) }}"
+                                                    class="btn btn-info btn-xs"> <i class="fas fa-eye me-1" style="font-size: 12px;"></i> Show
+                                                </a>
 
-                                        $request = $requests->firstWhere('sent_tool_id', $tool_fix->id);
-                                        @endphp
+                                                <button class="btn btn-secondary btn-xs"
+                                                    onclick="showRequestModal('{{ $tool_fix->id }}')">Request</button>
 
-                                        @if ($request)
-                                        @if (strcasecmp($request->type, 'Edit') === 0)
-                                        <a href="{{ route('adminsystem.tool.sent_edit', $tool_fix->id) }}"
-                                            style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right, #FFA500, #FF6347); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px; margin-right: 8px;">
-                                            <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit
-                                        </a>
-                                        @elseif (strcasecmp($request->type, 'Delete') === 0)
-                                        <form action="{{ route('adminsystem.tool.sent_destroy', $tool_fix->id) }}" method="POST" style="display:inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit"
-                                                class="btn btn-danger btn-sm"
-                                                style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right, rgb(167, 40, 40), rgb(139, 46, 46)); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;"
-                                                onclick="return confirm('Anda yakin akan menghapus data ini?')">
-                                                <i class="fas fa-trash-alt me-1" style="font-size: 12px;"></i> Delete
-                                            </button>
-                                        </form>
-                                        @else
-                                        <span class="text-danger">Unknown request type</span>
-                                        @endif
-                                        @else
-                                        <span class="text-danger">No corresponding request found</span>
-                                        @endif
+                                                @elseif ($tool_fix->status == 'Pending')
+                                                <span class="text-warning">Pending</span>
 
-                                        @elseif ($tool_fix->status == 'Rejected')
-                                        <span class="text-danger">Request Rejected</span>
-                                        @endif
-                                    </td>
+                                                @elseif ($tool_fix->status == 'Approved')
+                                                @php
+                                                // Cari request: prioritaskan 'Delete', jika tidak ada ambil 'Edit'
+                                                $request = $requests->where('sent_tool_id', $tool_fix->id)->firstWhere('type', 'Delete')
+                                                ?? $requests->where('sent_tool_id', $tool_fix->id)->firstWhere('type', 'Edit');
+                                                @endphp
 
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                                @if ($request)
+                                                @if (strcasecmp($request->type, 'Edit') === 0)
+                                                <a href="{{ route('adminsystem.tool.sent_edit', $tool_fix->id) }}"
+                                                    class="btn btn-warning btn-xs"> <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit
+                                                </a>
+                                                @elseif (strcasecmp($request->type, 'Delete') === 0)
+                                                <form action="{{ route('adminsystem.tool.sent_destroy', $tool_fix->id) }}" method="POST" style="display:inline;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit"
+                                                        class="btn btn-danger btn-xs"
+                                                        onclick="return confirm('Anda yakin akan menghapus data ini?')">
+                                                        <i class="fas fa-trash-alt me-1" style="font-size: 12px;"></i> Delete
+                                                    </button>
+                                                </form>
+                                                @else
+                                                <span class="text-danger">Unknown request type</span>
+                                                @endif
+                                                @else
+                                                <span class="text-danger">No corresponding request found</span>
+                                                @endif
+
+                                                @elseif ($tool_fix->status == 'Rejected')
+                                                <span class="text-danger">Request Rejected</span>
+                                                @endif
+                                            </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -6,17 +6,6 @@
     {{ session('success') }}
 </div>
 @endif
-
-<div class="nav-item d-flex align-self-end">
-    <form action="{{ route('adminsystem.budget.create') }}" method="GET" style="display:inline;">
-        @csrf
-        <button type="submit" class="btn btn-primary active mb-0 text-white" role="button" aria-pressed="true">
-            Tambah
-        </button>
-    </form>
-</div>
-<br>
-
 <div class="row">
     <div class="col-12">
         <div class="card mb-4">
@@ -85,11 +74,7 @@
                             </tbody>
                         </table>
 
-                        @if($budgets->isEmpty())
-                        <div class="text-center p-4">
-                            <p class="text-secondary">Tidak ada data GL Account.</p>
-                        </div>
-                        @endif
+                       
 
                     </div>
                 </div>

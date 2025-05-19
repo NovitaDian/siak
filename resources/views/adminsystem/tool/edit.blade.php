@@ -12,7 +12,7 @@
                 <h6 class="mb-0">{{ __('UBAH DATA PEMERIKSAAN ALAT') }}</h6>
             </div>
             <div class="card-body pt-4 p-3">
-                <form action="{{ route('adminsystem.tool.update', $toolReport->id) }}" method="POST">
+                <form action="{{ route('adminsystem.tool.update', $toolReport->id) }}" enctype="multipart/form-data" method="POST">
                     @csrf
                     @method('PUT')
 
@@ -69,25 +69,15 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="foto">{{ __('Foto') }}</label><br>
-                                @if ($ncr_fixs->foto)
-                                <img src="{{ asset('storage/' . $ncr_fixs->foto) }}" alt="Foto Sebelumnya" width="200" class="mb-2">
-                                @endif
-                                <input
-                                    class="form-control @error('foto') is-invalid @enderror"
-                                    type="file"
-                                    id="foto"
-                                    name="foto"
-                                    accept="image/*"
-                                    capture="environment"
-                                    readonly>
-
-                                @error('foto')
-                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                                @enderror
-
-                            </div>
+                            <label for="foto">Foto (biarkan kosong jika tidak ingin ubah)</label>
+                            <input
+                                type="file"
+                                name="foto"
+                                id="foto"
+                                class="form-control"
+                                accept="image/*"
+                                @if (!$toolReport->foto) required @endif
+                            >
                         </div>
                     </div>
                     <div class="d-flex justify-content-end">

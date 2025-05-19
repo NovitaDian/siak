@@ -250,7 +250,7 @@
                                             @elseif ($isEditRequest)
                                             @if ($ncr_fix->status_ncr === 'Closed')
                                             <a href="{{ route('adminsystem.ncr.edit_closed', $ncr_fix->id) }}" class="btn btn-warning btn-xs">
-                                                <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit Close
+                                                <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit
                                             </a>
                                             @elseif ($ncr_fix->status_ncr === 'Open')
                                             <a href="{{ route('adminsystem.ncr.sent_edit', $ncr_fix->id) }}" class="btn btn-warning btn-xs">
@@ -279,12 +279,6 @@
                                             @endif
                                         </div>
                                     </td>
-
-
-
-
-
-
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -330,17 +324,13 @@
 
 </main>
 
-<!-- Include jQuery and Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
-<script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-<script src="{{ asset('vendor/datatables/jquery.dataTables.min.js') }}"></script>
-<script src="{{ asset('vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
-<link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
-<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
 
+<link href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" rel="stylesheet">
+<script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
 <script>
     $(document).ready(function() {
         // Initialize data tables

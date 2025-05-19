@@ -374,6 +374,8 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::prefix('adminsystem/tool')->name('adminsystem.tool.')->group(function () {
 			Route::get('/', [ToolController::class, 'index'])->name('index');
 			Route::post('/', [ToolController::class, 'store'])->name('store');
+			Route::get('/export', [ToolController::class, 'export'])->name('export');
+			Route::get('/export-pdf', [ToolController::class, 'exportPdf'])->name('exportPdf');
 			Route::post('/request', [ToolController::class, 'storeRequest'])->name('storeRequest');
 			Route::post('/approve/{id}', [ToolController::class, 'approve'])->name('approve');
 			Route::post('/reject/{id}', [ToolController::class, 'reject'])->name('reject');

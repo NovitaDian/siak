@@ -4,7 +4,7 @@
 <div class="nav-item d-flex align-self-end">
     <form action="{{ route('adminsystem.pemasukan.create') }}" method="GET" style="display:inline;">
         @csrf
-        <button type="submit" class="btn btn-primary active mb-0 text-white" role="button" aria-pressed="true">
+        <button type="submit" class="btn btn-primary btn-sm active mb-0 text-white" role="button" aria-pressed="true">
             Tambah
         </button>
     </form>
@@ -53,33 +53,25 @@
                                 <td class="text-center">
                                     <p class="text-xs font-weight-bold mb-0">{{ $pemasukan->keterangan }}</p>
                                 </td>
-                                <td class="align-middle text-center">
-                                    <!-- Tombol Edit -->
-                                    <a href="javascript:;"
-                                        id="editBtn"
-                                        onclick="editAction();"
-                                        style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right, #FFA500, #FF6347); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px; margin-right: 8px;">
-                                        <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit
+                                <td class="text-center">
+                                            <!-- Tombol Edit -->
+                                            <a href="{{ route('adminsystem.pemasukan.edit', $pemasukan->id) }}"
+                                                class="btn btn-xs btn-warning">
+                                                <i class="fas fa-edit me-1" style="font-size:12px;"></i> Edit
+                                            </a>
 
-                                    </a>
-
-                                    <!-- Tombol Send (Delete Action) -->
-                                    <form action="{{ route('adminsystem.pemasukan.destroy', $pemasukan->id) }}" method="POST" style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit"
-                                            class="btn btn-sm"
-                                            onclick="return confirm('Anda yakin akan menghapus dokumen?')"
-                                            title="Hapus"
-                                            style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right, #FF4C4C, #FF0000); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;">
-                                            <i style="margin-right: 4px; font-size: 12px;"></i> Hapus
-                                        </button>
-                                    </form>
-
-
-                                    <!-- Tambahkan font-awesome untuk ikon -->
-                                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-                                </td>
+                                            <!-- Tombol Hapus -->
+                                            <form action="{{ route('adminsystem.pemasukan.destroy', $pemasukan->id) }}" method="POST" style="display:inline;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                    class="btn btn-danger btn-xs"
+                                                    onclick="return confirm('Anda yakin akan menghapus dokumen?')"
+                                                    style="display:inline-flex; align-items:center; padding:4px 8px; background:linear-gradient(to right, #FF4C4C, #FF0000); color:white; border-radius:5px; font-weight:bold; font-size:10px;">
+                                                    <i class="fas fa-trash-alt me-1" style="font-size:12px;"></i> Hapus
+                                                </button>
+                                            </form>
+                                        </td>
 
                                 <script>
                                     function editAction() {
@@ -100,6 +92,13 @@
 </div>
 <link href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" rel="stylesheet">
 <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+<link href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" rel="stylesheet">
+<script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+
 
 <script>
     $(document).ready(function() {

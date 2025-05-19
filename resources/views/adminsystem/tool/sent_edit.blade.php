@@ -12,7 +12,7 @@
                 <h6 class="mb-0">{{ __('UBAH DATA PEMERIKSAAN ALAT') }}</h6>
             </div>
             <div class="card-body pt-4 p-3">
-                <form action="{{ route('adminsystem.tool.sent_update', $tool_fixs->id) }}" method="POST">
+                <form action="{{ route('adminsystem.tool.sent_update', $tool_fixs->id) }}" enctype="multipart/form-data" method="POST">
                     @csrf
                     @method('PUT')
 
@@ -31,7 +31,7 @@
                                 <label for="alat_id">{{ __('Alat') }}</label>
                                 <select class="form-control" name="alat_id" id="alat_id" required>
                                     @foreach($alats as $alat)
-                                    <option value="{{ $alat->id }}" {{ $tool_fixs->alat_id == $alat->id ? 'selected' : '' }}>{{ $alat->nama_alat }}-{{ $alat->nomor }}</option>
+                                    <option value="{{ $alat->id }}" {{ $tool_fixs->alat_id == $alat->id ? 'selected' : '' }}>{{ $alat->nama_alat }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -61,16 +61,26 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="status_pemeriksaan">{{ __('Status Pemeriksaan') }}</label>
-                                <select class="form-control" name="status_pemeriksaan" id="status_pemeriksaan" required>
-                                    <option value="">Pilih Status</option>
+                                <select name="status_pemeriksaan" class="form-control" required>
                                     <option value="Layak operasi" {{ $tool_fixs->status_pemeriksaan == 'Layak operasi' ? 'selected' : '' }}>Layak operasi</option>
                                     <option value="Layak operasi dengan catatan" {{ $tool_fixs->status_pemeriksaan == 'Layak operasi dengan catatan' ? 'selected' : '' }}>Layak operasi dengan catatan</option>
                                     <option value="Tidak layak operasi" {{ $tool_fixs->status_pemeriksaan == 'Tidak layak operasi' ? 'selected' : '' }}>Tidak layak operasi</option>
                                 </select>
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <label for="foto">Foto (biarkan kosong jika tidak ingin ubah)</label>
+                            <input
+                                type="file"
+                                name="foto"
+                                id="foto"
+                                class="form-control"
+                                accept="image/*"
+                                @if (!$tool_fixs->foto)
+                            @endif
+                            >
+                        </div>
                     </div>
-
                     <div class="d-flex justify-content-end">
                         <button type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">{{ __('Update Laporan') }}</button>
                     </div>
