@@ -1,98 +1,91 @@
 @extends('layouts.user_type.auth')
 
 @section('content')
-
 <div class="row">
+  <!-- Card 1: SAFETY PERFORMANCE BOARD -->
   <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
     <div class="card">
       <div class="card-body p-3">
         <div class="row">
           <div class="col-8">
             <div class="numbers">
-              <p class="text-sm mb-0 text-capitalize font-weight-bold">SAFETY PERFORMANCE BOARD
-              </p>
+              <p class="text-sm mb-0 text-capitalize font-weight-bold">SAFETY PERFORMANCE BOARD</p>
               <h5 class="font-weight-bolder mb-0">
-
                 <span class="text-success text-sm font-weight-bolder"></span>
               </h5>
             </div>
           </div>
           <div class="col-4 text-end">
             <a href="{{ route('adminsystem.dashboard-incident') }}" class="btn btn-primary icon icon-shape shadow text-center border-radius-md">
-              <i class="fn-eye text-lg opacity-10" aria-hidden="true"></i>
+              <i class="fas fa-hard-hat text-lg opacity-10" aria-hidden="true"></i>
             </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <!-- Card 2: SAFETY PERFORMANCE INDICATOR -->
   <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
     <div class="card">
       <div class="card-body p-3">
         <div class="row">
           <div class="col-8">
             <div class="numbers">
-              <p class="text-sm mb-0 text-capitalize font-weight-bold">Today's Users</p>
-              <h5 class="font-weight-bolder mb-0">
-                2,300
-                <span class="text-success text-sm font-weight-bolder">+3%</span>
-              </h5>
+              <p class="text-sm mb-0 text-capitalize font-weight-bold">SAFETY PERFORMANCE INDICATOR</p>
             </div>
           </div>
           <div class="col-4 text-end">
-            <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
-              <i class="ni ni-world text-lg opacity-10" aria-hidden="true"></i>
-            </div>
+            <a href="{{ route('adminsystem.dashboard-spi') }}" class="btn btn-primary icon icon-shape shadow text-center border-radius-md">
+              <i class="fas fa-chart-line text-lg opacity-10" aria-hidden="true"></i>
+            </a>
           </div>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- Card 3: NON CONFORMITY REPORT -->
   <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
     <div class="card">
       <div class="card-body p-3">
         <div class="row">
           <div class="col-8">
             <div class="numbers">
-              <p class="text-sm mb-0 text-capitalize font-weight-bold">New Clients</p>
-              <h5 class="font-weight-bolder mb-0">
-                +3,462
-                <span class="text-danger text-sm font-weight-bolder">-2%</span>
-              </h5>
+              <p class="text-sm mb-0 text-capitalize font-weight-bold">NON CONFORMITY REPORT</p>
             </div>
           </div>
           <div class="col-4 text-end">
-            <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
-              <i class="ni ni-paper-diploma text-lg opacity-10" aria-hidden="true"></i>
-            </div>
+            <a href="{{ route('adminsystem.dashboard-ncr') }}" class="btn btn-primary icon icon-shape shadow text-center border-radius-md">
+              <i class="fas fa-exclamation-triangle text-lg opacity-10" aria-hidden="true"></i>
+            </a>
           </div>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- Card 4: BUDGETING -->
   <div class="col-xl-3 col-sm-6">
     <div class="card">
       <div class="card-body p-3">
         <div class="row">
           <div class="col-8">
             <div class="numbers">
-              <p class="text-sm mb-0 text-capitalize font-weight-bold">Sales</p>
-              <h5 class="font-weight-bolder mb-0">
-                $103,430
-                <span class="text-success text-sm font-weight-bolder">+5%</span>
-              </h5>
+              <p class="text-sm mb-0 text-capitalize font-weight-bold">BUDGETING</p>
             </div>
           </div>
           <div class="col-4 text-end">
-            <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
-              <i class="ni ni-cart text-lg opacity-10" aria-hidden="true"></i>
-            </div>
+            <a href="{{ route('adminsystem.dashboard-budget') }}" class="btn btn-primary icon icon-shape shadow text-center border-radius-md">
+              <i class="fas fa-coins text-lg opacity-10" aria-hidden="true"></i>
+            </a>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
+
 </div>
 <div class="row mt-4">
   <div class="col-lg-7 mb-lg-0 mb-4">

@@ -172,6 +172,32 @@ class IncidentController extends Controller
 
         // Klasifikasi Kejadian
         $klasifikasi = $request->input('klasifikasi_kejadiannya');
+        $klasifikasiBooleanMapping = [
+            'Near Miss' => 'near_miss',
+            'First Aid' => 'first_aid_case',
+            'Illness/Sick' => 'illness_sick',
+            'Medical Treatment Case (MTC)' => 'medical_treatment_case',
+            'Restricted Work Case (RWC)' => 'restricted_work_case',
+            'Lost Workdays Case (LWC)' => 'lost_workdays_case',
+            'Permanent Partial Disability (PPD)' => 'permanent_partial_dissability',
+            'Permanent Total Disability (PTD)' => 'permanent_total_dissability',
+            'Fatality' => 'fatality',
+            'Fire Incident' => 'fire_incident',
+            'Road Incident' => 'road_incident',
+            'Property Loss/Damage' => 'property_loss_damage',
+            'Environmental Incident' => 'environmental_incident',
+        ];
+
+        // Set semua kolom boolean tersebut ke 0 dulu
+        foreach ($klasifikasiBooleanMapping as $column) {
+            $validated[$column] = 0;
+        }
+
+        // Set ke 1 hanya jika sesuai klasifikasi
+        if (isset($klasifikasiBooleanMapping[$klasifikasi])) {
+            $validated[$klasifikasiBooleanMapping[$klasifikasi]] = 1;
+        }
+
 
         // Tentukan LTA & WLTA sesuai klasifikasi
         $validated['lta'] = in_array($klasifikasi, [

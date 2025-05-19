@@ -32,9 +32,9 @@
                                 <tbody>
                                     @foreach ($bagians as $bagian)
                                     <tr>
-                                        <td class="text-center">{{ $bagian->perusahaan_code }}</td>
-                                        <td class="text-center">{{ $bagian->perusahaan_name }}</td>
-                                        <td class="text-center">{{ $bagian->nama_bagian }}</td>
+                                        <td class="text-center"><p class="text-xs font-weight-bold mb-0">{{ $bagian->perusahaan_code }}</p></td>
+                                        <td class="text-center"><p class="text-xs font-weight-bold mb-0">{{ $bagian->perusahaan_name }}</p></td>
+                                        <td class="text-center"><p class="text-xs font-weight-bold mb-0">{{ $bagian->nama_bagian }}</p></td>
                                         <td class="text-center">
                                             <div class="d-flex justify-content-center gap-2">
                                                 <!-- Tombol Edit -->

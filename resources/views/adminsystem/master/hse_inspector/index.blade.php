@@ -31,8 +31,12 @@
                                 <tbody>
                                     @foreach ($hse_inspectors as $inspector)
                                     <tr>
-                                        <td class="text-center">{{ $inspector->name }}</td>
-                                        <td class="text-center">{{ $inspector->jabatan }}</td>
+                                        <td class="text-center">
+                                            <p class="text-xs font-weight-bold mb-0">{{ $inspector->name }}</p>
+                                        </td>
+                                        <td class="text-center">
+                                            <p class="text-xs font-weight-bold mb-0">{{ $inspector->jabatan }}</p></p>
+                                        </td>
                                         <td class="text-center">
                                             <div class="d-flex justify-content-center gap-2">
                                                 <!-- Edit Button -->
@@ -69,12 +73,13 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 <!-- DataTables & jQuery -->
-<link href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
 
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
         $('#dataTable').DataTable({
             pageLength: 10,
             lengthMenu: [10, 25, 50, 100],

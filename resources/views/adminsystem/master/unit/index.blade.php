@@ -24,8 +24,8 @@
                         </form>
                     </div>
 
-                    <div class="card-body px-0 pt-0 pb-2">
-                        <div class="table-responsive p-0">
+                      <div class="card-body px-0 pt-0 pb-2">
+                        <div class="table-responsive p-3">
                             <table id="unitTable" class="table align-items-center mb-0">
                                 <thead>
                                     <tr>
@@ -45,7 +45,7 @@
                                         </td>
                                         <td class="align-middle text-center">
                                             <!-- Tombol Edit -->
-                                            <a href="{{ route('adminsystem.unit.edit', $unit->id) }}" class="btn btn-warning btn-sm">
+                                            <a href="{{ route('adminsystem.unit.edit', $unit->id) }}" class="btn btn-warning btn-xs">
                                                 <i class="fas fa-edit me-1"></i> Edit
                                             </a>
 
@@ -53,7 +53,7 @@
                                             <form action="{{ route('adminsystem.unit.destroy', $unit->id) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm"
+                                                <button type="submit" class="btn btn-danger btn-xs"
                                                     onclick="return confirm('Anda yakin ingin menghapus unit ini?')">
                                                     <i class="fas fa-trash-alt me-1"></i> Hapus
                                                 </button>
@@ -80,6 +80,7 @@
 
 <!-- DataTables -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
 

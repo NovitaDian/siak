@@ -20,8 +20,8 @@
             <h6>Users List</h6>
           </div>
           <div class="card-body px-0 pt-0 pb-2">
-            <div class="table-responsive p-0">
-              <table class="table align-items-center mb-0">
+            <div class="table-responsive p-3">
+              <table class="table align-items-center mb-0" id="dataTable">
                 <thead>
                   <tr>
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama</th>
@@ -37,7 +37,7 @@
                     <td>
                       <div class="d-flex px-2 py-1">
                         <div>
-                          <img src="{{ asset('assets/img/team-2.jpg') }}" class="avatar avatar-sm me-3" alt="user">
+                          <img src="{{ asset('assets/img/user.png') }}" class="avatar avatar-sm me-3" alt="user">
                         </div>
                         <div class="d-flex flex-column justify-content-center">
                           <h6 class="mb-0 text-sm">{{ $user->name }}</h6>
@@ -75,5 +75,23 @@
     </div>
   </div>
 </main>
+<!-- DataTables -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
 
+<script>
+    $(document).ready(function() {
+        $('#dataTable').DataTable({
+            pageLength: 10,
+            lengthMenu: [10, 25, 50, 100],
+            ordering: true,
+            searching: true,
+            info: true,
+            paging: true,
+            responsive: true
+        });
+    });
+</script>
 @endsection

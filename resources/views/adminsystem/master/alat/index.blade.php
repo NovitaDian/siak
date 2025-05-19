@@ -13,7 +13,7 @@
                         <h6 class="mb-0">Nama Alat</h6>
                         <form action="{{ route('adminsystem.nama_alat.create') }}" method="GET">
                             @csrf
-                            <button type="submit" class="btn btn-primary text-white mb-0">Tambah</button>
+                            <button type="submit" class="btn btn-primary btn-sm text-white mb-0">Tambah</button>
                         </form>
                     </div>
                     <div class="card-body px-0 pt-0 pb-2">
@@ -28,7 +28,7 @@
                                 <tbody>
                                     @foreach ($nama_alats as $nama)
                                     <tr>
-                                        <td class="text-center">{{ $nama->nama_alat }}</td>
+                                        <td class="text-center"><p class="text-xs font-weight-bold mb-0">{{ $nama->nama_alat }}</p></td>
                                         <td class="text-center">
                                             <div class="d-flex justify-content-center gap-2">
                                                 <a href="{{ route('adminsystem.nama_alat.edit', $nama->id) }}" class="btn btn-warning btn-xs">
@@ -62,7 +62,7 @@
                         <h6 class="mb-0">Detail Alat</h6>
                         <form action="{{ route('adminsystem.detail_alat.create') }}" method="GET">
                             @csrf
-                            <button type="submit" class="btn btn-primary text-white mb-0">Tambah</button>
+                            <button type="submit" class="btn btn-primary btn-sm text-white mb-0">Tambah</button>
                         </form>
                     </div>
                     <div class="card-body px-0 pt-0 pb-2">
@@ -81,11 +81,11 @@
                                 <tbody>
                                     @foreach ($alats as $alat)
                                     <tr>
-                                        <td class="text-center">{{ $alat->nama_alat }}</td>
-                                        <td class="text-center">{{ $alat->nomor }}</td>
-                                        <td class="text-center">{{ $alat->waktu_inspeksi }}</td>
-                                        <td class="text-center">{{ $alat->durasi_inspeksi }}</td>
-                                        <td class="text-center">{{ $alat->status }}</td>
+                                        <td class="text-center"> <p class="text-xs font-weight-bold mb-0">{{ $alat->nama_alat }}</p></td>
+                                        <td class="text-center"> <p class="text-xs font-weight-bold mb-0">{{ $alat->nomor }}</p></td>
+                                        <td class="text-center"> <p class="text-xs font-weight-bold mb-0">{{ $alat->waktu_inspeksi }}</p></td>
+                                        <td class="text-center"> <p class="text-xs font-weight-bold mb-0">{{ $alat->durasi_inspeksi }}</p></td>
+                                        <td class="text-center"> <p class="text-xs font-weight-bold mb-0">{{ $alat->status }}</p></td>
                                         <td class="text-center">
                                             <div class="d-flex justify-content-center gap-2">
                                                 <a href="{{ route('adminsystem.detail_alat.edit', $alat->id) }}" class="btn btn-warning btn-xs">

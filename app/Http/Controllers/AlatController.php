@@ -155,4 +155,5 @@ class AlatController extends Controller
 
         return redirect()->route('adminsystem.alat.index')->with('success', 'Nama alat berhasil dihapus.');
     }
+    
 }

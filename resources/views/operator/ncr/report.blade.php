@@ -4,7 +4,7 @@
 
 <div>
     <div class="container-fluid">
-        <h2 class="text-black font-weight-bolder text-center">SAFETY BEHAVIOR & PPE COMPLIANCE</h2>
+        <h2 class="text-black font-weight-bolder text-center">NONCONFORMITY REPORT AND CORRECTIVE/PREVENTIVE ACTION REQUEST</h2>
     </div>
     <div class="container-fluid py-4 px-0">
         <div class="card mx-auto w-100" style="max-width: 150%; ">
@@ -12,7 +12,7 @@
                 <h6 class="mb-0">{{ __('DATA UMUM') }}</h6>
             </div>
             <div class="card-body pt-4 p-3">
-                <form action="{{ route('operator.ncr.store') }}" method="POST" role="form text-left">
+                <form action="{{ route('operator.ncr.store') }}"  method="POST" enctype="multipart/form-data" role="form text-left">
                     @csrf
                     @if($errors->any())
                     <div class="mt-3 alert alert-primary alert-dismissible fade show" role="alert">
@@ -58,34 +58,29 @@
                                 @enderror
                             </div>
                         </div>
-                    </div>
 
-                    <!-- H&S Officer 1 / Lead Auditor -->
-                    <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="nama_hs_officer_1">{{ __('Nama H&S Officer 1 / Lead Auditor') }}</label>
-                                <input class="form-control" type="text" id="nama_hs_officer_1" name="nama_hs_officer_1" value="{{ old('nama_hs_officer_1') }}" required>
+                                <input class="form-control" type="text" id="nama_hs_officer_1" name="nama_hs_officer_1" value="{{ old('nama_hs_officer_1') }}">
                                 @error('nama_hs_officer_1')
                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                 @enderror
                             </div>
                         </div>
-
-                        <!-- H&S Officer 2 / Auditor -->
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="nama_hs_officer_2">{{ __('Nama H&S Officer  2 / Auditor') }}</label>
-                                <input class="form-control" type="text" id="nama_hs_officer_2" name="nama_hs_officer_2" value="{{ old('nama_hs_officer_2') }}" required>
+                                <label for="nama_hs_officer_2">{{ __('Nama H&S Officer 2 / Auditor') }}</label>
+                                <input class="form-control" type="text" id="nama_hs_officer_2" name="nama_hs_officer_2" value="{{ old('nama_hs_officer_2') }}">
                                 @error('nama_hs_officer_2')
                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                 @enderror
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Tanggal Audit / Pengawasan -->
-                    <div class="row">
+
+                        <!-- Tanggal Audit / Pengawasan -->
+
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="tanggal_audit">{{ __('Tanggal Audit / Pengawasan') }}</label>
@@ -99,17 +94,17 @@
                         <!-- Nama Auditee -->
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="nama_auditee">{{ __('Nama Auditee') }}</label>
+                                <label for="nama_auditee">{{ __('Nama Auditee/Owner Area') }}</label>
                                 <input class="form-control" type="text" id="nama_auditee" name="nama_auditee" value="{{ old('nama_auditee') }}" required>
                                 @error('nama_auditee')
                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                 @enderror
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Dropdown Perusahaan -->
-                    <div class="row">
+
+                        <!-- Dropdown Perusahaan -->
+
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="perusahaan">{{ __('Perusahaan') }}</label>
@@ -130,7 +125,7 @@
                         <!-- Dropdown Bagian -->
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="nama_bagian">{{ __('Bagian') }}</label>
+                                <label for="nama_bagian">{{ __('Bagian/Department') }}</label>
                                 <select class="form-control" id="nama_bagian" name="nama_bagian" required>
                                     <option value="" disabled selected>Pilih Bagian</option>
                                 </select>
@@ -139,10 +134,10 @@
                                 @enderror
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Element / Referensi NCR -->
-                    <div class="row">
+
+                        <!-- Element / Referensi NCR -->
+
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="element_referensi_ncr">{{ __('Element / Referensi NCR') }}</label>
@@ -152,8 +147,6 @@
                                 @enderror
                             </div>
                         </div>
-
-                        <!-- Kategori Ketidaksesuaian -->
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="kategori_ketidaksesuaian">{{ __('Kategori Ketidaksesuaian') }}</label>
@@ -168,11 +161,12 @@
                                 @enderror
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Deskripsi Ketidaksesuaian -->
-                    <div class="row">
-                        <div class="col-md-12">
+
+
+                        <!-- Deskripsi Ketidaksesuaian -->
+
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label for="deskripsi_ketidaksesuaian">{{ __('Deskripsi Ketidaksesuaian') }}</label>
                                 <textarea class="form-control" id="deskripsi_ketidaksesuaian" name="deskripsi_ketidaksesuaian" rows="4" required>{{ old('deskripsi_ketidaksesuaian') }}</textarea>
@@ -181,12 +175,46 @@
                                 @enderror
                             </div>
                         </div>
-                    </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="tindak_lanjut">{{ __('Tindak Lanjut') }}</label>
+                                <textarea class="form-control" id="tindak_lanjut" name="tindak_lanjut" rows="4" required>{{ old('tindak_lanjut') }}</textarea>
+                                @error('tindak_lanjut')
+                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="estimasi">{{ __('Estimasi Penyelesaian') }}</label>
+                                <input class="form-control" type="date" id="estimasi" name="estimasi" value="{{ old('estimasi') }}" required>
+                                @error('estimasi')
+                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="foto">{{ __('Foto') }}</label>
+                                <input
+                                    class="form-control @error('foto') is-invalid @enderror"
+                                    type="file"
+                                    id="foto"
+                                    name="foto"
+                                    accept="image/*"
+                                    capture="environment"
+                                    required>
+                                @error('foto')
+                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
 
-                    <!-- Submit Button -->
-                    <div class="d-flex justify-content-end">
-                        <button type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">{{ __('Save Report') }}</button>
-                    </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">{{ __('Save Report') }}</button>
+                        </div>
                 </form>
             </div>
         </div>

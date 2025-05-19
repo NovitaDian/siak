@@ -12,7 +12,7 @@
             <div class="card-body pt-4 p-3">
                 <!-- Konten Budget Plan -->
                 <p>Detail rencana anggaran di sini...</p>
-                <button class="btn btn-primary" onclick="location.href='{{ route('adminsystem.budget.index') }}'">Lihat Rincian</button>
+                <button class="btn btn-primary btn-sm" onclick="location.href='{{ route('adminsystem.budget.index') }}'">Lihat Rincian</button>
             </div>
         </div>
     </div>
@@ -25,7 +25,7 @@
             <div class="card-body pt-4 p-3">
                 <!-- Konten PR -->
                 <p>Detail PR di sini...</p>
-                <button class="btn btn-primary" onclick="location.href='{{ route('adminsystem.pr.index') }}'">Lihat Rincian</button>
+                <button class="btn btn-primary btn-sm" onclick="location.href='{{ route('adminsystem.pr.index') }}'">Lihat Rincian</button>
             </div>
         </div>
     </div>

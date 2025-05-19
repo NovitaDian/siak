@@ -3,11 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Attachment;
+use App\Models\Budget;
+use App\Models\BudgetFix;
 use App\Models\Note;
 use App\Models\SentIncident;
+use App\Models\SentNcr;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class HomeController extends Controller
@@ -86,6 +90,30 @@ class HomeController extends Controller
     {
         return view('adminsystem.dashboard.dashboard');
     }
+    public function budget()
+    {
+        $budget_fixs = BudgetFix::all();
+        return view('adminsystem.dashboard.budget', compact('budget_fixs'));
+    }
+    public function ncr(Request $request)
+    {
+        $year = $request->input('year');
+
+        $ncr_fixs = SentNcr::when($year, function ($query) use ($year) {
+            return $query->whereYear('tanggal_shift_kerja', $year);
+        })->get();
+
+        $openCount = $ncr_fixs->where('status_ncr', 'Open')->count();
+        $closedCount = $ncr_fixs->where('status_ncr', 'Closed')->count();
+
+        $years = SentNcr::selectRaw('YEAR(tanggal_shift_kerja) as year')
+            ->distinct()
+            ->orderBy('year', 'desc')
+            ->pluck('year');
+        return view('adminsystem.dashboard.ncr', compact('ncr_fixs', 'openCount', 'closedCount', 'years', 'year'));
+    }
+
+
 
     public function incident()
     {
@@ -181,5 +209,45 @@ class HomeController extends Controller
             'shift3' => $shiftIII,
             'totalShift' => $totalWorkForce
         ]);
+    }
+
+    public function spi(Request $request)
+    {
+        $data = [];
+
+        // Loop per bulan dari Jan (1) sampai Dec (12)
+        $year = $request->input('year', date('Y')); // default tahun ini
+
+        $spiData = [];
+
+        for ($month = 1; $month <= 12; $month++) {
+            $incidents = DB::table('incidents_fix')
+                ->whereMonth('shift_date', $month)
+                ->whereYear('shift_date', $year)
+                ->get();
+
+            $data[] = [
+                'month' => Carbon::create()->month($month)->format('M'),
+                'lta' => $incidents->where('lost_workdays_case', true)->count(),
+                'wlta' => $incidents->where(function ($item) {
+                    return $item->first_aid_case || $item->medical_treatment_case || $item->restricted_work_case;
+                })->count(),
+                'ltifr' => $incidents->sum('jumlah_hari_hilang'),
+                'man_hours' => $incidents->sum('total_man_hours'),
+                'near_miss' => $incidents->where('near_miss', 1)->count(),
+                'illness_sick' => $incidents->where('illness_sick', 1)->count(),
+                'first_aid_case' => $incidents->where('first_aid_case', 1)->count(),
+                'medical_treatment_case' => $incidents->where('medical_treatment_case', 1)->count(),
+                'restricted_work_case' => $incidents->where('restricted_work_case', 1)->count(),
+                'lost_workdays_case' => $incidents->where('lost_workdays_case', 1)->count(),
+                'permanent_partial_dissability' => $incidents->where('permanent_partial_dissability', 1)->count(),
+                'permanent_total_dissability' => $incidents->where('permanent_total_dissability', 1)->count(),
+                'fatality' => $incidents->where('fatality', 1)->count(),
+                'fire_incident' => $incidents->where('fire_incident', 1)->count(),
+                'road_incident' => $incidents->where('road_incident', 1)->count(),
+            ];
+        }
+
+        return view('adminsystem.dashboard.spi', compact('data'));
     }
 }

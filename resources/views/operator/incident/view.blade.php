@@ -1,152 +1,287 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Accident / Incident Report</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
         }
 
-        .header-table,
-        .content-table {
-            width: 100%;
-            border-collapse: collapse;
+        .form-container {
+            border: 1px solid black;
+            padding: 20px;
         }
 
-        .header-table td {
-            padding: 5px;
+        .table-bordered {
+            border: 1px solid black;
         }
 
-        .header-table td:first-child {
-            width: 60%;
-        }
-
-        .header-table td:last-child {
-            width: 40%;
-        }
-
-        .content-table td {
-            padding: 10px;
-            vertical-align: top;
+        .logo {
+            width:100px;
+            height:100px;
         }
 
         .section-title {
             font-weight: bold;
-            margin-top: 20px;
+            font-size: 18px;
+            text-decoration: underline;
         }
 
-        .bordered {
+        .checkbox {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
             border: 1px solid black;
+            text-align: center;
+        }
+
+        .checked {
+            background-color: black;
         }
     </style>
 </head>
 
 <body>
-    <table class="header-table">
-        @forelse ($incidents as $incident)
-        <tr>
-            <td>
-                <h3>PT. DUS</h3>
-                <h2>Accident / Incident Report</h2>
-            </td>
-            <td>
-                <table>
-                    <tr>
-                        <td>No:</td>
-                        <td>FRM-HSE-013.1</td>
-                    </tr>
-                    <tr>
-                        <td>Rev.:</td>
-                        <td>03</td>
-                    </tr>
-                    <tr>
-                        <td>Tgl.:</td>
-                    </tr>
-                    <tr>
-                        <td>Hal.:</td>
-                        <td>1</td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        @empty
-        <p>No incident data available.</p>
-        @endforelse
-    </table>
-    <hr>
+    <div class="container my-4">
+        <div class="form-container">
+            <div class="d-flex justify-content-between">
+                <img src="{{ asset('assets/img/logodus.png') }}" alt="Logo" class="logo">
+                <div>
+                    <h4 class="text-center">Accident / Incident Report</h4>
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>No: FRM-HSE-013.1</td>
+                            <td>Rev.: 03</td>
+                        </tr>
+                        <tr>
+                            <td>Tgl: 30-Apr-23</td>
+                            <td>Hal.: 1 of 2</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
 
-    @forelse ($incidents as $incident)
-    <p><strong>NO LAPORAN:</strong> {{ isset($incident->no_laporan) ? $incident->no_laporan : 'Data tidak tersedia' }}</p>
-    <p><strong>Tanggal Pelaporan:</strong> {{ \Carbon\Carbon::now()->translatedFormat('l, d F Y') }}</p>
-    <p><strong>Dilaporkan oleh:</strong> {{ Auth::user()->name }}</p>
+            <p><b>No Laporan:</b> {{ $incident->no_laporan }} &nbsp;&nbsp; <b>Tanggal Pelaporan:</b> {{ date('l, d F Y', strtotime($incident->shift_date)) }}</p>
 
-    <div class="section-title">Tindakan Pengobatan:</div>
-    <p>Tindakan Segera Yang Dilakukan: {{ isset($incident->tindakan_segera_yang_dilakukan) ? $incident->tindakan_segera_yang_dilakukan : 'Data tidak tersedia' }}</p>
+            <div class="section-title">KLASIFIKASI KEJADIAN:</div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div>
+                        <input type="checkbox" name="klasifikasi_kejadiannya[]" value="Near Miss"
+                            <?= $incident->klasifikasi_kejadiannya == "Near Miss" ? "checked" : "" ?>>
+                        Near Miss
+                    </div>
+                    <div>
+                        <input type="checkbox" name="klasifikasi_kejadiannya[]" value="Illness/Sick"
+                            <?= $incident->klasifikasi_kejadiannya == "Illness/Sick" ? "checked" : "" ?>>
+                        Illness/Sick
+                    </div>
+                    <div>
+                        <input type="checkbox" name="klasifikasi_kejadiannya[]" value="First Aid Case (FAC)"
+                            <?= $incident->klasifikasi_kejadiannya == "First Aid Case (FAC)" ? "checked" : "" ?>>
+                        First Aid Case (FAC)
+                    </div>
+                    <div>
+                        <input type="checkbox" name="klasifikasi_kejadiannya[]" value="Medical Treatment Case (MTC)"
+                            <?= $incident->klasifikasi_kejadiannya == "Medical Treatment Case (MTC)" ? "checked" : "" ?>>
+                        Medical Treatment Case (MTC)
+                    </div>
+                    <div>
+                        <input type="checkbox" name="klasifikasi_kejadiannya[]" value="Restricted Work Case (RWC)"
+                            <?= $incident->klasifikasi_kejadiannya == "Restricted Work Case (RWC)" ? "checked" : "" ?>>
+                        Restricted Work Case (RWC)
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div>
+                        <input type="checkbox" name="klasifikasi_kejadiannya[]" value="Road Incident"
+                            <?= $incident->klasifikasi_kejadiannya == "Road Incident" ? "checked" : "" ?>>
+                        Road Incident
+                    </div>
+                    <div>
+                        <input type="checkbox" name="klasifikasi_kejadiannya[]" value="Property loss/damage"
+                            <?= $incident->klasifikasi_kejadiannya == "Property loss/damage" ? "checked" : "" ?>>
+                        Property loss/damage
+                    </div>
+                    <div>
+                        <input type="checkbox" name="klasifikasi_kejadiannya[]" value="Environmental incident"
+                            <?= $incident->klasifikasi_kejadiannya == "Environmental incident" ? "checked" : "" ?>>
+                        Environmental incident
+                    </div>
+                </div>
+            </div>
 
-    <div class="section-title">ANALISA PENYEBAB MASALAH:</div>
-    <p>Rincian Dari Pemeriksaan: {{ isset($incident->rincian_dari_pemeriksaan) ? $incident->rincian_dari_pemeriksaan : 'Data tidak tersedia' }}</p>
 
-    <div class="section-title">Kemungkinan Penyebab Langsung:</div>
-    <ol>
-        <li>{{ isset($incident->penyebab_langsung_1_a) ? $incident->penyebab_langsung_1_a : 'Data tidak tersedia' }}</li>
-        <li>{{ isset($incident->penyebab_langsung_2_a) ? $incident->penyebab_langsung_2_a : 'Data tidak tersedia' }}</li>
-        <li>{{ isset($incident->penyebab_langsung_3_a) ? $incident->penyebab_langsung_3_a : 'Data tidak tersedia' }}</li>
-    </ol>
+            <div class="section-title">INFORMASI UMUM:</div>
+            <p><b>Tanggal Kejadian:</b> {{ date('l, d F Y', strtotime($incident->tgl_kejadiannya)) }}</p>
+            <p><b>Jam Kejadian:</b> {{ date('H:i', strtotime($incident->jam_kejadiannya)) }} WIB</p>
+            <p><b>Lokasi Kejadian:</b> {{ $incident->lokasi_kejadiannya }}</p>
+            <p><b>Ada Korban:</b> {{ $incident->ada_korban }}</p>
 
-    <div class="section-title">Kemungkinan Penyebab Dasar:</div>
-    <ol>
-        <li>{{ isset($incident->penyebab_dasar_1_a) ? $incident->penyebab_dasar_1_a : 'Data tidak tersedia' }}</li>
-        <li>{{ isset($incident->penyebab_dasar_2_a) ? $incident->penyebab_dasar_2_a : 'Data tidak tersedia' }}</li>
-        <li>{{ isset($incident->penyebab_dasar_3_a) ? $incident->penyebab_dasar_3_a : 'Data tidak tersedia' }}</li>
-    </ol>
 
-    <div class="section-title">AREA KENDALI UNTUK TINDAKAN PENINGKATAN:</div>
-    <table class="content-table bordered">
-        <tr>
-            <th>No.</th>
-            <th>Deskripsi Tindakan Kendali</th>
-            <th>PIC</th>
-            <th>Waktu</th>
-        </tr>
-        <tr>
-            <td>1.</td>
-            <td>{{ isset($incident->tindakan_kendali_untuk_peningkatan_1_a) ? $incident->tindakan_kendali_untuk_peningkatan_1_a : 'Data tidak tersedia' }}</td>
-            <td>{{ isset($incident->pic_1) ? $incident->pic_1 : 'Data tidak tersedia' }}</td>
-            <td>{{ isset($incident->timing_1) ? $incident->timing_1 : 'Data tidak tersedia' }}</td>
-        </tr>
-        <tr>
-            <td>2.</td>
-            <td>{{ isset($incident->tindakan_kendali_untuk_peningkatan_2_a) ? $incident->tindakan_kendali_untuk_peningkatan_2_a : 'Data tidak tersedia' }}</td>
-            <td>{{ isset($incident->pic_2) ? $incident->pic_2 : 'Data tidak tersedia' }}</td>
-            <td>{{ isset($incident->timing_2) ? $incident->timing_2 : 'Data tidak tersedia' }}</td>
-        </tr>
-        <tr>
-            <td>3.</td>
-            <td>{{ isset($incident->tindakan_kendali_untuk_peningkatan_3_a) ? $incident->tindakan_kendali_untuk_peningkatan_3_a : 'Data tidak tersedia' }}</td>
-            <td>{{ isset($incident->pic_3) ? $incident->pic_3 : 'Data tidak tersedia' }}</td>
-            <td>{{ isset($incident->timing_3) ? $incident->timing_3 : 'Data tidak tersedia' }}</td>
-        </tr>
-    </table>
+            <div class="section-title">INFORMASI KORBAN:</div>
+            <p><b>Nama Korban:</b> {{ $incident->nama_korban }}</p>
+            <p><b>Tanggal Lahir:</b> {{ $incident->tgk_lahir }}</p>
+            <p><b>Nama Korban:</b> {{ $incident->jenis_kelamin }}</p>
+            <p><b>Status: </b></p>
+            <div class="row">
+                <div class="col-md-6">
+                    <div>
+                        <input type="checkbox" name="status[]" value="Karyawan"
+                            <?= $incident->status == "Karyawan" ? "checked" : "" ?>>
+                        Karyawan
+                    </div>
+                    <div>
+                        <input type="checkbox" name="status[]" value="Outsourcing/Borongan"
+                            <?= $incident->status == "Outsourcing/Borongan" ? "checked" : "" ?>>
+                        Outsourcing/Borongan
+                    </div>
+                    <div>
+                        <input type="checkbox" name="status[]" value="Pekerja Borongan"
+                            <?= $incident->status == "Pekerja Borongan" ? "checked" : "" ?>>
+                        Pekerja Borongan
+                    </div>
+                    <div>
+                        <input type="checkbox" name="status[]" value="Sub Kontraktor"
+                            <?= $incident->status == "Sub Kontraktor" ? "checked" : "" ?>>
+                        Sub Kontraktor
+                    </div>
+                    <div>
+                        <input type="checkbox" name="status[]" value="Kontraktor"
+                            <?= $incident->status == "Kontraktor" ? "checked" : "" ?>>
+                        Kontraktor
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div>
+                        <input type="checkbox" name="status[]" value="Magang"
+                            <?= $incident->status == "Magang" ? "checked" : "" ?>>
+                        Magang
+                    </div>
+                    <div>
+                        <input type="checkbox" name="status[]" value="Tamu"
+                            <?= $incident->status == "Tamu" ? "checked" : "" ?>>
+                        Tamu
+                    </div>
+                    <div>
+                        <input type="checkbox" name="status[]" value="Masyarakat Umum"
+                            <?= $incident->status == "Masyarakat Umum" ? "checked" : "" ?>>
+                        Masyarakat Umum
+                    </div>
+                </div>
 
-    <div class="section-title">Dilaporkan oleh:</div>
-    <p>{{ Auth::user()->name }}</p>
-    <p>Tanda Tangan: ___________________</p>
-    <p>Tanggal: ___________________</p>
+                <p><b>Perusahaan:</b> {{ $incident->perusahaan }}</p>
+                <p><b>Bagian:</b> {{ $incident->bagian }}</p>
+                <p><b>Jabatan:</b> {{ $incident->jabatan }}</p>
+                <div class="section-title">PENJELASAN KEJADIAN DAN TINDAKAN:</div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div><b>Jenis Luka/Sakit 1:</b> {{ $incident->jenis_luka_sakit }}</div>
+                        <div><b>Jenis Luka/Sakit 2:</b> {{ $incident->jenis_luka_sakit2 }}</div>
+                        <div><b>Jenis Luka/Sakit 3:</b> {{ $incident->jenis_luka_sakit3 }}</div>
+                        <div><b>Deskripsi Kejadian:</b> {{ $incident->penjelasan_kejadiannya }}</div>
+                    </div>
+                    <div class="col-md-6">
+                        <div><b>Bagian Tubuh 1:</b> {{ $incident->bagian_tubuh_luka }}</div>
+                        <div><b>Bagian Tubuh 2:</b> {{ $incident->bagian_tubuh_luka2 }}</div>
+                        <div><b>Bagian Tubuh 3:</b> {{ $incident->bagian_tubuh_luka3 }}</div>
+                    </div>
+                    <div><b>Jenis Kejadian:</b> {{ $incident->jenis_kejadiannya }}</div>
+                    <div><b>Deskripsi Kejadian:</b> {{ $incident->penjelasan_kejadiannya }}</div>
+                    <p><b>Tindakan Pengobatan:</b> {{ $incident->tindakan_pengobatan }}</p>
+                    <p><b>Tindakan Segera Yang Dilakukan:</b> {{ $incident->tindakan_segera_yang_dilakukan }}</p>
+                    <div class="section-title">ANALISA PENYEBAB MASALAH:</div>
+                    <p><b>Rincian Dari Pemeriksaan:</b> {{ $incident->rincian_dari_pemeriksaan }}</p>
+                    <div><b>Kemungkinan Penyebab Langsung:</b></div>
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>#1</td>
+                            <td>#2</td>
+                            <td>#3</td>
+                        </tr>
+                        <tr>
+                            <td>{{ $incident->penyebab_langsung_1_a }}</td>
+                            <td>{{ $incident->penyebab_langsung_2_a}}</td>
+                            <td>{{ $incident->penyebab_langsung_3_a}}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ $incident->penyebab_langsung_1_b}}</td>
+                            <td>{{ $incident->penyebab_langsung_2_b}}</td>
+                            <td>{{ $incident->penyebab_langsung_3_b}}</td>
+                        </tr>
+                    </table>
+                    <div><b>Kemungkinan Penyebab Dasar:</b></div>
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>#1</td>
+                            <td>#2</td>
+                            <td>#3</td>
+                        </tr>
+                        <tr>
+                            <td>{{ $incident->penyebab_dasar_1_a }}</td>
+                            <td>{{ $incident->penyebab_dasar_2_a}}</td>
+                            <td>{{ $incident->penyebab_dasar_3_a}}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ $incident->penyebab_dasar_1_b}}</td>
+                            <td>{{ $incident->penyebab_dasar_2_b}}</td>
+                            <td>{{ $incident->penyebab_dasar_3_b}}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ $incident->penyebab_dasar_1_c}}</td>
+                            <td>{{ $incident->penyebab_dasar_2_c}}</td>
+                            <td>{{ $incident->penyebab_dasar_3_c}}</td>
+                        </tr>
+                    </table>
+                    <div><b>AREA KENDALI UNTUK TINDAKAN PENINGKATAN:</b></div>
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>#1</td>
+                            <td>#2</td>
+                            <td>#3</td>
+                        </tr>
+                        <tr>
+                            <td>{{ $incident->tindakan_kendali_untuk_peningkatan_1_a }}</td>
+                            <td>{{ $incident->tindakan_kendali_untuk_peningkatan_2_a}}</td>
+                            <td>{{ $incident->tindakan_kendali_untuk_peningkatan_3_a}}</td>
+                        </tr>
+                        <tr>
+                            <td>{{ $incident->tindakan_kendali_untuk_peningkatan_1_b }}</td>
+                            <td>{{ $incident->tindakan_kendali_untuk_peningkatan_2_b}}</td>
+                            <td>{{ $incident->tindakan_kendali_untuk_peningkatan_3_b}}</td>
+                        </tr>
+                        <tr>
+                            <th>Deskripsi Tindakan Kendali</th>
+                            <th>PIC</th>
+                            <th>Waktu</th>
+                        </tr>
+                        <tr>
+                            <td>1. {{ $incident->deskripsi_tindakan_pencegahan_1 }}</td>
+                            <td>{{ $incident->pic_1 }}</td>
+                            <td>{{ $incident->timing_1 }}</td>
+                        </tr>
+                        <tr>
+                            <td>2.{{ $incident->deskripsi_tindakan_pencegahan_2 }}</td>
+                            <td>{{ $incident->pic_2 }}</td>
+                            <td>{{ $incident->timing_2 }}</td>
+                        </tr>
+                        <tr>
+                            <td>3.{{ $incident->deskripsi_tindakan_pencegahan_3 }}</td>
+                            <td>{{ $incident->pic_3 }}</td>
+                            <td>{{ $incident->timing_3 }}</td>
+                        </tr>
+                    </table>
 
-    <div class="section-title">Team Investigasi:</div>
-    <p>Tanda Tangan: ___________________</p>
-    <p>Tanggal: ___________________</p>
-
-    <div class="section-title">Mengetahui:</div>
-    <p>Tanda Tangan: ___________________</p>
-    <p>Tanggal: ___________________</p>
-    @empty
-    <p>No incident data available.</p>
-    @endforelse
+                    <div class="section-title">TANDA TANGAN:</div>
+                    <p><b>Dilaporkan oleh:</b>{{ $incident->safety_officer_1 }}</p>
+                    <p><b>Team Investigasi:</b> __________</p>
+                    <p><b>Mengetahui:</b> __________</p>
+                </div>
+            </div>
 </body>
 
 </html>

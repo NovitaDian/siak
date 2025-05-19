@@ -32,16 +32,15 @@
                                     <tr>
                                         <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Kode GL Account</th>
                                         <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama GL Account</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Deskripsi</th>
                                         <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @forelse ($gls as $glAccount)
                                     <tr>
-                                        <td class="text-center">{{ $glAccount->gl_code }}</td>
-                                        <td class="text-center">{{ $glAccount->gl_name }}</td>
-                                        <td class="text-center">{{ $glAccount->description }}</td>
+                                        <td class="text-center">
+                                        <p class="text-xs font-weight-bold mb-0">{{ $glAccount->gl_code }}</p></td>
+                                        <td class="text-center"><p class="text-xs font-weight-bold mb-0">{{ $glAccount->gl_name }}</p></td>
                                         <td class="text-center">
                                             <div class="d-flex justify-content-center gap-2">
                                                 <!-- Tombol Edit -->

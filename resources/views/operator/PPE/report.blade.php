@@ -59,18 +59,32 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="nama_hse_inspector">{{ __('Nama HSE Inspector') }}</label>
-                                <input class="form-control" type="text" id="nama_hse_inspector" name="nama_hse_inspector" value="{{ old('nama_hse_inspector') }}" required>
-                                @error('nama_hse_inspector')
+                                <label for="hse_inspector_id">{{ __('HSE Inspector') }}</label>
+                                <select class="form-control" name="hse_inspector_id" id="hse_inspector_id" required>
+                                    <option value="">Pilih HSE Inspector</option>
+                                    @foreach($inspectors as $inspector)
+                                    <option value="{{ $inspector->id }}" {{ old('hse_inspector_id') == $inspector->id ? 'selected' : '' }}>{{ $inspector->name }}</option>
+                                    @endforeach
+                                </select>
+                                @error('hse_inspector_id')
                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <div class="form-group">
-                                <label for="jam_pengawasan">{{ __('Jam Pengawasan') }}</label>
-                                <input class="form-control" type="time" id="jam_pengawasan" name="jam_pengawasan" value="{{ old('jam_pengawasan') }}" required>
-                                @error('jam_pengawasan')
+                                <label for="jam_mulai">{{ __('Jam Mulai Pengawasan') }}</label>
+                                <input class="form-control" type="time" id="jam_mulai" name="jam_mulai" value="{{ old('jam_mulai') }}" required>
+                                @error('jam_mulai')
+                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="jam_selesai">{{ __('Jam Selesai Pengawasan') }}</label>
+                                <input class="form-control" type="time" id="jam_selesai" name="jam_selesai" value="{{ old('jam_selesai') }}" required>
+                                @error('jam_selesai')
                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                 @enderror
                             </div>
@@ -78,6 +92,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="zona_pengawasan">{{ __('Zona Pengawasan') }}</label>
+                                <!-- bikin master -->
                                 <select class="form-control" id="zona_pengawasan" name="zona_pengawasan" required>
                                     <option value="" {{ old('zona_pengawasan') == '' ? 'selected' : '' }}>Pilih Zona</option>
                                     <option value="ZONA I (OFFICE, SECURITY)" {{ old('zona_pengawasan') == 'ZONA I (OFFICE, SECURITY)' ? 'selected' : '' }}>ZONA I (OFFICE, SECURITY)</option>
@@ -190,25 +205,12 @@
                             </div>
 
                         </div>
-
-
                     </div>
-
-
-
                     <div class="d-flex justify-content-end">
                         <button type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">{{ __('Save Report') }}</button>
                     </div>
                 </form>
             </div>
-
-
-
-
-
         </div>
-
-
-
     </div>
     @endsection

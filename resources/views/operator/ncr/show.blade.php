@@ -98,7 +98,7 @@
             <td style="width: 20%; text-align: right;">
                 <p>DOCUMENT</p>
                 <p>No: FRM-HSE-019.1 Rev.: 01</p>
-                <p>Tgl: {{ $tanggalHariIni }} Hal.: 1 of 1</p>
+                <p>Tgl: {{ $ncr->tanggal_audit }} Hal.: 1 of 1</p>
             </td>
         </tr>
     </table>
@@ -108,10 +108,10 @@
             <td style="width: 25%;">NCR-CPAR No.: {{ $ncr->id }}</td>
             <td style="width: 25%;">Audit Reference No.: {{ $ncr->element_referensi_ncr }}</td>
             <td style="width: 25%;">Date of Audit: {{ $ncr->tanggal_audit }}</td>
-            <td style="width: 25%;">Element: {{ $ncr->bagian }}</td>
+            <td style="width: 25%;">Element: {{ $ncr->element_referensi_ncr }}</td>
         </tr>
         <tr>
-            <td>Department Audited: {{ $ncr->perusahaan }}</td>
+            <td>Department Audited: {{ $ncr->perusahaan }}-{{ $ncr->nama_bagian }}</td>
             <td>Lead Auditor: {{ $ncr->nama_hs_officer_2 }}</td>
             <td>Auditee: {{ $ncr->nama_auditee }}</td>
             <td>Auditor: {{ $ncr->nama_hs_officer_1 }}</td>
@@ -156,8 +156,8 @@
             <td style="width: 50%;">Date: {{ $ncr->created_at }}</td>
         </tr>
         <tr>
-            <td style="width: 50%;">Reviewed by: ... (Data Reviewer) ...</td>
-            <td style="width: 50%;">Date: ... (Data Tanggal Review) ...</td>
+            <td style="width: 50%;">Reviewed by: </td>
+            <td style="width: 50%;">Date: </td>
         </tr>
     </table>
 
