@@ -13,7 +13,7 @@ class MaterialGroupController extends Controller
         $material_groups = MaterialGroup::all();
         return view('adminsystem.master.material_group.index', compact('material_groups'));
     }
-
+    
     public function create()
     {
         return view('adminsystem.master.material_group.create');
@@ -58,4 +58,9 @@ class MaterialGroupController extends Controller
     }
 
 
+    public function operator_index()
+    {
+        $material_groups = MaterialGroup::all();
+        return view('operator.master.material_group.index', compact('material_groups'));
+    }
 }

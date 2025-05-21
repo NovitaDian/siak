@@ -12,7 +12,7 @@ class PurchasingGroupController extends Controller
         $purs = PurchasingGroup::all();
         return view('adminsystem.master.purchasinggroup.index', compact('purs'));
     }
-
+    
     public function create()
     {
         return view('adminsystem.master.purchasinggroup.create');
@@ -59,3 +59,4 @@ class PurchasingGroupController extends Controller
     }
 
 }
+

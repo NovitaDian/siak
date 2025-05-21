@@ -59,16 +59,19 @@ class Incident extends Model
         'penyebab_dasar_3_c',
         'tindakan_kendali_untuk_peningkatan_1_a',
         'tindakan_kendali_untuk_peningkatan_1_b',
+        'tindakan_kendali_untuk_peningkatan_1_c',
         'deskripsi_tindakan_pencegahan_1',
         'pic_1',
         'timing_1',
         'tindakan_kendali_untuk_peningkatan_2_a',
         'tindakan_kendali_untuk_peningkatan_2_b',
+        'tindakan_kendali_untuk_peningkatan_2_c',
         'deskripsi_tindakan_pencegahan_2',
         'pic_2',
         'timing_2',
         'tindakan_kendali_untuk_peningkatan_3_a',
         'tindakan_kendali_untuk_peningkatan_3_b',
+        'tindakan_kendali_untuk_peningkatan_3_c',
         'deskripsi_tindakan_pencegahan_3',
         'pic_3',
         'timing_3',
@@ -103,8 +106,9 @@ class Incident extends Model
         'total_man_hours',
         'safe_shift',
         'safe_day',
-        
+
         'total_safe_day_by_year',
+        'total_safe_day_lta2',
     ];
 
     // Tipe data kolom tertentu

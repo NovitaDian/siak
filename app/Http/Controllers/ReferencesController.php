@@ -13,7 +13,7 @@ class ReferencesController extends Controller
         $documents = Document::all();
         return view('adminsystem.references.index', compact('documents'));
     }
-
+    
     public function store(Request $request)
     {
         $request->validate([
@@ -39,5 +39,10 @@ class ReferencesController extends Controller
         $document->delete();
 
         return redirect()->route('adminsystem.references.index')->with('success', 'Dokumen berhasil dihapus.');
+    }
+    public function operator_index()
+    {
+        $documents = Document::all();
+        return view('operator.references.index', compact('documents'));
     }
 }

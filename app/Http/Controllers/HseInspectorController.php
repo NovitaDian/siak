@@ -56,4 +56,9 @@ class HseInspectorController extends Controller
 
         return redirect()->route('adminsystem.hse_inspector.index')->with('success', 'Data berhasil dihapus.');
     }
+     public function operator_index()
+    {
+        $hse_inspectors = HseInspector::all();
+        return view('operator.master.hse_inspector.index', compact('hse_inspectors'));
+    }
 }

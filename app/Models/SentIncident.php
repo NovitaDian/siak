@@ -13,6 +13,7 @@ class SentIncident extends Model
 
     // Kolom-kolom yang dapat diisi secara massal
     protected $fillable = [
+        'writer',
         'stamp_date',
         'shift_date',
         'shift',
@@ -59,16 +60,19 @@ class SentIncident extends Model
         'penyebab_dasar_3_c',
         'tindakan_kendali_untuk_peningkatan_1_a',
         'tindakan_kendali_untuk_peningkatan_1_b',
+        'tindakan_kendali_untuk_peningkatan_1_c',
         'deskripsi_tindakan_pencegahan_1',
         'pic_1',
         'timing_1',
         'tindakan_kendali_untuk_peningkatan_2_a',
         'tindakan_kendali_untuk_peningkatan_2_b',
+        'tindakan_kendali_untuk_peningkatan_2_c',
         'deskripsi_tindakan_pencegahan_2',
         'pic_2',
         'timing_2',
         'tindakan_kendali_untuk_peningkatan_3_a',
         'tindakan_kendali_untuk_peningkatan_3_b',
+        'tindakan_kendali_untuk_peningkatan_3_c',
         'deskripsi_tindakan_pencegahan_3',
         'pic_3',
         'timing_3',
@@ -135,7 +139,8 @@ class SentIncident extends Model
         'safe_shift' => 'boolean',
         'safe_day' => 'boolean',
     ];
-    public function requests() {
+    public function requests()
+    {
         return $this->hasMany(ModelsIncidentRequest::class);
     }
 }

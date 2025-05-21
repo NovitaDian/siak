@@ -4,6 +4,139 @@
 
 <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
     <div class="container-fluid py-4">
+        <div class="row" style="display: none;">
+            <div class="col-12">
+                <div class="card mb-4">
+                    <div class="card-header pb-0">
+                        <h6>REQUEST</h6>
+                    </div>
+
+                    <div class="card-body px-4 pt-4 pb-4">
+                        <div class="table-responsive p-0">
+                            <table class="table align-items-center mb-0" id="dataTableReq">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">No</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Pengirim</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Waktu Pengajuan</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Jenis Pengajuan</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Alasan</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="notificationTableBody">
+                                    @forelse ($requests as $request)
+                                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                        <td class="text-center text-xs">{{ $loop->iteration }}</td>
+                                        <td class="text-center text-xs text-gray-900 dark:text-white">{{ $request->nama_pengirim }}</td>
+                                        <td class="text-center text-xs">{{ $request->created_at->format('d/m/Y') }}</td>
+                                        <td class="text-center text-xs">{{ $request->type }}</td>
+                                        <td class="text-center text-xs">{{ $request->reason }}</td>
+                                        <td class="text-center text-xs" id="status-{{$request->id}}">{{ $request->status }}</td>
+                                        <td class="text-center">
+                                            @if ($request->status == 'Pending')
+                                            <button class="btn btn-primary btn-xs" onclick="approveRequest('{{ $request->id }}')">Approve</button>
+                                            <button class="btn btn-danger btn-xs" onclick="rejectRequest('{{ $request->id }}')">Reject</button>
+                                            @endif
+                                            <form action="{{ route('operator.ppe.show', ['id' => $request->id]) }}" method="GET" style="display:inline;">
+                                                <button type="submit" class="btn btn-info btn-xs">
+                                                    Show
+                                                </button>
+                                            </form>
+                                            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+                                        </td>
+                                    </tr>
+                                    @empty
+                                    <tr class="bg-white dark:bg-gray-800">
+                                        <td colspan="6" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">Data tidak ditemukan.</td>
+                                    </tr>
+                                    @endforelse
+                                </tbody>
+
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- DRAFT TABLE -->
+        <!-- <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center pb-0">
+                <h6 class="mb-0">Draft</h6>
+                <form action="{{ route('operator.ppe.create') }}" method="GET" class="mb-0">
+                    @csrf
+                    <button type="submit" class="btn btn-primary">Tambah</button>
+                </form>
+            </div>
+
+            <div class="card-body px-4 pt-4 pb-4">
+                <div class="table-responsive p-0">
+                    <table class="table align-items-center mb-0" id="dataTableDraft">
+                        <thead>
+                            <tr>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">No</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal Shift Kerja</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Shift Kerja</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Safety Officer</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Jam Pengawasan</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Zona Pengawasan</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Lokasi Observasi</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="draftTableBody">
+                            @forelse ($ppes as $ppe)
+                            <tr>
+                                <td class="text-center text-xs">{{ $loop->iteration }}</td>
+                                <td class="text-center text-xs">{{ \Carbon\Carbon::parse($ppe->tanggal_shift_kerja)->format('d/m/Y') }}</td>
+                                <td class="text-center text-xs">{{ $ppe->shift_kerja }}</td>
+                                <td class="text-center text-xs">{{ $ppe->nama_hse_inspector }}</td>
+                                <td class="text-center text-xs">{{ $ppe->jam_pengawasan }}</td>
+                                <td class="text-center text-xs">{{ $ppe->zona_pengawasan }}</td>
+                                <td class="text-center text-xs">{{ $ppe->lokasi_observasi }}</td>
+                                <td class="align-middle text-center">
+                                    <div style="display: flex; justify-content: center; align-items: center;">
+                                        <!-- Tombol Edit -->
+        <!-- <a href="javascript:;"
+                                            id="editBtn"
+                                            class="btn btn-warning"
+                                            onclick="editAction();">
+                                            <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit
+                                        </a> -->
+
+        <!-- Tombol Delete -->
+        <!-- <form action="{{ route('operator.ppe.destroy', $ppe->id) }}" method="POST" style="margin: 0;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                class="btn btn-info"
+                                                onclick="return confirm('Anda yakin akan mengirim dokumen?')"
+                                                title="Kirim"> <i class="fas fa-paper-plane me-1" style="margin-right: 4px; font-size: 12px;"></i> Send
+                                            </button>
+                                        </form>
+                                    </div>
+
+                                    <!-- Font Awesome (pindahkan ke layout utama jika sudah dimuat global) -->
+        <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+                                </td>
+
+                                @empty
+                            <tr>
+                                <td colspan="7" class="px-6 py-4 text-center text-gray-500">Data tidak ditemukan.</td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>  -->
+
         <!-- SENT DOCUMENT TABLE -->
         <div class="card mb-4">
             <div class="card-header pb-0">

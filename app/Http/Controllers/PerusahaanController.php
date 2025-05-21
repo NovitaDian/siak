@@ -47,8 +47,6 @@ class PerusahaanController extends Controller
 
         return redirect()->route('adminsystem.perusahaan.index')->with('success', 'Perusahaan berhasil ditambahkan!');
     }
-
-
     public function update(Request $request, $id)
     {
         $perusahaan = Perusahaan::findOrFail($id);
@@ -83,6 +81,94 @@ class PerusahaanController extends Controller
         return redirect()->route('adminsystem.perusahaan.index')->with('notification', 'Perusahaan berhasil dikirim!');
     }
     public function Perusahaanshow($id)
+    {
+        $perusahaan = Perusahaan::find($id);
+        if ($perusahaan) {
+            return response()->json($perusahaan);
+        } else {
+            return response()->json(data: ['message' => 'Perusahaan tidak ditemukan']);
+        }
+    }
+
+
+
+
+
+
+    public function operator_index()
+    {
+        $perusahaans = Perusahaan::all();
+
+        // Mengirim data ke view
+        return view('operator.master.perusahaan.index', compact('perusahaans'));
+    }
+    public function operator_create()
+    {
+        $pers = Perusahaan::all();
+
+        // Mengirim data ke view
+        return view('operator.master.perusahaan.create', compact('pers'));
+    }
+    public function operator_edit($perusahaan_code)
+    {
+        $perusahaan = Perusahaan::findOrFail($perusahaan_code);
+
+        // Mengirim data ke view
+        return view('operator.master.perusahaan.edit', compact('perusahaan'));
+    }
+    // Menambahkan perusahaan baru
+    public function operator_store(Request $request)
+    {
+        $request->validate([
+            'perusahaan_code' => 'required|unique:perusahaan',
+            'perusahaan_name' => 'required',
+            'city' => 'required',
+            'street' => 'required',
+        ]);
+
+        Perusahaan::create([
+            'perusahaan_code' => $request->perusahaan_code,
+            'perusahaan_name' => $request->perusahaan_name,
+            'city' => $request->city,
+            'street' => $request->street,
+        ]);
+
+        return redirect()->route('operator.perusahaan.index')->with('success', 'Perusahaan berhasil ditambahkan!');
+    }
+    public function operator_update(Request $request, $id)
+    {
+        $perusahaan = Perusahaan::findOrFail($id);
+
+        $request->validate([
+            'perusahaan_code' => 'required',
+            'perusahaan_name' => 'required',
+            'city' => 'required',
+            'street' => 'required',
+        ]);
+
+        $perusahaan->update([
+            'perusahaan_code' => $request->perusahaan_code,
+            'perusahaan_name' => $request->perusahaan_name,
+            'city' => $request->city,
+            'street' => $request->street,
+        ]);
+
+        return redirect()->route('operator.perusahaan.index')->with('success', 'Perusahaan berhasil diupdate!');
+    }
+
+
+    // Menghapus perusahaan
+    public function operator_destroy($id)
+    {
+        $perusahaan = Perusahaan::find($id);
+        if (!$perusahaan) {
+            return response()->json(['message' => 'Perusahaan tidak ditemukan'], 404);
+        }
+
+        $perusahaan->delete();
+        return redirect()->route('operator.perusahaan.index')->with('notification', 'Perusahaan berhasil dikirim!');
+    }
+    public function operator_Perusahaanshow($id)
     {
         $perusahaan = Perusahaan::find($id);
         if ($perusahaan) {

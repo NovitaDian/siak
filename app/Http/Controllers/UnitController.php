@@ -12,7 +12,6 @@ class UnitController extends Controller
         $units = Unit::all();
         return view('adminsystem.master.unit.index', compact('units'));
     }
-
     public function create()
     {
         return view('adminsystem.master.unit.create');
@@ -57,5 +56,9 @@ class UnitController extends Controller
 
         return redirect()->route('adminsystem.unit.index')->with('success', 'Purchase Request berhasil dihapus.');
     }
-
+    public function operator_index()
+    {
+        $units = Unit::all();
+        return view('operator.master.unit.index', compact('units'));
+    }
 }

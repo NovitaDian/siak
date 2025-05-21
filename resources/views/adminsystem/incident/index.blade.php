@@ -37,7 +37,7 @@
                                         <td class="text-center text-xs font-weight-bold">
                                             @if ($request->status === 'Pending')
                                             <!-- Approve Button -->
-                                            <form action="{{ route('request.approve', $request->id) }}" method="POST" class="d-inline">
+                                            <form action="{{ route('adminsystem.incident.approve', $request->id) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 @method('PUT')
                                                 <button type="submit" class="btn btn-primary btn-xs">Approve</button>

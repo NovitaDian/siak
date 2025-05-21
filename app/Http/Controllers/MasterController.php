@@ -50,4 +50,38 @@ class MasterController extends Controller
         $bagians = Bagian::all();
         return view('adminsystem.master.bagian.index', compact('bagians'));
     }
+
+
+
+    public function operator_index()
+    {
+        $incidents = Incident::all();
+        return view('operator.master.index', compact('incidents'));
+    }
+      public function operator_hse_inspector()
+    {
+        $hse_inspectors = HseInspector::all();
+        return view('operator.master.hse_inspector.index', compact('hse_inspectors'));
+    }
+    public function operator_material_group()
+    {
+        $material_groups = MaterialGroup::all();
+        return view('operator.master.material_group.index', compact('material_groups'));
+    }
+    public function operator_unit()
+    {
+        $units = Unit::all();
+        return view('operator.master.unit.index', compact('units'));
+    }
+    
+    public function operator_purchasinggroup()
+    {
+        $purs = PurchasingGroup::all();
+        return view('operator.master.purchasinggroup.index', compact('purs'));
+    }
+    public function operator_bagian()
+    {
+        $bagians = Bagian::all();
+        return view('operator.master.bagian.index', compact('bagians'));
+    }
 }

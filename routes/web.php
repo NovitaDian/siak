@@ -108,6 +108,7 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::post('/approve/{id}', [IncidentController::class, 'approve'])->name('approve');
 			Route::post('/reject/{id}', [IncidentController::class, 'reject'])->name('reject');
 			Route::get('/get-bagian/{perusahaan_name}', [IncidentController::class, 'getBagian'])->name('getBagian');
+			Route::post('/get-jumlah-hari-hilang', [IncidentController::class, 'getJumlahHariHilang'])->name('getJumlahHariHilang');
 		});
 
 		Route::prefix('adminsystem/ppe')->name('adminsystem.ppe.')->group(function () {
@@ -523,6 +524,10 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::post('/ncr-request', [NcrController::class, 'operator_storeRequest'])->name('storeRequest');
 			Route::get('/get-bagian/{perusahaan_name}', [NcrController::class, 'operator_getBagian'])->name('getBagian');
 		});
+			Route::prefix('operator/master')->name('operator.master.')->group(function () {
+			Route::get('/home', [MasterController::class, 'operator_index'])->name('index');
+		});
+
 		Route::get('operator/master/ncr', [NcrController::class, 'operator_master'])->name('operator.ncr.master');
 
 		Route::prefix('operator/master/perusahaan')->name('operator.perusahaan.')->group(function () {
@@ -746,22 +751,16 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::delete('/sent_destroy/{id}', [ToolController::class, 'operator_sent_destroy'])->name('sent_destroy');
 		});
 
-
-
-		Route::prefix('operator/master')->name('operator.master.')->group(function () {
-			Route::get('/', [MasterController::class, 'index'])->name('index');
-		});
-
 		// Admin dashboard
 		Route::prefix('operator')->name('operator.')->group(function () {
 			Route::get('/home', [HomeController::class, 'index'])->name('home');
-			Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
-			Route::get('/dashboard-incident', [HomeController::class, 'incident'])->name('dashboard-incident');
-			Route::get('/dashboard-spi', [HomeController::class, 'spi'])->name('dashboard-spi');
-			Route::get('/dashboard-ncr', [HomeController::class, 'ncr'])->name('dashboard-ncr');
-			Route::get('/dashboard-budget', [HomeController::class, 'budget'])->name('dashboard-budget');
-			Route::post('/home', [HomeController::class, 'store'])->name('store');
-			Route::delete('/{note}', [HomeController::class, 'destroy'])->name('destroy');
+			Route::get('/dashboard', [HomeController::class, 'operator_dashboard'])->name('dashboard');
+			Route::get('/dashboard-incident', [HomeController::class, 'operator_incident'])->name('dashboard-incident');
+			Route::get('/dashboard-spi', [HomeController::class, 'operator_spi'])->name('dashboard-spi');
+			Route::get('/dashboard-ncr', [HomeController::class, 'operator_ncr'])->name('dashboard-ncr');
+			Route::get('/dashboard-budget', [HomeController::class, 'operator_budget'])->name('dashboard-budget');
+			Route::post('/home', [HomeController::class, 'operator_store'])->name('store');
+			Route::delete('/{note}', [HomeController::class, 'operator_destroy'])->name('destroy');
 		});
 	});
 });

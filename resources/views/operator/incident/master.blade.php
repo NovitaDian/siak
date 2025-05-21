@@ -1,4 +1,4 @@
-@extends('layouts.user_type.auth')
+@extends('layouts.user_type.operator')
 
 @section('content')
 
@@ -12,7 +12,7 @@
                     <div class="card-header pb-0 d-flex justify-content-between align-items-center">
                         <h6>PERUSAHAAN</h6>
                         <div class="nav-item">
-                            <form action="{{ route('operator.ncr.Perusahaancreate') }}" method="GET" style="display:inline;">
+                            <form action="{{ route('adminsystem.ncr.Perusahaancreate') }}" method="GET" style="display:inline;">
                                 @csrf
                                 <button type="submit" class="btn btn-primary active mb-0 text-white" role="button" aria-pressed="true">
                                     Tambah
@@ -63,7 +63,7 @@
                                             </a>
 
                                             <!-- Tombol Delete (Send Action) -->
-                                            <form action="{{ route('operator.ncr.Perusahaandestroy', $per->id) }}" method="POST" style="display:inline;">
+                                            <form action="{{ route('adminsystem.ncr.Perusahaandestroy', $per->id) }}" method="POST" style="display:inline;">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit"
@@ -82,7 +82,7 @@
                                         <script>
                                             function editAction() {
                                                 // Redirect to the edit form for the item
-                                                window.location.href = "{{ route('operator.ncr.Perusahaanedit', $per->id) }}";
+                                                window.location.href = "{{ route('adminsystem.ncr.Perusahaanedit', $per->id) }}";
                                             }
                                         </script>
                                         </td>
@@ -102,7 +102,7 @@
                     <div class="card-header pb-0 d-flex justify-content-between align-items-center">
                         <h6>BAGIAN PERUSAHAAN</h6>
                         <div class="nav-item">
-                            <form action="{{ route('operator.bagian.create') }}" method="GET" style="display:inline;">
+                            <form action="{{ route('adminsystem.bagian.create') }}" method="GET" style="display:inline;">
                                 @csrf
                                 <button type="submit" class="btn btn-primary active mb-0 text-white" role="button" aria-pressed="true">
                                     Tambah
@@ -148,7 +148,7 @@
                                             </a>
 
                                             <!-- Tombol Delete (Send Action) -->
-                                            <form action="{{ route('operator.bagian.destroy', $bagian->id) }}" method="POST" style="display:inline;">
+                                            <form action="{{ route('adminsystem.bagian.destroy', $bagian->id) }}" method="POST" style="display:inline;">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit"
@@ -167,7 +167,7 @@
                                         <script>
                                             function editAction() {
                                                 // Redirect to the edit form for the item
-                                                window.location.href = "{{ route('operator.bagian.edit', $bagian->id) }}";
+                                                window.location.href = "{{ route('adminsystem.bagian.edit', $bagian->id) }}";
                                             }
                                         </script>
                                         </td>

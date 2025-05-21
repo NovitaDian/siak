@@ -1,10 +1,9 @@
-@extends('layouts.user_type.auth')
+@extends('layouts.user_type.operator')
 
 @section('content')
 
 <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg">
     <div class="container-fluid py-4">
-
         <div class="row">
             <div class="col-12">
                 <div class="card">
@@ -36,8 +35,8 @@
             </div>
         </div>
     </div>
+    
 </main>
-
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

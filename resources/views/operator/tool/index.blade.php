@@ -1,4 +1,4 @@
-@extends('layouts.user_type.auth')
+@extends('layouts.user_type.operator')
 
 @section('content')
 
@@ -8,7 +8,7 @@
     </div>
 
     <br>
-    <div class="row">
+    <div class="row" style="display: none;">
         <div class="col-12">
             <div class="card mb-4">
                 <div class="card-header pb-0">
@@ -38,17 +38,17 @@
                                         <td class="text-center" id="status-{{$request->id}}">{{ $request->status }}</td>
                                         <td class="text-center">
                                             @if ($request->status == 'Pending')
-                                            <form action="{{ route('adminsystem.tool.approve', $request->id) }}" method="POST" style="display:inline;">
+                                            <form action="{{ route('operator.tool.approve', $request->id) }}" method="POST" style="display:inline;">
                                                 @csrf
                                                 <button type="submit" class="btn btn-primary btn-xs">Approve</button>
                                             </form>
 
-                                            <form action="{{ route('adminsystem.tool.reject', $request->id) }}" method="POST" style="display:inline;">
+                                            <form action="{{ route('operator.tool.reject', $request->id) }}" method="POST" style="display:inline;">
                                                 @csrf
                                                 <button type="submit" class="btn btn-danger btn-xs">Reject</button>
                                             </form>
                                             @endif
-                                            <form action="{{ route('adminsystem.tool.show', ['id' => $request->sent_tool_id]) }}" method="GET" style="display:inline;">
+                                            <form action="{{ route('operator.tool.show', ['id' => $request->sent_tool_id]) }}" method="GET" style="display:inline;">
                                                 <button type="submit" class="btn btn-info btn-xs">
                                                     Show
                                                 </button>
@@ -72,7 +72,7 @@
             <div class="card mb-4">
                 <div class="card-header pb-0 d-flex justify-content-between align-items-center">
                     <h6 class="mb-0">Draft tool</h6>
-                    <form action="{{ route('adminsystem.tool.create') }}" method="GET" style="display:inline;">
+                    <form action="{{ route('operator.tool.create') }}" method="GET" style="display:inline;">
                         @csrf
                         <button type="submit" class="btn btn-primary active mb-0 text-white" role="button" aria-pressed="true">
                             Tambah
@@ -104,14 +104,14 @@
                                         <td class="align-middle text-center">
                                             <div style="display: flex; justify-content: center; align-items: center;">
                                                 <!-- Tombol Edit -->
-                                                <a href="{{ route('adminsystem.tool.edit', $tool->id) }}"
+                                                <a href="{{ route('operator.tool.edit', $tool->id) }}"
                                                     class="btn btn-warning">
                                                     <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit
                                                 </a>
 
 
                                                 <!-- Tombol Delete -->
-                                                <form action="{{ route('adminsystem.tool.destroy', $tool->id) }}" method="POST" style="margin: 0;">
+                                                <form action="{{ route('operator.tool.destroy', $tool->id) }}" method="POST" style="margin: 0;">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit"
@@ -142,7 +142,7 @@
             <div class="card mb-4">
                 <div class="card-header pb-0">
                     <h6>Sent Tool</h6>
-                    <form action="{{ route('adminsystem.tool.index') }}" method="GET" class="row g-3 px-4 mb-3">
+                    <form action="{{ route('operator.tool.index') }}" method="GET" class="row g-3 px-4 mb-3">
                         <div class="col-12 col-md-3">
                             <label for="start_date" class="form-label">Tanggal Mulai</label>
                             <input type="date" name="start_date" id="start_date" class="form-control" value="{{ request('start_date') }}">
@@ -158,10 +158,10 @@
                         </div>
 
                         <div class="col-12 col-md-3 d-flex justify-content-md-end justify-content-start align-items-end gap-2">
-                            <a href="{{ route('adminsystem.tool.export', request()->all()) }}" class="btn btn-sm btn-success w-100 w-md-auto">
+                            <a href="{{ route('operator.tool.export', request()->all()) }}" class="btn btn-sm btn-success w-100 w-md-auto">
                                 <i class="fas fa-file-excel me-1"></i> Excel
                             </a>
-                            <a href="{{ route('adminsystem.tool.exportPdf', request()->all()) }}" class="btn btn-sm btn-danger w-100 w-md-auto">
+                            <a href="{{ route('operator.tool.exportPdf', request()->all()) }}" class="btn btn-sm btn-danger w-100 w-md-auto">
                                 <i class="fas fa-file-pdf me-1"></i> PDF
                             </a>
                         </div>
@@ -188,7 +188,7 @@
                                         <td class="text-center text-xs">{{ $tool_fix->status_pemeriksaan }}</td>
                                          <td class="align-middle text-center">
                                                 @if ($tool_fix->status == 'Nothing')
-                                                <a href="{{ route('adminsystem.tool.show', $tool_fix->id) }}"
+                                                <a href="{{ route('operator.tool.show', $tool_fix->id) }}"
                                                     class="btn btn-info btn-xs"> <i class="fas fa-eye me-1" style="font-size: 12px;"></i> Show
                                                 </a>
 
@@ -207,11 +207,11 @@
 
                                                 @if ($request)
                                                 @if (strcasecmp($request->type, 'Edit') === 0)
-                                                <a href="{{ route('adminsystem.tool.sent_edit', $tool_fix->id) }}"
+                                                <a href="{{ route('operator.tool.sent_edit', $tool_fix->id) }}"
                                                     class="btn btn-warning btn-xs"> <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit
                                                 </a>
                                                 @elseif (strcasecmp($request->type, 'Delete') === 0)
-                                                <form action="{{ route('adminsystem.tool.sent_destroy', $tool_fix->id) }}" method="POST" style="display:inline;">
+                                                <form action="{{ route('operator.tool.sent_destroy', $tool_fix->id) }}" method="POST" style="display:inline;">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit"
@@ -249,7 +249,7 @@
                     <h5 class="modal-title" id="requestModalLabel">Request Edit/Delete</h5>
                 </div>
                 <div class="modal-body">
-                    <form id="requestForm" method="POST" action="{{ route('adminsystem.tool.storeRequest') }}">
+                    <form id="requestForm" method="POST" action="{{ route('operator.tool.storeRequest') }}">
                         @csrf
                         <input type="hidden" id="senttoolId" name="sent_tool_id">
                         <div class="form-group">
@@ -318,7 +318,7 @@
 
     function approveRequest(id) {
         $.ajax({
-            url: "{{ route('adminsystem.tool.approve', '') }}/" + id, // Menggunakan route Laravel
+            url: "{{ route('operator.tool.approve', '') }}/" + id, // Menggunakan route Laravel
             type: 'POST',
             data: {
                 _token: csrfToken // Menggunakan CSRF token
@@ -339,7 +339,7 @@
     // Fungsi untuk menolak permintaan
     function rejectRequest(id) {
         $.ajax({
-            url: `/adminsystem/tool/reject/${id}`, // URL ke rute reject
+            url: `/operator/tool/reject/${id}`, // URL ke rute reject
             type: 'POST',
             data: {
                 _token: csrfToken // Sertakan CSRF token untuk keamanan
@@ -364,7 +364,7 @@
 
     // Fungsi untuk mengedit item yang telah dikirim
     function sentEditAction(id) {
-        window.location.href = "{{ url('adminsystem/tool/sent_edit') }}/" + id; // Menggunakan URL Laravel
+        window.location.href = "{{ url('operator/tool/sent_edit') }}/" + id; // Menggunakan URL Laravel
     }
 </script>
 
