@@ -403,6 +403,7 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('/home', [HomeController::class, 'index'])->name('home');
 			Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
 			Route::post('/dashboard/set-compliance-target', [HomeController::class, 'setComplianceTarget'])->name('set-compliance-target');
+			Route::post('/dashboard/update-target-manhours', [HomeController::class, 'updateTargetManHours'])->name('update-target-manhours');
 			Route::get('/dashboard-incident', [HomeController::class, 'incident'])->name('dashboard-incident');
 			Route::get('/dashboard-spi', [HomeController::class, 'spi'])->name('dashboard-spi');
 			Route::get('/dashboard-ncr', [HomeController::class, 'ncr'])->name('dashboard-ncr');

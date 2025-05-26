@@ -370,8 +370,17 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="status">{{ __('Status') }}</label>
-                                        <input class="form-control" type="text" id="status" name="status" value="{{ old('status') }}">
-                                        @error('status')
+                                        <select class="form-control" id="status" name="status">
+                                            <option value="">{{ __('Pilih Status') }}</option>
+                                            <option value="Karyawan">{{ __('Karyawan') }}</option>
+                                            <option value="Outsourcing/Borongan">{{ __('Outsourcing/Borongan') }}</option>
+                                            <option value="Pekerja Borongan">{{ __('Pekerja Borongan') }}</option>
+                                            <option value="Sub Kontraktor">{{ __('Sub Kontraktor') }}</option>
+                                            <option value="Kontraktor">{{ __('Kontraktor') }}</option>
+                                            <option value="Magang">{{ __('Magang') }}</option>
+                                            <option value="Tamu">{{ __('Tamu') }}</option>
+                                            <option value="Masyarakat Umum">{{ __('Masyarakat Umum') }}</option>
+                                        </select> @error('status')
                                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                         @enderror
                                     </div>
@@ -894,32 +903,24 @@
                                 </div>
                             </div>
                             <div class="ms-2" style="flex: 1;">
-                                <label for="referensi_file">{{ __('Referensi File') }}</label>
-                                <div>
-                                    <!-- Jika Anda tahu nama file, masukkan langsung di sini -->
-                                    <a href="{{ asset('referensi_files/jumlah_hari_hilang.pdf') }}" target="_blank" class="text-info">
-                                        Lihat Referensi File
-                                    </a>
-                                </div>
-                            </div>
-                            <label for="jml_hari_hilang" class="mt-3">{{ __('Jumlah Hari Hilang') }}</label>
-                            <input class="form-control" id="jml_hari_hilang" type="text" name="jml_hari_hilang" readonly value="{{ old('jml_hari_hilang') }}">
-                            @error('jml_hari_hilang')
-                            <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                            @enderror
+                                <label for="jml_hari_hilang" class="mt-3">{{ __('Jumlah Hari Hilang') }}</label>
+                                <input class="form-control" id="jml_hari_hilang" type="text" name="jml_hari_hilang" readonly value="{{ old('jml_hari_hilang') }}">
+                                @error('jml_hari_hilang')
+                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                                @enderror
 
+                            </div>
                         </div>
                     </div>
             </div>
         </div>
+
     </div>
 
-</div>
-
-<div class="d-flex justify-content-end">
-    <button type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">{{ __('Save Report') }}</button>
-</div>
-</form>
+    <div class="d-flex justify-content-end">
+        <button type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">{{ __('Save Report') }}</button>
+    </div>
+    </form>
 </div>
 
 <style>

@@ -10,6 +10,7 @@ use App\Models\SentIncident;
 use App\Models\SentNcr;
 use App\Models\SentPpe;
 use App\Models\Target;
+use App\Models\TargetManHours;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -244,100 +245,120 @@ class HomeController extends Controller
     }
 
 
-    public function incident()
+   public function incident(Request $request)
+{
+    // Ambil tanggal dari request, default ke hari ini
+    $selectedDate = $request->input('filter_date') 
+        ? Carbon::parse($request->input('filter_date')) 
+        : now();
+
+    // Total man hours pada tanggal yang dipilih
+    $totalManHours = SentIncident::whereDate('shift_date', $selectedDate)
+        ->sum('man_hours_per_day');
+
+    // LTA
+    $totalLTA = SentIncident::whereDate('shift_date', $selectedDate)
+        ->whereIn('klasifikasi_kejadiannya', [
+            'Lost Workdays Case (LWC)',
+            'Permanent Partial Dissability (PPD)',
+            'Permanent Total Dissability (PTD)'
+        ])
+        ->count();
+
+    // WLTA
+    $totalWLTA = SentIncident::whereDate('shift_date', $selectedDate)
+        ->whereIn('klasifikasi_kejadiannya', [
+            'First Aid Case (FAC)',
+            'Medical Treatment Case (MTC)',
+            'Restricted Work Case (RWC)'
+        ])
+        ->count();
+
+    // LTA terakhir
+    $lastLTA = SentIncident::whereIn('klasifikasi_kejadiannya', [
+        'Lost Workdays Case (LWC)',
+        'Permanent Partial Dissability (PPD)',
+        'Permanent Total Dissability (PTD)'
+    ])->orderBy('shift_date', 'desc')->first();
+
+    // WLTA terakhir
+    $lastWLTA = SentIncident::whereIn('klasifikasi_kejadiannya', [
+        'First Aid Case (FAC)',
+        'Medical Treatment Case (MTC)',
+        'Restricted Work Case (RWC)'
+    ])->orderBy('shift_date', 'desc')->first();
+
+    // Days & manhours since
+    $daysSinceLastLTA = $lastLTA ? Carbon::parse($lastLTA->shift_date)->diffInWeekdays(now()) : 0;
+    $daysSinceLastWLTA = $lastWLTA ? Carbon::parse($lastWLTA->shift_date)->diffInWeekdays(now()) : 0;
+
+    $hoursSinceLastLTA = $lastLTA ? SentIncident::where('shift_date', '>', $lastLTA->shift_date)
+        ->sum('man_hours_per_day') : 0;
+
+    $hoursSinceLastWLTA = $lastWLTA ? SentIncident::where('shift_date', '>', $lastWLTA->shift_date)
+        ->sum('man_hours_per_day') : 0;
+
+    // Total tenaga kerja per shift di tanggal tsb
+    $lastShiftIIncident = SentIncident::where('shift', 'Shift 1')->whereDate('shift_date', $selectedDate)->first();
+    $lastShiftIIIncident = SentIncident::where('shift', 'Shift 2')->whereDate('shift_date', $selectedDate)->first();
+    $lastShiftIIIIncident = SentIncident::where('shift', 'Shift 3')->whereDate('shift_date', $selectedDate)->first();
+
+    $shiftI = ($lastShiftIIncident->jml_employee ?? 0)
+        + ($lastShiftIIncident->jml_outsources ?? 0)
+        + ($lastShiftIIncident->jml_security ?? 0)
+        + ($lastShiftIIncident->jml_loading_stacking ?? 0)
+        + ($lastShiftIIncident->jml_contractor ?? 0);
+
+    $shiftII = ($lastShiftIIIncident->jml_employee ?? 0)
+        + ($lastShiftIIIncident->jml_outsources ?? 0)
+        + ($lastShiftIIIncident->jml_security ?? 0)
+        + ($lastShiftIIIncident->jml_loading_stacking ?? 0)
+        + ($lastShiftIIIncident->jml_contractor ?? 0);
+
+    $shiftIII = ($lastShiftIIIIncident->jml_employee ?? 0)
+        + ($lastShiftIIIIncident->jml_outsources ?? 0)
+        + ($lastShiftIIIIncident->jml_security ?? 0)
+        + ($lastShiftIIIIncident->jml_loading_stacking ?? 0)
+        + ($lastShiftIIIIncident->jml_contractor ?? 0);
+
+    $totalWorkForce = $shiftI + $shiftII + $shiftIII;
+
+    $targetManHours = TargetManHours::first()?->target_manhours ?? 0;
+
+    return view('adminsystem.dashboard.dashboard-incident', [
+        'totalManHours' => $totalManHours,
+        'totalLTA' => $totalLTA,
+        'totalWLTA' => $totalWLTA,
+        'daysSinceLastLTA' => $daysSinceLastLTA,
+        'daysSinceLastWLTA' => $daysSinceLastWLTA,
+        'manHoursSinceLastLTA' => $hoursSinceLastLTA,
+        'manHoursSinceLastWLTA' => $hoursSinceLastWLTA,
+        'lastLTAIncidentDate' => $lastLTA ? $lastLTA->shift_date : null,
+        'shift1' => $shiftI,
+        'shift2' => $shiftII,
+        'shift3' => $shiftIII,
+        'totalShift' => $totalWorkForce,
+        'targetManHours' => $targetManHours,
+        'selectedDate' => $selectedDate->format('Y-m-d')
+    ]);
+}
+
+    public function updateTargetManHours(Request $request)
     {
-        // Total man hours tahun berjalan (dihitung dari semua incident di tahun ini)
-        $currentYear = now()->year;
-
-        $totalManHours = SentIncident::whereYear('shift_date', $currentYear)
-            ->sum('man_hours_per_day');
-
-        // Hitung total LTA & WLTA tahun berjalan
-        $totalLTA = SentIncident::whereIn('klasifikasi_kejadiannya', [
-            'Lost Workdays Case (LWC)',
-            'Permanent Partial Dissability (PPD)',
-            'Permanent Total Dissability (PTD)'
-        ])
-            ->whereYear('shift_date', $currentYear)
-            ->count();
-
-        $totalWLTA = SentIncident::whereIn('klasifikasi_kejadiannya', [
-            'First Aid Case (FAC)',
-            'Medical Treatment Case (MTC)',
-            'Restricted Work Case (RWC)'
-        ])
-            ->whereYear('shift_date', $currentYear)
-            ->count();
-
-        // Kejadian LTA terakhir
-        $lastLTA = SentIncident::whereIn('klasifikasi_kejadiannya', [
-            'Lost Workdays Case (LWC)',
-            'Permanent Partial Dissability (PPD)',
-            'Permanent Total Dissability (PTD)'
-        ])
-            ->orderBy('shift_date', 'desc')
-            ->first();
-
-        // Kejadian WLTA terakhir
-        $lastWLTA = SentIncident::whereIn('klasifikasi_kejadiannya', [
-            'First Aid Case (FAC)',
-            'Medical Treatment Case (MTC)',
-            'Restricted Work Case (RWC)'
-        ])
-            ->orderBy('shift_date', 'desc')
-            ->first();
-
-        // Hari sejak LTA/WLTA terakhir
-        $daysSinceLastLTA = $lastLTA ? Carbon::parse($lastLTA->shift_date)->diffInWeekdays(now()) : 0;
-        $daysSinceLastWLTA = $lastWLTA ? Carbon::parse($lastWLTA->shift_date)->diffInWeekdays(now()) : 0;
-
-        // Jam kerja sejak LTA/WLTA terakhir
-        $hoursSinceLastLTA = $lastLTA ? SentIncident::where('shift_date', '>', $lastLTA->shift_date)
-            ->sum('man_hours_per_day') : 0;
-
-        $hoursSinceLastWLTA = $lastWLTA ? SentIncident::where('shift_date', '>', $lastWLTA->shift_date)
-            ->sum('man_hours_per_day') : 0;
-
-        // Total tenaga kerja terakhir berdasarkan input terakhir
-        $lastShiftIIncident = SentIncident::where('shift', 'Shift 1')->latest('shift_date')->first();
-        $lastShiftIIIncident = SentIncident::where('shift', 'Shift 2')->latest('shift_date')->first();
-        $lastShiftIIIIncident = SentIncident::where('shift', 'Shift 3')->latest('shift_date')->first();
-
-        // Hitung total_work_force per shift
-        $shiftI = ($lastShiftIIncident->jml_employee ?? 0)
-            + ($lastShiftIIncident->jml_outsources ?? 0)
-            + ($lastShiftIIncident->jml_security ?? 0)
-            + ($lastShiftIIncident->jml_loading_stacking ?? 0)
-            + ($lastShiftIIncident->jml_contractor ?? 0);
-
-        $shiftII = ($lastShiftIIIncident->jml_employee ?? 0)
-            + ($lastShiftIIIncident->jml_outsources ?? 0)
-            + ($lastShiftIIIncident->jml_security ?? 0)
-            + ($lastShiftIIIncident->jml_loading_stacking ?? 0)
-            + ($lastShiftIIIncident->jml_contractor ?? 0);
-
-        $shiftIII = ($lastShiftIIIIncident->jml_employee ?? 0)
-            + ($lastShiftIIIIncident->jml_outsources ?? 0)
-            + ($lastShiftIIIIncident->jml_security ?? 0)
-            + ($lastShiftIIIIncident->jml_loading_stacking ?? 0)
-            + ($lastShiftIIIIncident->jml_contractor ?? 0);
-
-        $totalWorkForce = $shiftI + $shiftII + $shiftIII;
-
-        return view('adminsystem.dashboard.dashboard-incident', [
-            'totalManHours' => $totalManHours,
-            'totalLTA' => $totalLTA,
-            'totalWLTA' => $totalWLTA,
-            'daysSinceLastLTA' => $daysSinceLastLTA,
-            'daysSinceLastWLTA' => $daysSinceLastWLTA,
-            'manHoursSinceLastLTA' => $hoursSinceLastLTA,
-            'manHoursSinceLastWLTA' => $hoursSinceLastWLTA,
-            'lastLTAIncidentDate' => $lastLTA ? $lastLTA->shift_date : null,
-            'shift1' => $shiftI,
-            'shift2' => $shiftII,
-            'shift3' => $shiftIII,
-            'totalShift' => $totalWorkForce
+        $request->validate([
+            'target_manhours' => 'required|integer|min:0',
         ]);
+
+        // Misalnya hanya satu row (single config row)
+        $setting = TargetManHours::first();
+        if (!$setting) {
+            $setting = new TargetManHours();
+        }
+
+        $setting->target_manhours = $request->target_manhours;
+        $setting->save();
+
+        return redirect()->back()->with('success', 'Target updated successfully.');
     }
 
     public function spi(Request $request)

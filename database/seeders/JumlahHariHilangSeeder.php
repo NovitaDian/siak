@@ -49,6 +49,7 @@ class JumlahHariHilangSeeder extends Seeder
             ["jenis_luka" => "Kehilangan fungsi Kedua telinga dalam satu kecelakaan", "jml_hari_hilang" => 3000],
             ["jenis_luka" => "Lumpuh total yang menetap", "jml_hari_hilang" => 6000],
             ["jenis_luka" => "Meninggal dunia", "jml_hari_hilang" => 6000],
+        
         ];
 
         DB::table('jumlah_hari_hilang')->insert($data);

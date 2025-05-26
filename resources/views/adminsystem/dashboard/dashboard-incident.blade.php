@@ -15,136 +15,131 @@
         }
 
         .section-title {
-            background: #0074c1;
-            color: white;
+            background: #d9edf7;
+            color: #31708f;
             text-align: center;
-            padding: 5px;
+            padding: 10px;
             font-weight: bold;
+            font-size: 18px;
+        }
+
+        .table-bordered {
+            width: 100%;
+            border: 1px solid #ddd;
+            margin-bottom: 20px;
         }
 
         .table-bordered td,
         .table-bordered th {
             vertical-align: middle;
+            text-align: left;
+            padding: 8px;
+            border: 1px solid #ddd;
+        }
+
+        .target-manhours {
+            background: #f2dede;
+            padding: 10px;
+            margin-top: 20px;
+            font-weight: bold;
             text-align: center;
         }
 
-        .remark {
-            font-weight: bold;
+        .box {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
         }
     </style>
 </head>
 
 <body>
     <div class="container-fluid">
-
         <div class="title-board">SAFETY PERFORMANCE BOARD</div>
-        <form action="{{ route('adminsystem.dashboard-incident') }}" method="GET" class="row mb-4">
-            <div class="col-md-3">
-                <input type="date" name="start_date" value="{{ request('start_date') }}" class="form-control">
-            </div>
-            <div class="col-md-3">
-                <input type="date" name="end_date" value="{{ request('end_date') }}" class="form-control">
-            </div>
-            <div class="col-md-3">
-                <button type="submit" class="btn btn-primary">Filter</button>
-                <a href="{{ route('adminsystem.dashboard-incident') }}" class="btn btn-secondary">Reset</a>
-            </div>
-        </form>
 
         <div class="row">
-            <div class="col-md-6">
-                <div class="section-title">COUNTING DAYS WITHOUT ACCIDENT</div>
-                <table class="table table-bordered">
-                    <tr>
-                        <td>Total Working Days Since Last LTA</td>
-                        <td>{{ $daysSinceLastLTA }}</td>
-                    </tr>
-                    <tr>
-                        <td>Total Working Days Since Last WLTA</td>
-                        <td>{{ $daysSinceLastWLTA }}</td>
-                    </tr>
-                    <tr>
-                        <td>Total Man Hours Since Last LTA</td>
-                        <td>{{ number_format($manHoursSinceLastLTA) }}</td>
-                    </tr>
-                    <tr>
-                        <td>Total Man Hours Since Last WLTA</td>
-                        <td>{{ number_format($manHoursSinceLastWLTA) }}</td>
-                    </tr>
-                </table>
+            <!-- Left Column: Filter & Target -->
+            <div class="col-md-3">
+                <form action="{{ route('adminsystem.dashboard-incident') }}" method="GET" class="mb-3 d-flex flex-column gap-2">
+                    <label class="form-label fw-bold mb-1">Filter Tanggal</label>
+                    <input type="date" name="filter_date" value="{{ request('filter_date') }}" class="form-control form-control-sm">
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary btn-sm flex-grow-1">Filter</button>
+                        <a href="{{ route('adminsystem.dashboard-incident') }}" class="btn btn-secondary btn-sm flex-grow-1">Reset</a>
+                    </div>
+                </form>
+
+                <form action="{{ route('adminsystem.update-target-manhours') }}" method="POST" class="mb-0 d-flex flex-column gap-2">
+                    @csrf
+                    <label for="target_manhours" class="form-label fw-bold mb-1">Target Total Man Hours</label>
+                    <input
+                        type="number"
+                        name="target_manhours"
+                        id="target_manhours"
+                        class="form-control form-control-sm"
+                        value="{{ old('target_manhours', $targetManHours) }}"
+                        min="0"
+                        required>
+                    <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                </form>
             </div>
 
-            <div class="col-md-6">
-                <div class="section-title">DATA SINCE BEGINNING OF THE YEAR</div>
-                <table class="table table-bordered">
-                    <tr>
-                        <td>Amount of Lost Time Accident (LTA)</td>
-                        <td>{{ $totalLTA }}</td>
-                    </tr>
-                    <tr>
-                        <td>Amount of Without Lost Time Accident (WLTA)</td>
-                        <td>{{ $totalWLTA }}</td>
-                    </tr>
-                    <tr>
-                        <td>Total Amount of Working Hours</td>
-                        <td>{{ number_format($totalManHours) }}</td>
-                    </tr>
-                    <tr>
-                        <td>The last day accident (LTA)</td>
-                        <td>{{ $lastLTAIncidentDate ? \Carbon\Carbon::parse($lastLTAIncidentDate)->format('l, d F Y') : '-' }}</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
+            <!-- Right Column: Data Tables -->
+            <div class="col-md-9">
+                <div class="row">
+                    <!-- Counting Days Without Accident -->
+                    <div class="col-md-12 mb-4">
+                        <div class="section-title">COUNTING DAYS WITHOUT ACCIDENT</div>
+                        <table class="table table-bordered">
+                            <tr>
+                                <td>Total Working Days Since Last LTA</td>
+                                <td class="text-end">{{ $daysSinceLastLTA }}</td>
+                            </tr>
+                            <tr>
+                                <td>Total Working Days Since Last WLTA</td>
+                                <td class="text-end">{{ $daysSinceLastWLTA }}</td>
+                            </tr>
+                            <tr>
+                                <td>Total Man Hours Since Last LTA</td>
+                                <td class="text-end">{{ number_format($manHoursSinceLastLTA) }}</td>
+                            </tr>
+                            <tr>
+                                <td>Total Man Hours Since Last WLTA</td>
+                                <td class="text-end">{{ number_format($manHoursSinceLastWLTA) }}</td>
+                            </tr>
+                        </table>
+                    </div>
 
-        <div class="row mt-4">
-            <div class="col-md-6">
-                <div class="section-title">NUMBERS OF WORK FORCE</div>
-                <table class="table table-bordered">
-                    <tr>
-                        <td>SHIFT I</td>
-                        <td>{{ $shift1 }}</td>
-                    </tr>
-                    <tr>
-                        <td>SHIFT II</td>
-                        <td>{{ $shift2 }}</td>
-                    </tr>
-                    <tr>
-                        <td>SHIFT III</td>
-                        <td>{{ $shift3 }}</td>
-                    </tr>
-                    <tr>
-                        <td><b>TOTAL</b></td>
-                        <td><b>{{ $totalShift }}</b></td>
-                    </tr>
-                </table>
-            </div>
+                    <!-- Data Since Beginning of the Year -->
+                    <div class="col-md-12">
+                        <div class="section-title">DATA SINCE BEGINNING OF THE YEAR</div>
+                        <table class="table table-bordered">
+                            <tr>
+                                <td>Amount of Lost Time Accident (LTA)</td>
+                                <td class="text-end">{{ $totalLTA }}</td>
+                            </tr>
+                            <tr>
+                                <td>Amount of Without Lost Time Accident (WLTA)</td>
+                                <td class="text-end">{{ $totalWLTA }}</td>
+                            </tr>
+                            <tr>
+                                <td>Total Amount of Working Hours</td>
+                                <td class="text-end">{{ number_format($totalManHours) }}</td>
+                            </tr>
+                            <tr>
+                                <td>The last day accident (LTA)</td>
+                                <td class="text-end">
+                                    {{ $lastLTAIncidentDate ? \Carbon\Carbon::parse($lastLTAIncidentDate)->format('d/m/Y') : '-' }}
+                                </td>
 
-            <div class="col-md-6">
-                <div class="section-title">REMARK</div>
-                <table class="table table-bordered">
-                    <tr>
-                        <td class="remark">SAFE</td>
-                        <td style="background-color:green;"></td>
-                    </tr>
-                    <tr>
-                        <td class="remark">LTA</td>
-                        <td style="background-color:red;"></td>
-                    </tr>
-                    <tr>
-                        <td class="remark">ROAD ACCIDENT</td>
-                        <td style="background-color:blue;"></td>
-                    </tr>
-                    <tr>
-                        <td class="remark">FATALITY</td>
-                        <td style="background-color:black;"></td>
-                    </tr>
-                </table>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
-
     </div>
 </body>
-
 
 @endsection

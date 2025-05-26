@@ -13,6 +13,7 @@ class SentIncident extends Model
 
     // Kolom-kolom yang dapat diisi secara massal
     protected $fillable = [
+        'draft_id',
         'writer',
         'stamp_date',
         'shift_date',
@@ -82,24 +83,10 @@ class SentIncident extends Model
         'jml_loading_stacking',
         'jml_contractor',
         'jml_hari_hilang',
-        'bulan_tahun',
-        'ada',
-        'near_miss',
-        'illness_sick',
-        'first_aid_case',
-        'medical_treatment_case',
-        'restricted_work_case',
-        'lost_workdays_case',
-        'permanent_partial_dissability',
-        'permanent_total_dissability',
-        'fatality',
+        'no_laporan',
         'lta',
         'wlta',
         'trc',
-        'fire_incident',
-        'road_incident',
-        'property_loss_damage',
-        'environmental_incident',
         'total_lta_by_year',
         'total_wlta_by_year',
         'total_work_force',
@@ -108,39 +95,53 @@ class SentIncident extends Model
         'safe_shift',
         'safe_day',
         'total_safe_day_by_year',
-        'no_laporan',
+        'total_safe_day_lta2',
+        'total_man_hours_lta',
+        'total_man_hours_wlta2',
+        'safe_shift_wlta',
+        'safe_day_wlta',
+        'total_safe_day_wlta',
+        'urut_kejadiannya',
+        'tanggal_urut_kejadiannya',
+        'status_request',
     ];
 
-    // Tipe data kolom tertentu
+    // Cast tipe data agar otomatis konversi saat akses dan penyimpanan
     protected $casts = [
-        'stamp_date' => 'datetime',
+        'stamp_date' => 'date',
         'shift_date' => 'date',
         'tgl_kejadiannya' => 'date',
-        'jam_kejadiannya' => 'datetime:H:i:s',
+        'jam_kejadiannya' => 'string', // karena di DB pakai time
         'tgl_lahir' => 'date',
+
+        // Boolean fields
         'ada_korban' => 'boolean',
-        'ada' => 'boolean',
-        'near_miss' => 'boolean',
-        'illness_sick' => 'boolean',
-        'first_aid_case' => 'boolean',
-        'medical_treatment_case' => 'boolean',
-        'restricted_work_case' => 'boolean',
-        'lost_workdays_case' => 'boolean',
-        'permanent_partial_dissability' => 'boolean',
-        'permanent_total_dissability' => 'boolean',
-        'fatality' => 'boolean',
         'lta' => 'boolean',
         'wlta' => 'boolean',
         'trc' => 'boolean',
-        'fire_incident' => 'boolean',
-        'road_incident' => 'boolean',
-        'property_loss_damage' => 'boolean',
-        'environmental_incident' => 'boolean',
         'safe_shift' => 'boolean',
         'safe_day' => 'boolean',
+
+        // Integer fields
+        'masa_kerja' => 'integer',
+        'jml_employee' => 'integer',
+        'jml_outsources' => 'integer',
+        'jml_security' => 'integer',
+        'jml_loading_stacking' => 'integer',
+        'jml_contractor' => 'integer',
+        'jml_hari_hilang' => 'integer',
+        'total_lta_by_year' => 'integer',
+        'total_wlta_by_year' => 'integer',
+        'total_work_force' => 'integer',
+        'man_hours_per_day' => 'integer',
+        'total_man_hours' => 'integer',
+        'total_safe_day_by_year' => 'integer',
+        'total_safe_day_lta2' => 'integer',
+        'total_man_hours_lta' => 'integer',
+        'total_man_hours_wlta2' => 'integer',
+        'safe_shift_wlta' => 'integer',
+        'safe_day_wlta' => 'integer',
+        'total_safe_day_wlta' => 'integer',
+        'urut_kejadiannya' => 'integer',
     ];
-    public function requests()
-    {
-        return $this->hasMany(ModelsIncidentRequest::class);
-    }
 }

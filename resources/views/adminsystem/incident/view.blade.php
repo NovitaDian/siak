@@ -21,8 +21,8 @@
         }
 
         .logo {
-            width:100px;
-            height:100px;
+            width: 100px;
+            height: 100px;
         }
 
         .section-title {
@@ -69,7 +69,7 @@
 
             <div class="section-title">KLASIFIKASI KEJADIAN:</div>
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <div>
                         <input type="checkbox" name="klasifikasi_kejadiannya[]" value="Near Miss"
                             <?= $incident->klasifikasi_kejadiannya == "Near Miss" ? "checked" : "" ?>>
@@ -96,7 +96,34 @@
                         Restricted Work Case (RWC)
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
+                    <div>
+                        <input type="checkbox" name="klasifikasi_kejadiannya[]" value="Lost Workdays Case (LWC)"
+                            <?= $incident->klasifikasi_kejadiannya == "Lost Workdays Case (LWC)" ? "checked" : "" ?>>
+                        Lost Workdays Case (LWC)
+                    </div>
+                    <div>
+                        <input type="checkbox" name="klasifikasi_kejadiannya[]" value="Permanent Partial Disability (PTD)"
+                            <?= $incident->klasifikasi_kejadiannya == "Permanent Partial Disability (PTD)" ? "checked" : "" ?>>
+                        Permanent Partial Disability (PPD)
+                    </div>
+                    <div>
+                        <input type="checkbox" name="klasifikasi_kejadiannya[]" value="Permanent Total Disability (PTD)"
+                            <?= $incident->klasifikasi_kejadiannya == "Permanent Total Disability (PTD)" ? "checked" : "" ?>>
+                        Permanent Total Disability (PTD)
+                    </div>
+                    <div>
+                        <input type="checkbox" name="klasifikasi_kejadiannya[]" value="Fatality"
+                            <?= $incident->klasifikasi_kejadiannya == "Fatality" ? "checked" : "" ?>>
+                        Fatality
+                    </div>
+                    <div>
+                        <input type="checkbox" name="klasifikasi_kejadiannya[]" value="Fire Incident"
+                            <?= $incident->klasifikasi_kejadiannya == "Fire Incident" ? "checked" : "" ?>>
+                        Fire Incident
+                    </div>
+                </div>
+                <div class="col-md-4">
                     <div>
                         <input type="checkbox" name="klasifikasi_kejadiannya[]" value="Road Incident"
                             <?= $incident->klasifikasi_kejadiannya == "Road Incident" ? "checked" : "" ?>>

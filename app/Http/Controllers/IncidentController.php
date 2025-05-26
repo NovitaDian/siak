@@ -18,7 +18,6 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Mail;
 
@@ -126,21 +125,7 @@ class IncidentController extends Controller
             'jml_loading_stacking' => 'nullable|integer',
             'jml_contractor' => 'nullable|integer',
             'jml_hari_hilang' => 'nullable|integer',
-            'bulan_tahun' => 'nullable|string|max:255',
-            'ada' => 'nullable|boolean',
-            'near_miss' => 'nullable|boolean',
-            'illness_sick' => 'nullable|boolean',
-            'first_aid_case' => 'nullable|boolean',
-            'medical_treatment_case' => 'nullable|boolean',
-            'restricted_work_case' => 'nullable|boolean',
-            'lost_workdays_case' => 'nullable|boolean',
-            'permanent_partial_dissability' => 'nullable|boolean',
-            'permanent_total_dissability' => 'nullable|boolean',
-            'fatality' => 'nullable|boolean',
-            'fire_incident' => 'nullable|boolean',
-            'road_incident' => 'nullable|boolean',
-            'property_loss_damage' => 'nullable|boolean',
-            'environmental_incident' => 'nullable|boolean',
+            'ada' => 'nullable|string',
             'no_laporan' => 'nullable|string|max:255',
         ]);
 
@@ -162,40 +147,11 @@ class IncidentController extends Controller
         $validated['man_hours_per_day'] = $totalWorkforce * 8;
 
         // Hitung status korban
-        $validated['ada'] = ($request->input('ada_korban') === 'Ada') ? 1 : 0;
-
         // Hitung bulan_tahun
-        $validated['bulan_tahun'] = date('Y-m', strtotime($request->input('shift_date')));
+        $validated['shift_date'] = date('Y-m-d', strtotime($request->input('shift_date')));
 
         // Klasifikasi Kejadian
         $klasifikasi = $request->input('klasifikasi_kejadiannya');
-        $klasifikasiBooleanMapping = [
-            'Near Miss' => 'near_miss',
-            'First Aid' => 'first_aid_case',
-            'Illness/Sick' => 'illness_sick',
-            'Medical Treatment Case (MTC)' => 'medical_treatment_case',
-            'Restricted Work Case (RWC)' => 'restricted_work_case',
-            'Lost Workdays Case (LWC)' => 'lost_workdays_case',
-            'Permanent Partial Disability (PPD)' => 'permanent_partial_dissability',
-            'Permanent Total Disability (PTD)' => 'permanent_total_dissability',
-            'Fatality' => 'fatality',
-            'Fire Incident' => 'fire_incident',
-            'Road Incident' => 'road_incident',
-            'Property Loss/Damage' => 'property_loss_damage',
-            'Environmental Incident' => 'environmental_incident',
-        ];
-
-        // Set semua kolom boolean tersebut ke 0 dulu
-        foreach ($klasifikasiBooleanMapping as $column) {
-            $validated[$column] = 0;
-        }
-
-        // Set ke 1 hanya jika sesuai klasifikasi
-        if (isset($klasifikasiBooleanMapping[$klasifikasi])) {
-            $validated[$klasifikasiBooleanMapping[$klasifikasi]] = 1;
-        }
-
-
         // Tentukan LTA & WLTA sesuai klasifikasi
         $validated['lta'] = in_array($klasifikasi, [
             'Lost Workdays Case (LWC)',
@@ -236,8 +192,8 @@ class IncidentController extends Controller
         // Hitung safe_shift
         if (
             ($validated['lta'] ?? 0) === 0 &&
-            ($validated['fire_incident'] ?? 0) === 0 &&
-            ($validated['road_incident'] ?? 0) === 0
+            ($validated['klasifikasi_kejadiannya'] ?? '') !== 'Fire Incident' &&
+            ($validated['klasifikasi_kejadiannya'] ?? '') !== 'Road Incident'
         ) {
             $validated['safe_shift'] = 1;
         } else {
@@ -247,17 +203,18 @@ class IncidentController extends Controller
         // Hitung safe_day
         if (
             ($validated['lta'] ?? 0) === 0 &&
-            ($validated['fire_incident'] ?? 0) === 0
+            ($validated['klasifikasi_kejadiannya'] ?? '') !== 'Fire Incident'
         ) {
             $validated['safe_day'] = 1;
         } else {
             $validated['safe_day'] = 0;
         }
 
+
         // PENGHITUNGAN TOTAL SAFE DAY BY YEAR
         try {
             $shiftDate = $request->input('shift_date'); // contoh: 2025-01-01
-            $shift = $request->input('shift'); // contoh: 'SHIFT I'
+            $shift = $request->input('shift');
             $safeDay = $validated['safe_day']; // input hari ini
             $safeShift = $validated['safe_shift']; // input hari ini, 1 atau 0
 
@@ -329,16 +286,41 @@ class IncidentController extends Controller
         // === SAFE SHIFT WLTA ===
         $validated['safe_shift_wlta'] = $validated['wlta'] === 0 ? 1 : 0;
 
-        // === TOTAL MAN HOURS LTA ===
-        if ($validated['safe_shift'] === 1) {
-            $totalManHoursLtaSebelumnya = Incident::where('shift_date', '<', $validated['shift_date'])
-                ->whereYear('shift_date', date('Y', strtotime($validated['shift_date'])))
+
+        $shiftOrder = [
+            'Shift 1' => 1,
+            'Shift 2' => 2,
+            'Shift 3' => 3,
+            'Nonshift' => 4,
+        ];
+
+        $currentDate = Carbon::parse($validated['shift_date']);
+        $currentShift = $validated['shift'] ?? 'Shift 1';
+        $currentShiftOrder = $shiftOrder[$currentShift] ?? 1;
+
+        if ($validated['safe_shift'] == 1) {
+            // Hitung total man hours sebelum laporan saat ini (berdasarkan tanggal dan urutan shift)
+            $totalManHoursLtaSebelumnya = Incident::where(function ($query) use ($currentDate, $currentShiftOrder) {
+                $query->where('shift_date', '<', $currentDate)
+                    ->orWhere(function ($q) use ($currentDate, $currentShiftOrder) {
+                        $q->where('shift_date', $currentDate)
+                            ->whereRaw("CASE shift 
+                WHEN 'Shift 1' THEN 1 
+                WHEN 'Shift 2' THEN 2 
+                WHEN 'Shift 3' THEN 3 
+                WHEN 'Nonshift' THEN 4 
+                ELSE 5 END < ?", [$currentShiftOrder]);
+                    });
+            })
+                ->whereYear('shift_date', $currentDate->year)
                 ->sum('man_hours_per_day');
 
-            $validated['total_man_hours_lta'] = $validated['man_hours_per_day'] + $totalManHoursLtaSebelumnya;
+
+            $validated['total_man_hours_lta'] = (int) ($validated['man_hours_per_day'] ?? 0) + $totalManHoursLtaSebelumnya;
         } else {
             $validated['total_man_hours_lta'] = 0;
         }
+
 
         // === TOTAL MAN HOURS WLTA ===
         if ($validated['safe_shift_wlta'] === 1) {
@@ -351,7 +333,17 @@ class IncidentController extends Controller
             $validated['total_man_hours_wlta'] = 0;
         }
 
+        if ($validated['safe_shift_wlta'] === 1) {
+            // Ambil total_man_hours_wlta2 sebelumnya (kumulatif)
+            $totalManHoursWlta2Sebelumnya = Incident::where('shift_date', '<', $validated['shift_date'])
+                ->whereYear('shift_date', date('Y', strtotime($validated['shift_date'])))
+                ->sum('total_man_hours_wlta2');
 
+            // Tambah man_hours_per_day hari ini
+            $validated['total_man_hours_wlta2'] = ($validated['man_hours_per_day'] ?? 0) + $totalManHoursWlta2Sebelumnya;
+        } else {
+            $validated['total_man_hours_wlta2'] = 0;
+        }
         // Hitung no_laporan otomatis
         $prefix = 'LPI-' . date('Ym'); // Contoh: LPI-202505
         $lastReport = Incident::where('no_laporan', 'like', $prefix . '%')->orderByDesc('no_laporan')->first();
@@ -377,7 +369,11 @@ class IncidentController extends Controller
     public function edit($id)
     {
         $incidents = Incident::findOrFail($id);
-        return view('adminsystem.incident.edit', compact('incidents'));
+        $perusahaans = Perusahaan::all();
+        $officers = HseInspector::all();
+        $bagians = Bagian::all();
+        $hilangs = HariHilang::all();
+        return view('adminsystem.incident.edit', compact('incidents', 'perusahaans', 'bagians', 'officers', 'hilangs'));
     }
 
     // Memperbarui data (update)
@@ -504,7 +500,6 @@ class IncidentController extends Controller
 
         // Pindahkan data ke tabel incident_fix
         SentIncident::create([
-
             'writer' => $incident->writer,
             'stamp_date' => $incident->stamp_date,
             'shift_date' => $incident->shift_date,
@@ -574,17 +569,7 @@ class IncidentController extends Controller
             'jml_loading_stacking' => $incident->jml_loading_stacking,
             'jml_contractor' => $incident->jml_contractor,
             'jml_hari_hilang' => $incident->jml_hari_hilang,
-            'bulan_tahun' => $incident->bulan_tahun,
             'ada' => $incident->ada,
-            'near_miss' => $incident->near_miss,
-            'illness_sick' => $incident->illness_sick,
-            'first_aid_case' => $incident->first_aid_case,
-            'medical_treatment_case' => $incident->medical_treatment_case,
-            'restricted_work_case' => $incident->restricted_work_case,
-            'lost_workdays_case' => $incident->lost_workdays_case,
-            'permanent_partial_dissability' => $incident->permanent_partial_dissability,
-            'permanent_total_dissability' => $incident->permanent_total_dissability,
-            'fatality' => $incident->fatality,
             'lta' => $incident->lta,
             'wlta' => $incident->wlta,
             'trc' => $incident->trc,
@@ -600,11 +585,20 @@ class IncidentController extends Controller
             'safe_shift' => $incident->safe_shift,
             'safe_day' => $incident->safe_day,
             'total_safe_day_by_year' => $incident->total_safe_day_by_year,
+            'total_safe_day_lta2' => $incident->total_safe_day_lta2,
+            'total_man_hours_lta' => $incident->total_man_hours_lta,
+            'total_man_hours_wlta2' => $incident->total_man_hours_wlta2,
+            'safe_shift_wlta' => $incident->safe_shift_wlta,
+            'safe_day_wlta' => $incident->safe_day_wlta,
+            'total_safe_day_wlta' => $incident->total_safe_day_wlta,
+            'urut_kejadiannya' => $incident->urut_kejadiannya,
+            'tanggal_urut_kejadiannya' => $incident->tanggal_urut_kejadiannya,
             'no_laporan' => $incident->no_laporan,
             'foto' => $incident->foto,
             'status_request' => 'Nothing',
-
+            'draft_id' => $incident->id,
         ]);
+
 
         // Hapus data dari incident
         $incident->delete();
@@ -613,13 +607,13 @@ class IncidentController extends Controller
     }
     public function sent_destroy($id)
     {
-        $incident = Incident::findOrFail($id);
+        $incident = SentIncident::findOrFail($id);
 
         // Delete the incident record
         $incident->delete();
 
         // Redirect to a relevant page, such as the incident index page with a success message
-        return redirect()->route('adminsystem.incidents.index')->with('success', 'Incident deleted successfully.');
+        return redirect()->route('adminsystem.incident.index')->with('success', 'Incident deleted successfully.');
     }
 
     // Mencari data (search)
@@ -652,7 +646,7 @@ class IncidentController extends Controller
         ]);
 
         SentIncident::where('id', $request->sent_incident_id)->update([
-            'status' => 'Pending',
+            'status_request' => 'Pending',
         ]);
 
         // Kirim email ke semua adminsystem
@@ -670,23 +664,32 @@ class IncidentController extends Controller
 
         return redirect()->route('adminsystem.incident.index')->with('success', 'Request berhasil dikirim dan email telah dikirim ke admin.');
     }
-    public function approve($id)
+    public function approve($sent_incident_id)
     {
-        $request = IncidentRequest::find($id);
+        $request = IncidentRequest::findOrFail($sent_incident_id);
         $request->status = 'Approved';
         $request->save();
 
-        return response()->json(['success' => true]);
+        SentIncident::where('id', $request->sent_incident_id)->update([
+            'status_request' => 'Approved',
+        ]);
+
+        return redirect()->route('adminsystem.incident.index');
     }
+
 
     public function reject($id)
     {
         $request = IncidentRequest::find($id);
         $request->status = 'Rejected';
         $request->save();
-
-        return response()->json(['success' => true]);
+        // Update juga incident_fixs jika perlu
+        SentIncident::where('id', $request->sent_incident_id)->update([
+            'status_request' => 'Rejected',
+        ]);
+        return redirect()->route('adminsystem.incident.index');
     }
+
     public function getBagian($perusahaan_name)
     {
         $bagians = Bagian::where('perusahaan_name', $perusahaan_name)->get();
@@ -719,12 +722,13 @@ class IncidentController extends Controller
                 $nilai = DB::table('jumlah_hari_hilang')
                     ->where('jenis_luka', $jenis)
                     ->value('jml_hari_hilang');
-                $total += $nilai ?? 0;
+                $total += (int) ($nilai ?? 0);
             }
         }
 
         return response()->json(['total' => $total]);
     }
+
 
 
 
@@ -1019,7 +1023,7 @@ class IncidentController extends Controller
         $incident->delete();
 
         // Redirect to a relevant page, such as the incident index page with a success message
-        return redirect()->route('operator.incidents.index')->with('success', 'Incident deleted successfully.');
+        return redirect()->route('operator.incident.index')->with('success', 'Incident deleted successfully.');
     }
 
     // Mencari data (search)

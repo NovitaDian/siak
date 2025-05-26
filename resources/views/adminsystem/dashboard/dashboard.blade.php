@@ -261,8 +261,10 @@
   @push('dashboard')
   <script>
     const labels = @json($labels);
+
+    //(% PPE Compliance Employee)
     const employeeData = @json($employeeData);
-    const targetEmployeeValue = @json($targetEmployee); // angkanya aja
+    const targetEmployeeValue = @json($targetEmployee);
     const targetEmployee = labels.map(() => targetEmployeeValue);
     const ctx = document.getElementById("chart-line-1").getContext("2d");
 
@@ -286,9 +288,9 @@
             tension: 0.4,
             borderWidth: 3,
             pointRadius: 4,
-            pointBackgroundColor: "#F44336",
-            borderColor: "#F44336",
-            backgroundColor: "rgba(157, 25, 30, 0.2)",
+            pointBackgroundColor: "#2196F3",
+            borderColor: "#2196F3",
+            backgroundColor: "rgba(33, 150, 243, 0.2)",
             fill: true,
             data: targetEmployee
           }
@@ -307,22 +309,16 @@
             beginAtZero: true,
             max: 100,
             ticks: {
-              callback: function(value) {
-                return value + "%";
-              }
+              callback: value => value + "%"
             }
           }
         }
       }
     });
+
+    //(% PPE Compliance Contractor)
     const contractorData = @json($contractorData);
     const targetContractor = @json($targetContractor);
-
-    // Cek hasil di console untuk memastikan datanya benar
-    console.log("Labels:", labels);
-    console.log("Contractor Data:", contractorData);
-    console.log("Target Contractor:", targetContractor);
-
     const ctx2 = document.getElementById("chart-line-2").getContext("2d");
 
     new Chart(ctx2, {
@@ -330,7 +326,7 @@
       data: {
         labels: labels,
         datasets: [{
-            label: "% Patuh Karyawan",
+            label: "% PPE Compliance Contractor",
             tension: 0.4,
             borderWidth: 3,
             pointRadius: 4,
@@ -341,7 +337,7 @@
             data: contractorData
           },
           {
-            label: "Target Compliance Contractor",
+            label: "% Target Compliance Contractor",
             tension: 0.4,
             borderWidth: 3,
             pointRadius: 4,
@@ -366,14 +362,14 @@
             beginAtZero: true,
             max: 100,
             ticks: {
-              callback: function(value) {
-                return value + "%";
-              }
+              callback: value => value + "%"
             }
           }
         }
       }
     });
+
+    //(Daily Employee Compliant/Noncompliant)
     const tidak_patuh_karyawan = @json($tidak_patuh_karyawan);
     const patuh_karyawan = @json($patuh_karyawan);
     const ctx3 = document.getElementById("chart-line-3").getContext("2d");
@@ -384,25 +380,25 @@
         labels: labels,
         datasets: [{
             label: "Jumlah Tidak Patuh Karyawan",
-            tension: 0.4,
+           tension: 0.4,
             borderWidth: 3,
             pointRadius: 4,
-            pointBackgroundColor: "#FF9800",
-            borderColor: "#FF9800",
-            backgroundColor: "rgba(255, 152, 0, 0.2)",
+            pointBackgroundColor: "#4CAF50",
+            borderColor: "#4CAF50",
+            backgroundColor: "rgba(76, 175, 80, 0.2)",
             fill: true,
             data: tidak_patuh_karyawan
           },
           {
             label: "Patuh Karyawan",
             tension: 0.4,
-            borderWidth: 2,
-            borderDash: [5, 5],
-            pointRadius: 0,
+            borderWidth: 3,
+            pointRadius: 4,
+            pointBackgroundColor: "#2196F3",
             borderColor: "#2196F3",
             backgroundColor: "rgba(33, 150, 243, 0.2)",
-            fill: false,
-            data: Array(labels.length).fill(targetEmployee)
+            fill: true,
+            data: patuh_karyawan
           }
         ]
       },
@@ -418,14 +414,14 @@
           y: {
             beginAtZero: true,
             ticks: {
-              callback: function(value) {
-                return value;
-              }
+              callback: value => value
             }
           }
         }
       }
     });
+
+    //(Daily Contractor Compliant/Noncompliant)
     const tidak_patuh_kontraktor = @json($tidak_patuh_kontraktor);
     const patuh_kontraktor = @json($patuh_kontraktor);
     const ctx4 = document.getElementById("chart-line-4").getContext("2d");
@@ -448,13 +444,13 @@
           {
             label: "Patuh Kontraktor",
             tension: 0.4,
-            borderWidth: 2,
-            borderDash: [5, 5],
-            pointRadius: 0,
+            borderWidth: 3,
+            pointRadius: 4,
+            pointBackgroundColor: "#2196F3",
             borderColor: "#2196F3",
             backgroundColor: "rgba(33, 150, 243, 0.2)",
-            fill: false,
-            data: Array(labels.length).fill(patuh_kontraktor)
+            fill: true,
+            data: patuh_kontraktor
           }
         ]
       },
@@ -470,14 +466,14 @@
           y: {
             beginAtZero: true,
             ticks: {
-              callback: function(value) {
-                return value;
-              }
+              callback: value => value
             }
           }
         }
       }
     });
+
+    //(Noncompliance by Type - Employee)
     const employeeHelmData = @json($employeeHelmData);
     const employeeSepatuData = @json($employeeSepatuData);
     const ctx5 = document.getElementById("chart-line-5").getContext("2d");
@@ -491,22 +487,22 @@
             tension: 0.4,
             borderWidth: 3,
             pointRadius: 4,
-            pointBackgroundColor: "#FF9800",
-            borderColor: "#FF9800",
-            backgroundColor: "rgba(255, 152, 0, 0.2)",
+            pointBackgroundColor: "#4CAF50",
+            borderColor: "#4CAF50",
+            backgroundColor: "rgba(76, 175, 80, 0.2)",
             fill: true,
             data: employeeHelmData
           },
           {
             label: "Karyawan Tidak Patuh Sepatu",
             tension: 0.4,
-            borderWidth: 2,
-            borderDash: [5, 5],
-            pointRadius: 0,
+            borderWidth: 3,
+            pointRadius: 4,
+            pointBackgroundColor: "#2196F3",
             borderColor: "#2196F3",
             backgroundColor: "rgba(33, 150, 243, 0.2)",
-            fill: false,
-            data: Array(labels.length).fill(employeeSepatuData)
+            fill: true,
+            data: employeeSepatuData
           }
         ]
       },
@@ -522,14 +518,14 @@
           y: {
             beginAtZero: true,
             ticks: {
-              callback: function(value) {
-                return value;
-              }
+              callback: value => value
             }
           }
         }
       }
     });
+
+    //(Noncompliance by Type - Contractor)
     const contractorHelmData = @json($contractorHelmData);
     const contractorSepatuData = @json($contractorSepatuData);
     const ctx6 = document.getElementById("chart-line-6").getContext("2d");
@@ -552,13 +548,13 @@
           {
             label: "Kontraktor Tidak Patuh Sepatu",
             tension: 0.4,
-            borderWidth: 2,
-            borderDash: [5, 5],
-            pointRadius: 0,
+            borderWidth: 3,
+            pointRadius: 4,
+            pointBackgroundColor: "#2196F3",
             borderColor: "#2196F3",
             backgroundColor: "rgba(33, 150, 243, 0.2)",
-            fill: false,
-            data: Array(labels.length).fill(contractorSepatuData)
+            fill: true,
+            data: contractorSepatuData
           }
         ]
       },
@@ -574,15 +570,11 @@
           y: {
             beginAtZero: true,
             ticks: {
-              callback: function(value) {
-                return value;
-              }
+              callback: value => value
             }
           }
         }
       }
     });
   </script>
-
-
   @endpush

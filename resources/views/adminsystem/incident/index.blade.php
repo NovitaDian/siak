@@ -13,55 +13,45 @@
                     </div>
                     <div class="card-body px-0 pt-0 pb-2">
                         <div class="table-responsive p-0">
-                            <table class="table align-items-center mb-0">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Pengirim</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Waktu Pengajuan</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Jenis Pengajuan</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Alasan</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="notificationTableBody">
-                                    @foreach ($requests as $request)
-                                    <tr>
-                                        <td class="text-center text-xs font-weight-bold">{{ $request->nama_pengirim }}</td>
-                                        <td class="text-center text-xs font-weight-bold">{{ $request->created_at->format('d/m/Y') }}</td>
-                                        <td class="text-center text-xs font-weight-bold">{{ $request->type }}</td>
-                                        <td class="text-center text-xs font-weight-bold">{{ $request->reason }}</td>
-                                        <td class="text-center text-xs font-weight-bold" id="status-{{ $request->id }}">
-                                            {{ $request->status }}
-                                        </td>
-                                        <td class="text-center text-xs font-weight-bold">
-                                            @if ($request->status === 'Pending')
-                                            <!-- Approve Button -->
-                                            <form action="{{ route('adminsystem.incident.approve', $request->id) }}" method="POST" class="d-inline">
-                                                @csrf
-                                                @method('PUT')
-                                                <button type="submit" class="btn btn-primary btn-xs">Approve</button>
-                                            </form>
-
-                                            <!-- Reject Button -->
-                                            <form action="{{ route('adminsystem.incident.reject', $request->id) }}" method="POST" class="d-inline">
-                                                @csrf
-                                                @method('PUT')
-                                                <button type="submit" class="btn btn-danger btn-xs">Reject</button>
-                                            </form>
-                                            @endif
-
-                                            <!-- Show Button -->
-                                            <form action="{{ route('adminsystem.incident.show', ['id' => $request->id]) }}" method="GET" class="m-0">
-                                                <button type="submit" class="btn btn-info btn-xs d-flex align-items-center">
-                                                    <i class="fas fa-eye me-1" style="font-size: 12px;"></i> Show
-                                                </button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                            <div class="card-header pb-0">
+                                <table class="table align-items-center mb-0" id="requestTable">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Pengirim</th>
+                                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Waktu Pengajuan</th>
+                                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Jenis Pengajuan</th>
+                                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Alasan</th>
+                                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
+                                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="notificationTableBody">
+                                        @foreach ($requests as $request)
+                                        <tr>
+                                            <td class="text-center text-xs font-weight-bold">{{ $request->nama_pengirim }}</td>
+                                            <td class="text-center text-xs font-weight-bold">{{ $request->created_at->format('d/m/Y') }}</td>
+                                            <td class="text-center text-xs font-weight-bold">{{ $request->type }}</td>
+                                            <td class="text-center text-xs font-weight-bold">{{ $request->reason }}</td>
+                                            <td class="text-center text-xs font-weight-bold" id="status-{{ $request->id }}">
+                                                {{ $request->status }}
+                                            </td>
+                                            <td class="text-center">
+                                                @if ($request->status == 'Pending')
+                                                <button class="btn btn-primary btn-xs" onclick="approveRequest('{{ $request->id }}')">Approve</button>
+                                                <button class="btn btn-danger btn-xs" onclick="rejectRequest('{{ $request->id }}')">Reject</button>
+                                                @endif
+                                                <form action="{{ route('adminsystem.incident.show', ['id' => $request->id]) }}" method="GET" style="display:inline;">
+                                                    <button type="submit" class="btn btn-info btn-xs">
+                                                        Show
+                                                    </button>
+                                                </form>
+                                                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -91,98 +81,98 @@
 
                 <div class="card-body px-0 pt-0 pb-2">
                     <div class="table-responsive p-0">
-                        <table class="table align-items-center mb-0">
-                            <thead>
-                                <tr>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal Shift Kerja</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Shift Kerja</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">HSE InspectorI</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Ada Kejadian</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Klasifikasi</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Korban</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Aksi</th>
-                                    <th class="text-secondary opacity-7"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($incidents as $incident)
-                                <tr>
-                                    <td class="text-center">
-                                        <div class="d-flex justify-content-center align-items-center px-2 py-1">
-                                            <div class="d-flex flex-column justify-content-center">
-                                                <h6 class="mb-0 text-sm">{{ \Carbon\Carbon::parse($incident->shift_date)->format('d/m/Y') }}</h6>
+                        <div class="card-header pb-0">
+                            <table class="table align-items-center mb-0" id="draftTable">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal Shift Kerja</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Shift Kerja</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">HSE InspectorI</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Ada Kejadian</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Klasifikasi</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Korban</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Aksi</th>
+                                        <th class="text-secondary opacity-7"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($incidents as $incident)
+                                    <tr>
+                                        <td class="text-center">
+                                            <div class="d-flex justify-content-center align-items-center px-2 py-1">
+                                                <div class="d-flex flex-column justify-content-center">
+                                                    <h6 class="mb-0 text-sm">{{ \Carbon\Carbon::parse($incident->shift_date)->format('d/m/Y') }}</h6>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
+                                        </td>
 
-                                    <td class="text-center">
-                                        <p class="text-xs font-weight-bold mb-0">{{ $incident->shift }}</p>
-                                    </td>
+                                        <td class="text-center">
+                                            <p class="text-xs font-weight-bold mb-0">{{ $incident->shift }}</p>
+                                        </td>
 
-                                    <td class="text-center">
-                                        <p class="text-xs font-weight-bold mb-0">{{ $incident->safety_officer_1 }}</p>
-                                    </td>
+                                        <td class="text-center">
+                                            <p class="text-xs font-weight-bold mb-0">{{ $incident->safety_officer_1 }}</p>
+                                        </td>
 
-                                    <td class="align-middle text-center text-sm">
-                                        <span class="badge badge-sm {{ $incident->status_kejadian == 'Ada' ? 'bg-gradient-warning' : 'bg-gradient-success' }}">
-                                            {{ $incident->status_kejadian == 'Ada' ? 'Ada' : 'Tidak' }}
-                                        </span>
-                                    </td>
+                                        <td class="align-middle text-center text-sm">
+                                            <span class="badge badge-sm {{ $incident->status_kejadian == 'Ada' ? 'bg-gradient-warning' : 'bg-gradient-success' }}">
+                                                {{ $incident->status_kejadian == 'Ada' ? 'Ada' : 'Tidak' }}
+                                            </span>
+                                        </td>
 
-                                    <td class="align-middle text-center">
-                                        <span class="text-secondary text-xs font-weight-bold">{{ $incident->klasifikasi_kejadiannya }}</span>
-                                    </td>
+                                        <td class="align-middle text-center">
+                                            <span class="text-secondary text-xs font-weight-bold">{{ $incident->klasifikasi_kejadiannya ?? "-" }}</span>
+                                        </td>
 
-                                    <td class="align-middle text-center">
-                                        <span class="text-secondary text-xs font-weight-bold">{{ $incident->ada_korban }}</span>
-                                    </td>
-                                    <td class="align-middle text-center">
-                                        <div class="d-flex justify-content-center align-items-center gap-2 flex-wrap">
-                                            <!-- Tombol Edit -->
-                                            <a href="{{ route('adminsystem.incident.edit', $incident->id) }}" class="btn btn-warning">
-                                                <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit
-                                            </a>
+                                        <td class="align-middle text-center text-sm">
+                                            <span class="badge badge-sm {{ $incident->ada_korban == 'Ada' ? 'bg-gradient-warning' : 'bg-gradient-success' }}">
+                                                {{ $incident->ada_korban == 'Tidak' ? 'Ada' : 'Tidak' }}
+                                            </span>
+                                        </td>
+                                        <td class="align-middle text-center">
+                                            <div class="d-flex justify-content-center align-items-center gap-1 flex-nowrap" style="flex-wrap: nowrap;">
 
-                                            <!-- Tombol Send -->
-                                            <form action="{{ route('adminsystem.incident.destroy', $incident->id) }}" method="POST" class="m-0">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit"
-                                                    class="btn btn-primary btn-xs d-flex align-items-center"
-                                                    onclick="return confirm('Anda yakin akan mengirim dokumen?')"
-                                                    title="Kirim">
-                                                    <i class="fas fa-paper-plane me-1" style="font-size: 12px;"></i> Send
-                                                </button>
-                                            </form>
+                                                <a href="{{ route('adminsystem.incident.edit', $incident->id) }}" class="btn btn-warning btn-xs">
+                                                    <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit
+                                                </a>
 
+                                                <form action="{{ route('adminsystem.incident.destroy', $incident->id) }}" method="POST" class="m-0">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-primary btn-xs" onclick="return confirm('Anda yakin akan mengirim dokumen?')" title="Kirim">
+                                                        <i class="fas fa-paper-plane me-1" style="font-size: 12px;"></i> Send
+                                                    </button>
+                                                </form>
 
-                                            <!-- Tombol Show -->
-                                            <form action="{{ route('adminsystem.incident.show', ['id' => $incident->id]) }}" method="GET" class="m-0">
-                                                <button type="submit" class="btn btn-info btn-xs d-flex align-items-center">
-                                                    <i class="fas fa-eye me-1" style="font-size: 12px;"></i> Show
-                                                </button>
-                                            </form>
+                                                <form action="{{ route('adminsystem.incident.show', ['id' => $incident->id]) }}" method="GET" class="m-0">
+                                                    <button type="submit" class="btn btn-info btn-xs">
+                                                        <i class="fas fa-eye me-1" style="font-size: 12px;"></i> Show
+                                                    </button>
+                                                </form>
 
-                                        </div>
-
-                                        <!-- Font Awesome (pindahkan ke layout utama jika belum global) -->
-                                        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-                                    </td>
+                                            </div>
+                                            <!-- Font Awesome (pindahkan ke layout utama jika belum global) -->
+                                            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+                                        </td>
 
 
 
-                                    <script>
-                                        function editAction() {
-                                            // Redirect to the edit form for the item
-                                            window.location.href = "{{ route('adminsystem.incident.edit', $incident->id) }}";
-                                        }
-                                    </script>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
 
-                        </table>
+
+
+                                        <script>
+                                            function editAction() {
+                                                // Redirect to the edit form for the item
+                                                window.location.href = "{{ route('adminsystem.incident.edit', $incident->id) }}";
+                                            }
+                                        </script>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -224,80 +214,77 @@
                 </div>
 
                 <div class="card-body px-0 pt-0 pb-2">
-                    <div class="table-responsive p-0">
-                        <table class="table align-items-center mb-0">
-                            <thead>
-                                <tr>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal Shift Kerja</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Shift Kerja</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">HSE InspectorI</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Ada Kejadian</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Klasifikasi</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Korban</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Aksi</th>
-                                    <th class="text-secondary opacity-7"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($incident_fixs as $incident_fix)
-                                <tr>
-                                    <td class="text-center">
-                                        <div class="d-flex justify-content-center align-items-center px-2 py-1">
-                                            <div class="d-flex flex-column justify-content-center">
-                                                <h6 class="mb-0 text-sm">{{ \Carbon\Carbon::parse($incident_fix->shift_date)->format('d/m/Y') }}</h6>
+                    <div class="table-responsive" style="overflow-x:auto;">
+                        <table class="table align-items-center mb-0" style="white-space: nowrap;">
+                            <table class="table align-items-center mb-0" id="sentTable">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal Shift Kerja</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Shift Kerja</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">HSE InspectorI</th>
+                                        <th style="width: 80px;" class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Ada Kejadian</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Klasifikasi</th>
+                                        <th style="width: 80px;" class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Korban</th>
+                                        <th style="width: 200px;" class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Aksi</th>
+
+                                        <th class="text-secondary opacity-7"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($incident_fixs as $incident_fix)
+                                    <tr>
+                                        <td class="text-center">
+                                            <div class="d-flex justify-content-center align-items-center px-2 py-1">
+                                                <div class="d-flex flex-column justify-content-center">
+                                                    <h6 class="mb-0 text-sm">{{ \Carbon\Carbon::parse($incident_fix->shift_date)->format('d/m/Y') }}</h6>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
+                                        </td>
 
-                                    <td class="text-center">
-                                        <p class="text-xs font-weight-bold mb-0">{{ $incident_fix->shift }}</p>
-                                    </td>
+                                        <td class="text-center">
+                                            <p class="text-xs font-weight-bold mb-0">{{ $incident_fix->shift }}</p>
+                                        </td>
 
-                                    <td class="text-center">
-                                        <p class="text-xs font-weight-bold mb-0">{{ $incident_fix->safety_officer_1 }}</p>
-                                    </td>
+                                        <td class="text-center">
+                                            <p class="text-xs font-weight-bold mb-0">{{ $incident_fix->safety_officer_1 }}</p>
+                                        </td>
 
-                                    <td class="align-middle text-center text-sm">
-                                        <span class="badge badge-sm {{ $incident_fix->status_kejadian == 'Ada' ? 'bg-gradient-warning' : 'bg-gradient-success' }}">
-                                            {{ $incident_fix->status_kejadian == 'Ada' ? 'Ada' : 'Tidak' }}
-                                        </span>
-                                    </td>
+                                        <td class="align-middle text-center text-sm">
+                                            <span class="badge badge-sm {{ $incident_fix->status_kejadian == 'Ada' ? 'bg-gradient-warning' : 'bg-gradient-success' }}">
+                                                {{ $incident_fix->status_kejadian == 'Ada' ? 'Ada' : 'Tidak' }}
+                                            </span>
+                                        </td>
 
-                                    <td class="align-middle text-center">
-                                        <span class="text-secondary text-xs font-weight-bold">{{ $incident_fix->klasifikasi_kejadiannya }}</span>
-                                    </td>
+                                        <td class="align-middle text-center">
+                                            <span class="text-secondary text-xs font-weight-bold">{{ $incident_fix->klasifikasi_kejadiannya ?? "-" }}</span>
+                                        </td>
 
-                                    <td class="align-middle text-center">
-                                        <span class="text-secondary text-xs font-weight-bold">{{ $incident_fix->ada_korban }}</span>
-                                    </td>
+                                        <td class="align-middle text-center text-sm">
+                                            <span class="badge badge-sm {{ $incident_fix->ada_korban == 'Ada' ? 'bg-gradient-warning' : 'bg-gradient-success' }}">
+                                                {{ $incident_fix->ada_korban == 'Tidak' ? 'Ada' : 'Tidak' }}
+                                            </span>
+                                        </td>
 
-                                    <td class="align-middle text-center">
-                                        @if ($incident_fix->status_request == 'Nothing')
-                                        <button class="btn btn-secondary btn-xs" onclick="showRequestModal('{{ $incident_fix->id }}')"> <i></i>&nbsp; Request
+                                        <td class="align-middle text-center">
+                                            @if ($incident_fix->status_request == 'Nothing')
+                                            <button class="btn btn-secondary btn-xs" onclick="showRequestModal('{{ $incident_fix->id }}')"> <i></i>&nbsp; Request
+                                            </button>
                                             @elseif ($incident_fix->status_request == 'Pending')
                                             <span class="text-warning">Pending</span>
                                             @elseif ($incident_fix->status_request == 'Approved')
                                             @php
-                                            // Fetch the corresponding request based on sent_incident_id
                                             $request = $requests->firstWhere('sent_incident_id', $incident_fix->id);
                                             \Log::info('Incident Fix ID: ' . $incident_fix->id . ' Looking for Request with sent_incident_id: ' . $incident_fix->id);
                                             \Log::info('Requests: ', $requests->toArray());
                                             @endphp
                                             @if ($request)
                                             @if ($request->type == 'Edit')
-                                            <a href="{{ route('adminsystem.incident.sent_edit', $incident_fix->id) }}" class="btn btn-warning">
-                                                <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit
-                                            </a>
+                                            <a href="javascript:;" id="editBtn" onclick="sentEditAction('{{ $incident_fix->id }}');" style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right, #28A745, #2E8B57); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;" class="btn btn-warning btn-sm">Edit</a>
                                             @elseif ($request->type == 'Delete')
-                                            <form action="{{ route('adminsystem.incident_fix.destroy', $incident_fix->id) }}" method="POST" class="m-0">
+                                            <form action="{{ route('adminsystem.incident.sent_destroy', $incident_fix->id) }}" method="POST" style="display:inline;">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit"
-                                                    class="btn btn-danger btn-xs d-flex align-items-center"
-                                                    onclick="return confirm('Anda yakin akan menghapus dokumen?')"
-                                                    title="Kirim">
-                                                    <i class="fas fa-ptrashe me-1" style="font-size: 12px;"></i> Send
-                                                </button>
+                                                <button type="submit" class="btn btn-danger btn-sm" style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right,rgb(167, 40, 40),rgb(139, 46, 46)); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;" onclick="return confirm(' Anda yakin akan menghapus data ini?')">Delete</button>
                                             </form>
                                             @endif
                                             @else
@@ -307,21 +294,18 @@
                                             <span class="text-danger">Request Rejected</span>
                                             @endif
                                             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
 
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-
-                        </table>
+                            </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    </div>
-    </div>
-    </div>
+
 
     <div class="modal fade" id="requestModal" tabindex="-1" role="dialog" aria-labelledby="requestModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -358,7 +342,33 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
 
+<link href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" rel="stylesheet">
+<script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
 <script>
+    $(document).ready(function() {
+        // Initialize data tables
+        $('#requestTable').DataTable({
+            pageLength: 5,
+            searching: true,
+            ordering: true,
+            responsive: true
+        });
+
+        $('#draftTable').DataTable({
+            pageLength: 5,
+            searching: true,
+            ordering: true,
+            responsive: true
+        });
+
+        $('#sentTable').DataTable({
+            pageLength: 5,
+            searching: true,
+            ordering: true,
+            responsive: true
+        });
+    });
+
     // Ambil CSRF token dari meta tag
     var csrfToken = '{{ csrf_token() }}';
 
