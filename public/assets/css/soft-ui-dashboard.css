@@ -7,8 +7,8 @@
  */
 :root {
   --bs-blue: #63B3ED;
-  --bs-indigo: #596CFF;
-  --bs-purple: #6f42c1;
+  --bs-indigo: #1c7f48;
+  --bs-purple: #1c7f48;
   --bs-pink: #d63384;
   --bs-red: #F56565;
   --bs-orange: #fd7e14;
@@ -208,7 +208,7 @@ a {
   text-decoration: none;
 }
 a:hover {
-  color: #830866;
+  color: #1c7f48;
   text-decoration: none;
 }
 
@@ -242,7 +242,7 @@ pre code {
 
 code {
   font-size: 0.875em;
-  color: #d63384;
+  color: #1c7f48;
   word-wrap: break-word;
 }
 a > code {
@@ -2613,9 +2613,9 @@ progress {
 .form-control:focus {
   color: #495057;
   background-color: #fff;
-  border-color: #e293d3;
+  border-color: #1c7f48;
   outline: 0;
-  box-shadow: 0 0 0 2px #e9aede;
+  box-shadow: 0 0 0 2px #27ab62;
 }
 .form-control::-webkit-date-and-time-value {
   height: 1.4rem;
@@ -2828,9 +2828,9 @@ textarea.form-control-lg {
   }
 }
 .form-select:focus {
-  border-color: #e293d3;
+  border-color: #1c7f48;
   outline: 0;
-  box-shadow: 0 0 0 2px #e9aede;
+  box-shadow: 0 0 0 2px #1c7f48;
 }
 .form-select[multiple], .form-select[size]:not([size="1"]) {
   padding-right: 0.75rem;
@@ -2983,10 +2983,10 @@ textarea.form-control-lg {
   outline: 0;
 }
 .form-range:focus::-webkit-slider-thumb {
-  box-shadow: 0 0 0 1px #fff, 0 0 0 2px #e9aede;
+  box-shadow: 0 0 0 1px #fff, 0 0 0 2px #1c7f48;
 }
 .form-range:focus::-moz-range-thumb {
-  box-shadow: 0 0 0 1px #fff, 0 0 0 2px #e9aede;
+  box-shadow: 0 0 0 1px #fff, 0 0 0 2px #1c7f48;
 }
 .form-range::-moz-focus-outer {
   border: 0;
@@ -3465,7 +3465,82 @@ margin-right: 8px;
   background-color: #90C67C;
   border-color: #90C67C;
 }
+.btn-send {
+  color: #fff;
+  background-color: #cc6ccc;
+  border-color: #6907b4;
+align-items: center; 
+padding: 6px 8px; 
+text-decoration: none; 
+border-radius: 5px; 
+font-weight: bold; 
+font-size: 10px; 
+margin-right: 8px;
+}
+.btn-send:hover {
+  color: #fff;
+  background-color:#cc6ccc;
+  border-color: #6907b4;
+}
+.btn-check:focus + .btn-send, .btn-send:focus {
+  color: #fff;
+  background-color: #6907b4;
+  border-color: #8307b4;
+  box-shadow: 0 0 0 0.2rem rgba(129, 48, 211, 0.5);
+}
+.btn-check:checked + .btn-send, .btn-check:active + .btn-send, .btn-send:active, .btn-send.active, .show > .btn-send.dropdown-toggle {
+  color: #fff;
+  background-color: #6907b4;
+  border-color: #8307b4;
+}
+.btn-check:checked + .btn-send:focus, .btn-check:active + .btn-send:focus, .btn-send:active:focus, .btn-send.active:focus, .show > .btn-send.dropdown-toggle:focus {
+  box-shadow: 0 0 0 0.2rem rgba(129, 48, 211, 0.5);
+}
+.btn-send:disabled, .btn-send.disabled {
+  color: #fff;
+  background-color: #cc6ccc;
+  border-color: #6907b4;
+}
+/* Gaya umum untuk semua tombol */
+.btn {
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 12px;
+  margin: 4px;
+  text-decoration: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s, box-shadow 0.2s;
+}
 
+.btn-add     { background-color: #5caa81; }  .btn-add:hover     { background-color: #4b916c; }
+.btn-delete  { background-color: #c26666; }  .btn-delete:hover  { background-color: #a65050; }
+.btn-approve { background-color: #5a7dc1; }  .btn-approve:hover { background-color: #4866a1; }
+.btn-reject  { background-color: #908b8b; }  .btn-reject:hover  { background-color: #777373; }
+.btn-send    { background-color: #a173b5; }  .btn-send:hover    { background-color: #895da0; }
+.btn-filter  { background-color: #d29056; }  .btn-filter:hover  { background-color: #b57745; }
+.btn-report  { background-color: #7965b1; }  .btn-report:hover  { background-color: #63509b; }
+.btn-edit    { background-color: #4682b4; }  .btn-edit:hover    { background-color: #376b91;}
+.btn-show    { background-color: #6fbf73; }  .btn-show:hover {  
+  background-color: #58a45c;
+}
+
+.btn-request {
+  background-color: #c29f4d; 
+}
+.btn-request:hover {
+  background-color: #a6863e;
+}
+.btn-xs {
+  font-size: 10px;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
 .btn-secondary {
   color: #000;
   background-color: #8392AB;
@@ -3961,7 +4036,7 @@ margin-right: 8px;
   text-decoration: none;
 }
 .btn-link:hover {
-  color: #830866;
+  color: #1c7f48;
   text-decoration: none;
 }
 .btn-link:focus {
@@ -4431,7 +4506,7 @@ margin-right: 8px;
   }
 }
 .nav-link:hover, .nav-link:focus {
-  color: #830866;
+  color: #1c7f48;
 }
 .nav-link.disabled {
   color: #6c757d;
@@ -5035,7 +5110,7 @@ margin-right: 8px;
 }
 .accordion-button:focus {
   z-index: 3;
-  border-color: #e293d3;
+  border-color: #1c7f48;
   outline: 0;
   box-shadow: none;
 }
@@ -5138,13 +5213,13 @@ margin-right: 8px;
 }
 .page-link:hover {
   z-index: 2;
-  color: #830866;
+  color: #1c7f48;
   background-color: #e9ecef;
   border-color: #dee2e6;
 }
 .page-link:focus {
   z-index: 3;
-  color: #830866;
+  color: #1c7f48;
   background-color: #e9ecef;
   outline: 0;
   box-shadow: 0 0 0 0.2rem rgba(203, 12, 159, 0.25);
@@ -18968,8 +19043,8 @@ margin-right: 8px;
   margin-left: 0;
 }
 .input-group .form-control:focus {
-  border-left: 1px solid #e293d3 !important;
-  border-right: 1px solid #e293d3 !important;
+  border-left: 1px solid #1c7f48 !important;
+  border-right: 1px solid #1c7f48 !important;
 }
 .input-group .form-control:not(:first-child) {
   border-left: 0;

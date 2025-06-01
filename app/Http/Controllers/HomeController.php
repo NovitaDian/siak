@@ -245,103 +245,65 @@ class HomeController extends Controller
     }
 
 
-   public function incident(Request $request)
-{
-    // Ambil tanggal dari request, default ke hari ini
-    $selectedDate = $request->input('filter_date') 
-        ? Carbon::parse($request->input('filter_date')) 
-        : now();
+    public function incident(Request $request)
+    {
+        // Ambil tanggal dan shift dari request
+        $shiftDate = $request->input('shift_date');
+        $shift = $request->input('shift');
 
-    // Total man hours pada tanggal yang dipilih
-    $totalManHours = SentIncident::whereDate('shift_date', $selectedDate)
-        ->sum('man_hours_per_day');
+        // Jika form belum disubmit, default tanggal ke hari ini
+        $selectedDate = $request->input('filter_date')
+            ? Carbon::parse($request->input('filter_date'))
+            : now();
 
-    // LTA
-    $totalLTA = SentIncident::whereDate('shift_date', $selectedDate)
-        ->whereIn('klasifikasi_kejadiannya', [
-            'Lost Workdays Case (LWC)',
-            'Permanent Partial Dissability (PPD)',
-            'Permanent Total Dissability (PTD)'
-        ])
-        ->count();
+        // Jika shift atau shift_date belum ada (belum submit), tampilkan view awal
+        if (!$shiftDate || !$shift) {
+            return view('adminsystem.dashboard.dashboard-incident', [
+                'daysSinceLastLTA' => 0,
+                'daysSinceLastWLTA' => 0,
+                'manHoursSinceLastLTA' => 0,
+                'manHoursSinceLastWLTA' => 0,
+                'totalLTA' => 0,
+                'totalWLTA' => 0,
+                'totalManHours' => 0,
+                'lastLTAIncidentDate' => null,
+                'targetManHours' => 0, // default jika belum ada data
+            ]);
+        }
 
-    // WLTA
-    $totalWLTA = SentIncident::whereDate('shift_date', $selectedDate)
-        ->whereIn('klasifikasi_kejadiannya', [
-            'First Aid Case (FAC)',
-            'Medical Treatment Case (MTC)',
-            'Restricted Work Case (RWC)'
-        ])
-        ->count();
+        $request->validate([
+            'shift_date' => 'required|date',
+            'shift' => 'required|string',
+        ]);
 
-    // LTA terakhir
-    $lastLTA = SentIncident::whereIn('klasifikasi_kejadiannya', [
-        'Lost Workdays Case (LWC)',
-        'Permanent Partial Dissability (PPD)',
-        'Permanent Total Dissability (PTD)'
-    ])->orderBy('shift_date', 'desc')->first();
+        // Ambil data incident berdasarkan tanggal dan shift
+        $data = SentIncident::whereDate('shift_date', $shiftDate)
+            ->where('shift', $shift)
+            ->first();
 
-    // WLTA terakhir
-    $lastWLTA = SentIncident::whereIn('klasifikasi_kejadiannya', [
-        'First Aid Case (FAC)',
-        'Medical Treatment Case (MTC)',
-        'Restricted Work Case (RWC)'
-    ])->orderBy('shift_date', 'desc')->first();
+        if (!$data) {
+            return redirect()->back()->with('error', 'Data tidak ditemukan untuk tanggal dan shift tersebut.');
+        }
 
-    // Days & manhours since
-    $daysSinceLastLTA = $lastLTA ? Carbon::parse($lastLTA->shift_date)->diffInWeekdays(now()) : 0;
-    $daysSinceLastWLTA = $lastWLTA ? Carbon::parse($lastWLTA->shift_date)->diffInWeekdays(now()) : 0;
+        // Cari tanggal LTA terakhir
+        $lastLtaDate = SentIncident::where('lta', 1)
+            ->whereDate('shift_date', '<=', $shiftDate)
+            ->orderByDesc('shift_date')
+            ->value('shift_date');
 
-    $hoursSinceLastLTA = $lastLTA ? SentIncident::where('shift_date', '>', $lastLTA->shift_date)
-        ->sum('man_hours_per_day') : 0;
+        return view('adminsystem.dashboard.dashboard-incident', [
+            'daysSinceLastLTA' => $data->total_safe_day_lta2 ?? 0,
+            'daysSinceLastWLTA' => $data->total_safe_day_wlta ?? 0,
+            'manHoursSinceLastLTA' => $data->total_man_hours_lta ?? 0,
+            'manHoursSinceLastWLTA' => $data->total_man_hours_wlta2 ?? 0,
+            'totalLTA' => $data->total_lta_by_year ?? 0,
+            'totalWLTA' => $data->total_wlta_by_year ?? 0,
+            'totalManHours' => $data->total_man_hours ?? 0,
+            'lastLTAIncidentDate' => $lastLtaDate,
+            'targetManHours' => $data->target_man_hours ?? 0, // jika tersedia
+        ]);
+    }
 
-    $hoursSinceLastWLTA = $lastWLTA ? SentIncident::where('shift_date', '>', $lastWLTA->shift_date)
-        ->sum('man_hours_per_day') : 0;
-
-    // Total tenaga kerja per shift di tanggal tsb
-    $lastShiftIIncident = SentIncident::where('shift', 'Shift 1')->whereDate('shift_date', $selectedDate)->first();
-    $lastShiftIIIncident = SentIncident::where('shift', 'Shift 2')->whereDate('shift_date', $selectedDate)->first();
-    $lastShiftIIIIncident = SentIncident::where('shift', 'Shift 3')->whereDate('shift_date', $selectedDate)->first();
-
-    $shiftI = ($lastShiftIIncident->jml_employee ?? 0)
-        + ($lastShiftIIncident->jml_outsources ?? 0)
-        + ($lastShiftIIncident->jml_security ?? 0)
-        + ($lastShiftIIncident->jml_loading_stacking ?? 0)
-        + ($lastShiftIIncident->jml_contractor ?? 0);
-
-    $shiftII = ($lastShiftIIIncident->jml_employee ?? 0)
-        + ($lastShiftIIIncident->jml_outsources ?? 0)
-        + ($lastShiftIIIncident->jml_security ?? 0)
-        + ($lastShiftIIIncident->jml_loading_stacking ?? 0)
-        + ($lastShiftIIIncident->jml_contractor ?? 0);
-
-    $shiftIII = ($lastShiftIIIIncident->jml_employee ?? 0)
-        + ($lastShiftIIIIncident->jml_outsources ?? 0)
-        + ($lastShiftIIIIncident->jml_security ?? 0)
-        + ($lastShiftIIIIncident->jml_loading_stacking ?? 0)
-        + ($lastShiftIIIIncident->jml_contractor ?? 0);
-
-    $totalWorkForce = $shiftI + $shiftII + $shiftIII;
-
-    $targetManHours = TargetManHours::first()?->target_manhours ?? 0;
-
-    return view('adminsystem.dashboard.dashboard-incident', [
-        'totalManHours' => $totalManHours,
-        'totalLTA' => $totalLTA,
-        'totalWLTA' => $totalWLTA,
-        'daysSinceLastLTA' => $daysSinceLastLTA,
-        'daysSinceLastWLTA' => $daysSinceLastWLTA,
-        'manHoursSinceLastLTA' => $hoursSinceLastLTA,
-        'manHoursSinceLastWLTA' => $hoursSinceLastWLTA,
-        'lastLTAIncidentDate' => $lastLTA ? $lastLTA->shift_date : null,
-        'shift1' => $shiftI,
-        'shift2' => $shiftII,
-        'shift3' => $shiftIII,
-        'totalShift' => $totalWorkForce,
-        'targetManHours' => $targetManHours,
-        'selectedDate' => $selectedDate->format('Y-m-d')
-    ]);
-}
 
     public function updateTargetManHours(Request $request)
     {

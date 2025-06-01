@@ -135,11 +135,9 @@
                                                 <form action="{{ route('adminsystem.daily.destroy', $daily->id) }}" method="POST" style="margin: 0;">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit"
-                                                        class="btn btn-info"
-                                                        onclick="return confirm('Anda yakin akan mengirim dokumen?')"
-                                                        title="Kirim"> <i class="fas fa-paper-plane me-1" style="margin-right: 4px; font-size: 12px;"></i> Send
-                                                    </button>
+                                                    <button type="submit" class="btn btn-send btn-xs" onclick="return confirm('Anda yakin akan mengirim dokumen?')" title="Kirim">
+                                                        <i class="fas fa-paper-plane me-1" style="margin-right: 4px; font-size: 12px;"></i> Send
+                                                        </button>
                                                 </form>
                                             </div>
 

@@ -114,10 +114,8 @@
                                                 <form action="{{ route('adminsystem.tool.destroy', $tool->id) }}" method="POST" style="margin: 0;">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit"
-                                                        class="btn btn-info"
-                                                        onclick="return confirm('Anda yakin akan mengirim dokumen?')"
-                                                        title="Kirim"> <i class="fas fa-paper-plane me-1" style="margin-right: 4px; font-size: 12px;"></i> Send
+                                                    <button type="submit" class="btn btn-send btn-xs" onclick="return confirm('Anda yakin akan mengirim dokumen?')" title="Kirim">
+                                                        <i class="fas fa-paper-plane me-1" style="margin-right: 4px; font-size: 12px;"></i> Send
                                                     </button>
                                                 </form>
                                             </div>
@@ -186,51 +184,51 @@
                                         <td class="text-center text-xs">{{ $tool_fix->hse_inspector }}</td>
                                         <td class="text-center text-xs">{{ \Carbon\Carbon::parse($tool_fix->tanggal_pemeriksaan)->format('d/m/Y') }}</td>
                                         <td class="text-center text-xs">{{ $tool_fix->status_pemeriksaan }}</td>
-                                         <td class="align-middle text-center">
-                                                @if ($tool_fix->status == 'Nothing')
-                                                <a href="{{ route('adminsystem.tool.show', $tool_fix->id) }}"
-                                                    class="btn btn-info btn-xs"> <i class="fas fa-eye me-1" style="font-size: 12px;"></i> Show
-                                                </a>
+                                        <td class="align-middle text-center">
+                                            @if ($tool_fix->status == 'Nothing')
+                                            <a href="{{ route('adminsystem.tool.show', $tool_fix->id) }}"
+                                                class="btn btn-info btn-xs"> <i class="fas fa-eye me-1" style="font-size: 12px;"></i> Show
+                                            </a>
 
-                                                <button class="btn btn-secondary btn-xs"
-                                                    onclick="showRequestModal('{{ $tool_fix->id }}')">Request</button>
+                                            <button class="btn btn-secondary btn-xs"
+                                                onclick="showRequestModal('{{ $tool_fix->id }}')">Request</button>
 
-                                                @elseif ($tool_fix->status == 'Pending')
-                                                <span class="text-warning">Pending</span>
+                                            @elseif ($tool_fix->status == 'Pending')
+                                            <span class="text-warning">Pending</span>
 
-                                                @elseif ($tool_fix->status == 'Approved')
-                                                @php
-                                                // Cari request: prioritaskan 'Delete', jika tidak ada ambil 'Edit'
-                                                $request = $requests->where('sent_tool_id', $tool_fix->id)->firstWhere('type', 'Delete')
-                                                ?? $requests->where('sent_tool_id', $tool_fix->id)->firstWhere('type', 'Edit');
-                                                @endphp
+                                            @elseif ($tool_fix->status == 'Approved')
+                                            @php
+                                            // Cari request: prioritaskan 'Delete', jika tidak ada ambil 'Edit'
+                                            $request = $requests->where('sent_tool_id', $tool_fix->id)->firstWhere('type', 'Delete')
+                                            ?? $requests->where('sent_tool_id', $tool_fix->id)->firstWhere('type', 'Edit');
+                                            @endphp
 
-                                                @if ($request)
-                                                @if (strcasecmp($request->type, 'Edit') === 0)
-                                                <a href="{{ route('adminsystem.tool.sent_edit', $tool_fix->id) }}"
-                                                    class="btn btn-warning btn-xs"> <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit
-                                                </a>
-                                                @elseif (strcasecmp($request->type, 'Delete') === 0)
-                                                <form action="{{ route('adminsystem.tool.sent_destroy', $tool_fix->id) }}" method="POST" style="display:inline;">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit"
-                                                        class="btn btn-danger btn-xs"
-                                                        onclick="return confirm('Anda yakin akan menghapus data ini?')">
-                                                        <i class="fas fa-trash-alt me-1" style="font-size: 12px;"></i> Delete
-                                                    </button>
-                                                </form>
-                                                @else
-                                                <span class="text-danger">Unknown request type</span>
-                                                @endif
-                                                @else
-                                                <span class="text-danger">No corresponding request found</span>
-                                                @endif
+                                            @if ($request)
+                                            @if (strcasecmp($request->type, 'Edit') === 0)
+                                            <a href="{{ route('adminsystem.tool.sent_edit', $tool_fix->id) }}"
+                                                class="btn btn-warning btn-xs"> <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit
+                                            </a>
+                                            @elseif (strcasecmp($request->type, 'Delete') === 0)
+                                            <form action="{{ route('adminsystem.tool.sent_destroy', $tool_fix->id) }}" method="POST" style="display:inline;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                    class="btn btn-danger btn-xs"
+                                                    onclick="return confirm('Anda yakin akan menghapus data ini?')">
+                                                    <i class="fas fa-trash-alt me-1" style="font-size: 12px;"></i> Delete
+                                                </button>
+                                            </form>
+                                            @else
+                                            <span class="text-danger">Unknown request type</span>
+                                            @endif
+                                            @else
+                                            <span class="text-danger">No corresponding request found</span>
+                                            @endif
 
-                                                @elseif ($tool_fix->status == 'Rejected')
-                                                <span class="text-danger">Request Rejected</span>
-                                                @endif
-                                            </td>
+                                            @elseif ($tool_fix->status == 'Rejected')
+                                            <span class="text-danger">Request Rejected</span>
+                                            @endif
+                                        </td>
                                     </tr>
                                     @endforeach
                                 </tbody>

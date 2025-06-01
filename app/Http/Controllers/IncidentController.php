@@ -345,17 +345,40 @@ class IncidentController extends Controller
             $validated['total_man_hours_wlta2'] = 0;
         }
         // Hitung no_laporan otomatis
-        $prefix = 'LPI-' . date('Ym'); // Contoh: LPI-202505
-        $lastReport = Incident::where('no_laporan', 'like', $prefix . '%')->orderByDesc('no_laporan')->first();
 
-        if ($lastReport && preg_match('/(\d+)$/', $lastReport->no_laporan, $matches)) {
-            $nextNumber = (int)$matches[1] + 1;
-        } else {
-            $nextNumber = 1;
-        }
+        // Ambil shift_date dari request
+        $shiftDate = Carbon::parse($request->shift_date);
 
-        $validated['no_laporan'] = $prefix . str_pad($nextNumber, 3, '0', STR_PAD_LEFT); // Misal: LPI-202505001
+        // Hitung jumlah kejadian pada bulan & tahun yang sama
+        $incidentCount = Incident::whereMonth('shift_date', $shiftDate->month)
+            ->whereYear('shift_date', $shiftDate->year)
+            ->count() + 1;
 
+        // Mapping bulan ke angka Romawi
+        $bulanRomawi = [
+            1 => 'I',
+            2 => 'II',
+            3 => 'III',
+            4 => 'IV',
+            5 => 'V',
+            6 => 'VI',
+            7 => 'VII',
+            8 => 'VIII',
+            9 => 'IX',
+            10 => 'X',
+            11 => 'XI',
+            12 => 'XII'
+        ];
+
+        // Ambil angka romawi berdasarkan bulan dari shiftDate
+        $bulan = $bulanRomawi[(int)$shiftDate->format('n')];
+
+        // Tahun format 2 digit
+        $tahun2Digit = $shiftDate->format('y');
+
+        // Susun no_laporan akhir
+        $no_laporan = "{$incidentCount}/{$bulan}/HSE/{$tahun2Digit}";
+        $validated['no_laporan'] = $no_laporan;
 
         // Simpan ke database
         $incident = Incident::create($validated);
@@ -487,6 +510,7 @@ class IncidentController extends Controller
     public function show($id)
     {
         $incident = Incident::find($id);
+        
         if (!$incident) {
             abort(404, 'Data tidak ditemukan');
         }

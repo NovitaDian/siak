@@ -147,10 +147,7 @@
                                             <form action="{{ route('operator.incident.destroy', $incident->id) }}" method="POST" class="m-0">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit"
-                                                    class="btn btn-primary btn-xs d-flex align-items-center"
-                                                    onclick="return confirm('Anda yakin akan mengirim dokumen?')"
-                                                    title="Kirim">
+                                                <button type="submit" class="btn btn-send btn-xs" onclick="return confirm('Anda yakin akan mengirim dokumen?')" title="Kirim">
                                                     <i class="fas fa-paper-plane me-1" style="font-size: 12px;"></i> Send
                                                 </button>
                                             </form>

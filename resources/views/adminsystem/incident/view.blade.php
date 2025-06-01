@@ -58,14 +58,14 @@
                             <td>Rev.: 03</td>
                         </tr>
                         <tr>
-                            <td>Tgl: 30-Apr-23</td>
+                            <td>Tanggal: {{ \Carbon\Carbon::parse($incident->created_at)->format('d/m/Y') }}</td>
                             <td>Hal.: 1 of 2</td>
                         </tr>
                     </table>
                 </div>
             </div>
 
-            <p><b>No Laporan:</b> {{ $incident->no_laporan }} &nbsp;&nbsp; <b>Tanggal Pelaporan:</b> {{ date('l, d F Y', strtotime($incident->shift_date)) }}</p>
+            <p><b>No Laporan:</b> {{ $incident->no_laporan }} &nbsp;&nbsp; <b>Tanggal Pelaporan:</b> {{ \Carbon\Carbon::parse($incident->shift_date)->translatedFormat('l, d F Y') }}</p>
 
             <div class="section-title">KLASIFIKASI KEJADIAN:</div>
             <div class="row">
@@ -152,7 +152,7 @@
 
             <div class="section-title">INFORMASI KORBAN:</div>
             <p><b>Nama Korban:</b> {{ $incident->nama_korban }}</p>
-            <p><b>Tanggal Lahir:</b> {{ $incident->tgk_lahir }}</p>
+            <p><b>Tanggal Lahir:</b> {{ $incident->tgl_lahir }}</p>
             <p><b>Nama Korban:</b> {{ $incident->jenis_kelamin }}</p>
             <p><b>Status: </b></p>
             <div class="row">

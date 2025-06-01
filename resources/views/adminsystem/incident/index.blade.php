@@ -37,12 +37,11 @@
                                             </td>
                                             <td class="text-center">
                                                 @if ($request->status == 'Pending')
-                                                <button class="btn btn-primary btn-xs" onclick="approveRequest('{{ $request->id }}')">Approve</button>
-                                                <button class="btn btn-danger btn-xs" onclick="rejectRequest('{{ $request->id }}')">Reject</button>
+                                                <button class="btn btn-approve btn-xs" onclick="approveRequest('{{ $request->id }}')">Approve</button>
+                                                <button class="btn btn-reject btn-xs" onclick="rejectRequest('{{ $request->id }}')">Reject</button>
                                                 @endif
                                                 <form action="{{ route('adminsystem.incident.show', ['id' => $request->id]) }}" method="GET" style="display:inline;">
-                                                    <button type="submit" class="btn btn-info btn-xs">
-                                                        Show
+                                                    <button type="submit" class="btn btn-show btn-xs"><i class="fas fa-eye me-1" style="font-size: 12px;"></i> Show
                                                     </button>
                                                 </form>
                                                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -73,7 +72,7 @@
                     <h6 class="mb-0">Draft</h6>
                     <form action="{{ route('adminsystem.incident.create') }}" method="GET" class="mb-0">
                         @csrf
-                        <button type="submit" class="btn btn-primary btn-sm text-white">
+                        <button type="submit" class="btn btn-add btn-sm text-white">
                             Tambah
                         </button>
                     </form>
@@ -115,9 +114,8 @@
                                         </td>
 
                                         <td class="align-middle text-center text-sm">
-                                            <span class="badge badge-sm {{ $incident->status_kejadian == 'Ada' ? 'bg-gradient-warning' : 'bg-gradient-success' }}">
-                                                {{ $incident->status_kejadian == 'Ada' ? 'Ada' : 'Tidak' }}
-                                            </span>
+                                            <p class="text-xs font-weight-bold mb-0">{{ $incident->status_kejadian }}</p>
+
                                         </td>
 
                                         <td class="align-middle text-center">
@@ -125,27 +123,27 @@
                                         </td>
 
                                         <td class="align-middle text-center text-sm">
-                                            <span class="badge badge-sm {{ $incident->ada_korban == 'Ada' ? 'bg-gradient-warning' : 'bg-gradient-success' }}">
+                                            <span class="text-secondary text-xs font-weight-bold">
                                                 {{ $incident->ada_korban == 'Tidak' ? 'Ada' : 'Tidak' }}
                                             </span>
                                         </td>
                                         <td class="align-middle text-center">
                                             <div class="d-flex justify-content-center align-items-center gap-1 flex-nowrap" style="flex-wrap: nowrap;">
 
-                                                <a href="{{ route('adminsystem.incident.edit', $incident->id) }}" class="btn btn-warning btn-xs">
+                                                <a href="{{ route('adminsystem.incident.edit', $incident->id) }}" class="btn btn-edit btn-xs">
                                                     <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit
                                                 </a>
 
                                                 <form action="{{ route('adminsystem.incident.destroy', $incident->id) }}" method="POST" class="m-0">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-primary btn-xs" onclick="return confirm('Anda yakin akan mengirim dokumen?')" title="Kirim">
+                                                    <button type="submit" class="btn btn-send btn-xs" onclick="return confirm('Anda yakin akan mengirim dokumen?')" title="Kirim">
                                                         <i class="fas fa-paper-plane me-1" style="font-size: 12px;"></i> Send
                                                     </button>
                                                 </form>
 
                                                 <form action="{{ route('adminsystem.incident.show', ['id' => $incident->id]) }}" method="GET" class="m-0">
-                                                    <button type="submit" class="btn btn-info btn-xs">
+                                                    <button type="submit" class="btn btn-show btn-xs">
                                                         <i class="fas fa-eye me-1" style="font-size: 12px;"></i> Show
                                                     </button>
                                                 </form>
@@ -197,11 +195,11 @@
                         </div>
 
                         <div class="col-12 col-md-3 d-flex align-items-end">
-                            <button type="submit" class="btn btn-sm btn-primary w-50">Filter</button>
+                            <button type="submit" class="btn btn-sm btn-filter w-50">Filter</button>
                         </div>
 
                         <div class="col-12 col-md-3 d-flex justify-content-md-end justify-content-start align-items-end gap-2">
-                            <a href="{{ route('adminsystem.incident.export', request()->all()) }}" class="btn btn-sm btn-success w-100 w-md-auto">
+                            <a href="{{ route('adminsystem.incident.export', request()->all()) }}" class="btn btn-sm btn-primary w-100 w-md-auto">
                                 <i class="fas fa-file-excel me-1"></i> Excel
                             </a>
                             <a href="{{ route('adminsystem.incident.exportPdf', request()->all()) }}" class="btn btn-sm btn-danger w-100 w-md-auto">
@@ -250,9 +248,8 @@
                                         </td>
 
                                         <td class="align-middle text-center text-sm">
-                                            <span class="badge badge-sm {{ $incident_fix->status_kejadian == 'Ada' ? 'bg-gradient-warning' : 'bg-gradient-success' }}">
-                                                {{ $incident_fix->status_kejadian == 'Ada' ? 'Ada' : 'Tidak' }}
-                                            </span>
+                                            <p class="text-xs font-weight-bold mb-0">{{ $incident_fix->status_kejadian }}</p>
+
                                         </td>
 
                                         <td class="align-middle text-center">
@@ -260,14 +257,14 @@
                                         </td>
 
                                         <td class="align-middle text-center text-sm">
-                                            <span class="badge badge-sm {{ $incident_fix->ada_korban == 'Ada' ? 'bg-gradient-warning' : 'bg-gradient-success' }}">
+                                            <span class="text-secondary text-xs font-weight-bold">
                                                 {{ $incident_fix->ada_korban == 'Tidak' ? 'Ada' : 'Tidak' }}
                                             </span>
                                         </td>
 
                                         <td class="align-middle text-center">
                                             @if ($incident_fix->status_request == 'Nothing')
-                                            <button class="btn btn-secondary btn-xs" onclick="showRequestModal('{{ $incident_fix->id }}')"> <i></i>&nbsp; Request
+                                            <button class="btn btn-request btn-xs" onclick="showRequestModal('{{ $incident_fix->id }}')"> <i></i>&nbsp; Request
                                             </button>
                                             @elseif ($incident_fix->status_request == 'Pending')
                                             <span class="text-warning">Pending</span>
@@ -279,12 +276,14 @@
                                             @endphp
                                             @if ($request)
                                             @if ($request->type == 'Edit')
-                                            <a href="javascript:;" id="editBtn" onclick="sentEditAction('{{ $incident_fix->id }}');" style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right, #28A745, #2E8B57); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;" class="btn btn-warning btn-sm">Edit</a>
-                                            @elseif ($request->type == 'Delete')
+                                            <a href="{{ route('adminsystem.incident.sent_edit', $incident_fix->id) }}" class="btn btn-edit btn-xs">
+                                                <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit
+                                            </a> @elseif ($request->type == 'Delete')
                                             <form action="{{ route('adminsystem.incident.sent_destroy', $incident_fix->id) }}" method="POST" style="display:inline;">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-sm" style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right,rgb(167, 40, 40),rgb(139, 46, 46)); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;" onclick="return confirm(' Anda yakin akan menghapus data ini?')">Delete</button>
+                                                <button type="submit" class="btn btn-delete btn-xs " style="display: inline-flex; align-items: center; padding: 4px 8px; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;" onclick="return confirm(' Anda yakin akan menghapus data ini?')"> <i class="fas fa-trash me-1" style="font-size: 12px;"></i> Hapus
+                                                </button>
                                             </form>
                                             @endif
                                             @else
