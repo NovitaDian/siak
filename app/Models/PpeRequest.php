@@ -12,12 +12,13 @@ class PpeRequest extends Model
 
     protected $fillable = [
         'sent_ppe_id',
+        'user_id',
         'nama_pengirim',
         'type',
         'reason',
         'status',
     ];
-    
+
     public function ppe()
     {
         return $this->belongsTo(SentPpe::class, 'sent_ppe_id'); // Pastikan 'ppe_id' adalah nama kolom foreign key di tabel ppe_requests
@@ -28,8 +29,4 @@ class PpeRequest extends Model
     {
         return $this->belongsTo(User::class);
     }
-
-
-   
-
 }

@@ -13,22 +13,19 @@ class ToolRequest extends Model
     protected $fillable = [
         'sent_tool_id',
         'nama_pengirim',
+        'user_id',
         'type',
         'reason',
         'status',
     ];
-    
+
     public function tool()
     {
-        return $this->belongsTo(SentPpe::class, 'sent_tool_id'); 
+        return $this->belongsTo(SentPpe::class, 'sent_tool_id');
     }
     // Relasi dengan model User
     public function user()
     {
         return $this->belongsTo(User::class);
     }
-
-
-   
-
 }

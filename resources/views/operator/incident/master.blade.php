@@ -14,7 +14,7 @@
                         <div class="nav-item">
                             <form action="{{ route('adminsystem.ncr.Perusahaancreate') }}" method="GET" style="display:inline;">
                                 @csrf
-                                <button type="submit" class="btn btn-primary active mb-0 text-white" role="button" aria-pressed="true">
+                                <button type="submit" class="btn btn-primary btn-sm text-white">
                                     Tambah
                                 </button>
                             </form>
@@ -104,7 +104,7 @@
                         <div class="nav-item">
                             <form action="{{ route('adminsystem.bagian.create') }}" method="GET" style="display:inline;">
                                 @csrf
-                                <button type="submit" class="btn btn-primary active mb-0 text-white" role="button" aria-pressed="true">
+                                <button type="submit" class="btn btn-primary btn-sm text-white">
                                     Tambah
                                 </button>
                             </form>

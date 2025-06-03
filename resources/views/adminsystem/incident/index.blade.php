@@ -1,7 +1,11 @@
 @extends('layouts.user_type.auth')
 
 @section('content')
-
+@if (session('success'))
+<div class="alert alert-success alert-dismissible fade show" role="alert" style="background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 10px; margin: 10px;">
+    {{ session('success') }}
+</div>
+@endif
 <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
     <div class="container-fluid py-4 px-0">
         <div class="card mx-auto w-100" style="max-width: 200%; ">
@@ -37,15 +41,32 @@
                                             </td>
                                             <td class="text-center">
                                                 @if ($request->status == 'Pending')
-                                                <button class="btn btn-approve btn-xs" onclick="approveRequest('{{ $request->id }}')">Approve</button>
-                                                <button class="btn btn-reject btn-xs" onclick="rejectRequest('{{ $request->id }}')">Reject</button>
+                                                <button
+                                                    class="btn btn-success btn-xs me-1"
+                                                    onclick="approveRequest('{{ $request->id }}')"
+                                                    title="Approve this request">
+                                                    <i class="fas fa-check m-1"></i> Approve
+                                                </button>
+
+                                                <button
+                                                    class="btn btn-danger btn-xs me-1"
+                                                    onclick="rejectRequest('{{ $request->id }}')"
+                                                    title="Reject this request">
+                                                    <i class="fas fa-times m-1"></i> Reject
+                                                </button>
                                                 @endif
-                                                <form action="{{ route('adminsystem.incident.show', ['id' => $request->id]) }}" method="GET" style="display:inline;">
-                                                    <button type="submit" class="btn btn-show btn-xs"><i class="fas fa-eye me-1" style="font-size: 12px;"></i> Show
+
+                                                <form
+                                                    action="{{ route('adminsystem.incident.sent_show', ['id' => $request->id]) }}"
+                                                    method="GET"
+                                                    style="display:inline;"
+                                                    title="View details">
+                                                    <button type="submit" class="btn btn-light btn-xs">
+                                                        <i class="fas fa-eye"></i> Show
                                                     </button>
                                                 </form>
-                                                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
                                             </td>
+
                                         </tr>
                                         @endforeach
                                     </tbody>
@@ -72,7 +93,7 @@
                     <h6 class="mb-0">Draft</h6>
                     <form action="{{ route('adminsystem.incident.create') }}" method="GET" class="mb-0">
                         @csrf
-                        <button type="submit" class="btn btn-add btn-sm text-white">
+                        <button type="submit" class="btn btn-primary btn-sm text-white">
                             Tambah
                         </button>
                     </form>
@@ -91,7 +112,6 @@
                                         <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Klasifikasi</th>
                                         <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Korban</th>
                                         <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Aksi</th>
-                                        <th class="text-secondary opacity-7"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -130,10 +150,6 @@
                                         <td class="align-middle text-center">
                                             <div class="d-flex justify-content-center align-items-center gap-1 flex-nowrap" style="flex-wrap: nowrap;">
 
-                                                <a href="{{ route('adminsystem.incident.edit', $incident->id) }}" class="btn btn-edit btn-xs">
-                                                    <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit
-                                                </a>
-
                                                 <form action="{{ route('adminsystem.incident.destroy', $incident->id) }}" method="POST" class="m-0">
                                                     @csrf
                                                     @method('DELETE')
@@ -142,22 +158,39 @@
                                                     </button>
                                                 </form>
 
-                                                <form action="{{ route('adminsystem.incident.show', ['id' => $incident->id]) }}" method="GET" class="m-0">
-                                                    <button type="submit" class="btn btn-show btn-xs">
-                                                        <i class="fas fa-eye me-1" style="font-size: 12px;"></i> Show
+                                                <div class="dropdown">
+                                                    <button class="btn btn-secondary btn-xs dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        <i class="fas fa-cog me-1" style="font-size: 12px;"></i> Options
                                                     </button>
-                                                </form>
-
+                                                    <ul class="dropdown-menu">
+                                                        <li>
+                                                            <a class="dropdown-item" href="{{ route('adminsystem.incident.edit', $incident->id) }}">
+                                                                <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <form action="{{ route('adminsystem.incident.show', ['id' => $incident->id]) }}" method="GET" class="m-0">
+                                                                <button type="submit" class="dropdown-item">
+                                                                    <i class="fas fa-eye me-1" style="font-size: 12px;"></i> Show
+                                                                </button>
+                                                            </form>
+                                                        </li>
+                                                        <li>
+                                                            <form action="{{ route('adminsystem.incident.draft_destroy', $incident->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="submit" class="dropdown-item text-danger">
+                                                                    <i class="fas fa-trash-alt me-1" style="font-size: 12px;"></i> Delete
+                                                                </button>
+                                                            </form>
+                                                        </li>
+                                                    </ul>
+                                                </div>
                                             </div>
-                                            <!-- Font Awesome (pindahkan ke layout utama jika belum global) -->
+
+                                            <!-- Font Awesome & Bootstrap JS (pindahkan ke layout utama jika belum ada) -->
                                             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
                                         </td>
-
-
-
-
-
-
                                         <script>
                                             function editAction() {
                                                 // Redirect to the edit form for the item
@@ -195,16 +228,27 @@
                         </div>
 
                         <div class="col-12 col-md-3 d-flex align-items-end">
-                            <button type="submit" class="btn btn-sm btn-filter w-50">Filter</button>
+                            <button type="submit" class="btn btn-sm btn-warning w-50" style="margin-top: 20px; margin-bottom: 6px">Filter</button>
                         </div>
 
-                        <div class="col-12 col-md-3 d-flex justify-content-md-end justify-content-start align-items-end gap-2">
-                            <a href="{{ route('adminsystem.incident.export', request()->all()) }}" class="btn btn-sm btn-primary w-100 w-md-auto">
-                                <i class="fas fa-file-excel me-1"></i> Excel
-                            </a>
-                            <a href="{{ route('adminsystem.incident.exportPdf', request()->all()) }}" class="btn btn-sm btn-danger w-100 w-md-auto">
-                                <i class="fas fa-file-pdf me-1"></i> PDF
-                            </a>
+                        <div class="col-12 col-md-3 d-flex justify-content-md-end justify-content-start align-items-end">
+                            <div class="dropdown w-100 w-md-auto">
+                                <button class="btn btn-sm btn-primary dropdown-toggle w-100 w-md-auto" style="margin-bottom: 5px" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-download me-1"></i> Unduh
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('adminsystem.incident.export', request()->all()) }}">
+                                            <i class="fas fa-file-excel text-success me-2"></i> Excel
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{{ route('adminsystem.incident.exportPdf', request()->all()) }}">
+                                            <i class="fas fa-file-pdf text-danger me-2"></i> PDF
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </form>
 
@@ -212,8 +256,8 @@
                 </div>
 
                 <div class="card-body px-0 pt-0 pb-2">
-                    <div class="table-responsive" style="overflow-x:auto;">
-                        <table class="table align-items-center mb-0" style="white-space: nowrap;">
+                    <div class="table-responsive p-0">
+                        <div class="card-header pb-0">
                             <table class="table align-items-center mb-0" id="sentTable">
                                 <thead>
                                     <tr>
@@ -223,9 +267,8 @@
                                         <th style="width: 80px;" class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Ada Kejadian</th>
                                         <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Klasifikasi</th>
                                         <th style="width: 80px;" class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Korban</th>
-                                        <th style="width: 200px;" class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Aksi</th>
-
-                                        <th class="text-secondary opacity-7"></th>
+                                        <th style="width: 200px;" class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Request</th>
+                                        <th style="width: 200px;" class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Opsi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -264,75 +307,107 @@
 
                                         <td class="align-middle text-center">
                                             @if ($incident_fix->status_request == 'Nothing')
-                                            <button class="btn btn-request btn-xs" onclick="showRequestModal('{{ $incident_fix->id }}')"> <i></i>&nbsp; Request
+                                            <button class="btn btn-info btn-xs" onclick="showRequestModal('{{ $incident_fix->id }}')">
+                                                <i class="fas fa-paper-plane me-1" style="font-size: 12px;"></i> Request
                                             </button>
+
                                             @elseif ($incident_fix->status_request == 'Pending')
-                                            <span class="text-warning">Pending</span>
+                                            <span class="badge bg-warning text-dark">Pending</span>
+
                                             @elseif ($incident_fix->status_request == 'Approved')
                                             @php
                                             $request = $requests->firstWhere('sent_incident_id', $incident_fix->id);
                                             \Log::info('Incident Fix ID: ' . $incident_fix->id . ' Looking for Request with sent_incident_id: ' . $incident_fix->id);
                                             \Log::info('Requests: ', $requests->toArray());
                                             @endphp
+
                                             @if ($request)
-                                            @if ($request->type == 'Edit')
-                                            <a href="{{ route('adminsystem.incident.sent_edit', $incident_fix->id) }}" class="btn btn-edit btn-xs">
-                                                <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit
-                                            </a> @elseif ($request->type == 'Delete')
-                                            <form action="{{ route('adminsystem.incident.sent_destroy', $incident_fix->id) }}" method="POST" style="display:inline;">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-delete btn-xs " style="display: inline-flex; align-items: center; padding: 4px 8px; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;" onclick="return confirm(' Anda yakin akan menghapus data ini?')"> <i class="fas fa-trash me-1" style="font-size: 12px;"></i> Hapus
+                                            <div class="dropdown d-inline">
+                                                <button class="btn btn-success btn-xs dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="fas fa-check-circle me-1" style="font-size: 12px;"></i> Approved
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    @if ($request->type == 'Edit')
+                                                    <li>
+                                                        <a href="{{ route('adminsystem.incident.sent_edit', $incident_fix->id) }}" class="dropdown-item">
+                                                            <i class="fas fa-edit me-1"></i> Edit
+                                                        </a>
+                                                    </li>
+                                                    @elseif ($request->type == 'Delete')
+                                                    <li>
+                                                        <form action="{{ route('adminsystem.incident.sent_destroy', $incident_fix->id) }}" method="POST" onsubmit="return confirm('Anda yakin akan menghapus data ini?')">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="dropdown-item text-danger">
+                                                                <i class="fas fa-trash-alt me-1"></i> Hapus
+                                                            </button>
+                                                        </form>
+                                                    </li>
+                                                    @endif
+                                                </ul>
+                                            </div>
+                                            @else
+                                            <span class="text-danger" title="Request data not found"><i class="fas fa-exclamation-triangle me-1"></i> No request found</span>
+                                            @endif
+
+                                            @elseif ($incident_fix->status_request == 'Rejected')
+                                            <span class="badge bg-danger">Rejected</span>
+                                            @endif
+
+                                            <!-- Font Awesome -->
+                                            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+                                        </td>
+
+                                        <td class="align-middle text-center">
+                                            <form
+                                                action="{{ route('adminsystem.incident.sent_show', ['id' => $incident_fix->id]) }}"
+                                                method="GET"
+                                                style="display:inline;"
+                                                title="View details">
+                                                <button type="submit" class="btn btn-light btn-xs">
+                                                    <i class="fas fa-eye"></i> Show
                                                 </button>
                                             </form>
-                                            @endif
-                                            @else
-                                            <span class="text-danger">No corresponding request found</span>
-                                            @endif
-                                            @elseif ($incident_fix->status_request == 'Rejected')
-                                            <span class="text-danger">Request Rejected</span>
-                                            @endif
-                                            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
                                         </td>
                                     </tr>
                                     @endforeach
                                 </tbody>
 
                             </table>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
 
-    <div class="modal fade" id="requestModal" tabindex="-1" role="dialog" aria-labelledby="requestModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="requestModalLabel">Request Edit/Delete</h5>
-                </div>
-                <div class="modal-body">
-                    <form id="requestForm" method="POST" action="{{ route('adminsystem.incident.storeRequest') }}">
-                        @csrf
-                        <input type="hidden" id="sentincidentId" name="sent_incident_id">
-                        <div class="form-group">
-                            <label for="requestType">Request Type</label><br>
-                            <input type="radio" id="Edit" name="type" value="Edit" required>
-                            <label for="Edit">Edit</label>
-                            <input type="radio" id="Delete" name="type" value="Delete" required>
-                            <label for="Delete">Delete</label>
-                        </div>
-                        <div class="form-group">
-                            <label for="reason">Reason for Request</label>
-                            <textarea class="form-control" id="reason" name="reason" required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Submit Request</button>
-                    </form>
+        <div class="modal fade" id="requestModal" tabindex="-1" role="dialog" aria-labelledby="requestModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="requestModalLabel">Request Edit/Delete</h5>
+                    </div>
+                    <div class="modal-body">
+                        <form id="requestForm" method="POST" action="{{ route('adminsystem.incident.storeRequest') }}">
+                            @csrf
+                            <input type="hidden" id="sentincidentId" name="sent_incident_id">
+                            <div class="form-group">
+                                <label for="requestType">Request Type</label><br>
+                                <input type="radio" id="Edit" name="type" value="Edit" required>
+                                <label for="Edit">Edit</label>
+                                <input type="radio" id="Delete" name="type" value="Delete" required>
+                                <label for="Delete">Delete</label>
+                            </div>
+                            <div class="form-group">
+                                <label for="reason">Reason for Request</label>
+                                <textarea class="form-control" id="reason" name="reason" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit Request</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
 </main>
 <!-- Include jQuery and Bootstrap JS -->
@@ -340,9 +415,9 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
-<link href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" rel="stylesheet">
-<script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
 <script>
     $(document).ready(function() {
         // Initialize data tables

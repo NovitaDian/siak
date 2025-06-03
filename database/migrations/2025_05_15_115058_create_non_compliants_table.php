@@ -27,7 +27,8 @@ class CreateNonCompliantsTable extends Migration
             $table->string('status', 30)->default('Nothing');
             $table->binary('foto', 100);
             $table->timestamps();
-
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('id_ppe')->references('id')->on('ppe_fix')->onDelete('cascade');
         });
     }

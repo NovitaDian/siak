@@ -17,8 +17,9 @@ return new class extends Migration {
             $table->binary('foto');
             $table->enum('status_pemeriksaan', ['Layak operasi', 'Layak operasi dengan catatan', 'Tidak layak operasi']);
             $table->timestamps();
-
-            $table->foreign('alat_id')->references('id')->on('alats')->onDelete('cascade');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+             $table->foreign('alat_id')->references('id')->on('alats')->onDelete('cascade');
             $table->foreign('hse_inspector_id')->references('id')->on('hse_inspector')->onDelete('cascade');
         });
     }

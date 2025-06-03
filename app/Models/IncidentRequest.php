@@ -11,15 +11,16 @@ class IncidentRequest extends Model
 
     protected $fillable = [
         'sent_incident_id',
+        'user_id',
         'nama_pengirim',
         'type',
         'reason',
         'status',
     ];
-    
+
     public function incident()
     {
-        return $this->belongsTo(SentIncident::class, 'sent_incident_id'); 
+        return $this->belongsTo(SentIncident::class, 'sent_incident_id');
     }
 
     // Relasi dengan model User
@@ -27,8 +28,4 @@ class IncidentRequest extends Model
     {
         return $this->belongsTo(User::class);
     }
-
-
-   
-
 }

@@ -10,6 +10,7 @@ return new class extends Migration {
             $table->id();
             $table->string('writer', 255);
             $table->unsignedBigInteger('draft_id');
+            $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('alat_id');
             $table->string('nama_alat');
             $table->unsignedBigInteger('hse_inspector_id');

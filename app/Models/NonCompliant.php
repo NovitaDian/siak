@@ -15,6 +15,7 @@ class NonCompliant extends Model
     // Kolom yang bisa diisi (fillable)
     protected $fillable = [
         'id_ppe',
+        'user_id',
         'nama_hse_inspector',
         'shift_kerja',
         'jam_mulai',
@@ -36,5 +37,9 @@ class NonCompliant extends Model
     public function ppeFix()
     {
         return $this->belongsTo(SentPpe::class, 'id_ppe', 'id');
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

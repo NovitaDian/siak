@@ -54,6 +54,7 @@ class NonCompliantController extends Controller
         ]);
 
         $data = $request->all();
+        $data['user_id'] = Auth::user()->id;
         $data['writer'] = Auth::user()->name;
 
         if ($request->hasFile('foto')) {
@@ -107,6 +108,7 @@ class NonCompliantController extends Controller
             'deskripsi_ketidaksesuaian' => $request->deskripsi_ketidaksesuaian,
             'tindakan' => $request->tindakan,
             'writer' => Auth::user()->name,
+            'user_id' => Auth::user()->id,
         ]);
 
         return redirect()->route('adminsystem.ppe.index')->with('success', 'Data berhasil diperbarui.');
@@ -136,6 +138,7 @@ class NonCompliantController extends Controller
             'type' => $request->type, // Request type
             'reason' => $request->reason, // Request reason
             'nama_pengirim' => Auth::user()->name, // The name of the user sending the request
+            'user_id' => Auth::user()->id, 
         ]);
         NonCompliant::where('id', $request->sent_non_compliant_id)->update(['status' => 'Pending']);
 
@@ -267,6 +270,7 @@ class NonCompliantController extends Controller
             'deskripsi_ketidaksesuaian' => $request->deskripsi_ketidaksesuaian,
             'tindakan' => $request->tindakan,
             'writer' => Auth::user()->name,
+            'user_id' => Auth::user()->id,
         ]);
 
         return redirect()->route('operator.ppe.index')->with('success', 'Data berhasil diperbarui.');
@@ -294,6 +298,7 @@ class NonCompliantController extends Controller
             'type' => $request->type, // Request type
             'reason' => $request->reason, // Request reason
             'nama_pengirim' => Auth::user()->name, // The name of the user sending the request
+            'user_id' => Auth::user()->id, 
         ]);
         NonCompliant::where('id', $request->sent_non_compliant_id)->update(['status' => 'Pending']);
 

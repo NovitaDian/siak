@@ -15,6 +15,7 @@ class ToolReport extends Model
 
     protected $fillable = [
         'writer',
+        'user_id',
         'nama_alat',
         'alat_id',
         'hse_inspector_id',
@@ -29,7 +30,11 @@ class ToolReport extends Model
         return $this->belongsTo(HseInspector::class, 'hse_inspector_id');
     }
     public function alat()
-{
-    return $this->belongsTo(Alat::class, 'alat_id');
-}
+    {
+        return $this->belongsTo(Alat::class, 'alat_id');
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

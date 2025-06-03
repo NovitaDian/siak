@@ -12,6 +12,7 @@ class Incident extends Model
 
     // Kolom-kolom yang dapat diisi secara massal
     protected $fillable = [
+        'user_id',
         'writer',
         'stamp_date',
         'shift_date',
@@ -142,4 +143,8 @@ class Incident extends Model
         'total_safe_day_wlta' => 'integer',
         'urut_kejadiannya' => 'integer',
     ];
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

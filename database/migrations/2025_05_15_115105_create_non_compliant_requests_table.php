@@ -16,8 +16,9 @@ return new class extends Migration
             $table->text('reason');
             $table->string('status', 255)->default('Pending');
             $table->timestamps();
-
-            // Foreign key ke tabel non_compliants
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+             // Foreign key ke tabel non_compliants
             $table->foreign('sent_non_compliant_id')
                 ->references('id')
                 ->on('non_compliants')

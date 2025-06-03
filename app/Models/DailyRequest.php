@@ -14,12 +14,14 @@ class DailyRequest extends Model
         'nama_pengirim',
         'type',
         'reason',
+        'user_id',
         'status',
+
     ];
-    
+
     public function daily()
     {
-        return $this->belongsTo(SentDaily::class, 'sent_daily_id'); 
+        return $this->belongsTo(SentDaily::class, 'sent_daily_id');
     }
 
     // Relasi dengan model User
@@ -27,8 +29,4 @@ class DailyRequest extends Model
     {
         return $this->belongsTo(User::class);
     }
-
-
-   
-
 }

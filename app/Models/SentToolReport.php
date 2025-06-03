@@ -15,6 +15,7 @@ class SentToolReport extends Model
 
     protected $fillable = [
         'draft_id',
+        'user_id',
         'writer',
         'alat_id',
         'nama_alat',
@@ -30,7 +31,11 @@ class SentToolReport extends Model
         return $this->belongsTo(HseInspector::class, 'hse_inspector_id');
     }
     public function alat()
-{
-    return $this->belongsTo(Alat::class, 'alat_id');
-}
+    {
+        return $this->belongsTo(Alat::class, 'alat_id');
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

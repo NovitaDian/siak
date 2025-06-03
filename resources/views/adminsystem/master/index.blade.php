@@ -1,7 +1,11 @@
 @extends('layouts.user_type.auth')
 
 @section('content')
-
+@if (session('success'))
+<div class="alert alert-success alert-dismissible fade show" role="alert" style="background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 10px; margin: 10px;">
+    {{ session('success') }}
+</div>
+@endif
 <div class="row">
     <div class="col-xl-4 col-sm-6 mb-4">
         <div class="card d-flex flex-row">

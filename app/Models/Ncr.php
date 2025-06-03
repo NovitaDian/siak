@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use PhpOffice\PhpSpreadsheet\Calculation\Statistical\Distributions\F;
 
 class Ncr extends Model
 {
@@ -28,6 +29,7 @@ class Ncr extends Model
         'deskripsi_ketidaksesuaian',
         'estimasi',
         'foto',
+        'user_id',
         'tindak_lanjut'
     ];
 
@@ -36,4 +38,8 @@ class Ncr extends Model
         'tanggal_shift_kerja',
         'tanggal_audit',
     ];
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

@@ -104,6 +104,8 @@ return new class extends Migration
             $table->integer('urut_kejadiannya')->nullable();
             $table->date('tanggal_urut_kejadiannya')->nullable();
             $table->timestamps();
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

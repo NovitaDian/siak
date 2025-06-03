@@ -11,15 +11,16 @@ class NonCompliantRequest extends Model
 
     protected $fillable = [
         'sent_non_compliant_id',
+        'user_id',
         'nama_pengirim',
         'type',
         'reason',
         'status',
     ];
-    
+
     public function non_compliant()
     {
-        return $this->belongsTo(NonCompliant::class, 'sent_non_compliant_id'); 
+        return $this->belongsTo(NonCompliant::class, 'sent_non_compliant_id');
     }
 
     // Relasi dengan model User
@@ -27,8 +28,4 @@ class NonCompliantRequest extends Model
     {
         return $this->belongsTo(User::class);
     }
-
-
-   
-
 }

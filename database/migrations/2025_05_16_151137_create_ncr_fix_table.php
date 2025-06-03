@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('ncr_fix', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('draft_id');
+            $table->unsignedBigInteger('user_id');
             $table->string('writer');
             $table->date('tanggal_shift_kerja');
             $table->text('shift_kerja');

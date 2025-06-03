@@ -14,6 +14,7 @@ class SentPpe extends Model
     // Daftar kolom yang dapat diisi secara massal
     protected $fillable = [
         'writer',
+        'user_id',
         'tanggal_shift_kerja',
         'shift_kerja',
         'status_ppe',
@@ -44,5 +45,9 @@ class SentPpe extends Model
     public function nonCompliants()
     {
         return $this->hasMany(NonCompliant::class, 'id_ppe', 'id');
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

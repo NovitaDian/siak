@@ -12,13 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('incident_requests', function (Blueprint $table) {
-             $table->id();
+            $table->id();
             $table->unsignedBigInteger('sent_incident_id'); // Foreign key, bisa dihubungkan ke tabel lain
             $table->string('nama_pengirim', 100);
             $table->string('type', 255);
             $table->text('reason');
             $table->string('status', 255)->default('Pending');
             $table->timestamps();
+            $table->unsignedBigInteger('user_id');
             $table->foreign('sent_incident_id')->references('id')->on('incidents_fix')->onDelete('cascade');
         });
     }

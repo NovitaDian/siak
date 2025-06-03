@@ -113,6 +113,7 @@ class PpeController extends Controller
             'jumlah_tidak_patuh_apd_lainnya_kontraktor' => $request->jumlah_tidak_patuh_apd_lainnya_kontraktor,
             'keterangan_tidak_patuh' => $request->keterangan_tidak_patuh,
             'writer' => Auth::user()->name,
+            'user_id' => Auth::user()->id,
             'status_ppe' => ($total_tidak_patuh == 0) ? 'Compliant' : 'Non-Compliant',
         ]);
 
@@ -205,6 +206,7 @@ class PpeController extends Controller
             'jumlah_tidak_patuh_apd_lainnya_kontraktor' => $request->jumlah_tidak_patuh_apd_lainnya_kontraktor,
             'keterangan_tidak_patuh' => $request->keterangan_tidak_patuh,
             'writer' => Auth::user()->name,
+            'user_id' => Auth::user()->id,
             'status_ppe' => $status_ppe
         ]);
 
@@ -346,6 +348,7 @@ class PpeController extends Controller
             'status_note' => $request->status_note,
             'status_ppe' => ($total_tidak_patuh == 0) ? 'Compliant' : 'Non-Compliant',
             'writer' => Auth::user()->name,
+            'user_id' => Auth::user()->id,
         ]);
 
         return redirect()->route('adminsystem.sent_ppe.index')->with('success', 'Data PPE telah diperbarui di sent_ppe!');
@@ -372,6 +375,7 @@ class PpeController extends Controller
             'type' => $request->type,
             'reason' => $request->reason,
             'nama_pengirim' => Auth::user()->name,
+            'user_id' => Auth::user()->id,
             'status' => 'Pending',
         ]);
 
@@ -465,7 +469,7 @@ class PpeController extends Controller
 
 
 
- 
+
     public function operator_index(Request $request)
     {
         $user = Auth::user();
@@ -566,6 +570,7 @@ class PpeController extends Controller
             'jumlah_tidak_patuh_apd_lainnya_kontraktor' => $request->jumlah_tidak_patuh_apd_lainnya_kontraktor,
             'keterangan_tidak_patuh' => $request->keterangan_tidak_patuh,
             'writer' => Auth::user()->name,
+            'user_id' => Auth::user()->id,
             'status_ppe' => ($total_tidak_patuh == 0) ? 'Compliant' : 'Non-Compliant',
         ]);
 
@@ -658,6 +663,7 @@ class PpeController extends Controller
             'jumlah_tidak_patuh_apd_lainnya_kontraktor' => $request->jumlah_tidak_patuh_apd_lainnya_kontraktor,
             'keterangan_tidak_patuh' => $request->keterangan_tidak_patuh,
             'writer' => Auth::user()->name,
+            'user_id' => Auth::user()->id,
             'status_ppe' => $status_ppe
         ]);
 
@@ -799,6 +805,7 @@ class PpeController extends Controller
             'status_note' => $request->status_note,
             'status_ppe' => ($total_tidak_patuh == 0) ? 'Compliant' : 'Non-Compliant',
             'writer' => Auth::user()->name,
+            'user_id' => Auth::user()->id,
         ]);
 
         return redirect()->route('operator.sent_ppe.index')->with('success', 'Data PPE telah diperbarui di sent_ppe!');
@@ -825,6 +832,7 @@ class PpeController extends Controller
             'type' => $request->type,
             'reason' => $request->reason,
             'nama_pengirim' => Auth::user()->name,
+            'user_id' => Auth::user()->id,
             'status' => 'Pending',
         ]);
 

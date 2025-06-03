@@ -70,6 +70,7 @@ class DailyController extends Controller
             'hse_inspector_id' => $inspector->id,
             'rincian_laporan' => $request->rincian_laporan,
             'writer' => Auth::user()->name,
+            'user_id' => Auth::user()->id,
         ]);
 
         return redirect()->route('adminsystem.daily.index')->with('success', 'Data berhasil disimpan!');
@@ -117,6 +118,7 @@ class DailyController extends Controller
             'hse_inspector_id' => $inspector->id,
             'rincian_laporan' => $request->rincian_laporan,
             'writer' => Auth::user()->name,
+            'user_id' => Auth::user()->id,
         ]);
 
         return redirect()->route('adminsystem.daily.index')->with('success', 'Data berhasil diupdate!');
@@ -179,11 +181,20 @@ class DailyController extends Controller
             'hse_inspector_id' => $inspector->id,
             'rincian_laporan' => $request->rincian_laporan,
             'writer' => Auth::user()->name,
+            'user_id' => Auth::user()->id,
             'status' => 'Nothing',
 
         ]);
 
         return redirect()->route('adminsystem.daily.index')->with('success', 'Data berhasil diupdate!');
+    }
+    public function draft_destroy($id)
+    {
+        // Ambil data PPE berdasarkan ID
+        $daily = Daily::findOrFail($id);
+        $daily->delete();
+        // Redirect dengan notifikasi
+        return redirect()->route('adminsystem.daily.index')->with('notification', 'NCR berhasil dihapus!');
     }
     public function sent_destroy($id)
     {
@@ -191,7 +202,7 @@ class DailyController extends Controller
         $daily_fixs = SentDaily::findOrFail($id);
         $daily_fixs->delete();
         // Redirect dengan notifikasi
-        return redirect()->route('adminsystem.daily.index')->with('notification', 'NCR berhasil dikirim!');
+        return redirect()->route('adminsystem.daily.index')->with('notification', 'NCR berhasil dihapus!');
     }
 
     public function storeRequest(Request $request)
@@ -207,6 +218,7 @@ class DailyController extends Controller
             'type' => $request->type,
             'reason' => $request->reason,
             'nama_pengirim' => Auth::user()->name,
+            'user_id' => Auth::user()->id,
             'status' => 'Pending',
         ]);
 
@@ -346,6 +358,7 @@ class DailyController extends Controller
             'hse_inspector_id' => $inspector->id,
             'rincian_laporan' => $request->rincian_laporan,
             'writer' => Auth::user()->name,
+            'user_id' => Auth::user()->id,
         ]);
 
         return redirect()->route('operator.daily.index')->with('success', 'Data berhasil disimpan!');
@@ -393,6 +406,7 @@ class DailyController extends Controller
             'hse_inspector_id' => $inspector->id,
             'rincian_laporan' => $request->rincian_laporan,
             'writer' => Auth::user()->name,
+            'user_id' => Auth::user()->id,
         ]);
 
         return redirect()->route('operator.daily.index')->with('success', 'Data berhasil diupdate!');
@@ -455,6 +469,7 @@ class DailyController extends Controller
             'hse_inspector_id' => $inspector->id,
             'rincian_laporan' => $request->rincian_laporan,
             'writer' => Auth::user()->name,
+            'user_id' => Auth::user()->id,
             'status' => 'Nothing',
 
         ]);
@@ -483,6 +498,7 @@ class DailyController extends Controller
             'type' => $request->type,
             'reason' => $request->reason,
             'nama_pengirim' => Auth::user()->name,
+            'user_id' => Auth::user()->id,
             'status' => 'Pending',
         ]);
 

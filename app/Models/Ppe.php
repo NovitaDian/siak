@@ -14,6 +14,7 @@ class Ppe extends Model
     // Daftar kolom yang dapat diisi secara massal
     protected $fillable = [
         'writer',
+        'user_id',
         'status_ppe',
         'tanggal_shift_kerja',
         'shift_kerja',
@@ -38,4 +39,8 @@ class Ppe extends Model
         'jumlah_tidak_patuh_apd_lainnya_kontraktor',
         'keterangan_tidak_patuh'
     ];
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

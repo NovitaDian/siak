@@ -97,11 +97,14 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('/master', [IncidentController::class, 'master'])->name('master');
 			Route::post('/', [IncidentController::class, 'store'])->name('store');
 			Route::get('/{id}/edit', [IncidentController::class, 'edit'])->name('edit');
+			Route::get('/sent/{id}', [IncidentController::class, 'sent_show'])->name('sent_show');
 			Route::get('/{id}/sent_edit', [IncidentController::class, 'sent_edit'])->name('sent_edit');
+			Route::put('/sent{id}', [IncidentController::class, 'sent_update'])->name('sent_update');
 			Route::put('/{id}', [IncidentController::class, 'update'])->name('update');
 			Route::get('/{id}', [IncidentController::class, 'show'])->name('show');
 			Route::delete('/{id}', [IncidentController::class, 'destroy'])->name('destroy');
 			Route::delete('/sent_destroy/{id}', [IncidentController::class, 'sent_destroy'])->name('sent_destroy');
+			Route::delete('/draft_destroy/{id}', [IncidentController::class, 'draft_destroy'])->name('draft_destroy');
 			Route::get('/search', [IncidentController::class, 'search'])->name('search');
 			Route::post('/incident-request', [IncidentController::class, 'storeRequest'])->name('storeRequest');
 			Route::post('/request', [IncidentController::class, 'submitRequest'])->name('request');
@@ -137,6 +140,7 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('/{id}/edit', [NonCompliantController::class, 'edit'])->name('edit');
 			Route::put('/{id}', [NonCompliantController::class, 'update'])->name('update');
 			Route::get('/{id}', [NonCompliantController::class, 'show'])->name('show');
+			Route::get('/{id}', [NonCompliantController::class, 'sent_show'])->name('sent_show');
 			Route::delete('/{id}', [NonCompliantController::class, 'destroy'])->name('destroy');
 			Route::get('/search', [NonCompliantController::class, 'search'])->name('search');
 			Route::post('/non_compliant-request', [NonCompliantController::class, 'storeRequest'])->name('storeRequest');
@@ -164,6 +168,7 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::put('/update_closed/{id}', [NcrController::class, 'updateClose'])->name('update_closed');
 			Route::get('/show{id}', [NcrController::class, 'show'])->name('show');
 			Route::delete('/{id}', [NcrController::class, 'destroy'])->name('destroy');
+			Route::delete('/draft_destroy/{id}', [NcrController::class, 'draft_destroy'])->name('draft_destroy');
 			Route::delete('/sent_destroy/{id}', [NcrController::class, 'sent_destroy'])->name('sent_destroy');
 			Route::get('/search', [NcrController::class, 'search'])->name('search');
 			Route::post('/ncr-request', [NcrController::class, 'storeRequest'])->name('storeRequest');
@@ -217,6 +222,7 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('/{id}/edit', [DailyController::class, 'edit'])->name('edit');
 			Route::put('/{id}', [DailyController::class, 'update'])->name('update');
 			Route::get('/{id}', [DailyController::class, 'show'])->name('show');
+			Route::delete('/draft/{id}', [DailyController::class, 'draft_destroy'])->name('draft_destroy');
 			Route::delete('/{id}', [DailyController::class, 'destroy'])->name('destroy');
 			Route::get('/search', [DailyController::class, 'search'])->name('search');
 			Route::get('/sent_edit/{id}', [DailyController::class, 'sent_edit'])->name('sent_edit');
@@ -381,6 +387,7 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::post('/approve/{id}', [ToolController::class, 'approve'])->name('approve');
 			Route::post('/reject/{id}', [ToolController::class, 'reject'])->name('reject');
 			Route::delete('/{id}', [ToolController::class, 'destroy'])->name('destroy');
+			Route::delete('/draft/{id}', [ToolController::class, 'draft_destroy'])->name('draft_destroy');
 			Route::get('/search', [ToolController::class, 'search'])->name('search');
 			Route::get('/create', [ToolController::class, 'create'])->name('create');
 			Route::get('/edit/{id}', [ToolController::class, 'edit'])->name('edit');

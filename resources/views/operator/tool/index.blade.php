@@ -74,7 +74,7 @@
                     <h6 class="mb-0">Draft tool</h6>
                     <form action="{{ route('operator.tool.create') }}" method="GET" style="display:inline;">
                         @csrf
-                        <button type="submit" class="btn btn-primary active mb-0 text-white" role="button" aria-pressed="true">
+                        <button type="submit" class="btn btn-primary btn-sm text-white">
                             Tambah
                         </button>
                     </form>

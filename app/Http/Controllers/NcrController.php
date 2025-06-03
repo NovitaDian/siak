@@ -115,6 +115,7 @@ class NcrController extends Controller
         ]);
 
         $data = $request->all();
+        $data['user_id'] = Auth::user()->id;
         $data['writer'] = Auth::user()->name;
 
         if ($request->hasFile('foto')) {
@@ -226,6 +227,7 @@ class NcrController extends Controller
         // Pindahkan data ke tabel ncr_fix
         SentNcr::create([
             'draft_id' => $ncr->id,
+            'user_id' => $ncr->user_id,
             'writer' => $ncr->writer,
             'tanggal_shift_kerja' => $ncr->tanggal_shift_kerja,
             'shift_kerja' => $ncr->shift_kerja,
@@ -253,6 +255,13 @@ class NcrController extends Controller
         return redirect()->route('adminsystem.ncr.index')->with('success', 'Data berhasil dikirim.');
     }
 
+    public function draft_destroy(Request $request, $id)
+    {
+        // Ambil data PPE berdasarkan ID
+        $ncr = Ncr::findOrFail($id);
+        $ncr->delete();
+        return redirect()->route('adminsystem.ncr.index')->with('notification', 'NCR berhasil dikirim!');
+    }
     public function sent_destroy(Request $request, $id)
     {
         // Ambil data PPE berdasarkan ID
@@ -278,6 +287,7 @@ class NcrController extends Controller
             'type' => $request->type,
             'reason' => $request->reason,
             'nama_pengirim' => Auth::user()->name,
+            'user_id' => Auth::user()->id,
             'status' => 'Pending',
         ]);
 
@@ -750,6 +760,7 @@ class NcrController extends Controller
             'type' => $request->type,
             'reason' => $request->reason,
             'nama_pengirim' => Auth::user()->name,
+            'user_id' => Auth::user()->id,
             'status' => 'Pending',
         ]);
 

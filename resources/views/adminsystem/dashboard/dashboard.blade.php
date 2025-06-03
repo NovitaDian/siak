@@ -16,8 +16,9 @@
             </div>
           </div>
           <div class="col-4 text-end">
-            <a href="{{ route('adminsystem.dashboard-incident') }}" class="btn btn-primary icon icon-shape shadow text-center border-radius-md">
-              <i class="fas fa-hard-hat text-lg opacity-10" aria-hidden="true"></i>
+            <a href="{{ route('adminsystem.dashboard-incident') }}" class="btn btn-primary icon icon-shape shadow text-center border-radius-md d-flex align-items-center justify-content-center"
+              style="height: 50px; width: 50px; border-radius: 8px;">
+              <i class="fas fa-hard-hat text-lg opacity-10" style="margin-bottom: 20px;" aria-hidden="true"></i>
             </a>
           </div>
         </div>
@@ -36,8 +37,9 @@
             </div>
           </div>
           <div class="col-4 text-end">
-            <a href="{{ route('adminsystem.dashboard-spi') }}" class="btn btn-primary icon icon-shape shadow text-center border-radius-md">
-              <i class="fas fa-chart-line text-lg opacity-10" aria-hidden="true"></i>
+            <a href="{{ route('adminsystem.dashboard-spi') }}" class="btn btn-primary icon icon-shape shadow text-center border-radius-md d-flex align-items-center justify-content-center"
+              style="height: 50px; width: 50px; border-radius: 8px;">
+              <i class="fas fa-chart-line text-lg opacity-10" style="margin-bottom: 20px;" aria-hidden="true"></i>
             </a>
           </div>
         </div>
@@ -56,8 +58,9 @@
             </div>
           </div>
           <div class="col-4 text-end">
-            <a href="{{ route('adminsystem.dashboard-ncr') }}" class="btn btn-primary icon icon-shape shadow text-center border-radius-md">
-              <i class="fas fa-exclamation-triangle text-lg opacity-10" aria-hidden="true"></i>
+            <a href="{{ route('adminsystem.dashboard-ncr') }}" class="btn btn-primary icon icon-shape shadow text-center border-radius-md d-flex align-items-center justify-content-center"
+              style="height: 50px; width: 50px; border-radius: 8px;">
+              <i class="fas fa-exclamation-triangle text-lg opacity-10" style="margin-bottom: 20px;" aria-hidden="true"></i>
             </a>
           </div>
         </div>
@@ -76,8 +79,9 @@
             </div>
           </div>
           <div class="col-4 text-end">
-            <a href="{{ route('adminsystem.dashboard-budget') }}" class="btn btn-primary icon icon-shape shadow text-center border-radius-md">
-              <i class="fas fa-coins text-lg opacity-10" aria-hidden="true"></i>
+            <a href="{{ route('adminsystem.dashboard-budget') }}" class="btn btn-primary icon icon-shape shadow text-center border-radius-md d-flex align-items-center justify-content-center"
+              style="height: 50px; width: 50px; border-radius: 8px; ">
+              <i class="fas fa-coins text-lg opacity-10" style="margin-bottom: 20px;" style="margin-bottom: 20px;" aria-hidden="true"></i>
             </a>
           </div>
         </div>
@@ -380,7 +384,7 @@
         labels: labels,
         datasets: [{
             label: "Jumlah Tidak Patuh Karyawan",
-           tension: 0.4,
+            tension: 0.4,
             borderWidth: 3,
             pointRadius: 4,
             pointBackgroundColor: "#4CAF50",

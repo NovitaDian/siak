@@ -46,6 +46,21 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
 
     ];
-     
-    
+
+    public function Ncr()
+    {
+        return $this->hasMany(Ncr::class, 'user_id');
+    }
+    public function Ppe()
+    {
+        return $this->hasMany(Ppe::class, 'user_id');
+    }
+    public function ToolReport()
+    {
+        return $this->hasMany(ToolReport::class, 'user_id');
+    }
+    public function Daily()
+    {
+        return $this->hasMany(Daily::class, 'user_id');
+    }
 }

@@ -20,7 +20,8 @@ return new class extends Migration
             $table->string('nama_hse_inspector');
             $table->text('rincian_laporan');
             $table->timestamps();
-
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('hse_inspector_id')->references('id')->on('hse_inspector')->onDelete('cascade');
         });
     }

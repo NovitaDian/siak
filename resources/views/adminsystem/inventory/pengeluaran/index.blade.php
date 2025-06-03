@@ -1,7 +1,11 @@
 @extends('layouts.user_type.auth')
 
 @section('content')
-
+@if (session('success'))
+<div class="alert alert-success alert-dismissible fade show" role="alert" style="background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 10px; margin: 10px;">
+    {{ session('success') }}
+</div>
+@endif
 <div class="row">
     <div class="col-12">
         <div class="card mb-4">
@@ -16,62 +20,60 @@
             </div>
             <br>
             <div class="col-12">
-                      <div class="card-body pt-4 p-3">
-                <div class="table-responsive p-0">
-                            <table class="table align-items-center mb-0" id="dataTable">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Kode Barang</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Quantity</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Unit</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Keterangan</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Opsi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($pengeluarans as $pengeluaran)
-                                    <tr>
-                                        <td class="text-center">{{ $pengeluaran->barang_id }}</td>
-                                        <td class="text-center">{{ \Carbon\Carbon::parse($pengeluaran->tanggal)->format('d/m/Y') }}</td>
-                                        <td class="text-center">{{ $pengeluaran->quantity }}</td>
-                                        <td class="text-center">{{ $pengeluaran->unit }}</td>
-                                        <td class="text-center">{{ $pengeluaran->keterangan }}</td>
-                                        <td class="text-center">
-                                            <!-- Tombol Edit -->
-                                            <a href="{{ route('adminsystem.pengeluaran.edit', $pengeluaran->id) }}"
-                                                class="btn btn-xs btn-warning">
-                                                <i class="fas fa-edit me-1" style="font-size:12px;"></i> Edit
-                                            </a>
+                <div class="card-body pt-4 p-3">
+                    <div class="table-responsive p-0">
+                        <table class="table align-items-center mb-0" id="dataTable">
+                            <thead>
+                                <tr>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Kode Barang</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Quantity</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Unit</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Keterangan</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Opsi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($pengeluarans as $pengeluaran)
+                                <tr>
+                                    <td class="text-center">{{ $pengeluaran->barang_id }}</td>
+                                    <td class="text-center">{{ \Carbon\Carbon::parse($pengeluaran->tanggal)->format('d/m/Y') }}</td>
+                                    <td class="text-center">{{ $pengeluaran->quantity }}</td>
+                                    <td class="text-center">{{ $pengeluaran->unit }}</td>
+                                    <td class="text-center">{{ $pengeluaran->keterangan }}</td>
+                                    <td class="text-center">
+                                        <a href="{{ route('adminsystem.pengeluaran.edit', $pengeluaran->id) }}"
+                                            class="btn btn-warning btn-xs mb-2"> <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit
 
-                                            <!-- Tombol Hapus -->
-                                            <form action="{{ route('adminsystem.pengeluaran.destroy', $pengeluaran->id) }}" method="POST" style="display:inline;">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit"
-                                                    class="btn btn-danger btn-xs"
-                                                    onclick="return confirm('Anda yakin akan menghapus dokumen?')"
-                                                    style="display:inline-flex; align-items:center; padding:4px 8px; background:linear-gradient(to right, #FF4C4C, #FF0000); color:white; border-radius:5px; font-weight:bold; font-size:10px;">
-                                                    <i class="fas fa-trash-alt me-1" style="font-size:12px;"></i> Hapus
-                                                </button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                                        </a>
 
-                            @if($pengeluarans->isEmpty())
-                            <div class="text-center py-4">
-                                <p class="text-secondary">Tidak ada data pengeluaran.</p>
-                            </div>
-                            @endif
+                                        <!-- Tombol Send (Delete Action) -->
+                                        <form action="{{ route('adminsystem.pengeluaran.destroy', $pengeluaran->id) }}" method="POST" style="display:inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                onclick="return confirm('Anda yakin akan menghapus dokumen?')"
+                                                title="Kirim"
+                                                class="btn btn-danger btn-xs mb-2"> <i class="fas fa-trash me-1" style="font-size: 12px;"></i> Hapus
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+
+                        @if($pengeluarans->isEmpty())
+                        <div class="text-center py-4">
+                            <p class="text-secondary">Tidak ada data pengeluaran.</p>
                         </div>
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </div>
 
 <!-- DataTables & dependencies -->

@@ -39,6 +39,8 @@ return new class extends Migration
             $table->string('status_note', 100)->nullable();
             $table->string('status_ppe', 100)->nullable();
             $table->string('status', 30)->default('Nothing');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
             $table->foreign('hse_inspector_id')->references('id')->on('hse_inspector')->onDelete('cascade');
         });

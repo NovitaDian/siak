@@ -16,6 +16,7 @@ class SentNcr extends Model
     protected $fillable = [
         'draft_id',
         'writer',
+        'user_id',
         'tanggal_shift_kerja',
         'shift_kerja',
         'nama_hs_officer_1',
@@ -45,5 +46,9 @@ class SentNcr extends Model
     public function requests()
     {
         return $this->hasMany(NcrRequest::class);
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

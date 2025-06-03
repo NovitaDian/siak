@@ -77,6 +77,7 @@ class ToolController extends Controller
             'status_pemeriksaan' => $request->status_pemeriksaan,
             'foto' => $request->foto,
             'writer' => Auth::user()->name,
+            'user_id' => Auth::user()->id,
 
         ]);
 
@@ -116,6 +117,7 @@ class ToolController extends Controller
             'tanggal_pemeriksaan' => $request->tanggal_pemeriksaan,
             'status_pemeriksaan' => $request->status_pemeriksaan,
             'writer' => Auth::user()->name,
+            'user_id' => Auth::user()->id,
         ]);
 
         return redirect()->route('adminsystem.tool.index')->with('success', 'Data pemeriksaan berhasil diperbarui.');
@@ -143,6 +145,7 @@ class ToolController extends Controller
             'status_pemeriksaan' => $request->status_pemeriksaan,
             'status' => 'Nothing',
             'writer' => Auth::user()->name,
+            'user_id' => Auth::user()->id,
         ];
 
         if ($request->hasFile('foto')) {
@@ -219,6 +222,13 @@ class ToolController extends Controller
 
         return redirect()->route('adminsystem.tool.index')->with('success', 'Data berhasil dikirim.');
     }
+    public function draft_destroy(Request $request, $id)
+    {
+        // Ambil data PPE berdasarkan ID
+        $tool = ToolReport::findOrFail($id);
+        $tool->delete();
+        return redirect()->route('adminsystem.tool.index')->with('notification', 'NCR berhasil dikirim!');
+    }
     public function sent_destroy(Request $request, $id)
     {
         // Ambil data PPE berdasarkan ID
@@ -243,6 +253,7 @@ class ToolController extends Controller
             'type' => $request->type,
             'reason' => $request->reason,
             'nama_pengirim' => Auth::user()->name,
+            'user_id' => Auth::user()->id,
             'status' => 'Pending',
         ]);
 
@@ -389,7 +400,7 @@ class ToolController extends Controller
             'status_pemeriksaan' => $request->status_pemeriksaan,
             'foto' => $request->foto,
             'writer' => Auth::user()->name,
-
+            'user_id' => Auth::user()->id,
         ]);
 
         return redirect()->route('operator.tool.index')->with('success', 'Data pemeriksaan berhasil disimpan.');
@@ -428,6 +439,7 @@ class ToolController extends Controller
             'tanggal_pemeriksaan' => $request->tanggal_pemeriksaan,
             'status_pemeriksaan' => $request->status_pemeriksaan,
             'writer' => Auth::user()->name,
+            'user_id' => Auth::user()->id,
         ]);
 
         return redirect()->route('operator.tool.index')->with('success', 'Data pemeriksaan berhasil diperbarui.');
@@ -455,6 +467,7 @@ class ToolController extends Controller
             'status_pemeriksaan' => $request->status_pemeriksaan,
             'status' => 'Nothing',
             'writer' => Auth::user()->name,
+            'user_id' => Auth::user()->id,
         ];
 
         if ($request->hasFile('foto')) {
@@ -555,6 +568,7 @@ class ToolController extends Controller
             'type' => $request->type,
             'reason' => $request->reason,
             'nama_pengirim' => Auth::user()->name,
+            'user_id' => Auth::user()->id,
             'status' => 'Pending',
         ]);
 

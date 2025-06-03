@@ -106,6 +106,7 @@ return new class extends Migration
             $table->date('tanggal_urut_kejadiannya')->nullable();
             $table->string('status_request', 30)->default('Nothing');
             $table->timestamps();
+            $table->unsignedBigInteger('user_id');
         });
     }
 

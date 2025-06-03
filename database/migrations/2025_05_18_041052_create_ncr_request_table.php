@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('reason');
             $table->string('status', 255)->default('Pending');
             $table->timestamps();
+            $table->unsignedBigInteger('user_id');
             $table->foreign('sent_ncr_id')->references('id')->on('ncr_fix')->onDelete('cascade');
         });
     }

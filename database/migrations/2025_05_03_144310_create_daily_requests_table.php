@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('daily_requests', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('sent_daily_id'); 
+            $table->unsignedBigInteger('user_id'); 
             $table->string('nama_pengirim', 100);
             $table->string('type', 255);
             $table->text('reason');

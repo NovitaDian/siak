@@ -17,6 +17,11 @@ class Daily extends Model
         'hse_inspector_id',
         'nama_hse_inspector',
         'rincian_laporan',
+        'user_id',
         'writer'
     ];
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

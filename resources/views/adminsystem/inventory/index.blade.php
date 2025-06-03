@@ -1,7 +1,11 @@
 @extends('layouts.user_type.auth')
 
 @section('content')
-
+@if (session('success'))
+<div class="alert alert-success alert-dismissible fade show" role="alert" style="background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 10px; margin: 10px;">
+    {{ session('success') }}
+</div>
+@endif
 <div class="row">
     <!-- First row with 2 columns for Penerimaan Barang and PR -->
     <div class="col-xl-6 col-sm-12 mb-xl-0 mb-4">
@@ -100,16 +104,15 @@
 
     <div class="col-12">
         <div class="card h-100 p-3">
-        <div class="card-header pb-0 d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0">Barang</h6>
-                    <form action="{{ route('adminsystem.barang.create') }}" method="GET" style="display:inline;">
-                        @csrf
-                        <button type="submit" class="btn btn-sm btn-primary active mb-0 text-white" role="button" aria-pressed="true">
-                            Tambah
-                        </button>
-                    </form>
-                </div>
-          
+            <div class="card-header pb-0 d-flex justify-content-between align-items-center">
+                <h6 class="mb-0">Barang</h6>
+                <form action="{{ route('adminsystem.barang.create') }}" method="GET" style="display:inline;">
+                    @csrf
+                    <button type="submit" class="btn btn-primary btn-sm text-white"> Tambah
+                    </button>
+                </form>
+            </div>
+
 
             <div class="card-body pt-4 p-3">
                 <div class="table-responsive p-0">
@@ -157,7 +160,7 @@
                         </tbody>
                     </table>
 
-                   
+
                 </div>
             </div>
         </div>

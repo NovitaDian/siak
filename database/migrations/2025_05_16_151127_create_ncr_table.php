@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('ncr', function (Blueprint $table) {
-            $table->id(); 
+            $table->id();
             $table->string('writer', 255);
             $table->date('tanggal_shift_kerja');
             $table->text('shift_kerja');
@@ -31,9 +31,10 @@ return new class extends Migration
             $table->date('estimasi')->nullable();
             $table->text('tindak_lanjut')->nullable();
             $table->binary('foto')->nullable();
-            $table->timestamps(); 
+            $table->timestamps();
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
-        
     }
 
     /**
