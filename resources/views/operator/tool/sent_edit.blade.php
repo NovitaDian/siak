@@ -1,4 +1,4 @@
-@extends('layouts.user_type.operator')
+@extends('layouts.user_type.auth')
 
 @section('content')
 
@@ -12,7 +12,7 @@
                 <h6 class="mb-0">{{ __('UBAH DATA PEMERIKSAAN ALAT') }}</h6>
             </div>
             <div class="card-body pt-4 p-3">
-                <form action="{{ route('operator.tool.sent_update', $tool_fixs->id) }}" enctype="multipart/form-data" method="POST">
+                <form action="{{ route('adminsystem.tool.sent_update', $tool_fixs->id) }}" enctype="multipart/form-data" method="POST">
                     @csrf
                     @method('PUT')
 

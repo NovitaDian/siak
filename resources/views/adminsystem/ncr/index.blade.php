@@ -7,11 +7,6 @@
 </div>
 @endif
 <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg">
-    <div class="container-fluid py-4">
-
-    </div>
-
-    <br>
     <div class="row">
         <div class="col-12">
             <div class="card mb-4">
@@ -201,7 +196,7 @@
                         </div>
 
                         <div class="col-12 col-md-3 d-flex align-items-end">
-                            <button type="submit" class="btn btn-sm btn-send w-50">Filter</button>
+                            <button type="submit" class="btn btn-sm btn-warning w-50">Filter</button>
                         </div>
 
                         <div class="col-12 col-md-3 d-flex justify-content-md-end justify-content-start align-items-end">
@@ -280,7 +275,7 @@
 
                                             {{-- STATUS: Nothing --}}
                                             @if ($ncr_fix->status === 'Nothing')
-                                            <button class="btn btn-secondary btn-xs" onclick="showRequestModal('{{ $ncr_fix->id }}')">
+                                            <button class="btn btn-info btn-xs" onclick="showRequestModal('{{ $ncr_fix->id }}')">
                                                 <i class="fas fa-paper-plane me-1" style="font-size: 12px;"></i> Request
                                             </button>
 
@@ -319,24 +314,24 @@
                                             </span>
                                             @endif
                                             @endif
-                                           <td> @if ($ncr_fix->status_ncr === 'Closed')
-                                            <form action="{{ route('adminsystem.ncr.show', ['id' => $ncr_fix->id]) }}" method="GET" class="m-0">
-                                                <button type="submit" class="btn btn-info btn-xs d-flex align-items-center">
-                                                    <i class="fas fa-eye me-1" style="font-size: 12px;"></i> Show
-                                                </button>
-                                            </form>
-                                            @endif
-</td>
-                                        </div>
+                                    <td> @if ($ncr_fix->status_ncr === 'Closed')
+                                        <form action="{{ route('adminsystem.ncr.show', ['id' => $ncr_fix->id]) }}" method="GET" class="m-0">
+                                            <button type="submit" class="btn btn-light btn-xs d-flex align-items-center">
+                                                <i class="fas fa-eye me-1" style="font-size: 12px;"></i> Show
+                                            </button>
+                                        </form>
+                                        @endif
                                     </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
                     </div>
+                    </td>
+                    </tr>
+                    @endforeach
+                    </tbody>
+                    </table>
                 </div>
             </div>
         </div>
+    </div>
     </div>
 
     <!-- Modal Request -->

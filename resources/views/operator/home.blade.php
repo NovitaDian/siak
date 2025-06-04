@@ -88,21 +88,49 @@
                                     @endforeach
                                     @endif
 
-                                
+                                <form action="{{ route('operator.destroy', $note->id) }}" method="POST" style="display: inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus catatan ini?')">Hapus</button>
+                                </form>
                             </div>
                         </div>
                         @endforeach
                     </div>
 
-                   
-                   
+                    <div class="mt-3 d-flex justify-content-center">
+                        <button class="btn btn-success btn-sm" onclick="addNewTimelineItem()">Tambah Kolom Baru</button>
+                    </div>
+
+                    <form action="{{ route('operator.store') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="timeline-item" id="new-timeline-item" style="display: none;">
+                            <div class="timeline-content">
+                                <div class="form-group">
+                                    <label for="note">Catatan:</label>
+                                    <textarea class="form-control" name="note" id="note" rows="3" placeholder="Tulis catatan Anda di sini..."></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="attachment">Attachment:</label>
+                                    <input type="file" class="form-control" name="attachment" id="attachment">
+                                </div>
+                                <div class="mt-2 d-flex justify-content-end">
+                                    <button type="submit" class="btn btn-primary btn-sm">Simpan</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
 
                 </div>
             </div>
         </div>
     </div>
 
-    
+    <script>
+        function addNewTimelineItem() {
+            document.getElementById('new-timeline-item').style.display = 'block';
+        }
+    </script>
     <style>
         .timeline-item {
             border-bottom: 1px solid #ddd;

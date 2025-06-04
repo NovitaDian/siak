@@ -53,7 +53,7 @@
             <div class="col-12">
                 <div class="card mb-4 shadow-sm">
                     <div class="card-header pb-0">
-                        <h6 class="fw-bold">Sent NCR</h6>
+                        <h6 class="fw-bold">Data NCR</h6>
                     </div>
                     <div class="card-body px-0 pt-0 pb-2">
                         <div class="table-responsive p-3">
@@ -67,7 +67,6 @@
                                         <th class="text-center text-uppercase text-secondary text-xxs fw-bold opacity-7">Tanggal Audit</th>
                                         <th class="text-center text-uppercase text-secondary text-xxs fw-bold opacity-7">Nama Auditee</th>
                                         <th class="text-center text-uppercase text-secondary text-xxs fw-bold opacity-7">Durasi NCR</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs fw-bold opacity-7">Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -84,7 +83,6 @@
                                         <td class="text-center text-xs">{{ \Carbon\Carbon::parse($ncr_fix->tanggal_audit)->format('d/m/Y') }}</td>
                                         <td class="text-center text-xs">{{ $ncr_fix->nama_auditee }}</td>
                                         <td class="text-center text-xs">{{ $ncr_fix->durasi_ncr }}</td>
-                                        <td class="text-center text-xs">{{ $ncr_fix->status }}</td>
                                     </tr>
                                     @endforeach
                                 </tbody>

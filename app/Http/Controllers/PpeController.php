@@ -470,32 +470,25 @@ class PpeController extends Controller
 
 
 
+     // Menampilkan semua data observasi
     public function operator_index(Request $request)
     {
         $user = Auth::user();
-
-        // Ambil data draft NCR oleh user login
         $ppes = Ppe::where('writer', $user->name)->get();
 
-        // Ambil semua request (Edit/Delete)
-        $allRequests = PpeRequest::all();
-
-        // Filter tanggal jika ada
         $start = $request->start_date;
         $end = $request->end_date;
 
+        // Jika filter tanggal diisi, gunakan whereBetween
         if ($start && $end) {
-            $ppe_fixs = SentPpe::whereBetween('tanggal_shift_kerja', [$start, $end])
-                ->where('writer', $user->name)
-                ->get();
+            $ppe_fixs = SentPpe::whereBetween('tanggal_shift_kerja', [$start, $end])->get();
         } else {
-            $ppe_fixs = SentPpe::where('writer', $user->name)->get();
+            $ppe_fixs = SentPpe:where('writer', $user->name)->get();
         }
 
-        return view('operator.ppe.index', compact('ppes', 'ppe_fixs', 'allRequests'));
+        $requests = PpeRequest::all();
+        return view('operator.ppe.index', compact('ppes', 'ppe_fixs', 'requests'));
     }
-
-
     // Menampilkan form untuk membuat data baru
     public function operator_create()
     {

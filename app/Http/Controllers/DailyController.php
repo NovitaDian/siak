@@ -135,6 +135,7 @@ class DailyController extends Controller
         SentDaily::create([
             'draft_id' => $daily->id,
             'writer' => $daily->writer,
+            'user_id' => $daily->user_id,
             'alat_id' => $daily->alat_id,
             'tanggal_shift_kerja' => $daily->tanggal_shift_kerja,
             'shift_kerja' => $daily->shift_kerja,
@@ -361,6 +362,7 @@ class DailyController extends Controller
             'user_id' => Auth::user()->id,
         ]);
 
+
         return redirect()->route('operator.daily.index')->with('success', 'Data berhasil disimpan!');
     }
 
@@ -384,7 +386,7 @@ class DailyController extends Controller
     // Mengupdate data ke database
     public function operator_update(Request $request, $id)
     {
-        // Validasi input
+
         $request->validate([
             'tanggal_shift_kerja' => 'required|date',
             'shift_kerja' => 'required|string|max:50',
@@ -393,13 +395,13 @@ class DailyController extends Controller
         ]);
 
         // Ambil data Daily yang akan diupdate
-        $daily = Daily::findOrFail($id);
+        $daily_fix = SentDaily::findOrFail($id);
 
         // Ambil data HSE Inspector
         $inspector = HseInspector::findOrFail($request->hse_inspector_id);
 
         // Update data
-        $daily->update([
+        $daily_fix->update([
             'tanggal_shift_kerja' => $request->tanggal_shift_kerja,
             'shift_kerja' => $request->shift_kerja,
             'nama_hse_inspector' => $inspector->name,
@@ -407,6 +409,8 @@ class DailyController extends Controller
             'rincian_laporan' => $request->rincian_laporan,
             'writer' => Auth::user()->name,
             'user_id' => Auth::user()->id,
+            'status' => 'Nothing',
+
         ]);
 
         return redirect()->route('operator.daily.index')->with('success', 'Data berhasil diupdate!');
@@ -424,6 +428,7 @@ class DailyController extends Controller
             'draft_id' => $daily->id,
             'writer' => $daily->writer,
             'alat_id' => $daily->alat_id,
+            'user_id' => $daily->user_id,
             'tanggal_shift_kerja' => $daily->tanggal_shift_kerja,
             'shift_kerja' => $daily->shift_kerja,
             'nama_hse_inspector' => $daily->nama_hse_inspector,
@@ -438,6 +443,7 @@ class DailyController extends Controller
         return redirect()->route('operator.daily.index')->with('success', 'Data berhasil dikirim.');
     }
 
+ 
     public function operator_sent_edit($id)
     {
         // Retrieve the NCR record by ID
@@ -476,13 +482,21 @@ class DailyController extends Controller
 
         return redirect()->route('operator.daily.index')->with('success', 'Data berhasil diupdate!');
     }
+    public function operator_draft_destroy($id)
+    {
+        // Ambil data PPE berdasarkan ID
+        $daily = Daily::findOrFail($id);
+        $daily->delete();
+        // Redirect dengan notifikasi
+        return redirect()->route('operator.daily.index')->with('notification', 'NCR berhasil dihapus!');
+    }
     public function operator_sent_destroy($id)
     {
         // Ambil data PPE berdasarkan ID
         $daily_fixs = SentDaily::findOrFail($id);
         $daily_fixs->delete();
         // Redirect dengan notifikasi
-        return redirect()->route('operator.daily.index')->with('notification', 'NCR berhasil dikirim!');
+        return redirect()->route('operator.daily.index')->with('notification', 'NCR berhasil dihapus!');
     }
 
     public function operator_storeRequest(Request $request)

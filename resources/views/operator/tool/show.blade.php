@@ -1,7 +1,11 @@
-@extends('layouts.user_type.operator')
+@extends('layouts.user_type.auth')
 
 @section('content')
-
+@if (session('success'))
+<div class="alert alert-success alert-dismissible fade show" role="alert" style="background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 10px; margin: 10px;">
+    {{ session('success') }}
+</div>
+@endif
 <div class="container-fluid">
     <h2 class="text-black font-weight-bolder text-center mb-4">DETAIL LAPORAN PENGECEKAN ALAT</h2>
 
@@ -53,7 +57,7 @@
                 </div>
             </div>
             <div class="d-flex justify-content-end mt-3">
-                <a href="{{ route('operator.tool.index') ?? '-'}}" class="btn btn-secondary">Kembali</a>
+                <a href="{{ route('adminsystem.tool.index') ?? '-'}}" class="btn btn-secondary">Kembali</a>
             </div>
         </div>
     </div>

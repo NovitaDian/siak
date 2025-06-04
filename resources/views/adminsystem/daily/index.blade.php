@@ -7,7 +7,6 @@
 </div>
 @endif
 <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg">
-    <div class="container-fluid py-4">
         <div class="row">
             <div class="col-12">
                 <div class="card mb-4">
@@ -203,29 +202,29 @@
                                     <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request('end_date') }}">
                                 </div>
 
-                               <div class="col-12 col-md-3 d-flex align-items-end">
-                            <button type="submit" class="btn btn-sm btn-send w-50">Filter</button>
-                        </div>
+                                <div class="col-12 col-md-3 d-flex align-items-end">
+                                    <button type="submit" class="btn btn-sm btn-warning w-50">Filter</button>
+                                </div>
 
-                        <div class="col-12 col-md-3 d-flex justify-content-md-end justify-content-start align-items-end">
-                            <div class="dropdown w-100 w-md-auto">
-                                <button class="btn btn-sm btn-primary dropdown-toggle w-100 w-md-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fas fa-download me-1"></i> Unduh
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <a class="dropdown-item" href="{{ route('adminsystem.tool.export', request()->all()) }}">
-                                            <i class="fas fa-file-excel text-success me-2"></i> Excel
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="{{ route('adminsystem.tool.exportPdf', request()->all()) }}">
-                                            <i class="fas fa-file-pdf text-danger me-2"></i> PDF
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
+                                <div class="col-12 col-md-3 d-flex justify-content-md-end justify-content-start align-items-end">
+                                    <div class="dropdown w-100 w-md-auto">
+                                        <button class="btn btn-sm btn-primary dropdown-toggle w-100 w-md-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="fas fa-download me-1"></i> Unduh
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li>
+                                                <a class="dropdown-item" href="{{ route('adminsystem.tool.export', request()->all()) }}">
+                                                    <i class="fas fa-file-excel text-success me-2"></i> Excel
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" href="{{ route('adminsystem.tool.exportPdf', request()->all()) }}">
+                                                    <i class="fas fa-file-pdf text-danger me-2"></i> PDF
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
                             </form>
 
 
@@ -334,7 +333,7 @@
             </div>
         </div>
     </div>
-    </div>
+  
     <div class="modal fade" id="requestModal" tabindex="-1" role="dialog" aria-labelledby="requestModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">

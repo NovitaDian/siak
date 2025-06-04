@@ -1,20 +1,23 @@
-@extends('layouts.user_type.auth')
+@extends('layouts.user_type.operator')
 
 @section('content')
-<div class="nav-item d-flex align-self-end">
-    <form action="{{ route('adminsystem.pemasukan.create') }}" method="GET" style="display:inline;">
-        @csrf
-        <button type="submit" class="btn btn-primary btn-sm active mb-0 text-white" role="button" aria-pressed="true">
-            Tambah
-        </button>
-    </form>
+@if (session('success'))
+<div class="alert alert-success alert-dismissible fade show" role="alert" style="background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 10px; margin: 10px;">
+    {{ session('success') }}
 </div>
-<br>
+@endif
+
 <div class="row">
     <div class="col-12">
         <div class="card mb-4">
-            <div class="card-header pb-0">
+            <div class="card-header pb-0 d-flex justify-content-between align-items-center">
                 <h6>Data Pemasukan</h6>
+                <form action="{{ route('operator.pemasukan.create') }}" method="GET" style="display:inline;">
+                    @csrf
+                    <button type="submit" class="btn btn-sm btn-primary active mb-0 text-white" role="button" aria-pressed="true">
+                        Tambah
+                    </button>
+                </form>
             </div>
             <div class="card-body px-4 pt-4 pb-4">
                 <div class="table-responsive p-0">
@@ -54,29 +57,27 @@
                                     <p class="text-xs font-weight-bold mb-0">{{ $pemasukan->keterangan }}</p>
                                 </td>
                                 <td class="text-center">
-                                            <!-- Tombol Edit -->
-                                            <a href="{{ route('adminsystem.pemasukan.edit', $pemasukan->id) }}"
-                                                class="btn btn-xs btn-warning">
-                                                <i class="fas fa-edit me-1" style="font-size:12px;"></i> Edit
-                                            </a>
+                                    <a href="{{ route('operator.pemasukan.edit', $pemasukan->id) }}"
+                                        class="btn btn-warning btn-xs mb-2"> <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit
 
-                                            <!-- Tombol Hapus -->
-                                            <form action="{{ route('adminsystem.pemasukan.destroy', $pemasukan->id) }}" method="POST" style="display:inline;">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit"
-                                                    class="btn btn-danger btn-xs"
-                                                    onclick="return confirm('Anda yakin akan menghapus dokumen?')"
-                                                    style="display:inline-flex; align-items:center; padding:4px 8px; background:linear-gradient(to right, #FF4C4C, #FF0000); color:white; border-radius:5px; font-weight:bold; font-size:10px;">
-                                                    <i class="fas fa-trash-alt me-1" style="font-size:12px;"></i> Hapus
-                                                </button>
-                                            </form>
-                                        </td>
+                                    </a>
+
+                                    <!-- Tombol Send (Delete Action) -->
+                                    <form action="{{ route('operator.pemasukan.destroy', $pemasukan->id) }}" method="POST" style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit"
+                                            onclick="return confirm('Anda yakin akan menghapus dokumen?')"
+                                            title="Kirim"
+                                            class="btn btn-danger btn-xs mb-2"> <i class="fas fa-trash me-1" style="font-size: 12px;"></i> Hapus
+                                        </button>
+                                    </form>
+                                </td>
 
                                 <script>
                                     function editAction() {
                                         // Redirect to the edit form for the item
-                                        window.location.href = "{{ route('adminsystem.pemasukan.edit', $pemasukan->id) }}";
+                                        window.location.href = "{{ route('operator.pemasukan.edit', $pemasukan->id) }}";
                                     }
                                 </script>
                                 </td>

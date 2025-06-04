@@ -343,27 +343,23 @@ class ToolController extends Controller
 
     public function operator_index(Request $request)
     {
+
         $user = Auth::user();
-
-        // Ambil data draft NCR oleh user login
-        $tools = ToolReport::where('writer', $user->name)->get();
-
-        // Ambil semua request (Edit/Delete)
-        $allRequests = ToolRequest::all();
-
-        // Filter tanggal jika ada
+        $tools = ToolReport::with('alat')
+            ->where('writer', $user->name)
+            ->get();
         $start = $request->start_date;
         $end = $request->end_date;
 
+        // Jika filter tanggal diisi, gunakan whereBetween
         if ($start && $end) {
-            $tool_fixs = SentToolReport::whereBetween('tanggal_pemeriksaan', [$start, $end])
-                ->where('writer', $user->name)
-                ->get();
+            $tool_fixs = SentToolReport::whereBetween('tanggal_pemeriksaan', [$start, $end])->get();
         } else {
-            $tool_fixs = SentToolReport::where('writer', $user->name)->get();
+            $tool_fixs = SentToolReport::all();
         }
+        $requests = ToolRequest::where('writer', $user->name)->get();
 
-        return view('operator.tool.index', compact('tools', 'tool_fixs', 'allRequests'));
+        return view('operator.tool.index', compact('tools', 'tool_fixs', 'requests'));
     }
     public function operator_create()
     {
@@ -401,6 +397,7 @@ class ToolController extends Controller
             'foto' => $request->foto,
             'writer' => Auth::user()->name,
             'user_id' => Auth::user()->id,
+
         ]);
 
         return redirect()->route('operator.tool.index')->with('success', 'Data pemeriksaan berhasil disimpan.');
@@ -543,6 +540,13 @@ class ToolController extends Controller
         $tool->delete();
 
         return redirect()->route('operator.tool.index')->with('success', 'Data berhasil dikirim.');
+    }
+    public function operator_draft_destroy(Request $request, $id)
+    {
+        // Ambil data PPE berdasarkan ID
+        $tool = ToolReport::findOrFail($id);
+        $tool->delete();
+        return redirect()->route('operator.tool.index')->with('notification', 'NCR berhasil dikirim!');
     }
     public function operator_sent_destroy(Request $request, $id)
     {

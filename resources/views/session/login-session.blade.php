@@ -31,7 +31,7 @@
                   </div>
                   <label>Password</label>
                   <div class="mb-3">
-                    <input type="password" class="form-control" name="password" id="password" placeholder="Password" value="secret" aria-label="Password" aria-describedby="password-addon">
+                    <input class="form-control" type="password" id="password" name="password" required>
                     @error('password')
                     <p class="text-danger text-xs mt-2">{{ $message }}</p>
                     @enderror

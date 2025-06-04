@@ -7,7 +7,6 @@
 </div>
 @endif
 <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
-    <div class="container-fluid py-4">
         <div class="row">
 
             <div class="card mb-4">
@@ -63,8 +62,6 @@
                     </div>
                 </div>
             </div>
-
-        </div>
 
 </main>
 

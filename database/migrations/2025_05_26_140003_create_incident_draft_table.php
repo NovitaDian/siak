@@ -83,7 +83,7 @@ return new class extends Migration
             $table->integer('jml_loading_stacking')->nullable();
             $table->integer('jml_contractor')->nullable();
             $table->integer('jml_hari_hilang')->nullable();
-            $table->string('no_laporan', 255)->unique();
+            $table->string('no_laporan', 255)->nullable();
             $table->integer('lta')->nullable();
             $table->integer('wlta')->nullable();
             $table->integer('trc')->nullable();

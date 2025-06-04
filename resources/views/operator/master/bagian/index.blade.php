@@ -1,17 +1,22 @@
-@extends('layouts.user_type.auth')
+@extends('layouts.user_type.operator')
 
 @section('content')
-
+@if (session('success'))
+<div class="alert alert-success alert-dismissible fade show" role="alert" style="background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 10px; margin: 10px;">
+    {{ session('success') }}
+</div>
+@endif
 <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg">
-    <div class="container-fluid py-4">
-
         <div class="row">
             <div class="col-12">
                 <div class="card mb-4">
                     <div class="card-header pb-0">
                         <div class="d-flex justify-content-between align-items-center">
                             <h6 class="mb-0">Bagian Perusahaan</h6>
-                            
+                            <form action="{{ route('operator.bagian.create') }}" method="GET">
+                                @csrf
+                                <button type="submit" class="btn btn-sm btn-primary text-white">Tambah</button>
+                            </form>
                         </div>
                     </div>
 
@@ -23,6 +28,7 @@
                                         <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Kode Perusahaan</th>
                                         <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Perusahaan</th>
                                         <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Bagian</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -31,7 +37,24 @@
                                         <td class="text-center"><p class="text-xs font-weight-bold mb-0">{{ $bagian->perusahaan_code }}</p></td>
                                         <td class="text-center"><p class="text-xs font-weight-bold mb-0">{{ $bagian->perusahaan_name }}</p></td>
                                         <td class="text-center"><p class="text-xs font-weight-bold mb-0">{{ $bagian->nama_bagian }}</p></td>
-                                        
+                                        <td class="text-center">
+                                            <div class="d-flex justify-content-center gap-2">
+                                                <!-- Tombol Edit -->
+                                                <a href="{{ route('operator.bagian.edit', $bagian->id) }}" class="btn btn-warning btn-xs">
+                                                    <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit
+                                                </a>
+
+                                                <!-- Tombol Delete -->
+                                                <form action="{{ route('operator.bagian.destroy', $bagian->id) }}" method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger btn-xs"
+                                                        onclick="return confirm('Anda yakin akan menghapus bagian ini?')">
+                                                        <i class="fas fa-trash-alt me-1" style="font-size: 12px;"></i> Delete
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -41,7 +64,7 @@
 
                 </div>
             </div>
-        </div>
+      
 
     </div>
 </main>

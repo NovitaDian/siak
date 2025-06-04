@@ -13,7 +13,7 @@
                 <h6 class="mb-0">Data Pengeluaran</h6>
                 <form action="{{ route('adminsystem.pengeluaran.create') }}" method="GET">
                     @csrf
-                    <button type="submit" class="btn btn-primary text-white mb-0">
+                    <button type="submit" class="btn btn-primary btn-sm text-white mb-0">
                         Tambah
                     </button>
                 </form>

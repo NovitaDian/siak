@@ -1,10 +1,10 @@
-@extends('layouts.user_type.auth')
+@extends('layouts.user_type.operator')
 
 @section('content')
 
 <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
     <div class="container-fluid py-4">
-        <div class="row" style="display: none;">
+        <div class="row">
             <div class="col-12">
                 <div class="card mb-4">
                     <div class="card-header pb-0">
@@ -34,16 +34,20 @@
                                             <td class="text-center" id="status-{{$request->id}}">{{ $request->status }}</td>
                                             <td class="text-center">
                                                 @if ($request->status == 'Pending')
-                                                <button class="btn btn-primary btn-xs" onclick="approveRequest('{{ $request->id }}')">Approve</button>
-                                                <button class="btn btn-danger btn-xs" onclick="rejectRequest('{{ $request->id }}')">Reject</button>
-                                                @endif
-                                                <form action="{{ route('operator.non_compliant.show', ['id' => $request->id]) }}" method="GET" style="display:inline;">
-                                                    <button type="submit" class="btn btn-info btn-xs">
-                                                        Show
-                                                    </button>
-                                                </form>
-                                                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+                                                <button
+                                                    class="btn btn-success btn-xs me-1"
+                                                    onclick="approveRequest('{{ $request->id }}')"
+                                                    title="Approve this request">
+                                                    <i class="fas fa-check m-1"></i> Approve
+                                                </button>
 
+                                                <button
+                                                    class="btn btn-danger btn-xs me-1"
+                                                    onclick="rejectRequest('{{ $request->id }}')"
+                                                    title="Reject this request">
+                                                    <i class="fas fa-times m-1"></i> Reject
+                                                </button>
+                                                @endif
                                             </td>
                                         </tr>
                                         @endforeach
@@ -126,34 +130,48 @@
                                     <td class="text-center text-xs">{{ $nc->tindakan }}</td>
                                     <td class="align-middle text-center text-xs">
                                         @if ($nc->status == 'Nothing')
-                                        <button class="btn btn-secondary btn-xs" onclick="showRequestModal('{{ $nc->id }}')"> <i></i>&nbsp; Request
+                                        <button class="btn btn-secondary btn-xs" onclick="showRequestModal('{{ $nc->id }}')">
+                                            <i class="fas fa-paper-plane me-1" style="font-size: 12px;"></i> Request
                                         </button>
+
                                         @elseif ($nc->status == 'Pending')
                                         <span class="text-warning">Pending</span>
 
                                         @elseif ($nc->status == 'Approved')
                                         @if ($request)
-                                        @if ($request->type == 'Edit')
-                                        <a href="{{ route('operator.non_compliant.edit', $nc->id) }}" class="btn btn-warning">
-                                            <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit
-                                        </a>
-                                        @elseif ($request->type == 'Delete')
-                                        <form action="{{ route('operator.non_compliant.destroy', $nc->id) }}" method="POST"
-                                            style="display:inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm"
-                                                style="display: inline-flex; align-items: center; padding: 4px 8px; background: linear-gradient(to right,rgb(167, 40, 40),rgb(139, 46, 46)); color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 10px;"
-                                                onclick="return confirm(' Anda yakin akan menghapus data ini?')">Delete</button>
-                                        </form>
-                                        @endif
+                                        <div class="dropdown d-inline">
+                                            <button class="btn btn-success btn-xs dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="fas fa-check-circle me-1" style="font-size: 12px;"></i> Approved
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                @if ($request->type == 'Edit')
+                                                <li>
+                                                    <a href="{{ route('operator.non_compliant.edit', $nc->id) }}" class="dropdown-item">
+                                                        <i class="fas fa-edit me-1"></i> Edit
+                                                    </a>
+                                                </li>
+                                                @elseif ($request->type == 'Delete')
+                                                <li>
+                                                    <form action="{{ route('operator.non_compliant.destroy', $nc->id) }}" method="POST" onsubmit="return confirm('Anda yakin akan menghapus data ini?')">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="dropdown-item text-danger">
+                                                            <i class="fas fa-trash-alt me-1"></i> Hapus
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                                @endif
+                                            </ul>
+                                        </div>
+                                        @else
+                                        <span class="text-danger">No corresponding request found</span>
                                         @endif
 
                                         @elseif ($nc->status == 'Rejected')
                                         <span class="text-danger">Request Rejected</span>
                                         @endif
-
                                     </td>
+
 
                                     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
                                 </tr>

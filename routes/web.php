@@ -48,7 +48,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 	Route::get('/admin/home', [HomeController::class, 'adminsystem'])->name('adminsystem.home')->middleware('userAkses:adminsystem');
 	Route::get('/operator/home', [HomeController::class, 'operator'])->name('operator.home')->middleware('userAkses:operator');
-	Route::get('/guest/home', [HomeController::class, 'guest'])->name('guest.home')->middleware('userAkses:guest');
+	Route::get('/tamu/home', [HomeController::class, 'tamu'])->name('tamu.home')->middleware('userAkses:tamu');
 
 	Route::get('billing', function () {
 		return view('billing');
@@ -453,7 +453,6 @@ Route::group(['middleware' => 'auth'], function () {
 
 
 	Route::group(['middleware' => 'role:operator'], function () {
-		// Incident management
 		Route::prefix('operator/incident')->name('operator.incident.')->group(function () {
 			Route::get('/', [IncidentController::class, 'operator_index'])->name('index');
 			Route::get('/export', [IncidentController::class, 'operator_export'])->name('export');
@@ -462,17 +461,21 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('/master', [IncidentController::class, 'operator_master'])->name('master');
 			Route::post('/', [IncidentController::class, 'operator_store'])->name('store');
 			Route::get('/{id}/edit', [IncidentController::class, 'operator_edit'])->name('edit');
+			Route::get('/sent/{id}', [IncidentController::class, 'operator_sent_show'])->name('sent_show');
 			Route::get('/{id}/sent_edit', [IncidentController::class, 'operator_sent_edit'])->name('sent_edit');
+			Route::put('/sent{id}', [IncidentController::class, 'operator_sent_update'])->name('sent_update');
 			Route::put('/{id}', [IncidentController::class, 'operator_update'])->name('update');
 			Route::get('/{id}', [IncidentController::class, 'operator_show'])->name('show');
 			Route::delete('/{id}', [IncidentController::class, 'operator_destroy'])->name('destroy');
 			Route::delete('/sent_destroy/{id}', [IncidentController::class, 'operator_sent_destroy'])->name('sent_destroy');
+			Route::delete('/draft_destroy/{id}', [IncidentController::class, 'operator_draft_destroy'])->name('draft_destroy');
 			Route::get('/search', [IncidentController::class, 'operator_search'])->name('search');
 			Route::post('/incident-request', [IncidentController::class, 'operator_storeRequest'])->name('storeRequest');
 			Route::post('/request', [IncidentController::class, 'operator_submitRequest'])->name('request');
 			Route::post('/approve/{id}', [IncidentController::class, 'operator_approve'])->name('approve');
 			Route::post('/reject/{id}', [IncidentController::class, 'operator_reject'])->name('reject');
 			Route::get('/get-bagian/{perusahaan_name}', [IncidentController::class, 'operator_getBagian'])->name('getBagian');
+			Route::post('/get-jumlah-hari-hilang', [IncidentController::class, 'operator_getJumlahHariHilang'])->name('getJumlahHariHilang');
 		});
 
 		Route::prefix('operator/ppe')->name('operator.ppe.')->group(function () {
@@ -501,6 +504,7 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('/{id}/edit', [NonCompliantController::class, 'operator_edit'])->name('edit');
 			Route::put('/{id}', [NonCompliantController::class, 'operator_update'])->name('update');
 			Route::get('/{id}', [NonCompliantController::class, 'operator_show'])->name('show');
+			Route::get('/{id}', [NonCompliantController::class, 'operator_sent_show'])->name('sent_show');
 			Route::delete('/{id}', [NonCompliantController::class, 'operator_destroy'])->name('destroy');
 			Route::get('/search', [NonCompliantController::class, 'operator_search'])->name('search');
 			Route::post('/non_compliant-request', [NonCompliantController::class, 'operator_storeRequest'])->name('storeRequest');
@@ -528,15 +532,12 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::put('/update_closed/{id}', [NcrController::class, 'operator_updateClose'])->name('update_closed');
 			Route::get('/show{id}', [NcrController::class, 'operator_show'])->name('show');
 			Route::delete('/{id}', [NcrController::class, 'operator_destroy'])->name('destroy');
+			Route::delete('/draft_destroy/{id}', [NcrController::class, 'operator_draft_destroy'])->name('draft_destroy');
 			Route::delete('/sent_destroy/{id}', [NcrController::class, 'operator_sent_destroy'])->name('sent_destroy');
 			Route::get('/search', [NcrController::class, 'operator_search'])->name('search');
 			Route::post('/ncr-request', [NcrController::class, 'operator_storeRequest'])->name('storeRequest');
 			Route::get('/get-bagian/{perusahaan_name}', [NcrController::class, 'operator_getBagian'])->name('getBagian');
 		});
-			Route::prefix('operator/master')->name('operator.master.')->group(function () {
-			Route::get('/home', [MasterController::class, 'operator_index'])->name('index');
-		});
-
 		Route::get('operator/master/ncr', [NcrController::class, 'operator_master'])->name('operator.ncr.master');
 
 		Route::prefix('operator/master/perusahaan')->name('operator.perusahaan.')->group(function () {
@@ -585,6 +586,7 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('/{id}/edit', [DailyController::class, 'operator_edit'])->name('edit');
 			Route::put('/{id}', [DailyController::class, 'operator_update'])->name('update');
 			Route::get('/{id}', [DailyController::class, 'operator_show'])->name('show');
+			Route::delete('/draft/{id}', [DailyController::class, 'operator_draft_destroy'])->name('draft_destroy');
 			Route::delete('/{id}', [DailyController::class, 'operator_destroy'])->name('destroy');
 			Route::get('/search', [DailyController::class, 'operator_search'])->name('search');
 			Route::get('/sent_edit/{id}', [DailyController::class, 'operator_sent_edit'])->name('sent_edit');
@@ -749,6 +751,7 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::post('/approve/{id}', [ToolController::class, 'operator_approve'])->name('approve');
 			Route::post('/reject/{id}', [ToolController::class, 'operator_reject'])->name('reject');
 			Route::delete('/{id}', [ToolController::class, 'operator_destroy'])->name('destroy');
+			Route::delete('/draft/{id}', [ToolController::class, 'operator_draft_destroy'])->name('draft_destroy');
 			Route::get('/search', [ToolController::class, 'operator_search'])->name('search');
 			Route::get('/create', [ToolController::class, 'operator_create'])->name('create');
 			Route::get('/edit/{id}', [ToolController::class, 'operator_edit'])->name('edit');
@@ -760,16 +763,49 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::delete('/sent_destroy/{id}', [ToolController::class, 'operator_sent_destroy'])->name('sent_destroy');
 		});
 
+
+
+		Route::prefix('operator/master')->name('operator.master.')->group(function () {
+			Route::get('/', [MasterController::class, 'operator_index'])->name('index');
+		});
+
 		// Admin dashboard
 		Route::prefix('operator')->name('operator.')->group(function () {
 			Route::get('/home', [HomeController::class, 'index'])->name('home');
 			Route::get('/dashboard', [HomeController::class, 'operator_dashboard'])->name('dashboard');
+			Route::post('/dashboard/set-compliance-target', [HomeController::class, 'operator_setComplianceTarget'])->name('set-compliance-target');
+			Route::post('/dashboard/update-target-manhours', [HomeController::class, 'operator_updateTargetManHours'])->name('update-target-manhours');
 			Route::get('/dashboard-incident', [HomeController::class, 'operator_incident'])->name('dashboard-incident');
 			Route::get('/dashboard-spi', [HomeController::class, 'operator_spi'])->name('dashboard-spi');
 			Route::get('/dashboard-ncr', [HomeController::class, 'operator_ncr'])->name('dashboard-ncr');
 			Route::get('/dashboard-budget', [HomeController::class, 'operator_budget'])->name('dashboard-budget');
 			Route::post('/home', [HomeController::class, 'operator_store'])->name('store');
 			Route::delete('/{note}', [HomeController::class, 'operator_destroy'])->name('destroy');
+		});
+	});
+	Route::group(['middleware' => 'role:tamu'], function () {
+
+		Route::prefix('tamu')->name('tamu.')->group(function () {
+			Route::get('/home', [HomeController::class, 'index'])->name('home');
+			Route::get('/dashboard', [HomeController::class, 'tamu_dashboard'])->name('dashboard');
+			Route::post('/dashboard/set-compliance-target', [HomeController::class, 'tamu_setComplianceTarget'])->name('set-compliance-target');
+			Route::post('/dashboard/update-target-manhours', [HomeController::class, 'tamu_updateTargetManHours'])->name('update-target-manhours');
+			Route::get('/dashboard-incident', [HomeController::class, 'tamu_incident'])->name('dashboard-incident');
+			Route::get('/dashboard-spi', [HomeController::class, 'tamu_spi'])->name('dashboard-spi');
+			Route::get('/dashboard-ncr', [HomeController::class, 'tamu_ncr'])->name('dashboard-ncr');
+			Route::get('/dashboard-budget', [HomeController::class, 'tamu_budget'])->name('dashboard-budget');
+			Route::post('/home', [HomeController::class, 'tamu_store'])->name('store');
+			Route::delete('/{note}', [HomeController::class, 'tamu_destroy'])->name('destroy');
+		});
+		Route::prefix('tamu/info_user')->name('tamu.info_user.')->group(function () {
+			Route::get('/', [InfoUserController::class, 'tamu_index'])->name('index');
+			Route::post('/', [InfoUserController::class, 'tamu_store'])->name('store');
+			Route::delete('/{id}', [InfoUserController::class, 'tamu_destroy'])->name('destroy');
+			Route::get('/search', [InfoUserController::class, 'tamu_search'])->name('search');
+			Route::get('/create', [InfoUserController::class, 'tamu_create'])->name('create');
+			Route::get('/edit/{id}', [InfoUserController::class, 'tamu_edit'])->name('edit');
+			Route::get('/detail/{id}', [InfoUserController::class, 'tamu_detail'])->name('detail');
+			Route::put('/{id}', [InfoUserController::class, 'tamu_update'])->name('update');
 		});
 	});
 });
@@ -784,6 +820,7 @@ Route::group(['middleware' => 'guest'], function () {
 	Route::get('/reset-password/{token}', [ResetController::class, 'resetPass'])->name('password.reset');
 	Route::post('/reset-password', [ChangePasswordController::class, 'changePassword'])->name('password.update');
 });
+
 
 Route::get('/', function () {
 	return view('session/login-session');

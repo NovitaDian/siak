@@ -216,26 +216,50 @@
                                 <div class="form-group d-flex justify-content-between">
                                     <div class="me-2" style="flex: 1;">
                                         <label for="jenis_luka_sakit">{{ __('Luka/Sakit 1') }}</label>
-                                        <input class="form-control" id="jenis_luka_sakit" rows="3" name="jenis_luka_sakit"></input>
+                                        <select class="form-control" id="jenis_luka_sakit" name="jenis_luka_sakit">
+                                            <option value="" disabled selected>Pilih Jenis Luka</option>
+                                            @foreach($hilangs as $luka)
+                                            <option value="{{ $luka->jenis_luka }}" {{ old('luka') == $luka->jenis_luka ? 'selected' : '' }}>
+                                                {{ $luka->jenis_luka }}
+                                            </option>
+                                            @endforeach
+                                        </select>
                                         @error('jenis_luka_sakit')
                                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                         @enderror
                                     </div>
+
                                     <div class="ms-2" style="flex: 1;">
                                         <label for="jenis_luka_sakit2">{{ __('Luka/Sakit 2') }}</label>
-                                        <input class="form-control" id="jenis_luka_sakit2" rows="3" name="jenis_luka_sakit2"></input>
+                                        <select class="form-control" id="jenis_luka_sakit2" name="jenis_luka_sakit2">
+                                            <option value="" disabled selected>Pilih Jenis Luka</option>
+                                            @foreach($hilangs as $luka)
+                                            <option value="{{ $luka->jenis_luka }}" {{ old('luka') == $luka->jenis_luka ? 'selected' : '' }}>
+                                                {{ $luka->jenis_luka }}
+                                            </option>
+                                            @endforeach
+                                        </select>
                                         @error('jenis_luka_sakit2')
                                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                         @enderror
                                     </div>
+
                                     <div class="ms-2" style="flex: 1;">
                                         <label for="jenis_luka_sakit3">{{ __('Luka/Sakit 3') }}</label>
-                                        <input class="form-control" id="jenis_luka_sakit3" rows="3" name="jenis_luka_sakit3"></input>
+                                        <select class="form-control" id="jenis_luka_sakit3" name="jenis_luka_sakit3">
+                                            <option value="" disabled selected>Pilih Jenis Luka</option>
+                                            @foreach($hilangs as $luka)
+                                            <option value="{{ $luka->jenis_luka }}" {{ old('luka') == $luka->jenis_luka ? 'selected' : '' }}>
+                                                {{ $luka->jenis_luka }}
+                                            </option>
+                                            @endforeach
+                                        </select>
                                         @error('jenis_luka_sakit3')
                                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                         @enderror
                                     </div>
                                 </div>
+
                                 <div class="row">
 
                                     <center>
@@ -346,8 +370,17 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="status">{{ __('Status') }}</label>
-                                        <input class="form-control" type="text" id="status" name="status" value="{{ old('status') }}">
-                                        @error('status')
+                                        <select class="form-control" id="status" name="status">
+                                            <option value="">{{ __('Pilih Status') }}</option>
+                                            <option value="Karyawan">{{ __('Karyawan') }}</option>
+                                            <option value="Outsourcing/Borongan">{{ __('Outsourcing/Borongan') }}</option>
+                                            <option value="Pekerja Borongan">{{ __('Pekerja Borongan') }}</option>
+                                            <option value="Sub Kontraktor">{{ __('Sub Kontraktor') }}</option>
+                                            <option value="Kontraktor">{{ __('Kontraktor') }}</option>
+                                            <option value="Magang">{{ __('Magang') }}</option>
+                                            <option value="Tamu">{{ __('Tamu') }}</option>
+                                            <option value="Masyarakat Umum">{{ __('Masyarakat Umum') }}</option>
+                                        </select> @error('status')
                                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                         @enderror
                                     </div>
@@ -402,7 +435,7 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="masa_kerja">{{ __('Masa Kerja (Tahun)') }}</label>
-                                        <input class="form-control" type="text" id="masa_kerja" name="masa_kerja" value="{{ old('masa_kerja') }}">
+                                        <input class="form-control" type="number" id="masa_kerja" name="masa_kerja" value="{{ old('masa_kerja') }}">
                                         @error('masa_kerja')
                                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                         @enderror
@@ -649,28 +682,38 @@
                                 <div class="form-group d-flex">
                                     <div class="me-2" style="flex: 1;">
                                         <label for="tindakan_kendali_untuk_peningkatan_1_a">{{ __('Tindakan Kendali Untuk Peningkatan 1 A') }}</label>
-                                        <select class="form-control" id="tindakan_kendali_untuk_peningkatan_1_a" name="tindakan_kendali_untuk_peningkatan_1_a" onchange="updatePeningkatanDropdown('1')">
+                                        <select class="form-control" id="tindakan_kendali_untuk_peningkatan_1_a" name="tindakan_kendali_untuk_peningkatan_1_a">
                                             <option value="">{{ __('Pilih Kategori') }}</option>
-                                            <option value="LEADERSHIP">LEADERSHIP</option>
-                                            <option value="PLANNING AND ADMINISTRATION">PLANNING AND ADMINISTRATION</option>
-                                            <option value="RISK EVALUATION">RISK EVALUATION</option>
-                                            <option value="HUMAN RESOURCES">HUMAN RESOURCES</option>
-                                            <option value="COMPLIANCE ASSURANCE">COMPLIANCE ASSURANCE</option>
-                                            <option value="PROJECT MANAGEMENT">PROJECT MANAGEMENT</option>
-                                            <option value="TRAINING AND COMPETENCE">TRAINING AND COMPETENCE</option>
-                                            <option value="COMMUNICATION AND PROMOTION">COMMUNICATION AND PROMOTION</option>
-                                            <option value="RISK CONTROL">RISK CONTROL</option>
-                                            <option value="ASSET MANAGEMENT">ASSET MANAGEMENT</option>
-                                            <option value="CONTRACTOR MANAGEMENT / PURCHASING">CONTRACTOR MANAGEMENT / PURCHASING</option>
-                                            <option value="EMERGENCY PREPAREDNESS">EMERGENCY PREPAREDNESS</option>
-                                            <option value="LEARNING FROM EVENTS">LEARNING FROM EVENTS</option>
-                                            <option value="RISK MONITORING">RISK MONITORING</option>
-                                            <option value="RESULTS AND REVIEW">RESULTS AND REVIEW</option>
+                                            <option value="Sistem tidak memadai">Sistem tidak memadai</option>
+                                            <option value="Standar kinerja tidak memadai">Standar kinerja tidak memadai</option>
+                                            <option value="Kepatuhan terhadap standar kinerja tidak memadai">Kepatuhan terhadap standar kinerja tidak memadai</option>
                                         </select>
                                     </div>
                                     <div class="ms-2" style="flex: 1;">
                                         <label for="tindakan_kendali_untuk_peningkatan_1_b">{{ __('Tindakan Kendali Untuk Peningkatan 1 B') }}</label>
-                                        <select class="form-control" id="tindakan_kendali_untuk_peningkatan_1_b" name="tindakan_kendali_untuk_peningkatan_1_b">
+                                        <select class="form-control" id="tindakan_kendali_untuk_peningkatan_1_b" name="tindakan_kendali_untuk_peningkatan_1_b" onchange="updatePeningkatanDropdown('1')">
+                                            <option value="">{{ __('Pilih Kategori') }}</option>
+                                            <option value="Kepemimpinan">Kepemimpinan</option>
+                                            <option value="Perencanaan dan Administrasi">Perencanaan dan Administrasi</option>
+                                            <option value="Evaluasi Risiko">Evaluasi Risiko</option>
+                                            <option value="Sumber Daya Manusia">Sumber Daya Manusia</option>
+                                            <option value="Jaminan Kepatuhan">Jaminan Kepatuhan</option>
+                                            <option value="Manajemen Proyek">Manajemen Proyek</option>
+                                            <option value="Pelatihan dan Kompetensi">Pelatihan dan Kompetensi</option>
+                                            <option value="Komunikasi dan Promosi">Komunikasi dan Promosi</option>
+                                            <option value="Pengendalian Risiko">Pengendalian Risiko</option>
+                                            <option value="Manajemen Aset">Manajemen Aset</option>
+                                            <option value="Manajemen Kontraktor dan Pembelian">Manajemen Kontraktor dan Pembelian</option>
+                                            <option value="Kesiapsiagaan Darurat">Kesiapsiagaan Darurat</option>
+                                            <option value="Belajar dari Peristiwa">Belajar dari Peristiwa</option>
+                                            <option value="Pemantauan Risiko">Pemantauan Risiko</option>
+                                            <option value="Hasil dan Tinjauan">Hasil dan Tinjauan</option>
+
+                                        </select>
+                                    </div>
+                                    <div class="ms-2" style="flex: 1;">
+                                        <label for="tindakan_kendali_untuk_peningkatan_1_c">{{ __('Tindakan Kendali Untuk Peningkatan 1 C') }}</label>
+                                        <select class="form-control" id="tindakan_kendali_untuk_peningkatan_1_c" name="tindakan_kendali_untuk_peningkatan_1_c">
                                             <option value="">{{ __('Pilih Kategori') }}</option>
                                         </select>
                                     </div>
@@ -681,29 +724,39 @@
                                 <div class="form-group d-flex">
                                     <div class="me-2" style="flex: 1;">
                                         <label for="tindakan_kendali_untuk_peningkatan_2_a">{{ __('Tindakan Kendali Untuk Peningkatan 2 A') }}</label>
-                                        <select class="form-control" id="tindakan_kendali_untuk_peningkatan_2_a" name="tindakan_kendali_untuk_peningkatan_2_a" onchange="updatePeningkatanDropdown('2')">
+                                        <select class="form-control" id="tindakan_kendali_untuk_peningkatan_2_a" name="tindakan_kendali_untuk_peningkatan_2_a">
                                             <option value="">{{ __('Pilih Kategori') }}</option>
-                                            <option value="">{{ __('Pilih Kategori') }}</option>
-                                            <option value="LEADERSHIP">LEADERSHIP</option>
-                                            <option value="PLANNING AND ADMINISTRATION">PLANNING AND ADMINISTRATION</option>
-                                            <option value="RISK EVALUATION">RISK EVALUATION</option>
-                                            <option value="HUMAN RESOURCES">HUMAN RESOURCES</option>
-                                            <option value="COMPLIANCE ASSURANCE">COMPLIANCE ASSURANCE</option>
-                                            <option value="PROJECT MANAGEMENT">PROJECT MANAGEMENT</option>
-                                            <option value="TRAINING AND COMPETENCE">TRAINING AND COMPETENCE</option>
-                                            <option value="COMMUNICATION AND PROMOTION">COMMUNICATION AND PROMOTION</option>
-                                            <option value="RISK CONTROL">RISK CONTROL</option>
-                                            <option value="ASSET MANAGEMENT">ASSET MANAGEMENT</option>
-                                            <option value="CONTRACTOR MANAGEMENT / PURCHASING">CONTRACTOR MANAGEMENT / PURCHASING</option>
-                                            <option value="EMERGENCY PREPAREDNESS">EMERGENCY PREPAREDNESS</option>
-                                            <option value="LEARNING FROM EVENTS">LEARNING FROM EVENTS</option>
-                                            <option value="RISK MONITORING">RISK MONITORING</option>
-                                            <option value="RESULTS AND REVIEW">RESULTS AND REVIEW</option>
+                                            <option value="Sistem tidak memadai">Sistem tidak memadai</option>
+                                            <option value="Standar kinerja tidak memadai">Standar kinerja tidak memadai</option>
+                                            <option value="Kepatuhan terhadap standar kinerja tidak memadai">Kepatuhan terhadap standar kinerja tidak memadai</option>
+
                                         </select>
                                     </div>
                                     <div class="ms-2" style="flex: 1;">
                                         <label for="tindakan_kendali_untuk_peningkatan_2_b">{{ __('Tindakan Kendali Untuk Peningkatan 2 B') }}</label>
-                                        <select class="form-control" id="tindakan_kendali_untuk_peningkatan_2_b" name="tindakan_kendali_untuk_peningkatan_2_b">
+                                        <select class="form-control" id="tindakan_kendali_untuk_peningkatan_2_b" name="tindakan_kendali_untuk_peningkatan_2_b" onchange="updatePeningkatanDropdown('2')">
+                                            <option value="">{{ __('Pilih Kategori') }}</option>
+                                            <option value="Kepemimpinan">Kepemimpinan</option>
+                                            <option value="Perencanaan dan Administrasi">Perencanaan dan Administrasi</option>
+                                            <option value="Evaluasi Risiko">Evaluasi Risiko</option>
+                                            <option value="Sumber Daya Manusia">Sumber Daya Manusia</option>
+                                            <option value="Jaminan Kepatuhan">Jaminan Kepatuhan</option>
+                                            <option value="Manajemen Proyek">Manajemen Proyek</option>
+                                            <option value="Pelatihan dan Kompetensi">Pelatihan dan Kompetensi</option>
+                                            <option value="Komunikasi dan Promosi">Komunikasi dan Promosi</option>
+                                            <option value="Pengendalian Risiko">Pengendalian Risiko</option>
+                                            <option value="Manajemen Aset">Manajemen Aset</option>
+                                            <option value="Manajemen Kontraktor dan Pembelian">Manajemen Kontraktor dan Pembelian</option>
+                                            <option value="Kesiapsiagaan Darurat">Kesiapsiagaan Darurat</option>
+                                            <option value="Belajar dari Peristiwa">Belajar dari Peristiwa</option>
+                                            <option value="Pemantauan Risiko">Pemantauan Risiko</option>
+                                            <option value="Hasil dan Tinjauan">Hasil dan Tinjauan</option>
+
+                                        </select>
+                                    </div>
+                                    <div class="ms-2" style="flex: 1;">
+                                        <label for="tindakan_kendali_untuk_peningkatan_2_c">{{ __('Tindakan Kendali Untuk Peningkatan 2 C') }}</label>
+                                        <select class="form-control" id="tindakan_kendali_untuk_peningkatan_2_c" name="tindakan_kendali_untuk_peningkatan_2_c">
                                             <option value="">{{ __('Pilih Kategori') }}</option>
                                         </select>
                                     </div>
@@ -714,29 +767,39 @@
                                 <div class="form-group d-flex">
                                     <div class="me-2" style="flex: 1;">
                                         <label for="tindakan_kendali_untuk_peningkatan_3_a">{{ __('Tindakan Kendali Untuk Peningkatan 3 A') }}</label>
-                                        <select class="form-control" id="tindakan_kendali_untuk_peningkatan_3_a" name="tindakan_kendali_untuk_peningkatan_3_a" onchange="updatePeningkatanDropdown('3')">
+                                        <select class="form-control" id="tindakan_kendali_untuk_peningkatan_3_a" name="tindakan_kendali_untuk_peningkatan_3_a">
                                             <option value="">{{ __('Pilih Kategori') }}</option>
-                                            <option value="">{{ __('Pilih Kategori') }}</option>
-                                            <option value="LEADERSHIP">LEADERSHIP</option>
-                                            <option value="PLANNING AND ADMINISTRATION">PLANNING AND ADMINISTRATION</option>
-                                            <option value="RISK EVALUATION">RISK EVALUATION</option>
-                                            <option value="HUMAN RESOURCES">HUMAN RESOURCES</option>
-                                            <option value="COMPLIANCE ASSURANCE">COMPLIANCE ASSURANCE</option>
-                                            <option value="PROJECT MANAGEMENT">PROJECT MANAGEMENT</option>
-                                            <option value="TRAINING AND COMPETENCE">TRAINING AND COMPETENCE</option>
-                                            <option value="COMMUNICATION AND PROMOTION">COMMUNICATION AND PROMOTION</option>
-                                            <option value="RISK CONTROL">RISK CONTROL</option>
-                                            <option value="ASSET MANAGEMENT">ASSET MANAGEMENT</option>
-                                            <option value="CONTRACTOR MANAGEMENT / PURCHASING">CONTRACTOR MANAGEMENT / PURCHASING</option>
-                                            <option value="EMERGENCY PREPAREDNESS">EMERGENCY PREPAREDNESS</option>
-                                            <option value="LEARNING FROM EVENTS">LEARNING FROM EVENTS</option>
-                                            <option value="RISK MONITORING">RISK MONITORING</option>
-                                            <option value="RESULTS AND REVIEW">RESULTS AND REVIEW</option>
+                                            <option value="Sistem tidak memadai">Sistem tidak memadai</option>
+                                            <option value="Standar kinerja tidak memadai">Standar kinerja tidak memadai</option>
+                                            <option value="Kepatuhan terhadap standar kinerja tidak memadai">Kepatuhan terhadap standar kinerja tidak memadai</option>
+
                                         </select>
                                     </div>
                                     <div class="ms-2" style="flex: 1;">
                                         <label for="tindakan_kendali_untuk_peningkatan_3_b">{{ __('Tindakan Kendali Untuk Peningkatan 3 B') }}</label>
-                                        <select class="form-control" id="tindakan_kendali_untuk_peningkatan_3_b" name="tindakan_kendali_untuk_peningkatan_3_b">
+                                        <select class="form-control" id="tindakan_kendali_untuk_peningkatan_3_b" name="tindakan_kendali_untuk_peningkatan_3_b" onchange="updatePeningkatanDropdown('3')">
+                                            <option value="">{{ __('Pilih Kategori') }}</option>
+                                            <option value="Kepemimpinan">Kepemimpinan</option>
+                                            <option value="Perencanaan dan Administrasi">Perencanaan dan Administrasi</option>
+                                            <option value="Evaluasi Risiko">Evaluasi Risiko</option>
+                                            <option value="Sumber Daya Manusia">Sumber Daya Manusia</option>
+                                            <option value="Jaminan Kepatuhan">Jaminan Kepatuhan</option>
+                                            <option value="Manajemen Proyek">Manajemen Proyek</option>
+                                            <option value="Pelatihan dan Kompetensi">Pelatihan dan Kompetensi</option>
+                                            <option value="Komunikasi dan Promosi">Komunikasi dan Promosi</option>
+                                            <option value="Pengendalian Risiko">Pengendalian Risiko</option>
+                                            <option value="Manajemen Aset">Manajemen Aset</option>
+                                            <option value="Manajemen Kontraktor dan Pembelian">Manajemen Kontraktor dan Pembelian</option>
+                                            <option value="Kesiapsiagaan Darurat">Kesiapsiagaan Darurat</option>
+                                            <option value="Belajar dari Peristiwa">Belajar dari Peristiwa</option>
+                                            <option value="Pemantauan Risiko">Pemantauan Risiko</option>
+                                            <option value="Hasil dan Tinjauan">Hasil dan Tinjauan</option>
+
+                                        </select>
+                                    </div>
+                                    <div class="ms-2" style="flex: 1;">
+                                        <label for="tindakan_kendali_untuk_peningkatan_3_c">{{ __('Tindakan Kendali Untuk Peningkatan 3 C') }}</label>
+                                        <select class="form-control" id="tindakan_kendali_untuk_peningkatan_3_c" name="tindakan_kendali_untuk_peningkatan_3_c">
                                             <option value="">{{ __('Pilih Kategori') }}</option>
                                         </select>
                                     </div>
@@ -840,31 +903,24 @@
                                 </div>
                             </div>
                             <div class="ms-2" style="flex: 1;">
-                                <label for="referensi_file">{{ __('Referensi File') }}</label>
-                                <div>
-                                    <!-- Jika Anda tahu nama file, masukkan langsung di sini -->
-                                    <a href="{{ asset('referensi_files/jumlah_hari_hilang.pdf') }}" target="_blank" class="text-info">
-                                        Lihat Referensi File
-                                    </a>
-                                </div>
+                                <label for="jml_hari_hilang" class="mt-3">{{ __('Jumlah Hari Hilang') }}</label>
+                                <input class="form-control" id="jml_hari_hilang" type="text" name="jml_hari_hilang" readonly value="{{ old('jml_hari_hilang') }}">
+                                @error('jml_hari_hilang')
+                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                                @enderror
+
                             </div>
-                            <label for="jml_hari_hilang" class="mt-3">{{ __('Jumlah Hari Hilang') }}</label>
-                            <input class="form-control" id="jml_hari_hilang" type="text" rows="3" name="jml_hari_hilang" value="{{ old('jml_hari_hilang') }}"></input>
-                            @error('jml_hari_hilang')
-                            <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                            @enderror
                         </div>
                     </div>
             </div>
         </div>
+
     </div>
 
-</div>
-
-<div class="d-flex justify-content-end">
-    <button type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">{{ __('Save Report') }}</button>
-</div>
-</form>
+    <div class="d-flex justify-content-end">
+        <button type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">{{ __('Save Report') }}</button>
+    </div>
+    </form>
 </div>
 
 <style>
@@ -1236,196 +1292,189 @@
         });
     });
 
-    // Update currentFormIndex if user clears an input (optional)
     formInputs.forEach((input, index) => {
         input.addEventListener('input', () => {
-            // Do nothing if user types manually
-            // You can enhance this to reset if you want stricter behavior
+
         });
     });
 </script>
-
-
 <script>
     function updatePeningkatanDropdown(phase) {
-        const firstDropdown = document.getElementById(`tindakan_kendali_untuk_peningkatan_${phase}_a`);
-        const secondDropdown = document.getElementById(`tindakan_kendali_untuk_peningkatan_${phase}_b`);
+        const firstDropdown = document.getElementById(`tindakan_kendali_untuk_peningkatan_${phase}_b`);
+        const secondDropdown = document.getElementById(`tindakan_kendali_untuk_peningkatan_${phase}_c`);
         secondDropdown.innerHTML = '<option value="">Pilih Sub-Kategori</option>';
 
         const options = {
-
-            "LEADERSHIP": [
-                "Purpose and Values",
-                "Goals",
-                "Policy",
-                "Strategy",
-                "Stakeholder Engagement",
-                "Business Processes",
-                "Business Risks",
-                "Accountabilities",
-                "Management Commitment",
-                "Process Safety Leadership"
+            "Kepemimpinan": [
+                "Tujuan dan Nilai",
+                "Sasaran",
+                "Kebijakan",
+                "Strategi",
+                "Keterlibatan Pemangku Kepentingan",
+                "Proses Bisnis",
+                "Risiko Bisnis",
+                "Tanggung Jawab",
+                "Komitmen Manajemen",
+                "Kepemimpinan Keselamatan Proses"
             ],
-            "PLANNING AND ADMINISTRATION": [
-                "Business Planning",
-                "Work Planning and Control",
-                "Action Tracking",
-                "Management System Documentation",
-                "Records",
-                "Process Safety Planning"
+            "Perencanaan dan Administrasi": [
+                "Perencanaan Bisnis",
+                "Perencanaan dan Pengendalian Pekerjaan",
+                "Pelacakan Tindakan",
+                "Dokumentasi Sistem Manajemen",
+                "Rekaman",
+                "Perencanaan Keselamatan Proses"
             ],
-            "RISK EVALUATION": [
-                "Health Hazard Identification and Evaluation",
-                "Safety Hazard Identification and Evaluation",
-                "Security Hazard Identification and Evaluation",
-                "Environmental Hazards Identification and Evaluation",
-                "Customer Expectations Identification and Evaluation",
-                "Task Risk Evaluation",
-                "Process Safety Information",
-                "Process Hazard Analysis"
+            "Evaluasi Risiko": [
+                "Identifikasi dan Evaluasi Bahaya Kesehatan",
+                "Identifikasi dan Evaluasi Bahaya Keselamatan",
+                "Identifikasi dan Evaluasi Bahaya Keamanan",
+                "Identifikasi dan Evaluasi Bahaya Lingkungan",
+                "Identifikasi dan Evaluasi Harapan Pelanggan",
+                "Evaluasi Risiko Tugas",
+                "Informasi Keselamatan Proses",
+                "Analisis Bahaya Proses"
             ],
-            "HUMAN RESOURCES": [
-                "Human Resources System",
-                "Recruitment",
-                "Managing Individual Performance",
-                "Recognition and Discipline",
-                "Leaving the Organization",
-                "Management of Organizational Change",
-                "Process Safety Human Resources"
+            "Sumber Daya Manusia": [
+                "Sistem Sumber Daya Manusia",
+                "Rekrutmen",
+                "Manajemen Kinerja Individu",
+                "Pengakuan dan Disiplin",
+                "Keluar dari Organisasi",
+                "Manajemen Perubahan Organisasi",
+                "Sumber Daya Manusia dalam Keselamatan Proses"
             ],
-            "COMPLIANCE ASSURANCE": [
-                "Regulations",
-                "External Authorizations to Operate",
-                "Industry Codes and Standards",
-                "Reporting to Authorities",
-                "Information Security",
-                "Product Stewardship",
-                "Compliance Assessment",
-                "Process Safety Regulations",
-                "Security of Process Information"
-
+            "Jaminan Kepatuhan": [
+                "Peraturan",
+                "Izin Operasi Eksternal",
+                "Kode dan Standar Industri",
+                "Pelaporan ke Otoritas",
+                "Keamanan Informasi",
+                "Penjaminan Produk",
+                "Penilaian Kepatuhan",
+                "Peraturan Keselamatan Proses",
+                "Keamanan Informasi Proses"
             ],
-            "PROJECT MANAGEMENT": [
-                "Project Co-ordination",
-                "Project Planning",
-                "Project Execution",
-                "Project Control",
-                "Project Close Out",
-                "Process Safety Project Reviews"
+            "Manajemen Proyek": [
+                "Koordinasi Proyek",
+                "Perencanaan Proyek",
+                "Pelaksanaan Proyek",
+                "Pengendalian Proyek",
+                "Penutupan Proyek",
+                "Tinjauan Keselamatan Proses Proyek"
             ],
-            "TRAINING AND COMPETENCE": [
-                "Training System",
-                "Training Needs Analysis",
-                "Instructor Competence",
-                "Delivery of Training",
-                "Leadership Orientation/Induction",
-                "General Orientation/Induction",
-                "Job Orientation/Induction",
-                "Training Systems Evaluation"
+            "Pelatihan dan Kompetensi": [
+                "Sistem Pelatihan",
+                "Analisis Kebutuhan Pelatihan",
+                "Kompetensi Instruktur",
+                "Pelaksanaan Pelatihan",
+                "Orientasi/Induksi Kepemimpinan",
+                "Orientasi/Induksi Umum",
+                "Orientasi/Induksi Pekerjaan",
+                "Evaluasi Sistem Pelatihan"
             ],
-            "COMMUNICATION AND PROMOTION": [
-                "Communication System",
-                "Meeting Co-ordination",
-                "Management Meetings",
-                "Group Meetings",
-                "Joint Committee/Council",
-                "Coaching",
-                "Recognition",
-                "Promotion Campaigns",
-                "Away from Work Safety",
-                "Process Safety Awareness"
+            "Komunikasi dan Promosi": [
+                "Sistem Komunikasi",
+                "Koordinasi Pertemuan",
+                "Pertemuan Manajemen",
+                "Pertemuan Kelompok",
+                "Komite/Satgas Gabungan",
+                "Pendampingan/Coaching",
+                "Pengakuan",
+                "Kampanye Promosi",
+                "Keselamatan di Luar Jam Kerja",
+                "Kesadaran Keselamatan Proses"
             ],
-            "RISK CONTROL": [
-                "Health Hazards Controls",
-                "Safety Hazards Controls",
-                "Security Controls",
-                "Environmental Hazard Controls",
-                "Quality Control of Materials and Products",
-                "Process Control and Operating Products",
-                "Rules",
-                "Work Permits",
-                "Warning Signs and Notices",
-                "Personal Protective Equipment",
-                "Process Hazard Controls",
-                "Operating Procedures for Controlling Process Risk",
-                "Major Hazard Reports"
+            "Pengendalian Risiko": [
+                "Pengendalian Bahaya Kesehatan",
+                "Pengendalian Bahaya Keselamatan",
+                "Pengendalian Keamanan",
+                "Pengendalian Bahaya Lingkungan",
+                "Pengendalian Kualitas Material dan Produk",
+                "Pengendalian Proses dan Produk Operasional",
+                "Peraturan",
+                "Izin Kerja",
+                "Tanda Peringatan dan Papan Informasi",
+                "Alat Pelindung Diri",
+                "Pengendalian Bahaya Proses",
+                "Prosedur Operasional untuk Pengendalian Risiko Proses",
+                "Laporan Bahaya Besar"
             ],
-            "ASSET MANAGEMENT": [
-                "Maintenance Program",
-                "Maintenance Planning and Scheduling",
-                "Execution of Maintenance",
-                "Maintenance Review",
-                "General Conditions Inspections",
-                "Physical Condition Tour",
-                "Special Equipment Inspections",
-                "Pre-Use Equipment Inspections",
-                "Engineering Change Management",
-                "Inspections, Measuring, Test Equipment",
-                "Acquisition and Sale",
-                "Asset Integrity Program",
-                "Process Safety Inspection"
+            "Manajemen Aset": [
+                "Program Pemeliharaan",
+                "Perencanaan dan Penjadwalan Pemeliharaan",
+                "Pelaksanaan Pemeliharaan",
+                "Tinjauan Pemeliharaan",
+                "Inspeksi Kondisi Umum",
+                "Kunjungan Kondisi Fisik",
+                "Inspeksi Peralatan Khusus",
+                "Inspeksi Peralatan Sebelum Digunakan",
+                "Manajemen Perubahan Rekayasa",
+                "Inspeksi, Pengukuran, Alat Uji",
+                "Akuisisi dan Penjualan",
+                "Program Integritas Aset",
+                "Inspeksi Keselamatan Proses"
             ],
-            "CONTRACTOR MANAGEMENT / PURCHASING": [
-                "Contractor/Supplier Selection",
-                "Contractor Operations",
-                "Contractor/Supplier Assurance",
-                "Supply Chain and Purchasing",
-                "Logistics",
-                "Managing Contractors in Process Area"
+            "Manajemen Kontraktor dan Pembelian": [
+                "Seleksi Kontraktor/Pemasok",
+                "Operasi Kontraktor",
+                "Penjaminan Kontraktor/Pemasok",
+                "Rantai Pasok dan Pembelian",
+                "Logistik",
+                "Manajemen Kontraktor di Area Proses"
             ],
-            "EMERGENCY PREPAREDNESS": [
-                "Emergency Needs Assessment",
-                "Site Emergency Plan",
-                "Off-Site Emergency Plan",
-                "Crisis Plan",
-                "Business Continuity Plan",
-                "Emergency Continuity Plan",
-                "Emergency Communication",
-                "Emergency Protection System",
-                "Energy Control",
-                "Emergency Teams",
-                "Drills and Exercises",
-                "First Aid",
-                "Medical Support",
-                "Organized Outside Help and Mutual Aid",
-                "Preparedness for Major Accidents"
+            "Kesiapsiagaan Darurat": [
+                "Penilaian Kebutuhan Darurat",
+                "Rencana Darurat di Lokasi",
+                "Rencana Darurat di Luar Lokasi",
+                "Rencana Krisis",
+                "Rencana Keberlangsungan Bisnis",
+                "Rencana Kelangsungan Darurat",
+                "Komunikasi Darurat",
+                "Sistem Perlindungan Darurat",
+                "Pengendalian Energi",
+                "Tim Darurat",
+                "Latihan dan Simulasi",
+                "Pertolongan Pertama",
+                "Dukungan Medis",
+                "Bantuan Eksternal dan Kerja Sama",
+                "Kesiapan terhadap Kecelakaan Besar"
             ],
-            "LEARNING FROM EVENTS": [
-                "Learning from Events System",
-                "Learning from Success",
-                "Participation in Investigations",
-                "Near-Miss and Substandard Conditions",
-                "Complaints Management",
-                "Event Announcements",
-                "Away-from-Work Accidents",
-                "Action Follow-Up",
-                "LFE Reporting Verification",
-                "Event Analysis",
-                "Improvement Teams"
+            "Belajar dari Peristiwa": [
+                "Sistem Pembelajaran dari Peristiwa",
+                "Pembelajaran dari Keberhasilan",
+                "Partisipasi dalam Investigasi",
+                "Kondisi Hampir Celaka dan Tidak Standar",
+                "Manajemen Keluhan",
+                "Pengumuman Peristiwa",
+                "Kecelakaan di Luar Pekerjaan",
+                "Tindak Lanjut Tindakan",
+                "Verifikasi Pelaporan LFE",
+                "Analisis Peristiwa",
+                "Tim Perbaikan"
             ],
-            "RISK MONITORING": [
-                "Health Hazard Monitoring",
-                "Safety Hazard Monitoring",
-                "Security Hazard Monitoring",
-                "Environmental Hazard Monitoring",
-                "Customer Satisfaction",
-                "Effectiveness of Monitoring",
-                "Perception Surveys",
-                "Behavioral Observation",
-                "Task Observations",
-                "Audits",
-                "Process Hazard Monitoring"
+            "Pemantauan Risiko": [
+                "Pemantauan Bahaya Kesehatan",
+                "Pemantauan Bahaya Keselamatan",
+                "Pemantauan Bahaya Keamanan",
+                "Pemantauan Bahaya Lingkungan",
+                "Kepuasan Pelanggan",
+                "Efektivitas Pemantauan",
+                "Survei Persepsi",
+                "Observasi Perilaku",
+                "Observasi Tugas",
+                "Audit",
+                "Pemantauan Bahaya Proses"
             ],
-            "RESULTS AND REVIEW": [
-                "Business Results",
-                "Management Review",
-                "Reporting to Stakeholders",
-                "Residual Risk Management"
+            "Hasil dan Tinjauan": [
+                "Hasil Bisnis",
+                "Tinjauan Manajemen",
+                "Pelaporan ke Pemangku Kepentingan",
+                "Manajemen Risiko Residual"
             ]
 
 
         };
-
         const selectedCategory = firstDropdown.value;
         if (options[selectedCategory]) {
             options[selectedCategory].forEach(optionText => {
@@ -1515,7 +1564,7 @@
 
             if (perusahaan_name) {
                 $.ajax({
-                    url: '/operator/incident/get-bagian/' + perusahaan_name,
+                    url: '/adminsystem/incident/get-bagian/' + perusahaan_name,
                     type: 'GET',
                     success: function(data) {
                         console.log("Bagian Data: ", data); // Log the response data
@@ -1535,6 +1584,25 @@
             }
         });
     });
+</script>
+<script>
+    function hitungHariHilang() {
+        $.ajax({
+            url: "{{ url('adminsystem/incident/get-jumlah-hari-hilang') }}",
+            method: 'POST',
+            data: {
+                jenis1: $('#jenis_luka_sakit').val(),
+                jenis2: $('#jenis_luka_sakit2').val(),
+                jenis3: $('#jenis_luka_sakit3').val(),
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                $('#jml_hari_hilang').val(response.total);
+            }
+        });
+    }
+
+    $('#jenis_luka_sakit, #jenis_luka_sakit2, #jenis_luka_sakit3').on('change', hitungHariHilang);
 </script>
 
 </div>

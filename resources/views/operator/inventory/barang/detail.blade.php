@@ -61,8 +61,8 @@
 
                 <!-- Buttons to Edit and Delete -->
                 <div class="d-flex justify-content-between mt-4">
-                    <a href="{{ route('adminsystem.barang.edit', $barangs->id) }}" class="btn bg-gradient-dark btn-md">{{ __('Edit Barang') }}</a>
-                    <form action="{{ route('adminsystem.barang.destroy', $barangs->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this item?');">
+                    <a href="{{ route('operator.barang.edit', $barangs->id) }}" class="btn bg-gradient-dark btn-md">{{ __('Edit Barang') }}</a>
+                    <form action="{{ route('operator.barang.destroy', $barangs->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this item?');">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-danger btn-md">{{ __('Hapus Barang') }}</button>

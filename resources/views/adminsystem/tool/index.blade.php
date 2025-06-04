@@ -85,7 +85,7 @@
                     <h6 class="mb-0">Draft tool</h6>
                     <form action="{{ route('adminsystem.tool.create') }}" method="GET" style="display:inline;">
                         @csrf
-                        <button type="submit" class="btn btn-send active mb-0 text-white" role="button" aria-pressed="true">
+                        <button type="submit" class="btn btn-primary btn-sm active mb-0 text-white" role="button" aria-pressed="true">
                             Tambah
                         </button>
                     </form>
@@ -185,7 +185,7 @@
                         </div>
 
                         <div class="col-12 col-md-3 d-flex align-items-end">
-                            <button type="submit" class="btn btn-sm btn-send w-50">Filter</button>
+                            <button type="submit" class="btn btn-sm btn-warning w-50">Filter</button>
                         </div>
 
                         <div class="col-12 col-md-3 d-flex justify-content-md-end justify-content-start align-items-end">

@@ -48,8 +48,8 @@ class SessionsController extends Controller
                 return redirect('/adminsystem/home');
             } elseif (Auth::user()->role == 'operator') {
                 return redirect('/operator/home');
-            } elseif (Auth::user()->role == 'guest') {
-                return redirect('/guest/home');
+            } elseif (Auth::user()->role == 'tamu') {
+                return redirect('/tamu/home');
             }
         } else {
             return redirect('')->withErrors('NIK and Password not found ');

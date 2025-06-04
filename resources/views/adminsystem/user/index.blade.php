@@ -8,22 +8,20 @@
 @endif
 <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg">
   <div class="container-fluid py-4">
-    <div class="nav-item d-flex align-self-end">
-      <form action="{{ route('adminsystem.user.create') }}" method="GET" style="display:inline;">
-        @csrf
-        <button type="submit" class="btn btn-sm btn-primary active mb-0 text-white" role="button" aria-pressed="true">
-
-          Tambah
-        </button>
-      </form>
-    </div>
     <br>
     <div class="row">
       <div class="col-12">
         <div class="card mb-4">
-          <div class="card-header pb-0">
-            <h6>Users List</h6>
+          <div class="card-header pb-0 d-flex justify-content-between align-items-center">
+            <h6 class="mb-0">Users List</h6>
+            <form action="{{ route('adminsystem.user.create') }}" method="GET" style="display:inline;">
+              @csrf
+              <button type="submit" class="btn btn-sm btn-primary active mb-0 text-white" role="button" aria-pressed="true">
+                Tambah
+              </button>
+            </form>
           </div>
+
           <div class="card-body px-0 pt-0 pb-2">
             <div class="table-responsive p-3">
               <table class="table align-items-center mb-0" id="dataTable">

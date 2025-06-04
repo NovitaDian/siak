@@ -16,7 +16,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8|confirmed', // Password confirmation
-            'role' => 'required|string|in:adminsystem,operator,guest',
+            'role' => 'required|string|in:adminsystem,operator,tamu',
         ]);
 
         // Store plain password temporarily in the session
@@ -42,7 +42,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
             'password' => 'nullable|string|min:8|confirmed', // Password confirmation
-            'role' => 'required|string|in:adminsystem,operator,guest',
+            'role' => 'required|string|in:adminsystem,operator,tamu',
         ]);
 
         $user->name = $request->name;

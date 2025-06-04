@@ -1,9 +1,78 @@
 @extends('layouts.user_type.operator')
 
 @section('content')
-
+@if (session('success'))
+<div class="alert alert-success alert-dismissible fade show" role="alert" style="background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 10px; margin: 10px;">
+    {{ session('success') }}
+</div>
+@endif
 <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg">
-    <div class="container-fluid py-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="card mb-4">
+                    <div class="card-header pb-0">
+                        <h6>REQUEST</h6>
+                    </div>
+                    <div class="card-body px-4 pt-4 pb-4">
+                        <div class="table-responsive p-0">
+                            <table class="table align-items-center mb-0" id="dataTableReq">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Pengirim</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Waktu Pengajuan</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Jenis Pengajuan</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Alasan</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="notificationTableBody">
+                                    @foreach ($requests as $request)
+                                    <tr>
+                                        <td class="text-center text-xs">{{ $request->nama_pengirim }}</td>
+                                        <td class="text-center text-xs">{{ $request->created_at->format('d/m/Y') }}</td>
+                                        <td class="text-center text-xs">{{ $request->type }}</td>
+                                        <td class="text-center text-xs">{{ $request->reason }}</td>
+                                        <td class="text-center" id="status-{{$request->id}}">{{ $request->status }}</td>
+                                        <td class="text-center">
+                                            @if ($request->status == 'Pending')
+                                            <button
+                                                class="btn btn-success btn-xs me-1"
+                                                onclick="approveRequest('{{ $request->id }}')"
+                                                title="Approve this request">
+                                                <i class="fas fa-check m-1"></i> Approve
+                                            </button>
+
+                                            <button
+                                                class="btn btn-danger btn-xs me-1"
+                                                onclick="rejectRequest('{{ $request->id }}')"
+                                                title="Reject this request">
+                                                <i class="fas fa-times m-1"></i> Reject
+                                            </button>
+                                            @endif
+
+                                            <form
+                                                action="{{ route('operator.daily.show', ['id' => $request->id]) }}"
+                                                method="GET"
+                                                style="display:inline;"
+                                                title="View details">
+                                                <button type="submit" class="btn btn-light btn-xs">
+                                                    <i class="fas fa-eye"></i> Show
+                                                </button>
+                                            </form>
+                                        </td>
+
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+
         <br>
         <div class="row">
             <div class="col-12">
@@ -54,28 +123,50 @@
                                             <p class="text-xs font-weight-bold mb-0">{{ $daily->rincian_laporan }}</p>
                                         </td>
                                         <td class="align-middle text-center">
-                                            <div style="display: flex; justify-content: center; align-items: center;">
-                                                <!-- Tombol Edit -->
-                                                <a href="javascript:;"
-                                                    id="editBtn"
-                                                    class="btn btn-warning"
-                                                    onclick="editAction();">
-                                                    <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit
-                                                </a>
+                                            <div class="d-flex justify-content-center align-items-center gap-1 flex-nowrap" style="flex-wrap: nowrap;">
 
-                                                <!-- Tombol Delete -->
-                                                <form action="{{ route('operator.daily.destroy', $daily->id) }}" method="POST" style="margin: 0;">
+                                                <form action="{{ route('operator.daily.destroy', $daily->id) }}" method="POST" class="m-0">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-send btn-xs" onclick="return confirm('Anda yakin akan mengirim dokumen?')" title="Kirim">
-                                                        <i class="fas fa-paper-plane me-1" style="margin-right: 4px; font-size: 12px;"></i> Send
+                                                        <i class="fas fa-paper-plane me-1" style="font-size: 12px;"></i> Send
                                                     </button>
                                                 </form>
+
+                                                <div class="dropdown">
+                                                    <button class="btn btn-secondary btn-xs dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        <i class="fas fa-cog me-1" style="font-size: 12px;"></i> Options
+                                                    </button>
+                                                    <ul class="dropdown-menu">
+                                                        <li>
+                                                            <a class="dropdown-item" href="{{ route('operator.daily.edit', $daily->id) }}">
+                                                                <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <form action="{{ route('operator.daily.show', ['id' => $daily->id]) }}" method="GET" class="m-0">
+                                                                <button type="submit" class="dropdown-item">
+                                                                    <i class="fas fa-eye me-1" style="font-size: 12px;"></i> Show
+                                                                </button>
+                                                            </form>
+                                                        </li>
+                                                        <li>
+                                                            <form action="{{ route('operator.daily.draft_destroy', $daily->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="submit" class="dropdown-item text-danger">
+                                                                    <i class="fas fa-trash-alt me-1" style="font-size: 12px;"></i> Delete
+                                                                </button>
+                                                            </form>
+                                                        </li>
+                                                    </ul>
+                                                </div>
                                             </div>
 
-                                            <!-- Font Awesome (pindahkan ke layout utama jika sudah dimuat global) -->
+                                            <!-- Font Awesome & Bootstrap JS (pindahkan ke layout utama jika belum ada) -->
                                             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
                                         </td>
+
 
 
                                         <script>
@@ -112,16 +203,27 @@
                                 </div>
 
                                 <div class="col-12 col-md-3 d-flex align-items-end">
-                                    <button type="submit" class="btn btn-sm btn-primary w-50">Filter</button>
+                                    <button type="submit" class="btn btn-sm btn-warning w-50">Filter</button>
                                 </div>
 
-                                <div class="col-12 col-md-3 d-flex justify-content-md-end justify-content-start align-items-end gap-2">
-                                    <a href="{{ route('operator.daily.export', request()->all()) }}" class="btn btn-sm btn-success w-100 w-md-auto">
-                                        <i class="fas fa-file-excel me-1"></i> Excel
-                                    </a>
-                                    <a href="{{ route('operator.daily.exportPdf', request()->all()) }}" class="btn btn-sm btn-danger w-100 w-md-auto">
-                                        <i class="fas fa-file-pdf me-1"></i> PDF
-                                    </a>
+                                <div class="col-12 col-md-3 d-flex justify-content-md-end justify-content-start align-items-end">
+                                    <div class="dropdown w-100 w-md-auto">
+                                        <button class="btn btn-sm btn-primary dropdown-toggle w-100 w-md-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="fas fa-download me-1"></i> Unduh
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li>
+                                                <a class="dropdown-item" href="{{ route('operator.tool.export', request()->all()) }}">
+                                                    <i class="fas fa-file-excel text-success me-2"></i> Excel
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item" href="{{ route('operator.tool.exportPdf', request()->all()) }}">
+                                                    <i class="fas fa-file-pdf text-danger me-2"></i> PDF
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </form>
 
@@ -137,6 +239,7 @@
                                             <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Shift Kerja</th>
                                             <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">HSE Inspector</th>
                                             <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Rincian</th>
+                                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Request</th>
                                             <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Opsi</th>
                                         </tr>
                                     </thead>
@@ -163,12 +266,9 @@
 
                                             <td class="align-middle text-center">
                                                 @if ($daily_fix->status == 'Nothing')
-                                                <a href="{{ route('operator.daily.show', $daily_fix->id) }}"
-                                                    class="btn btn-info btn-xs"> <i class="fas fa-eye me-1" style="font-size: 12px;"></i> Show
-                                                </a>
-
-                                                <button class="btn btn-secondary btn-xs"
-                                                    onclick="showRequestModal('{{ $daily_fix->id }}')">Request</button>
+                                                <button class="btn btn-secondary btn-xs" onclick="showRequestModal('{{ $daily_fix->id }}')">
+                                                    <i class="fas fa-paper-plane me-1" style="font-size: 12px;"></i> Request
+                                                </button>
 
                                                 @elseif ($daily_fix->status == 'Pending')
                                                 <span class="text-warning">Pending</span>
@@ -181,23 +281,32 @@
                                                 @endphp
 
                                                 @if ($request)
-                                                @if (strcasecmp($request->type, 'Edit') === 0)
-                                                <a href="{{ route('operator.daily.sent_edit', $daily_fix->id) }}"
-                                                    class="btn btn-warning btn-xs"> <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit
-                                                </a>
-                                                @elseif (strcasecmp($request->type, 'Delete') === 0)
-                                                <form action="{{ route('operator.daily.sent_destroy', $daily_fix->id) }}" method="POST" style="display:inline;">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit"
-                                                        class="btn btn-danger btn-xs"
-                                                        onclick="return confirm('Anda yakin akan menghapus data ini?')">
-                                                        <i class="fas fa-trash-alt me-1" style="font-size: 12px;"></i> Delete
+                                                <div class="dropdown d-inline">
+                                                    <button class="btn btn-success btn-xs dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        <i class="fas fa-check-circle me-1" style="font-size: 12px;"></i> Approved
                                                     </button>
-                                                </form>
-                                                @else
-                                                <span class="text-danger">Unknown request type</span>
-                                                @endif
+                                                    <ul class="dropdown-menu">
+                                                        @if (strcasecmp($request->type, 'Edit') === 0)
+                                                        <li>
+                                                            <a href="{{ route('operator.daily.sent_edit', $daily_fix->id) }}" class="dropdown-item">
+                                                                <i class="fas fa-edit me-1"></i> Edit
+                                                            </a>
+                                                        </li>
+                                                        @elseif (strcasecmp($request->type, 'Delete') === 0)
+                                                        <li>
+                                                            <form action="{{ route('operator.daily.sent_destroy', $daily_fix->id) }}" method="POST" onsubmit="return confirm('Anda yakin akan menghapus data ini?')">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="submit" class="dropdown-item text-danger">
+                                                                    <i class="fas fa-trash-alt me-1"></i> Hapus
+                                                                </button>
+                                                            </form>
+                                                        </li>
+                                                        @else
+                                                        <li><span class="dropdown-item text-danger">Unknown request type</span></li>
+                                                        @endif
+                                                    </ul>
+                                                </div>
                                                 @else
                                                 <span class="text-danger">No corresponding request found</span>
                                                 @endif
@@ -205,6 +314,12 @@
                                                 @elseif ($daily_fix->status == 'Rejected')
                                                 <span class="text-danger">Request Rejected</span>
                                                 @endif
+                                            </td>
+
+                                            <td class="align-middle text-center">
+                                                <a href="{{ route('operator.daily.show', $daily_fix->id) }}"
+                                                    class="btn btn-info btn-xs"> <i class="fas fa-eye me-1" style="font-size: 12px;"></i> Show
+                                                </a>
                                             </td>
                                         </tr>
                                         @endforeach
@@ -218,7 +333,7 @@
             </div>
         </div>
     </div>
-    </div>
+  
     <div class="modal fade" id="requestModal" tabindex="-1" role="dialog" aria-labelledby="requestModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -253,8 +368,8 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
-<link href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css" rel="stylesheet">
-<script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
 <script>
     // Ambil CSRF token dari meta tag

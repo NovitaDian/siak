@@ -11,7 +11,6 @@
         <div class="card mx-auto w-100" style="max-width: 200%; ">
             <div class="row">
                 <div class="col-12">
-                    <div class="card mb-4">
                         <div class="card-header pb-0">
                             <h6>REQUEST</h6>
                         </div>
@@ -80,11 +79,6 @@
                 </div>
             </div>
         </div>
-    </div>
-
-
-
-
     <!-- SENT DOCUMENT TABLE -->
     <div class="row">
         <div class="col-12">
@@ -132,7 +126,7 @@
                             <input type="date" name="end_date" id="end_date" class="form-control" value="{{ request('end_date') }}">
                         </div>
                         <div class="col-md-3 d-flex align-items-end">
-                            <button type="submit" class="btn btn-sm btn-send">Filter</button>
+                            <button type="submit" class="btn btn-sm btn-warning">Filter</button>
                         </div>
                     </form>
                 </div>
@@ -174,7 +168,7 @@
                                     <td class="text-center text-xs">{{ $ppe_fix->lokasi_observasi }}</td>
                                     <td class="align-middle text-center">
                                         @if ($ppe_fix->status == 'Nothing')
-                                        <button class="btn btn-secondary btn-xs" onclick="showRequestModal('{{ $ppe_fix->id }}')">
+                                        <button class="btn btn-info btn-xs" onclick="showRequestModal('{{ $ppe_fix->id }}')">
                                             <i class="fas fa-paper-plane me-1" style="font-size: 12px;"></i> Request
                                         </button>
 
@@ -223,7 +217,7 @@
                                     <td class="align-middle text-center">
                                         @if ($ppe_fix->status_ppe == 'Non-Compliant')
                                         <form action="{{ route('adminsystem.ppe.show', ['id' => $ppe_fix->id]) }}" method="GET" style="display:inline;">
-                                            <button type="submit" class="btn btn-info btn-xs">
+                                            <button type="submit" class="btn btn-secondary btn-xs">
                                                 <i class="fas fa-flag"></i>&nbsp; Report
                                             </button>
                                         </form>

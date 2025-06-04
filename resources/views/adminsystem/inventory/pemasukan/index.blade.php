@@ -6,20 +6,18 @@
     {{ session('success') }}
 </div>
 @endif
-<div class="nav-item d-flex align-self-end">
-    <form action="{{ route('adminsystem.pemasukan.create') }}" method="GET" style="display:inline;">
-        @csrf
-        <button type="submit" class="btn btn-primary btn-sm active mb-0 text-white" role="button" aria-pressed="true">
-            Tambah
-        </button>
-    </form>
-</div>
-<br>
+
 <div class="row">
     <div class="col-12">
         <div class="card mb-4">
-            <div class="card-header pb-0">
+            <div class="card-header pb-0 d-flex justify-content-between align-items-center">
                 <h6>Data Pemasukan</h6>
+                <form action="{{ route('adminsystem.pemasukan.create') }}" method="GET" style="display:inline;">
+                    @csrf
+                    <button type="submit" class="btn btn-sm btn-primary active mb-0 text-white" role="button" aria-pressed="true">
+                        Tambah
+                    </button>
+                </form>
             </div>
             <div class="card-body px-4 pt-4 pb-4">
                 <div class="table-responsive p-0">

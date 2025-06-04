@@ -1,4 +1,4 @@
-@extends('layouts.user_type.auth')
+@extends('layouts.user_type.operator')
 
 @section('content')
 <div class="container-fluid py-4">
@@ -7,7 +7,7 @@
             <h6 class="mb-0">{{ __('Form Pemasukan Barang') }}</h6>
         </div>
         <div class="card-body pt-4 p-3">
-            <form action="{{ route('adminsystem.pemasukan.store') }}" method="POST" role="form text-left" enctype="multipart/form-data">
+            <form action="{{ route('operator.pemasukan.store') }}" method="POST" role="form text-left" enctype="multipart/form-data">
                 @csrf
 
                 @if($errors->any())

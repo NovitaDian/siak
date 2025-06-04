@@ -517,16 +517,13 @@ class NcrController extends Controller
         $end = $request->end_date;
 
         if ($start && $end) {
-            $ncr_fixs = SentNcr::whereBetween('tanggal_shift_kerja', [$start, $end])
-                ->where('writer', $user->name)
-                ->get();
+            $ncr_fixs = SentNcr::whereBetween('tanggal_shift_kerja', [$start, $end])->get();
         } else {
-            $ncr_fixs = SentNcr::where('writer', $user->name)->get();
+            $ncr_fixs = SentNcr:where('writer', $user->name)->get();
         }
 
         return view('operator.ncr.index', compact('ncrs', 'ncr_fixs', 'allRequests'));
     }
-
 
 
     // Menampilkan detail data NCR berdasarkan ID
@@ -597,6 +594,7 @@ class NcrController extends Controller
         ]);
 
         $data = $request->all();
+        $data['user_id'] = Auth::user()->id;
         $data['writer'] = Auth::user()->name;
 
         if ($request->hasFile('foto')) {
@@ -708,6 +706,7 @@ class NcrController extends Controller
         // Pindahkan data ke tabel ncr_fix
         SentNcr::create([
             'draft_id' => $ncr->id,
+            'user_id' => $ncr->user_id,
             'writer' => $ncr->writer,
             'tanggal_shift_kerja' => $ncr->tanggal_shift_kerja,
             'shift_kerja' => $ncr->shift_kerja,
@@ -735,6 +734,13 @@ class NcrController extends Controller
         return redirect()->route('operator.ncr.index')->with('success', 'Data berhasil dikirim.');
     }
 
+    public function operator_draft_destroy(Request $request, $id)
+    {
+        // Ambil data PPE berdasarkan ID
+        $ncr = Ncr::findOrFail($id);
+        $ncr->delete();
+        return redirect()->route('operator.ncr.index')->with('notification', 'NCR berhasil dikirim!');
+    }
     public function operator_sent_destroy(Request $request, $id)
     {
         // Ambil data PPE berdasarkan ID
@@ -964,4 +970,14 @@ class NcrController extends Controller
 
         return redirect()->route('operator.ncr.index')->with('success', 'NCR berhasil di-close!');
     }
-}
+    }
+
+
+
+
+
+
+
+
+
+

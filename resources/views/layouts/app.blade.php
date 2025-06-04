@@ -58,6 +58,10 @@
   @yield('operator')
   @endauth
 
+  @auth
+  @yield('tamu')
+  @endauth
+
   @guest
   @yield('guest')
   @endguest
