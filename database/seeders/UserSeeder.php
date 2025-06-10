@@ -33,6 +33,15 @@ class UserSeeder extends Seeder
             'password' => Hash::make('secret'),
             'created_at' => now(),
             'updated_at' => now()
+        ],
+        [
+            'id' => 3,
+            'name' => 'guest',
+            'role' => 'guest',
+            'email' => 'guest@softui.com',
+            'password' => Hash::make('secret'),
+            'created_at' => now(),
+            'updated_at' => now()
         ]
         ];
         DB::table('users')->insert($users);

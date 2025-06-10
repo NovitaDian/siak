@@ -2,37 +2,53 @@
 
 namespace Database\Seeders;
 
-use App\Models\Perusahaan;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class PerusahaanTableSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
-    public function run(): void
+    public function run()
     {
-        Perusahaan::insert([
+        $perusahaans = [
+            [
+                'perusahaan_name' => 'PT. Dharmapala Usaha Sukses',
+                'perusahaan_code' => 26321,
+            ],
+            [
+                'perusahaan_name' => 'PT. RPM',
+                'perusahaan_code' => 53270,
+            ],
+            [
+                'perusahaan_name' => 'PT. SBT',
+                'perusahaan_code' => 24122,
+            ],
+            [
+                'perusahaan_name' => 'PT. PPT',
+                'perusahaan_code' => 61517,
+            ],
+            [
+                'perusahaan_name' => 'PT. Elcander',
+                'perusahaan_code' => 32372,
+            ],
+            [
+                'perusahaan_name' => 'PT. Tenang Jaya Sejahtera',
+                'perusahaan_code' => 13270,
+            ],
+            [
+                'perusahaan_name' => 'PT. G4S',
+                'perusahaan_code' => 24528,
+            ],
+        ];
 
-            [
-                'id' => 1,
-                'perusahaan_code' => '115568',
-                'perusahaan_name' => 'PT. OLAM  INDONESIA',
-                'city' => 'Jakarta-DKI',
-                'street' => 'Gandaria 8 Office Building Lt.15',
-                'created_at' => '2025-02-26 06:56:22',
-                'updated_at' => '2025-02-26 06:56:22',
-            ],
-            [
-                'id' => 1151,
-                'perusahaan_code' => '00013',
-                'perusahaan_name' => 'PT.SATU DUA',
-                'city' => 'Jakarta-DKI',
-                'street' => 'Jalan Laut Kompleks Pelabuhan Tanjung Intan, Klega...',
-                'created_at' => '2025-02-26 06:57:37',
-                'updated_at' => '2025-02-26 06:57:37',
-            ],
-        ]);
+        foreach ($perusahaans as $perusahaan) {
+            DB::table('perusahaan')->insert([
+                'perusahaan_name' => $perusahaan['perusahaan_name'],
+                'perusahaan_code' => $perusahaan['perusahaan_code'],
+                'city' => '-',
+                'street' => '-',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
     }
 }

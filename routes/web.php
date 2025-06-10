@@ -121,8 +121,8 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('/create', [PpeController::class, 'create'])->name('create');
 			Route::post('/', [PpeController::class, 'store'])->name('store');
 			Route::get('/{id}/edit', [PpeController::class, 'edit'])->name('edit');
+			Route::get('/show{id}', [PpeController::class, 'show'])->name('show');
 			Route::put('/{id}', [PpeController::class, 'update'])->name('update');
-			Route::get('/{id}', [PpeController::class, 'show'])->name('show');
 			Route::delete('/{id}', [PpeController::class, 'destroy'])->name('destroy');
 			Route::get('/search', [PpeController::class, 'search'])->name('search');
 			Route::get('/sent_edit/{id}', [PpeController::class, 'sent_edit'])->name('sent_edit');
@@ -134,13 +134,12 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::post('/reject/{id}', [PpeController::class, 'reject'])->name('reject');
 		});
 		Route::prefix('adminsystem/non_compliant')->name('adminsystem.non_compliant.')->group(function () {
-			Route::get('/', [NonCompliantController::class, 'index'])->name('index');
 			Route::get('/create/{id}', [NonCompliantController::class, 'create'])->name('create');
-			Route::post('/', [NonCompliantController::class, 'store'])->name('store');
-			Route::get('/{id}/edit', [NonCompliantController::class, 'edit'])->name('edit');
+			Route::post('/storepelanggar', [NonCompliantController::class, 'store'])->name('store');
+			Route::get('edit/{id}', [NonCompliantController::class, 'edit'])->name('edit');
 			Route::put('/{id}', [NonCompliantController::class, 'update'])->name('update');
-			Route::get('/{id}', [NonCompliantController::class, 'show'])->name('show');
-			Route::get('/{id}', [NonCompliantController::class, 'sent_show'])->name('sent_show');
+			Route::get('/show{id}', [NonCompliantController::class, 'show'])->name('show');
+			Route::get('/sent_show{id}', [NonCompliantController::class, 'sent_show'])->name('sent_show');
 			Route::delete('/{id}', [NonCompliantController::class, 'destroy'])->name('destroy');
 			Route::get('/search', [NonCompliantController::class, 'search'])->name('search');
 			Route::post('/non_compliant-request', [NonCompliantController::class, 'storeRequest'])->name('storeRequest');
@@ -393,7 +392,8 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('/edit/{id}', [ToolController::class, 'edit'])->name('edit');
 			Route::get('/detail/{id}', [ToolController::class, 'detail'])->name('detail');
 			Route::put('/{id}', [ToolController::class, 'update'])->name('update');
-			Route::get('/{id}', [ToolController::class, 'show'])->name('show');
+			Route::get('/sent_{id}', [ToolController::class, 'show'])->name('show');
+			Route::get('/{id}', [ToolController::class, 'sent_show'])->name('sent_show');
 			Route::get('/sent_edit/{id}', [ToolController::class, 'sent_edit'])->name('sent_edit');
 			Route::put('/sent_update/{id}', [ToolController::class, 'sent_update'])->name('sent_update');
 			Route::delete('/sent_destroy/{id}', [ToolController::class, 'sent_destroy'])->name('sent_destroy');

@@ -236,7 +236,8 @@
                                             </button>
 
                                             @elseif ($tool_fix->status == 'Pending')
-                                            <span class="text-warning">Pending</span>
+                                            <span class="badge bg-warning text-dark">Pending</span>
+
 
                                             @elseif ($tool_fix->status == 'Approved')
                                             @php
@@ -277,7 +278,7 @@
                                             @endif
 
                                             @elseif ($tool_fix->status == 'Rejected')
-                                            <span class="text-danger">Request Rejected</span>
+                                            <span class="badge bg-danger text-white">Rejected</span>
                                             @endif
                                         </td>
 
@@ -308,14 +309,14 @@
                         @csrf
                         <input type="hidden" id="senttoolId" name="sent_tool_id">
                         <div class="form-group">
-                            <label for="requestType">Request Type</label><br>
+                            <label for="requestType"> Jenis Request </label><br>
                             <input type="radio" id="Edit" name="type" value="Edit" required>
                             <label for="Edit">Edit</label>
                             <input type="radio" id="Delete" name="type" value="Delete" required>
                             <label for="Delete">Delete</label>
                         </div>
                         <div class="form-group">
-                            <label for="reason">Reason for Request</label>
+                            <label for="reason">Alasan Pengajuan Request</label>
                             <textarea class="form-control" id="reason" name="reason" required></textarea>
                         </div>
                         <button type="submit" class="btn btn-primary">Submit Request</button>

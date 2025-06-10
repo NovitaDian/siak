@@ -5,7 +5,7 @@
 <div>
 
     <h6 class="mb-0 mt-4">{{ __('DATA PELANGGAR') }}</h6>
-    <form action="{{ route('adminsystem.non_compliant.store') }}" enctype="multipart/form-data" method="POST">
+    <form action="{{ route('adminsystem.non_compliant.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <input type="hidden" name="id_ppe" value="{{ $ppeFix->id }}">
 
@@ -46,7 +46,7 @@
                     <input type="text" name="lokasi_observasi" class="form-control" value="{{ $ppeFix->lokasi_observasi ?? '' }}" readonly>
                 </div>
             </div>
-                 </div>
+        </div>
 
         <h6 class="mb-0 mt-4">{{ __('DATA PELANGGAR') }}</h6>
 
@@ -110,21 +110,21 @@
                         <input type="text" name="tindakan" class="form-control">
                     </div>
                     <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="foto">{{ __('Foto') }}</label>
-                                <input
-                                    class="form-control @error('foto') is-invalid @enderror"
-                                    type="file"
-                                    id="foto"
-                                    name="foto"
-                                    accept="image/*"
-                                    capture="environment"
-                                    required>
-                                @error('foto')
-                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                                @enderror
-                            </div>
+                        <div class="form-group">
+                            <label for="foto">{{ __('Foto') }}</label>
+                            <input
+                                class="form-control @error('foto') is-invalid @enderror"
+                                type="file"
+                                id="foto"
+                                name="foto"
+                                accept="image/*"
+                                capture="environment"
+                                required>
+                            @error('foto')
+                            <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                            @enderror
                         </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -133,7 +133,8 @@
 
         <!-- Tombol Submit -->
         <div class="mt-4">
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">{{ __('Save Report') }}</button>
+
         </div>
     </form>
 </div>

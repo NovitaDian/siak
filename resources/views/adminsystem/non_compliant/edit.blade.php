@@ -103,7 +103,8 @@
 </div>
 
 <div class="mt-4">
-    <button type="submit" class="btn btn-primary">Update</button>
+    <button type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">{{ __('Update Report') }}</button>
+
 </div>
 </form>
 </div>

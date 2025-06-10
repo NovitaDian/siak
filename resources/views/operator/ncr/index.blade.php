@@ -346,14 +346,14 @@
                     <div class="modal-body">
                         <input type="hidden" id="sentNcrId" name="sent_ncr_id">
                         <div class="form-group">
-                            <label for="requestType">Request Type</label><br>
+                            <label for="requestType"> Jenis Request </label><br>
                             <input type="radio" id="Edit" name="type" value="Edit" required>
                             <label for="Edit">Edit</label>
                             <input type="radio" id="Delete" name="type" value="Delete" required>
                             <label for="Delete">Delete</label>
                         </div>
                         <div class="form-group">
-                            <label for="reason">Reason for Request</label>
+                            <label for="reason">Alasan Pengajuan Request</label>
                             <textarea class="form-control" id="reason" name="reason" required></textarea>
                         </div>
                     </div>

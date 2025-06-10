@@ -1,261 +1,99 @@
-<!DOCTYPE html>
-<html>
+@extends('layouts.user_type.operator')
 
-<head>
-    <title>Nonconformity Report & Corrective/Preventive Action Request</title>
-    <style>
-        body {
-            font-family: sans-serif;
-            font-size: 12pt;
-        }
+@section('content')
+<div class="container-fluid">
+    <h2 class="text-black font-weight-bolder text-center mb-4">
+        NONCONFORMITY REPORT AND CORRECTIVE/PREVENTIVE ACTION REQUEST
+    </h2>
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-            table-layout: fixed;
-            /* Untuk lebar kolom yang tetap */
-        }
+    <div class="card mx-auto w-100" style="max-width: 150%;">
+        <div class="card-header pb-0 px-3">
+            <h6 class="mb-0">{{ __('DATA UMUM') }}</h6>
+        </div>
+        <div class="card-body pt-4 p-3">
+            <div class="row">
 
-        th,
-        td {
-            border: 1px solid black;
-            padding: 5px;
-            vertical-align: top;
-        }
-
-        th {
-            text-align: left;
-            font-weight: bold;
-        }
-
-        .center {
-            text-align: center;
-        }
-
-        .logo-container {
-            text-align: center;
-            padding: 10px 0;
-        }
-
-        .logo {
-            max-width: 100px;
-        }
-
-        .table-header {
-            background-color: #f2f2f2;
-            font-weight: bold;
-        }
-
-        /* Style untuk textarea */
-        textarea {
-            width: 100%;
-            height: 80px;
-            /* Sesuaikan tinggi yang Anda inginkan */
-            box-sizing: border-box;
-            /* Agar padding tidak mempengaruhi lebar total */
-        }
-
-        /* Style untuk checkbox dan label */
-        .checkbox-container {
-            display: inline-block;
-            margin-right: 10px;
-            vertical-align: middle;
-            /* rata tengah dengan label */
-        }
-
-        .checkbox-container input[type="checkbox"],
-        .checkbox-container input[type="radio"] {
-            margin-right: 5px;
-            vertical-align: middle;
-        }
-
-        /* Style untuk bagian Verification */
-        .verification-section {
-            display: flex;
-            align-items: center;
-            /* rata tengah vertikal */
-        }
-
-        .verification-section>div {
-            margin-right: 20px;
-            /* Spasi antar div */
-        }
-    </style>
-</head>
-
-<body>
-
-    <table style="table-layout: fixed;">
-        <tr>
-            <td style="width: 20%;" class="logo-container">
-                <img src="{{ asset('assets/img/logodus.png') }}" alt="Logo" class="logo">
-            </td>
-            <td style="width: 60%; text-align: center;">
-                <h2>Nonconformity Report</h2>
-                <h2>And Corrective/Preventive Action Request</h2>
-            </td>
-            <td style="width: 20%; text-align: right;">
-                <p>DOCUMENT</p>
-                <p>No: FRM-HSE-019.1 Rev.: 01</p>
-                <p>Tgl: {{ $ncr->tanggal_audit }} Hal.: 1 of 1</p>
-            </td>
-        </tr>
-    </table>
-
-    <table>
-        <tr>
-            <td style="width: 25%;">NCR-CPAR No.: {{ $ncr->id }}</td>
-            <td style="width: 25%;">Audit Reference No.: {{ $ncr->element_referensi_ncr }}</td>
-            <td style="width: 25%;">Date of Audit: {{ $ncr->tanggal_audit }}</td>
-            <td style="width: 25%;">Element: {{ $ncr->element_referensi_ncr }}</td>
-        </tr>
-        <tr>
-            <td>Department Audited: {{ $ncr->perusahaan }}-{{ $ncr->nama_bagian }}</td>
-            <td>Lead Auditor: {{ $ncr->nama_hs_officer_2 }}</td>
-            <td>Auditee: {{ $ncr->nama_auditee }}</td>
-            <td>Auditor: {{ $ncr->nama_hs_officer_1 }}</td>
-        </tr>
-    </table>
-
-    <table>
-        <tr>
-            <td colspan="4">Non conformity categorized as:</td>
-        </tr>
-        <tr>
-            <td colspan="4">
-                <div class="checkbox-container">
-                    <input type="checkbox" id="system_documentation" name="kategori_ketidaksesuaian[]" value="System Documentation" {{ in_array('System Documentation', $ncr->kategori_ketidaksesuaian) ? 'checked' : '' }}>
-                    <label for="system_documentation">System Documentation</label>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Tanggal Shift Kerja</label>
+                    <div class="border p-2 rounded bg-light">{{ $ncr->tanggal_shift_kerja }}</div>
                 </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" id="implementation" name="kategori_ketidaksesuaian[]" value="Implementation/Practices" {{ in_array('Implementation/Practices', $ncr->kategori_ketidaksesuaian) ? 'checked' : '' }}>
-                    <label for="implementation">Implementation/Practices</label>
-                </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" id="review_analysis" name="kategori_ketidaksesuaian[]" value="Review/Analysis" {{ in_array('Review/Analysis', $ncr->kategori_ketidaksesuaian) ? 'checked' : '' }}>
-                    <label for="review_analysis">Review/Analysis</label>
-                </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" id="improvement_action" name="kategori_ketidaksesuaian[]" value="Improvement Action" {{ in_array('Improvement Action', $ncr->kategori_ketidaksesuaian) ? 'checked' : '' }}>
-                    <label for="improvement_action">Improvement action</label>
-                </div>
-            </td>
-        </tr>
-    </table>
 
-    <table>
-        <tr>
-            <td colspan="2">Identified of Non-Conformity/ Potential Non-Conformity:</td>
-        </tr>
-        <tr>
-            <td colspan="2"><textarea readonly>{{ $ncr->deskripsi_ketidaksesuaian }}</textarea></td>
-        </tr>
-        <tr>
-            <td style="width: 50%;">Prepared by: {{ $ncr->writer }}</td>
-            <td style="width: 50%;">Date: {{ $ncr->created_at }}</td>
-        </tr>
-        <tr>
-            <td style="width: 50%;">Reviewed by: </td>
-            <td style="width: 50%;">Date: </td>
-        </tr>
-    </table>
-
-    <table>
-        <tr>
-            <td colspan="4">Non conformity rated as:</td>
-        </tr>
-        <tr>
-            <td>
-                <div class="checkbox-container">
-                    <input type="radio" id="satisfactory">
-                    <label for="satisfactory">Satisfactory</label>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Shift Kerja</label>
+                    <div class="border p-2 rounded bg-light">{{ $ncr->shift_kerja }}</div>
                 </div>
-            </td>
-            <td>
-                <div class="checkbox-container">
-                    <input type="radio" id="need_refinement">
-                    <label for="need_refinement">Need Refinement</label>
-                </div>
-            </td>
-            <td>
-                <div class="checkbox-container">
-                    <input type="radio" id="need_improvement">
-                    <label for="need_improvement">Need Improvement</label>
-                </div>
-            </td>
-            <td>
-                <div class="checkbox-container">
-                    <input type="radio" id="need_immediate_action">
-                    <label for="need_immediate_action">Need Immediate Action</label>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="4">
-                <div class="checkbox-container">
-                    <input type="radio" id="quality_issue">
-                    <label for="quality_issue">Quality Issue</label>
-                </div>
-            </td>
-        </tr>
-    </table>
 
-    <table>
-        <tr>
-            <td colspan="2">Determination of Root Cause/s:</td>
-        </tr>
-        <tr>
-            <td colspan="2"><textarea>... (Data Root Cause) ...</textarea></td>
-        </tr>
-    </table>
-
-    <table>
-        <tr>
-            <td colspan="2">Corrective/ Preventive Action/s:</td>
-        </tr>
-        <tr>
-            <td colspan="2"><textarea>... (Data Corrective Action) ...</textarea></td>
-        </tr>
-        <tr>
-            <td style="width: 50%;">Date of Completion: ... (Data Tanggal Selesai) ...</td>
-            <td style="width: 50%;">Responsibility/PIC: ... (Data PIC) ...</td>
-        </tr>
-    </table>
-
-    <table>
-        <tr>
-            <td colspan="2">Follow up and Review Comments:</td>
-        </tr>
-        <tr>
-            <td colspan="2"><textarea>... (Data Review Comments) ...</textarea></td>
-        </tr>
-    </table>
-
-    <table>
-        <tr>
-            <td colspan="4">Verification of Preventive-Corrective Action / Close Out:</td>
-        </tr>
-        <tr>
-            <td style="width: 25%;">Date: ... (Data Verifikasi) ...</td>
-            <td style="width: 25%;">Close out comment: ... (Data Komentar Close Out) ...</td>
-            <td style="width: 25%;">Auditee/Team: ... (Data Auditee/Team) ...</td>
-            <td style="width: 25%;">Auditor/MR: ... (Data Auditor/MR) ...</td>
-        </tr>
-        <tr>
-            <td colspan="4" class="verification-section">
-                <div class="checkbox-container">
-                    <input type="checkbox" id="effective">
-                    <label for="effective">Effective</label>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Nama H&S Officer 1 / Lead Auditor</label>
+                    <div class="border p-2 rounded bg-light">{{ $ncr->nama_hs_officer_1 }}</div>
                 </div>
-                <div class="checkbox-container">
-                    <input type="checkbox" id="not_effective">
-                    <label for="not_effective">Not effective</label>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Nama H&S Officer 2 / Auditor</label>
+                    <div class="border p-2 rounded bg-light">{{ $ncr->nama_hs_officer_2 }}</div>
                 </div>
-            </td>
-        </tr>
-    </table>
 
-</body>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Tanggal Audit / Pengawasan</label>
+                    <div class="border p-2 rounded bg-light">{{ $ncr->tanggal_audit }}</div>
+                </div>
 
-</html>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Nama Auditee/Owner Area</label>
+                    <div class="border p-2 rounded bg-light">{{ $ncr->nama_auditee }}</div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Perusahaan</label>
+                    <div class="border p-2 rounded bg-light">{{ $ncr->perusahaan }}</div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Bagian/Department</label>
+                    <div class="border p-2 rounded bg-light">{{ $ncr->nama_bagian }}</div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Element / Referensi NCR</label>
+                    <div class="border p-2 rounded bg-light">{{ $ncr->element_referensi_ncr }}</div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Kategori Ketidaksesuaian</label>
+                    <div class="border p-2 rounded bg-light">{{ $ncr->kategori_ketidaksesuaian }}</div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Deskripsi Ketidaksesuaian</label>
+                    <div class="border p-2 rounded bg-light">{{ $ncr->deskripsi_ketidaksesuaian}}</div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Tindak Lanjut</label>
+                    <div class="border p-2 rounded bg-light">{{$ncr->tindak_lanjut}}</div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Estimasi Penyelesaian</label>
+                    <div class="border p-2 rounded bg-light">{{ $ncr->estimasi }}</div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Foto</label><br>
+                    @if($ncr->foto)
+                    <img src="{{ asset('storage/' . $ncr->foto) }}" alt="Foto NCR" class="img-fluid rounded" style="max-height: 300px;">
+                    @else
+                    <div class="border p-2 rounded bg-light">Tidak ada foto</div>
+                    @endif
+                </div>
+               <form action="{{ route('adminsystem.ncr.index') }}" method="GET" style="display:inline;">
+                        @csrf
+                        <button type="submit" class="btn btn-sm btn-primary btn-sm active mb-0 text-white" role="button" aria-pressed="true">
+                            Kembali
+                        </button>
+                    </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection

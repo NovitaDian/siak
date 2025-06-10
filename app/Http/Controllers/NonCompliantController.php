@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\NonCompliantRequestNotification;
 use App\Models\Bagian;
 use App\Models\Perusahaan;
 use Illuminate\Support\Facades\Auth;
 use App\Models\NonCompliant;
 use App\Models\NonCompliantRequest;
 use App\Models\SentPpe;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 
 class NonCompliantController extends Controller
 {
@@ -17,7 +21,7 @@ class NonCompliantController extends Controller
     {
         $nonCompliants = NonCompliant::with('ppeFix')->get();
         $requests = NonCompliantRequest::all();
-        return view('adminsystem.non_compliant.index', compact('nonCompliants', 'requests'));
+        return view('adminsystem.ppe.show', compact('nonCompliants', 'requests'));
     }
 
     // Menampilkan form untuk membuat NonCompliant baru
@@ -64,13 +68,14 @@ class NonCompliantController extends Controller
 
         NonCompliant::create($data);
 
-        return redirect()->route('adminsystem.ppe.index')->with('success', 'Data berhasil disimpan.');
+        return redirect()->route('adminsystem.ppe.show', $data['id_ppe'])
+            ->with('success', 'Pelanggar berhasil ditambahkan!');
     }
     // Menampilkan form untuk mengedit NonCompliant
     public function edit($id)
     {
-        $ppeFix = SentPpe::findOrFail($id);
-        $nonCompliant = NonCompliant::where('id_ppe', $ppeFix->id)->first(); // Get the first matching record, assuming one exists.
+        $nonCompliant = NonCompliant::findOrFail($id);
+        $ppeFix = SentPpe::findOrFail($nonCompliant->id_ppe);
         $perusahaans = Perusahaan::all();
         $bagians = Bagian::all();
         return view('adminsystem.non_compliant.edit', compact('nonCompliant', 'ppeFix', 'perusahaans', 'bagians'));
@@ -87,34 +92,34 @@ class NonCompliantController extends Controller
             'nama_bagian' => 'required|string',
             'nama_hse_inspector' => 'required|string',
             'shift_kerja' => 'required|string',
-            'jam_pengawasan' => 'required|string',
+            'jam_mulai' => 'required|string',
+            'jam_selesai' => 'required|string',
             'zona_pengawasan' => 'required|string',
             'lokasi_observasi' => 'required|string',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
         $nonCompliant = NonCompliant::findOrFail($id);
+        $data = $request->all();
+        $data['user_id'] = Auth::user()->id;
+        $data['writer'] = Auth::user()->name;
 
-        $nonCompliant->update([
-            'id_ppe' => $request->id_ppe,
-            'nama_hse_inspector' => $request->nama_hse_inspector,
-            'shift_kerja' => $request->shift_kerja,
-            'jam_pengawasan' => $request->jam_pengawasan,
-            'zona_pengawasan' => $request->zona_pengawasan,
-            'lokasi_observasi' => $request->lokasi_observasi,
-            'tipe_observasi' => $request->tipe_observasi,
-            'nama_pelanggar' => $request->nama_pelanggar,
-            'perusahaan' => $request->perusahaan,
-            'nama_bagian' => $request->nama_bagian,
-            'deskripsi_ketidaksesuaian' => $request->deskripsi_ketidaksesuaian,
-            'tindakan' => $request->tindakan,
-            'writer' => Auth::user()->name,
-            'user_id' => Auth::user()->id,
-        ]);
+        if ($request->hasFile('foto')) {
+            // Hapus foto lama jika ada
+            if ($nonCompliant->foto && Storage::disk('public')->exists($nonCompliant->foto)) {
+                Storage::disk('public')->delete($nonCompliant->foto);
+            }
 
-        return redirect()->route('adminsystem.ppe.index')->with('success', 'Data berhasil diperbarui.');
+            // Simpan foto baru
+            $fotoPath = $request->file('foto')->store('pelanggar/foto', 'public');
+            $data['foto'] = $fotoPath;
+        }
+
+        $nonCompliant->update($data);
+
+        return redirect()->route('adminsystem.ppe.show', $data['id_ppe'])
+            ->with('success', 'Data pelanggar berhasil diperbarui!');
     }
-
-
     // Menghapus NonCompliant
     public function destroy($id)
     {
@@ -138,14 +143,26 @@ class NonCompliantController extends Controller
             'type' => $request->type, // Request type
             'reason' => $request->reason, // Request reason
             'nama_pengirim' => Auth::user()->name, // The name of the user sending the request
-            'user_id' => Auth::user()->id, 
+            'user_id' => Auth::user()->id,
         ]);
         NonCompliant::where('id', $request->sent_non_compliant_id)->update(['status' => 'Pending']);
 
-        // Return JSON response with a 201 status code (Created)
+        // Kirim email ke semua adminsystem
+        $admins = User::where('role', 'adminsystem')->get();
+        foreach ($admins as $admin) {
+            Mail::to($admin->email)->send(new NonCompliantRequestNotification($request));
+        }
+
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Request berhasil dikirim dan email telah dikirim ke admin.',
+            ]);
+        }
+
         return response()->json([
             'success' => true,
-            'message' => 'Request submitted successfully.'
+            'message' => 'Request berhasil dikirim dan email telah dikirim ke admin.'
         ], 201);
     }
 
@@ -226,7 +243,8 @@ class NonCompliantController extends Controller
 
         NonCompliant::create($data);
 
-        return redirect()->route('adminsystem.ppe.index')->with('success', 'Data berhasil disimpan.');
+        return redirect()->route('operator.ppe.show', $data['id_ppe'])
+            ->with('success', 'Pelanggar berhasil ditambahkan!');
     }
     // Menampilkan form untuk mengedit NonCompliant
     public function operator_edit($id)
@@ -241,6 +259,7 @@ class NonCompliantController extends Controller
     // Mengupdate data NonCompliant
     public function operator_update(Request $request, $id)
     {
+
         $request->validate([
             'id_ppe' => 'required|integer',
             'tipe_observasi' => 'required|string',
@@ -249,32 +268,35 @@ class NonCompliantController extends Controller
             'nama_bagian' => 'required|string',
             'nama_hse_inspector' => 'required|string',
             'shift_kerja' => 'required|string',
-            'jam_pengawasan' => 'required|string',
+            'jam_mulai' => 'required|string',
+            'jam_selesai' => 'required|string',
             'zona_pengawasan' => 'required|string',
             'lokasi_observasi' => 'required|string',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
         $nonCompliant = NonCompliant::findOrFail($id);
+        $data = $request->all();
+        $data['user_id'] = Auth::user()->id;
+        $data['writer'] = Auth::user()->name;
 
-        $nonCompliant->update([
-            'id_ppe' => $request->id_ppe,
-            'nama_hse_inspector' => $request->nama_hse_inspector,
-            'shift_kerja' => $request->shift_kerja,
-            'jam_pengawasan' => $request->jam_pengawasan,
-            'zona_pengawasan' => $request->zona_pengawasan,
-            'lokasi_observasi' => $request->lokasi_observasi,
-            'tipe_observasi' => $request->tipe_observasi,
-            'nama_pelanggar' => $request->nama_pelanggar,
-            'perusahaan' => $request->perusahaan,
-            'nama_bagian' => $request->nama_bagian,
-            'deskripsi_ketidaksesuaian' => $request->deskripsi_ketidaksesuaian,
-            'tindakan' => $request->tindakan,
-            'writer' => Auth::user()->name,
-            'user_id' => Auth::user()->id,
-        ]);
+        if ($request->hasFile('foto')) {
+            // Hapus foto lama jika ada
+            if ($nonCompliant->foto && Storage::disk('public')->exists($nonCompliant->foto)) {
+                Storage::disk('public')->delete($nonCompliant->foto);
+            }
 
-        return redirect()->route('operator.ppe.index')->with('success', 'Data berhasil diperbarui.');
+            // Simpan foto baru
+            $fotoPath = $request->file('foto')->store('pelanggar/foto', 'public');
+            $data['foto'] = $fotoPath;
+        }
+
+        $nonCompliant->update($data);
+
+        return redirect()->route('operator.ppe.show', $data['id_ppe'])
+            ->with('success', 'Data pelanggar berhasil diperbarui!');
     }
+
     // Menghapus NonCompliant
     public function operator_destroy($id)
     {
@@ -298,7 +320,7 @@ class NonCompliantController extends Controller
             'type' => $request->type, // Request type
             'reason' => $request->reason, // Request reason
             'nama_pengirim' => Auth::user()->name, // The name of the user sending the request
-            'user_id' => Auth::user()->id, 
+            'user_id' => Auth::user()->id,
         ]);
         NonCompliant::where('id', $request->sent_non_compliant_id)->update(['status' => 'Pending']);
 

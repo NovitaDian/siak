@@ -51,14 +51,7 @@ class NcrController extends Controller
     public function show($id)
     {
         $ncr = SentNcr::findOrFail($id);
-
-        if (is_string($ncr->kategori_ketidaksesuaian)) {
-            $ncr->kategori_ketidaksesuaian = explode(',', $ncr->kategori_ketidaksesuaian);
-        }
-
-        $tanggalHariIni = Carbon::now()->format('d F Y');
-
-        return view('adminsystem.ncr.show', compact('ncr', 'tanggalHariIni'));
+        return view('adminsystem.ncr.show', compact('ncr'));
     }
 
 
@@ -519,7 +512,7 @@ class NcrController extends Controller
         if ($start && $end) {
             $ncr_fixs = SentNcr::whereBetween('tanggal_shift_kerja', [$start, $end])->get();
         } else {
-            $ncr_fixs = SentNcr:where('writer', $user->name)->get();
+        $ncr_fixs = SentNcr::where('writer', $user->name)->get();
         }
 
         return view('operator.ncr.index', compact('ncrs', 'ncr_fixs', 'allRequests'));
@@ -529,15 +522,8 @@ class NcrController extends Controller
     // Menampilkan detail data NCR berdasarkan ID
     public function operator_show($id)
     {
-        $ncr = SentNcr::findOrFail($id);
-
-        if (is_string($ncr->kategori_ketidaksesuaian)) {
-            $ncr->kategori_ketidaksesuaian = explode(',', $ncr->kategori_ketidaksesuaian);
-        }
-
-        $tanggalHariIni = Carbon::now()->format('d F Y');
-
-        return view('operator.ncr.show', compact('ncr', 'tanggalHariIni'));
+        $ncr = SentNcr::findOrFail($id);  
+        return view('operator.ncr.show', compact('ncr'));
     }
 
 

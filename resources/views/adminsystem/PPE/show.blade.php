@@ -101,7 +101,7 @@
                 <h6 class="mb-0"></h6>
                 <form action="{{ route('adminsystem.non_compliant.create', $ppeFix->id) }}" method="GET" class="mb-0">
                     @csrf
-                    <button type="submit" class="btn btn-primary">Tambah</button>
+                    <button type="submit" class="btn btn-sm btn-primary">Tambah</button>
                 </form>
             </div>
             <div class="card-body px-0 pt-0 pb-2">
@@ -111,6 +111,7 @@
                             <thead>
                                 <tr>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">No</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Foto</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Pelanggar</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Deskripsi Ketidaksesuaian</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Perusahaan</th>
@@ -123,6 +124,14 @@
                                 @forelse ($nonCompliants as $nc)
                                 <tr>
                                     <td class="text-center text-xs">{{ $loop->iteration }}</td>
+                                    <td class="text-center text-xs">
+                                        <div style="width:60px; height:60px; overflow:hidden; border-radius:4px; display:inline-block;">
+                                            <img src="{{ asset('storage/' . $nc->foto) }}"
+                                                alt="{{ $nc->description }}"
+                                                style="width:100%; height:100%; object-fit:cover;">
+
+                                        </div>
+                                    </td>
                                     <td class="text-center text-xs">{{ $nc->nama_pelanggar }}</td>
                                     <td class="text-center text-xs">{{ $nc->deskripsi_ketidaksesuaian }}</td>
                                     <td class="text-center text-xs">{{ $nc->perusahaan }}</td>
@@ -135,7 +144,7 @@
                                         </button>
 
                                         @elseif ($nc->status == 'Pending')
-                                        <span class="text-warning">Pending</span>
+                                        <span class="badge bg-warning text-dark">Pending</span>
 
                                         @elseif ($nc->status == 'Approved')
                                         @if ($request)
@@ -168,7 +177,7 @@
                                         @endif
 
                                         @elseif ($nc->status == 'Rejected')
-                                        <span class="text-danger">Request Rejected</span>
+                                        <span class="badge bg-danger text-white">Rejected</span>
                                         @endif
                                     </td>
 
@@ -196,14 +205,14 @@
                                 @csrf
                                 <input type="hidden" id="sentNonCompliantId" name="sent_non_compliant_id">
                                 <div class="form-group">
-                                    <label for="requestType">Request Type</label><br>
+                                    <label for="requestType"> Jenis Request </label><br>
                                     <input type="radio" id="Edit" name="type" value="Edit" required>
                                     <label for="Edit">Edit</label>
                                     <input type="radio" id="Delete" name="type" value="Delete" required>
                                     <label for="Delete">Delete</label>
                                 </div>
                                 <div class="form-group">
-                                    <label for="reason">Reason for Request</label>
+                                    <label for="reason">Alasan Pengajuan Request</label>
                                     <textarea class="form-control" id="reason" name="reason" required></textarea>
                                 </div>
                                 <button type="submit" class="btn btn-primary">Submit Request</button>

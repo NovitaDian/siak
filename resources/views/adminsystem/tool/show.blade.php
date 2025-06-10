@@ -49,10 +49,11 @@
                 </div>
                 <div class="col-md-12 mb-3">
                     <strong>Foto Pemeriksaan:</strong><br>
-                    @if ($tools->foto && Storage::disk('public')->exists($tools->foto))
-                        <img src="{{ asset('storage/' . $tools->foto) ?? '-'}}" alt="Foto Pemeriksaan" class="img-fluid rounded" style="max-height: 400px;">
+
+                    @if ($tools && $tools->foto && Storage::disk('public')->exists($tools->foto))
+                    <img src="{{ Storage::url($tools->foto) }}" alt="Foto Pemeriksaan" class="img-fluid rounded" style="max-height: 400px;">
                     @else
-                        <p>Tidak ada foto tersedia.</p>
+                    <p>Tidak ada foto tersedia.</p>
                     @endif
                 </div>
             </div>

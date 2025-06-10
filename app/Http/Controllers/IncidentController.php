@@ -28,8 +28,10 @@ class IncidentController extends Controller
     public function index(Request $request)
     {
         $user = auth()->user();
-        $incidents = Incident::where('writer', $user->name)->get();
-        $requests = IncidentRequest::all();
+        $incidents = Incident::where('writer', $user->name)->latest()
+            ->get();
+        $requests = IncidentRequest::latest()
+            ->get();
         $start = $request->start_date;
         $end = $request->end_date;
 
@@ -37,8 +39,9 @@ class IncidentController extends Controller
         if ($start && $end) {
             $incident_fixs = SentIncident::whereBetween('shift_date', [$start, $end])->get();
         } else {
-            $incident_fixs = SentIncident::all();
+            $incident_fixs = SentIncident::orderByDesc('shift_date')->get();
         }
+
         return view('adminsystem.incident.index', compact('incidents', 'incident_fixs', 'requests'));
     }
 
@@ -714,7 +717,7 @@ class IncidentController extends Controller
         $incident->update($validated);
 
         return redirect()->route('adminsystem.incident.index')
-            ->with('success', 'Data berhasil ditambahkan.');
+            ->with('success', 'Data berhasil diperbarui.');
     }
     public function sent_update(Request $request, $id)
     {
@@ -1029,7 +1032,7 @@ class IncidentController extends Controller
         $incident->update($validated);
 
         return redirect()->route('adminsystem.incident.index')
-            ->with('success', 'Data berhasil ditambahkan.');
+            ->with('success', 'Data berhasil diperbarui.');
     }
 
     // Melihat detail data (show)
@@ -2033,7 +2036,7 @@ class IncidentController extends Controller
         $incident->update($validated);
 
         return redirect()->route('operator.incident.index')
-            ->with('success', 'Data berhasil ditambahkan.');
+            ->with('success', 'Data berhasil diperbarui.');
     }
     public function operator_sent_update(Request $request, $id)
     {
@@ -2348,7 +2351,7 @@ class IncidentController extends Controller
         $incident->update($validated);
 
         return redirect()->route('operator.incident.index')
-            ->with('success', 'Data berhasil ditambahkan.');
+            ->with('success', 'Data berhasil diperbarui.');
     }
 
     // Melihat detail data (show)

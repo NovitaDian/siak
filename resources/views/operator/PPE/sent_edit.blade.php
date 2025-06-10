@@ -12,7 +12,7 @@
                 <h6 class="mb-0">{{ __('EDIT DATA UMUM') }}</h6>
             </div>
             <div class="card-body pt-4 p-3">
-                <form action="{{ route('operator.ppe.update', $ppeFixs->id) }}" method="POST" role="form text-left">
+                <form action="{{ route('operator.ppe.sent_update', $ppeFixs->id) }}" method="POST" role="form text-left">
                     @csrf
                     @method('PUT')
 

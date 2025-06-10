@@ -250,7 +250,19 @@
                                     <td class="text-center text-xs">{{ \Carbon\Carbon::parse($ncr_fix->tanggal_audit)->format('d/m/Y') }}</td>
                                     <td class="text-center text-xs">{{ $ncr_fix->nama_auditee }}</td>
                                     <td class="text-center text-xs">{{ $ncr_fix->durasi_ncr }}</td>
-                                    <td class="text-center text-xs">{{ $ncr_fix->status }}</td>
+                                    <td class="text-center text-xs">
+                                        <div class="d-flex flex-wrap gap-1 justify-content-center">
+                                            @if ($ncr_fix->status == 'Nothing')
+                                            <span class="badge  bg-secondary text-white">Nothing</span>
+                                            @elseif ($ncr_fix->status == 'Pending')
+                                            <span class="badge  bg-warning text-dark">Pending</span>
+                                            @elseif ($ncr_fix->status == 'Rejected')
+                                            <span class="badge bg-danger">Rejected</span>
+                                            @elseif ($ncr_fix->status == 'Approved')
+                                            <span class="badge bg-success">Approved</span>
+                                            @endif
+                                        </div>
+                                    </td>
                                     <td class="align-middle text-center text-xs">
                                         <div class="d-flex flex-wrap gap-1 justify-content-center">
                                             @if ($ncr_fix->status_ncr === 'Open')
@@ -278,7 +290,6 @@
                                             <button class="btn btn-info btn-xs" onclick="showRequestModal('{{ $ncr_fix->id }}')">
                                                 <i class="fas fa-paper-plane me-1" style="font-size: 12px;"></i> Request
                                             </button>
-
                                             {{-- STATUS: Approved --}}
                                             @elseif ($ncr_fix->status === 'Approved')
                                             @if ($matchedRequest)
@@ -346,14 +357,14 @@
                     <div class="modal-body">
                         <input type="hidden" id="sentNcrId" name="sent_ncr_id">
                         <div class="form-group">
-                            <label for="requestType">Request Type</label><br>
+                            <label for="requestType"> Jenis Request </label><br>
                             <input type="radio" id="Edit" name="type" value="Edit" required>
                             <label for="Edit">Edit</label>
                             <input type="radio" id="Delete" name="type" value="Delete" required>
                             <label for="Delete">Delete</label>
                         </div>
                         <div class="form-group">
-                            <label for="reason">Reason for Request</label>
+                            <label for="reason">Alasan Pengajuan Request</label>
                             <textarea class="form-control" id="reason" name="reason" required></textarea>
                         </div>
                     </div>
@@ -412,25 +423,43 @@
         $('#sentNcrId').val(ncrId);
         $('#requestModal').modal('show');
     }
-
-    // Handle approve request
-    function approveRequest(requestId) {
+    const csrfToken = '{{ csrf_token() }}';
+    // Fungsi untuk menyetujui permintaan
+    function approveRequest(id) {
         $.ajax({
-            url: '/adminsystem/ncr/approve/' + requestId,
-            type: 'GET',
+            url: "{{ route('adminsystem.ncr.approve', '') }}/" + id, // Menggunakan route Laravel
+            type: 'POST',
+            data: {
+                _token: csrfToken // Menggunakan CSRF token
+            },
             success: function(response) {
-                $('#status-' + requestId).text('Approved');
+                if (response.success) {
+                    $('#status-' + id).text('Approved'); // Perbarui status di tabel
+                } else {
+                    console.error("Approval failed:", response.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Error approving request:", error);
             }
         });
     }
 
-    // Handle reject request
-    function rejectRequest(requestId) {
+    // Fungsi untuk menolak permintaan
+    function rejectRequest(id) {
         $.ajax({
-            url: '/adminsystem/ncr/reject/' + requestId,
-            type: 'GET',
+            url: "{{ route('adminsystem.ncr.reject', '') }}/" + id, // Menggunakan route Laravel
+            type: 'POST',
+            data: {
+                _token: csrfToken // Menggunakan CSRF token
+            },
             success: function(response) {
-                $('#status-' + requestId).text('Rejected');
+                if (response.success) {
+                    $('#status-' + id).text('Rejected'); // Perbarui status di tabel
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Error rejecting request:", error);
             }
         });
     }

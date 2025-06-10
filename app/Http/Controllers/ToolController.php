@@ -63,10 +63,13 @@ class ToolController extends Controller
         $alat = Alat::findOrFail($request->alat_id);
         $inspector = HseInspector::findOrFail($request->hse_inspector_id);
 
+        $fotoPath = null;
         if ($request->hasFile('foto')) {
-            $fotoPath = $request->file('foto')->store('pelanggar/foto', 'public');
-            $data['foto'] = $fotoPath;
+            $foto = $request->file('foto');
+            $fotoPath = $foto->store('uploads/foto', 'public'); // string path yang valid
         }
+
+
 
         ToolReport::create([
             'alat_id' => $alat->id,
@@ -75,7 +78,7 @@ class ToolController extends Controller
             'hse_inspector' => $inspector->name,
             'tanggal_pemeriksaan' => $request->tanggal_pemeriksaan,
             'status_pemeriksaan' => $request->status_pemeriksaan,
-            'foto' => $request->foto,
+            'foto' => $fotoPath,
             'writer' => Auth::user()->name,
             'user_id' => Auth::user()->id,
 
@@ -90,26 +93,11 @@ class ToolController extends Controller
             'hse_inspector_id' => 'required|exists:hse_inspector,id',
             'tanggal_pemeriksaan' => 'required|date',
             'status_pemeriksaan' => 'required|in:Layak operasi,Layak operasi dengan catatan,Tidak layak operasi',
-            'foto' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
-
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
         $toolReport = ToolReport::findOrFail($id);
-        if ($request->hasFile('foto')) {
-            // Optional: delete old file first
-            if ($request->foto && Storage::disk('public')->exists($request->foto)) {
-                Storage::disk('public')->delete($request->foto);
-            }
-
-            $foto = $request->file('foto');
-            $fotoPath = $foto->store('uploads/foto', 'public');
-            $data['foto'] = $fotoPath;
-        } else {
-            // Remove 'foto' key if no new file uploaded
-            unset($data['foto']);
-        }
-
-        $toolReport->update([
+        $data = [
             'alat_id' => $request->alat_id,
             'nama_alat' => Alat::find($request->alat_id)?->nama_alat,
             'hse_inspector_id' => $request->hse_inspector_id,
@@ -118,7 +106,22 @@ class ToolController extends Controller
             'status_pemeriksaan' => $request->status_pemeriksaan,
             'writer' => Auth::user()->name,
             'user_id' => Auth::user()->id,
-        ]);
+        ];
+
+        // Jika ada upload foto baru
+        if ($request->hasFile('foto')) {
+            // Hapus foto lama jika ada
+            if ($toolReport->foto && Storage::disk('public')->exists($toolReport->foto)) {
+                Storage::disk('public')->delete($toolReport->foto);
+            }
+
+            // Simpan foto baru
+            $fotoPath = $request->file('foto')->store('uploads/foto', 'public');
+            $data['foto'] = $fotoPath;
+        }
+
+        // Update data
+        $toolReport->update($data);
 
         return redirect()->route('adminsystem.tool.index')->with('success', 'Data pemeriksaan berhasil diperbarui.');
     }
@@ -148,15 +151,15 @@ class ToolController extends Controller
             'user_id' => Auth::user()->id,
         ];
 
+        $toolReport = ToolReport::findOrFail($id);
         if ($request->hasFile('foto')) {
             // Hapus foto lama jika ada
-            if ($tool_fixs->foto && Storage::disk('public')->exists($tool_fixs->foto)) {
-                Storage::disk('public')->delete($tool_fixs->foto);
+            if ($toolReport->foto && Storage::disk('public')->exists($toolReport->foto)) {
+                Storage::disk('public')->delete($toolReport->foto);
             }
 
             // Simpan foto baru
-            $foto = $request->file('foto');
-            $fotoPath = $foto->store('uploads/foto', 'public');
+            $fotoPath = $request->file('foto')->store('uploads/foto', 'public');
             $data['foto'] = $fotoPath;
         }
 
@@ -187,6 +190,13 @@ class ToolController extends Controller
     }
     public function show($id)
     {
+        $tools = ToolReport::find($id);
+        $alats = Alat::all();
+        $inspectors = HseInspector::all();
+        return view('adminsystem.tool.show', compact('alats', 'inspectors', 'tools'));
+    }
+    public function sent_show($id)
+    {
         $tools = SentToolReport::find($id);
         $alats = Alat::all();
         $inspectors = HseInspector::all();
@@ -201,6 +211,7 @@ class ToolController extends Controller
         // Pindahkan data ke tabel tool_fix
         SentToolReport::create([
             'draft_id' => $tool->id,
+            'user_id' => $tool->user_id,
             'writer' => $tool->writer,
             'alat_id' => $tool->alat_id,
             'nama_alat' => $tool->nama_alat,

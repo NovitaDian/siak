@@ -17,10 +17,10 @@
                     @method('PUT')
 
                     @if($errors->any())
-                        <div class="alert alert-danger">{{ $errors->first() }}</div>
+                    <div class="alert alert-danger">{{ $errors->first() }}</div>
                     @endif
                     @if(session('success'))
-                        <div class="alert alert-success">{{ session('success') }}</div>
+                    <div class="alert alert-success">{{ session('success') }}</div>
                     @endif
 
                     <div class="row">
@@ -64,9 +64,9 @@
                             <select name="perusahaan" id="perusahaan" class="form-control" required>
                                 <option value="" disabled selected>Pilih Perusahaan</option>
                                 @foreach($perusahaans as $perusahaan)
-                                    <option value="{{ $perusahaan->perusahaan_name }}" {{ $ncr_fixs->perusahaan == $perusahaan->perusahaan_name ? 'selected' : '' }}>
-                                        {{ $perusahaan->perusahaan_name }}
-                                    </option>
+                                <option value="{{ $perusahaan->perusahaan_name }}" {{ $ncr_fixs->perusahaan == $perusahaan->perusahaan_name ? 'selected' : '' }}>
+                                    {{ $perusahaan->perusahaan_name }}
+                                </option>
                                 @endforeach
                             </select>
                         </div>
@@ -114,7 +114,8 @@
                         </div>
 
                         <div class="d-flex justify-content-end mt-4">
-                            <button type="submit" class="btn btn-primary">Update</button>
+                            <button type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">{{ __('Update Report') }}</button>
+
                         </div>
                     </div>
                 </form>

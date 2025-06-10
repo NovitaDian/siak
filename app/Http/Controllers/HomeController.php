@@ -59,6 +59,7 @@ class HomeController extends Controller
         ]);
 
         $note = Note::create([
+            'user_id' => auth()->user()->id, // Assuming you are using authentication
             'writer' => auth()->user()->name, // Assuming you are using authentication
             'note' => $request->input('note'),
         ]);

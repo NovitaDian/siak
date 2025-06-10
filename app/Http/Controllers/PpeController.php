@@ -351,7 +351,7 @@ class PpeController extends Controller
             'user_id' => Auth::user()->id,
         ]);
 
-        return redirect()->route('adminsystem.sent_ppe.index')->with('success', 'Data PPE telah diperbarui di sent_ppe!');
+        return redirect()->route('adminsystem.ppe.index')->with('success', 'Data PPE telah diperbarui!');
     }
 
 
@@ -483,7 +483,7 @@ class PpeController extends Controller
         if ($start && $end) {
             $ppe_fixs = SentPpe::whereBetween('tanggal_shift_kerja', [$start, $end])->get();
         } else {
-            $ppe_fixs = SentPpe:where('writer', $user->name)->get();
+            $ppe_fixs = SentPpe::where('writer', $user->name)->get();
         }
 
         $requests = PpeRequest::all();

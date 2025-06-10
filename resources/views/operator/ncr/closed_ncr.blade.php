@@ -6,10 +6,10 @@
     <div class="col-12">
         <div class="card mx-auto w-100" style="max-width: 95%;">
             <div class="card-header pb-0 px-3">
-                <h6 class="mb-0">{{ __('EDIT DATA UMUM') }}</h6>
+                <h6 class="mb-0">{{ __('CLOSE NCR') }}</h6>
             </div>
             <div class="card-body pt-4 p-3">
-                <form action="{{ route('operator.ncr.close_ncr', $ncr_fixs->id) }}" method="POST" enctype="multipart/form-data"  role="form text-left">
+                <form action="{{ route('operator.ncr.close_ncr', $ncr_fixs->id) }}" method="POST" enctype="multipart/form-data" role="form text-left">
                     @csrf
                     @method('PUT')
                     @if($errors->any())

@@ -14,12 +14,14 @@ return new class extends Migration
         Schema::create('ppe_request', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('sent_ppe_id'); 
+            $table->unsignedBigInteger('user_id'); 
             $table->string('nama_pengirim', 100);
             $table->string('type', 255);
             $table->text('reason');
             $table->string('status', 255)->default('Pending');
             $table->timestamps(); 
-            $table->foreign('sent_ppe_id')->references('id')->on('daily_fix')->onDelete('cascade');
+            $table->foreign('sent_ppe_id')->references('id')->on('ppe_fix')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
         });
     }

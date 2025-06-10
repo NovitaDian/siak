@@ -15,7 +15,7 @@
                   <img src="{{ asset('assets/img/logos/hse.png') }}" alt="HSE" style="height:40px;">
                   <img src="{{ asset('assets/img/logos/pt_dus.png') }}" alt="PT.DUS" style="height:40px;">
                 </div>
-                <h3 class="font-weight-bolder text-info text-gradient">Welcome back</h3>
+                <h3 class="font-weight-bolder text-info text-gradient">Selamat Datang Kembali!</h3>
                 <p class="mb-0">Buat akun baru<br></p>
                 <p class="mb-0">Atau masuk dengan akun yang sudah ada</p>
               </div>
@@ -38,7 +38,7 @@
                   </div>
                   <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" id="rememberMe" checked="">
-                    <label class="form-check-label" for="rememberMe">Remember me</label>
+                    <label class="form-check-label" for="rememberMe">Ingat saya</label>
                   </div>
                   <div class="text-center">
                     <button type="submit" class="btn bg-gradient-info w-100 mt-4 mb-0">Sign in</button>
@@ -46,11 +46,11 @@
                 </form>
               </div>
               <div class="card-footer text-center pt-0 px-lg-2 px-1">
-                <small class="text-muted">Forgot you password? Reset you password
-                  <a href="/login/forgot-password" class="text-info text-gradient font-weight-bold">here</a>
+                <small class="text-muted">Lupa password?
+                  <a href="/login/forgot-password" class="text-info text-gradient font-weight-bold">Di sini</a>
                 </small>
                 <p class="mb-4 text-sm mx-auto">
-                  Don't have an account?
+                  Belum memiliki akun?
                   <a href="register" class="text-info text-gradient font-weight-bold">Sign up</a>
                 </p>
               </div>
