@@ -1,4 +1,4 @@
-@extends('layouts.user_type.auth')
+@extends('layouts.user_type.operator')
 
 @section('content')
 @if (session('success'))
@@ -11,79 +11,13 @@
 
     </div>
 
-    <br>
-    <div class="row">
-        <div class="col-12">
-            <div class="card mb-4">
-                <div class="card-header pb-0">
-                    <h6>REQUEST</h6>
-                </div>
-                <div class="card-body px-0 pt-0 pb-2">
-                    <div class="table-responsive p-0">
-                        <div class="card-header pb-0">
-                            <table class="table align-items-center mb-0" id="dataTableReq">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Pengirim</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Waktu Pengajuan</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Jenis Pengajuan</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Alasan</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="notificationTableBody">
-                                    @foreach ($requests as $request)
-                                    <tr>
-                                        <td class="text-center text-xs">{{ $request->nama_pengirim }}</td>
-                                        <td class="text-center text-xs">{{ $request->created_at->format('d/m/Y') }}</td>
-                                        <td class="text-center text-xs">{{ $request->type }}</td>
-                                        <td class="text-center text-xs">{{ $request->reason }}</td>
-                                        <td class="text-center" id="status-{{$request->id}}">{{ $request->status }}</td>
-                                        <td class="text-center">
-                                            @if ($request->status == 'Pending')
-                                            <button
-                                                class="btn btn-success btn-xs me-1"
-                                                onclick="approveRequest('{{ $request->id }}')"
-                                                title="Approve this request">
-                                                <i class="fas fa-check m-1"></i> Approve
-                                            </button>
-
-                                            <button
-                                                class="btn btn-danger btn-xs me-1"
-                                                onclick="rejectRequest('{{ $request->id }}')"
-                                                title="Reject this request">
-                                                <i class="fas fa-times m-1"></i> Reject
-                                            </button>
-                                            @endif
-
-                                            <form
-                                                action="{{ route('adminsystem.tool.show', ['id' => $request->id]) }}"
-                                                method="GET"
-                                                style="display:inline;"
-                                                title="View details">
-                                                <button type="submit" class="btn btn-light btn-xs">
-                                                    <i class="fas fa-eye"></i> Show
-                                                </button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <div class="row">
         <div class="col-12">
             <div class="card mb-4">
                 <div class="card-header pb-0 d-flex justify-content-between align-items-center">
                     <h6 class="mb-0">Draft tool</h6>
-                    <form action="{{ route('adminsystem.tool.create') }}" method="GET" style="display:inline;">
+                    <form action="{{ route('operator.tool.create') }}" method="GET" style="display:inline;">
                         @csrf
                         <button type="submit" class="btn btn-primary btn-sm active mb-0 text-white" role="button" aria-pressed="true">
                             Tambah
@@ -115,7 +49,7 @@
                                         <td class="align-middle text-center">
                                             <div class="d-flex justify-content-center align-items-center gap-1 flex-nowrap" style="flex-wrap: nowrap;">
 
-                                                <form action="{{ route('adminsystem.tool.destroy', $tool->id) }}" method="POST" class="m-0">
+                                                <form action="{{ route('operator.tool.destroy', $tool->id) }}" method="POST" class="m-0">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-send btn-xs" onclick="return confirm('Anda yakin akan mengirim dokumen?')" title="Kirim">
@@ -129,19 +63,19 @@
                                                     </button>
                                                     <ul class="dropdown-menu">
                                                         <li>
-                                                            <a class="dropdown-item" href="{{ route('adminsystem.tool.edit', $tool->id) }}">
+                                                            <a class="dropdown-item" href="{{ route('operator.tool.edit', $tool->id) }}">
                                                                 <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit
                                                             </a>
                                                         </li>
                                                         <li>
-                                                            <form action="{{ route('adminsystem.tool.show', ['id' => $tool->id]) }}" method="GET" class="m-0">
+                                                            <form action="{{ route('operator.tool.show', ['id' => $tool->id]) }}" method="GET" class="m-0">
                                                                 <button type="submit" class="dropdown-item">
                                                                     <i class="fas fa-eye me-1" style="font-size: 12px;"></i> Show
                                                                 </button>
                                                             </form>
                                                         </li>
                                                         <li>
-                                                            <form action="{{ route('adminsystem.tool.draft_destroy', $tool->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
+                                                            <form action="{{ route('operator.tool.draft_destroy', $tool->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
                                                                 @csrf
                                                                 @method('DELETE')
                                                                 <button type="submit" class="dropdown-item text-danger">
@@ -173,7 +107,7 @@
             <div class="card mb-4">
                 <div class="card-header pb-0">
                     <h6>Sent Tool</h6>
-                    <form action="{{ route('adminsystem.tool.index') }}" method="GET" class="row g-3 px-4 mb-3">
+                    <form action="{{ route('operator.tool.index') }}" method="GET" class="row g-3 px-4 mb-3">
                         <div class="col-12 col-md-3">
                             <label for="start_date" class="form-label">Tanggal Mulai</label>
                             <input type="date" name="start_date" id="start_date" class="form-control" value="{{ request('start_date') }}">
@@ -195,12 +129,12 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a class="dropdown-item" href="{{ route('adminsystem.tool.export', request()->all()) }}">
+                                        <a class="dropdown-item" href="{{ route('operator.tool.export', request()->all()) }}">
                                             <i class="fas fa-file-excel text-success me-2"></i> Excel
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item" href="{{ route('adminsystem.tool.exportPdf', request()->all()) }}">
+                                        <a class="dropdown-item" href="{{ route('operator.tool.exportPdf', request()->all()) }}">
                                             <i class="fas fa-file-pdf text-danger me-2"></i> PDF
                                         </a>
                                     </li>
@@ -254,13 +188,13 @@
                                                 <ul class="dropdown-menu">
                                                     @if (strcasecmp($request->type, 'Edit') === 0)
                                                     <li>
-                                                        <a href="{{ route('adminsystem.tool.sent_edit', $tool_fix->id) }}" class="dropdown-item">
+                                                        <a href="{{ route('operator.tool.sent_edit', $tool_fix->id) }}" class="dropdown-item">
                                                             <i class="fas fa-edit me-1"></i> Edit
                                                         </a>
                                                     </li>
                                                     @elseif (strcasecmp($request->type, 'Delete') === 0)
                                                     <li>
-                                                        <form action="{{ route('adminsystem.tool.sent_destroy', $tool_fix->id) }}" method="POST" onsubmit="return confirm('Anda yakin akan menghapus data ini?')">
+                                                        <form action="{{ route('operator.tool.sent_destroy', $tool_fix->id) }}" method="POST" onsubmit="return confirm('Anda yakin akan menghapus data ini?')">
                                                             @csrf
                                                             @method('DELETE')
                                                             <button type="submit" class="dropdown-item text-danger">
@@ -283,7 +217,7 @@
                                         </td>
 
                                         <td class="align-middle text-center">
-                                            <a href="{{ route('adminsystem.tool.show', $tool_fix->id) }}"
+                                            <a href="{{ route('operator.tool.show', $tool_fix->id) }}"
                                                 class="btn btn-info btn-xs"> <i class="fas fa-eye me-1" style="font-size: 12px;"></i> Show
                                             </a>
                                         </td>
@@ -305,7 +239,7 @@
                     <h5 class="modal-title" id="requestModalLabel">Request Edit/Delete</h5>
                 </div>
                 <div class="modal-body">
-                    <form id="requestForm" method="POST" action="{{ route('adminsystem.tool.storeRequest') }}">
+                    <form id="requestForm" method="POST" action="{{ route('operator.tool.storeRequest') }}">
                         @csrf
                         <input type="hidden" id="senttoolId" name="sent_tool_id">
                         <div class="form-group">
@@ -374,7 +308,7 @@
 
     function approveRequest(id) {
         $.ajax({
-            url: "{{ route('adminsystem.tool.approve', '') }}/" + id, // Menggunakan route Laravel
+            url: "{{ route('operator.tool.approve', '') }}/" + id, // Menggunakan route Laravel
             type: 'POST',
             data: {
                 _token: csrfToken // Menggunakan CSRF token
@@ -395,7 +329,7 @@
     // Fungsi untuk menolak permintaan
     function rejectRequest(id) {
         $.ajax({
-            url: `/adminsystem/tool/reject/${id}`, // URL ke rute reject
+            url: `/operator/tool/reject/${id}`, // URL ke rute reject
             type: 'POST',
             data: {
                 _token: csrfToken // Sertakan CSRF token untuk keamanan
@@ -420,7 +354,7 @@
 
     // Fungsi untuk mengedit item yang telah dikirim
     function sentEditAction(id) {
-        window.location.href = "{{ url('adminsystem/tool/sent_edit') }}/" + id; // Menggunakan URL Laravel
+        window.location.href = "{{ url('operator/tool/sent_edit') }}/" + id; // Menggunakan URL Laravel
     }
 </script>
 

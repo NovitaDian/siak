@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('incidents_fix', function (Blueprint $table) {
+        Schema::create('incident_draft', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('draft_id');
             $table->string('writer', 255);
             $table->date('stamp_date')->nullable();
             $table->date('shift_date');
@@ -84,7 +83,7 @@ return new class extends Migration
             $table->integer('jml_loading_stacking')->nullable();
             $table->integer('jml_contractor')->nullable();
             $table->integer('jml_hari_hilang')->nullable();
-            $table->string('no_laporan', 255)->unique();
+            $table->string('no_laporan', 255)->nullable();
             $table->integer('lta')->nullable();
             $table->integer('wlta')->nullable();
             $table->integer('trc')->nullable();
@@ -102,11 +101,9 @@ return new class extends Migration
             $table->integer('safe_shift_wlta')->nullable();
             $table->integer('safe_day_wlta')->nullable();
             $table->integer('total_safe_day_wlta')->nullable();
-            $table->integer('urut_kejadiannya')->nullable();
-            $table->date('tanggal_urut_kejadiannya')->nullable();
-            $table->string('status_request', 30)->default('Nothing');
-            $table->timestamps();
             $table->unsignedBigInteger('user_id');
+            $table->timestamps();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -115,6 +112,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('incidents_fix');
+        Schema::dropIfExists('incident_draft');
     }
 };

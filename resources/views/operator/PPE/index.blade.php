@@ -9,74 +9,7 @@
 <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
     <div class="container-fluid py-4 px-0">
         <div class="card mx-auto w-100" style="max-width: 200%; ">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card-header pb-0">
-                        <h6>REQUEST</h6>
-                    </div>
-
-                    <div class="card-body px-4 pt-4 pb-4">
-                        <div class="table-responsive p-0">
-                            <table class="table align-items-center mb-0" id="dataTableReq">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">No</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Pengirim</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Waktu Pengajuan</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Jenis Pengajuan</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Alasan</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="notificationTableBody">
-                                    @forelse ($requests as $request)
-                                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                        <td class="text-center text-xs">{{ $loop->iteration }}</td>
-                                        <td class="text-center text-xs text-gray-900 dark:text-white">{{ $request->nama_pengirim }}</td>
-                                        <td class="text-center text-xs">{{ $request->created_at->format('d/m/Y') }}</td>
-                                        <td class="text-center text-xs">{{ $request->type }}</td>
-                                        <td class="text-center text-xs">{{ $request->reason }}</td>
-                                        <td class="text-center text-xs" id="status-{{$request->id}}">{{ $request->status }}</td>
-                                        <td class="text-center">
-                                            @if ($request->status == 'Pending')
-                                            <button
-                                                class="btn btn-success btn-xs me-1"
-                                                onclick="approveRequest('{{ $request->id }}')"
-                                                title="Approve this request">
-                                                <i class="fas fa-check m-1"></i> Approve
-                                            </button>
-
-                                            <button
-                                                class="btn btn-danger btn-xs me-1"
-                                                onclick="rejectRequest('{{ $request->id }}')"
-                                                title="Reject this request">
-                                                <i class="fas fa-times m-1"></i> Reject
-                                            </button>
-                                            @endif
-
-                                            <form
-                                                action="{{ route('operator.ppe.show', ['id' => $request->id]) }}"
-                                                method="GET"
-                                                style="display:inline;"
-                                                title="View details">
-                                                <button type="submit" class="btn btn-light btn-xs">
-                                                    <i class="fas fa-eye"></i> Show
-                                                </button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                    @empty
-
-                                    @endforelse
-                                </tbody>
-
-                            </table>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
+           
         </div>
     </div>
     <!-- SENT DOCUMENT TABLE -->
@@ -159,8 +92,6 @@
                                             {{ $ppe_fix->status_ppe }}
                                         </span>
                                     </td>
-
-                                    </td>
                                     <td class="text-center text-xs">{{ $ppe_fix->shift_kerja }}</td>
                                     <td class="text-center text-xs">{{ $ppe_fix->nama_hse_inspector }}</td>
                                     <td class="text-center text-xs">{{ $ppe_fix->jam_mulai }}-{{ $ppe_fix->jam_selesai }}</td>
@@ -228,9 +159,7 @@
                                     </td>
 
                                     @empty
-                                <tr class="bg-white dark:bg-gray-800">
-                                    <td colspan="6" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">Data tidak ditemukan.</td>
-                                </tr>
+                                
                                 @endforelse
                             </tbody>
                         </table>

@@ -168,15 +168,14 @@
               <div class="row">
                 <div class="col-md-6 d-flex align-items-end">
                   <div class="me-3 w-100">
-                    <label for="target_employee" class="form-label fw-bold">Target % Patuh Karyawan:</label>
-                    <input type="number" name="target" id="target_employee" class="form-control" value="{{ $targetEmployee ?? '' }}" min="0" max="100" required>
+                   <label for="target_contractor" class="form-label fw-bold">Target % Patuh Kontraktor:</label>
+                    <input type="number" name="target" id="target_contractor" class="form-control" value="{{ $targetContractor ?? '' }}" min="0" max="100">
                   </div>
                   <div>
                     <button type="submit" class="btn btn-success mb-1">Update Target</button>
                   </div>
                 </div>
               </div>
-
             </form>
             <canvas id="chart-line-2" class="chart-canvas" height="300"></canvas>
           </div>

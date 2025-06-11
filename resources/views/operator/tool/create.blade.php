@@ -1,4 +1,4 @@
-@extends('layouts.user_type.auth')
+@extends('layouts.user_type.operator')
 
 @section('content')
 
@@ -12,7 +12,7 @@
                 <h6 class="mb-0">{{ __('DATA LAPORAN PENGECEKAN ALAT') }}</h6>
             </div>
             <div class="card-body pt-4 p-3">
-                <form action="{{ route('adminsystem.tool.store') }}" method="POST" enctype="multipart/form-data" role="form text-left">
+                <form action="{{ route('operator.tool.store') }}" method="POST" enctype="multipart/form-data" role="form text-left">
                     @csrf
                     @if($errors->any())
                     <div class="mt-3 alert alert-primary alert-dismissible fade show" role="alert">

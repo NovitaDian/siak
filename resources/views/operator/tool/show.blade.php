@@ -1,4 +1,4 @@
-@extends('layouts.user_type.auth')
+@extends('layouts.user_type.operator')
 
 @section('content')
 @if (session('success'))
@@ -57,7 +57,7 @@
                 </div>
             </div>
             <div class="d-flex justify-content-end mt-3">
-                <a href="{{ route('adminsystem.tool.index') ?? '-'}}" class="btn btn-secondary">Kembali</a>
+                <a href="{{ route('operator.tool.index') ?? '-'}}" class="btn btn-secondary">Kembali</a>
             </div>
         </div>
     </div>

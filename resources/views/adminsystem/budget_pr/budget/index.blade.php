@@ -13,7 +13,7 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <h6 class="mb-0">Budget</h6>
                     <form action="{{ route('adminsystem.budget.create') }}" method="GET">
-                        <button type="submit" class="btn btn-primary mb-0">
+                        <button type="submit" class="btn btn-sm btn-primary mb-0">
                             Tambah
                         </button>
                     </form>

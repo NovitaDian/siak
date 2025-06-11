@@ -126,7 +126,7 @@ class PpeController extends Controller
     public function show($id)
     {
         $ppeFix = SentPpe::findOrFail($id);
-        $nonCompliants = NonCompliant::all();
+        $nonCompliants = NonCompliant::where('id_ppe', $id)->get();
         $requests = NonCompliantRequest::all();
         return view('adminsystem.ppe.show', compact('ppeFix', 'requests', 'nonCompliants'));
     }
@@ -470,7 +470,7 @@ class PpeController extends Controller
 
 
 
-     // Menampilkan semua data observasi
+    // Menampilkan semua data observasi
     public function operator_index(Request $request)
     {
         $user = Auth::user();
@@ -576,7 +576,7 @@ class PpeController extends Controller
     public function operator_show($id)
     {
         $ppeFix = SentPpe::findOrFail($id);
-        $nonCompliants = NonCompliant::all();
+        $nonCompliants = NonCompliant::where('id_ppe', $id)->get();
         $requests = NonCompliantRequest::all();
         return view('operator.ppe.show', compact('ppeFix', 'requests', 'nonCompliants'));
     }

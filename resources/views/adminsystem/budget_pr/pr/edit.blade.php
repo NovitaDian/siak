@@ -35,7 +35,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="pr_no">{{ __('Nomor PR') }}</label>
-                                <input class="form-control" type="text" id="pr_no" name="pr_no" value="{{ old('pr_no', $pr->pr_no) }}" required readonly>
+                                <input class="form-control" type="text" id="pr_no" name="pr_no" value="{{ old('pr_no', $pr->pr_no) }}" required>
                             </div>
                         </div>
                         <div class="col-md-6">

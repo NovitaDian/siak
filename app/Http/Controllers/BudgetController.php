@@ -179,12 +179,18 @@ class BudgetController extends Controller
                 'bg_approve'     => $bgApprove,
                 'sisa'           => $sisa,
                 'kategori'       => $request->kategori,
-            ]);
+        ]);
         }
 
         return redirect()->route('adminsystem.budget.index')->with('success', 'Data budget berhasil diperbarui.');
     }
-
+public function budget_edit($id)
+    {
+        $budget = Budget::findOrFail($id);
+        $gls = Gl_Account::all();
+        return view('adminsystem.budget_pr.budget.edit', compact('budget','gls'));
+    }
+   
     public function getGlName($gl_code)
     {
         $gl = Gl_Account::where('gl_code', $gl_code)->first(); // Assuming Gl_Account is your model
@@ -290,8 +296,12 @@ class BudgetController extends Controller
     public function pr_edit($id)
     {
         $pr = PurchaseRequest::findOrFail($id);
-        return view('adminsystem.budget_pr.pr.edit', compact('pr'));
+        $units = Unit::all();
+        $budgets = Budget::all();
+        $gls = Gl_Account::all();
+        return view('adminsystem.budget_pr.pr.edit', compact('pr','units','budgets','gls'));
     }
+   
 
     public function pr_update(Request $request, $id)
     {

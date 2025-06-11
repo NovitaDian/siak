@@ -366,9 +366,10 @@ class ToolController extends Controller
         if ($start && $end) {
             $tool_fixs = SentToolReport::whereBetween('tanggal_pemeriksaan', [$start, $end])->get();
         } else {
-            $tool_fixs = SentToolReport::all();
+            $tool_fixs = SentToolReport::where('writer', $user->name)
+            ->get();
         }
-        $requests = ToolRequest::where('writer', $user->name)->get();
+        $requests = ToolRequest::where('nama_pengirim', $user->name)->get();
 
         return view('operator.tool.index', compact('tools', 'tool_fixs', 'requests'));
     }

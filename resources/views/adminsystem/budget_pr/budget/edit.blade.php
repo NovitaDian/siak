@@ -3,13 +3,13 @@
 @section('content')
 
 <div>
-    <div class="container-fluid">
-        <h2 class="text-black font-weight-bolder text-center">EDIT GL ACCOUNT</h2>
+    <div class="container-fluid ">
+        <h2 class="text-black font-weight-bolder text-center">EDIT BUDGET PLAN</h2>
     </div>
     <div class="container-fluid py-4 px-0">
-        <div class="card mx-auto w-100" style="max-width: 150%; ">
+        <div class="card mx-auto w-100" style="max-width: 150%;">
             <div class="card-header pb-0 px-3">
-                <h6 class="mb-0">{{ __('EDIT DATA GL ACCOUNT') }}</h6>
+                <h6 class="mb-0">{{ __('EDIT DATA BUDGET PLAN') }}</h6>
             </div>
             <div class="card-body pt-4 p-3">
                 <form action="{{ route('adminsystem.budget.update', $budget->id) }}" method="POST" role="form text-left">
@@ -35,61 +35,58 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="gl_code">{{ __('GL Code') }}</label>
-                                <input class="form-control" type="text" id="gl_code" name="gl_code" value="{{ old('gl_code', $budget->gl_code) }}" required>
+                                <select class="form-control" id="gl_code" name="gl_code" required>
+                                    <option value="">Pilih GL Code</option>
+                                    @foreach($gls as $gl)
+                                    <option value="{{ $gl->gl_code }}" {{ (old('gl_code', $budget->gl_code) == $gl->gl_code) ? 'selected' : '' }}>
+                                        {{ $gl->gl_code }} - {{ $gl->gl_name }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                                @error('gl_code')
+                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                                @enderror
                             </div>
                         </div>
+                    </div>
+                    
+                    <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="gl_name">{{ __('GL Name') }}</label>
-                                <input class="form-control" type="text" id="gl_name" name="gl_name" value="{{ old('gl_name', $budget->gl_name) }}" required>
+                                <input class="form-control" type="text" id="gl_name" name="gl_name" value="{{ old('gl_name', $budget->gl_name) }}" required readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="year">{{ __('Year') }}</label>
+                                <input class="form-control" type="text" id="year" name="year" value="{{ old('year', $budget->year) }}" required>
                             </div>
                         </div>
                     </div>
-
+                    
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="price_per_unit">{{ __('Price per Unit') }}</label>
-                                <input class="form-control" type="number" id="price_per_unit" name="price_per_unit" value="{{ old('price_per_unit', $budget->price_per_unit) }}" step="0.01" required>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <!-- January to December Fields (Adjusted to 2 columns per row) -->
-                        @foreach(['januari', 'februari', 'maret', 'april', 'mei', 'juni', 'juli', 'agustus', 'september', 'oktober', 'november', 'desember'] as $month)
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="{{ $month }}_qty">{{ __(ucfirst($month) . ' Quantity') }}</label>
-                                <input class="form-control" type="number" id="{{ $month }}_qty" name="{{ $month }}_qty" value="{{ old($month . '_qty', $budget->{$month . '_qty'}) }}" step="0.01" oninput="calculateTotal('{{ $month }}')">
+                                <label for="kategori">{{ __('Kategori') }}</label>
+                                <select class="form-control" id="kategori" name="kategori" required>
+                                    <option value="APEX" {{ (old('kategori', $budget->kategori) == 'APEX') ? 'selected' : '' }}>APEX</option>
+                                    <option value="OPEX" {{ (old('kategori', $budget->kategori) == 'OPEX') ? 'selected' : '' }}>OPEX</option>
+                                    <option value="Consumable" {{ (old('kategori', $budget->kategori) == 'Consumable') ? 'selected' : '' }}>Consumable</option>
+                                </select>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="{{ $month }}_total">{{ __(ucfirst($month) . ' Total') }}</label>
-                                <input class="form-control" type="text" id="{{ $month }}_total" name="{{ $month }}_total" value="{{ old($month . '_total', $budget->{$month . '_total'}) }}" readonly>
-                            </div>
-                        </div>
-                        @endforeach
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="setahun_qty">{{ __('Total Quantity Year') }}</label>
-                                <input class="form-control" type="text" id="setahun_qty" name="setahun_qty" value="{{ old('setahun_qty', $budget->setahun_qty) }}" readonly>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="setahun_total">{{ __('Total Price Year') }}</label>
-                                <input class="form-control" type="text" id="setahun_total" name="setahun_total" value="{{ old('setahun_total', $budget->setahun_total) }}" readonly>
+                                <label for="setahun_total">{{ __('Total Harga Setahun') }}</label>
+                                <input class="form-control" type="text" id="setahun_total" name="setahun_total" value="{{ old('setahun_total', $budget->setahun_total) }}">
                             </div>
                         </div>
                     </div>
 
                     <div class="d-flex justify-content-end">
-                        <button type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">{{ __('Update GL Account') }}</button>
+                        <a href="{{ route('adminsystem.budget.index') }}" class="btn btn-secondary me-2 mt-4 mb-4">Cancel</a>
+                        <button type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">{{ __('Update Budget Plan') }}</button>
                     </div>
                 </form>
             </div>
@@ -98,43 +95,27 @@
 </div>
 
 <script>
-    function calculateTotal(month) {
-        // Get price per unit
-        var pricePerUnit = parseFloat(document.getElementById('price_per_unit').value);
+    document.getElementById('gl_code').addEventListener('change', function() {
+        var gl_code = this.value;
 
-        if (!pricePerUnit) {
-            alert("Please enter the price per unit");
-            return;
+        if (gl_code) {
+            var url = '{{ route("adminsystem.budget.getGlName", ":gl_code") }}';
+            url = url.replace(':gl_code', gl_code);
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.gl_name) {
+                        document.getElementById('gl_name').value = data.gl_name;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching GL name:', error);
+                });
+        } else {
+            document.getElementById('gl_name').value = '';
         }
-
-        // Get quantity for the month
-        var qty = parseFloat(document.getElementById(month + '_qty').value);
-
-        // Calculate total for the month
-        if (!isNaN(qty)) {
-            var total = qty * pricePerUnit;
-            document.getElementById(month + '_total').value = total.toFixed(2);
-        }
-
-        calculateYearTotal();
-    }
-
-    function calculateYearTotal() {
-        var totalYearQty = 0;
-        var totalYearPrice = 0;
-        var months = ['januari', 'februari', 'maret', 'april', 'mei', 'juni', 'juli', 'agustus', 'september', 'oktober', 'november', 'desember'];
-
-        months.forEach(function(month) {
-            var qty = parseFloat(document.getElementById(month + '_qty').value);
-            var total = parseFloat(document.getElementById(month + '_total').value);
-
-            if (!isNaN(qty)) totalYearQty += qty;
-            if (!isNaN(total)) totalYearPrice += total;
-        });
-
-        document.getElementById('setahun_qty').value = totalYearQty.toFixed(2);
-        document.getElementById('setahun_total').value = totalYearPrice.toFixed(2);
-    }
+    });
 </script>
 
 @endsection
