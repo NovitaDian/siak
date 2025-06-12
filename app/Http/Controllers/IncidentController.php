@@ -1183,8 +1183,6 @@ class IncidentController extends Controller
             'safe_shift_wlta' => $incident->safe_shift_wlta,
             'safe_day_wlta' => $incident->safe_day_wlta,
             'total_safe_day_wlta' => $incident->total_safe_day_wlta,
-            'urut_kejadiannya' => $incident->urut_kejadiannya,
-            'tanggal_urut_kejadiannya' => $incident->tanggal_urut_kejadiannya,
             'foto' => $incident->foto,
             'status_request' => 'Nothing',
             'draft_id' => $incident->id,

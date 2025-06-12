@@ -4,7 +4,7 @@
 
 <div>
     <div class="container-fluid ">
-        <h2 class="text-black font-weight-bolder text-center">EDIT PLANT</h2>
+        <h2 class="text-black font-weight-bolder text-center">EDIT MATERIAL GROUP</h2>
     </div>
     <div class="container-fluid py-4 px-0">
         <div class="card mx-auto w-100" style="max-width: 150%; ">

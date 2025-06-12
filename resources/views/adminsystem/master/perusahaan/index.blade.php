@@ -49,7 +49,7 @@
                                     </td>
                                     <td class="align-middle text-center">
                                         <!-- Tombol Edit -->
-                                        <a href="{{ route('adminsystem.perusahaan.edit', $per->perusahaan_code) }}" class="btn btn-warning btn-xs">
+                                        <a href="{{ route('adminsystem.perusahaan.edit', $per->id) }}" class="btn btn-warning btn-xs">
                                             <i class="fas fa-edit me-1"></i> Edit
                                         </a>
 

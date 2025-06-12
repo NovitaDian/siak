@@ -5,6 +5,7 @@
     <div class="title-board text-center fw-bold fs-4 mb-4">SAFETY PERFORMANCE BOARD</div>
 
     <div class="row">
+
         <!-- Left Column -->
         <div class="col-md-3">
             <form action="{{ route('adminsystem.dashboard-incident') }}" method="GET" class="mb-3">
@@ -41,68 +42,75 @@
 
         <!-- Right Column -->
         <div class="col-md-9">
+            <!-- Tanggal -->
+            <div class="wrap-text d-flex justify-content-between">
+                <h6 class="fw-bold"><strong>Tanggal: {{ \Carbon\Carbon::parse($selectedDate)->format('d/m/Y') }}</strong></h6>
+                <h6 class="text-end fw-bold"><strong>Shift: {{($shift)}}</strong></h6>
+            </div>
+            <!-- Section 1: Counting Days Without Accident -->
             <div class="mb-4">
                 <div class="section-title">COUNTING DAYS WITHOUT ACCIDENT</div>
                 <table class="table table-bordered">
                     <tr>
-                        <td><strong><strong>Total Working Days Since Last LTA</strong>
-                            <br>
+                        <td>
+                            <strong>Total Working Days Since Last LTA</strong><br>
                             (Total Hari Kerja Sejak LTA Terakhir)
                         </td>
                         <td class="text-end fw-bold">{{ $daysSinceLastLTA }}</td>
                     </tr>
                     <tr>
-                        <td><strong>Total Working Days Since Last WLTA
-                            </strong><br>
+                        <td>
+                            <strong>Total Working Days Since Last WLTA</strong><br>
                             (Total Hari Kerja Sejak WLTA Terakhir)
                         </td>
                         <td class="text-end fw-bold">{{ $daysSinceLastWLTA }}</td>
                     </tr>
                     <tr>
-                        <td><strong>Total Man Hours Since Last LTA
-                            </strong><br>
+                        <td>
+                            <strong>Total Man Hours Since Last LTA</strong><br>
                             (Total Jam Kerja Sejak LTA Terakhir)
                         </td>
                         <td class="text-end fw-bold">{{ number_format($manHoursSinceLastLTA) }}</td>
                     </tr>
                     <tr>
-                        <td><strong>Total Man Hours Since Last WLTA
-                            </strong><br>
-                            (Total Jam Kerja Sejak LTA Terakhir)
+                        <td>
+                            <strong>Total Man Hours Since Last WLTA</strong><br>
+                            (Total Jam Kerja Sejak WLTA Terakhir)
                         </td>
                         <td class="text-end fw-bold">{{ number_format($manHoursSinceLastWLTA) }}</td>
                     </tr>
                 </table>
             </div>
 
+            <!-- Section 2: Data Since Beginning of the Year -->
             <div>
                 <div class="section-title">DATA SINCE BEGINNING OF THE YEAR</div>
                 <table class="table table-bordered">
                     <tr>
-                        <td><strong>Amount of Lost Time Accident (LTA)
-                            </strong><br>
+                        <td>
+                            <strong>Amount of Lost Time Accident (LTA)</strong><br>
                             (Jumlah Kecelakaan Kerja yang Hilang)
                         </td>
                         <td class="text-end fw-bold">{{ $totalLTA }}</td>
                     </tr>
                     <tr>
-                        <td><strong>Amount of Without Lost Time Accident (WLTA)
-                            </strong><br>
+                        <td>
+                            <strong>Amount of Without Lost Time Accident (WLTA)</strong><br>
                             (Jumlah Kecelakaan Tanpa Kehilangan Waktu Kerja)
                         </td>
                         <td class="text-end fw-bold">{{ $totalWLTA }}</td>
                     </tr>
                     <tr>
-                        <td><strong>Total Amount of Working Hours
-                            </strong><br>
+                        <td>
+                            <strong>Total Amount of Working Hours</strong><br>
                             (Jumlah Total Jam Kerja)
                         </td>
                         <td class="text-end fw-bold">{{ number_format($totalManHours) }}</td>
                     </tr>
                     <tr>
-                        <td><strong>The last day accident (LTA)
-                            </strong><br>
-                            (Hari terakhir terjadi LTA)
+                        <td>
+                            <strong>The Last Day Accident (LTA)</strong><br>
+                            (Hari Terakhir Terjadi LTA)
                         </td>
                         <td class="text-end fw-bold">
                             {{ $lastLTAIncidentDate ? \Carbon\Carbon::parse($lastLTAIncidentDate)->format('d/m/Y') : '-' }}
@@ -112,30 +120,29 @@
             </div>
         </div>
     </div>
-</div>
 
-<style>
-    .title-board {
-        font-weight: bold;
-        font-size: 24px;
-        margin-top: 20px;
-    }
+    <style>
+        .title-board {
+            font-weight: bold;
+            font-size: 24px;
+            margin-top: 20px;
+        }
 
-    .section-title {
-        background: #d9edf7;
-        color: #31708f;
-        text-align: center;
-        padding: 10px;
-        font-weight: bold;
-        font-size: 18px;
-    }
+        .section-title {
+            background: #d9edf7;
+            color: #31708f;
+            text-align: center;
+            padding: 10px;
+            font-weight: bold;
+            font-size: 18px;
+        }
 
-    .table-bordered td,
-    .table-bordered th {
-        vertical-align: middle;
-        text-align: left;
-        padding: 8px;
-        border: 1px solid #ddd;
-    }
-</style>
-@endsection
+        .table-bordered td,
+        .table-bordered th {
+            vertical-align: middle;
+            text-align: left;
+            padding: 8px;
+            border: 1px solid #ddd;
+        }
+    </style>
+    @endsection

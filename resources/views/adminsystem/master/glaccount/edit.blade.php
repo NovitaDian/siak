@@ -40,15 +40,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="description">{{ __('Description') }}</label>
-                                <input class="form-control" type="text" id="description" name="description" value="{{ old('description', $gl->description) }}" required>
-                            </div>
-                        </div>
-                    </div>
                     <div class="d-flex justify-content-end">
                         <button type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">{{ __('Update GL Account') }}</button>
                     </div>

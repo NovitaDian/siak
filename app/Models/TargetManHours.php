@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class TargetManHours extends Model
 {
+       
        protected $fillable = ['key', 'value'];
 
 }

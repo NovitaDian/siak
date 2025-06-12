@@ -179,7 +179,7 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('/', [PerusahaanController::class, 'index'])->name('index');
 			Route::get('/create', [PerusahaanController::class, 'create'])->name('create');
 			Route::post('/', [PerusahaanController::class, 'store'])->name('store');
-			Route::get('/edit/{perusahaan_code}', [PerusahaanController::class, 'edit'])->name('edit');
+			Route::get('/edit/{id}', [PerusahaanController::class, 'edit'])->name('edit');
 			Route::put('/{id}', [PerusahaanController::class, 'update'])->name('update');
 			Route::get('/{id}', [PerusahaanController::class, 'show'])->name('show');
 			Route::delete('/{id}', [PerusahaanController::class, 'destroy'])->name('destroy');

@@ -4,15 +4,15 @@
 
 <div>
     <div class="container-fluid">
-        <h2 class="text-black font-weight-bolder text-center">EDIT LAPORAN K3</h2>
+        <h2 class="text-black font-weight-bolder text-center">EDIT DATA NAMA ALAT</h2>
     </div>
     <div class="container-fluid py-4 px-0">
         <div class="card mx-auto w-100" style="max-width: 150%; ">
             <div class="card-header pb-0 px-3">
-                <h6 class="mb-0">{{ __('EDIT LAPORAN PENGECEKAN ALAT') }}</h6>
+                <h6 class="mb-0">{{ __('EDIT NAMA ALAT') }}</h6>
             </div>
             <div class="card-body pt-4 p-3">
-                <form action="{{ route('adminsystem.tool.update', $toolReport->id) }}" method="POST" role="form text-left">
+                <form action="{{ route('adminsystem.tool.update', $nama_alat->id) }}" method="POST" role="form text-left">
                     @csrf
                     @method('PUT') <!-- Menandakan bahwa ini adalah request untuk update -->
                     @if($errors->any())
@@ -26,7 +26,7 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="nama_alat">{{ __('Nama Alat') }}</label>
-                            <input class="form-control" type="text" id="nama_alat" name="nama_alat" value="{{ old('nama_alat', $toolReport->nama_alat) }}" required>
+                            <input class="form-control" type="text" id="nama_alat" name="nama_alat" value="{{ old('nama_alat', $nama_alat->nama_alat) }}" required>
                             @error('nama_alat')
                             <p class="text-danger text-xs mt-2">{{ $message }}</p>
                             @enderror

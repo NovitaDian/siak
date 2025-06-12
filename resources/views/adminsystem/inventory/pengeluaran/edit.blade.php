@@ -58,9 +58,8 @@
                             @enderror
                         </div>
                     </div>
-                </div>
+              
 
-                <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="unit">{{ __('Unit') }}</label>
@@ -80,7 +79,7 @@
                             @enderror
                         </div>
                     </div>
-                </div>
+          
 
                 <div class="d-flex justify-content-end">
                     <button type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">{{ __('Update Pengeluaran') }}</button>

@@ -3,7 +3,7 @@
 @section('content')
 <div class="row">
   <!-- Card 1: SAFETY PERFORMANCE BOARD -->
-  <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+  <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
     <div class="card">
       <div class="card-body p-3">
         <div class="row">
@@ -27,7 +27,7 @@
   </div>
 
   <!-- Card 2: SAFETY PERFORMANCE INDICATOR -->
-  <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+  <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
     <div class="card">
       <div class="card-body p-3">
         <div class="row">
@@ -48,7 +48,7 @@
   </div>
 
   <!-- Card 3: NON CONFORMITY REPORT -->
-  <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+  <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
     <div class="card">
       <div class="card-body p-3">
         <div class="row">
@@ -61,27 +61,6 @@
             <a href="{{ route('tamu.dashboard-ncr') }}" class="btn btn-primary icon icon-shape shadow text-center border-radius-md d-flex align-items-center justify-content-center"
               style="height: 50px; width: 50px; border-radius: 8px;">
               <i class="fas fa-exclamation-triangle text-lg opacity-10" style="margin-bottom: 20px;" aria-hidden="true"></i>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Card 4: BUDGETING -->
-  <div class="col-xl-3 col-sm-6">
-    <div class="card">
-      <div class="card-body p-3">
-        <div class="row">
-          <div class="col-8">
-            <div class="numbers">
-              <p class="text-sm mb-0 text-capitalize font-weight-bold">BUDGETING</p>
-            </div>
-          </div>
-          <div class="col-4 text-end">
-            <a href="{{ route('tamu.dashboard-budget') }}" class="btn btn-primary icon icon-shape shadow text-center border-radius-md d-flex align-items-center justify-content-center"
-              style="height: 50px; width: 50px; border-radius: 8px; ">
-              <i class="fas fa-coins text-lg opacity-10" style="margin-bottom: 20px;" style="margin-bottom: 20px;" aria-hidden="true"></i>
             </a>
           </div>
         </div>
@@ -139,7 +118,6 @@
                     <label for="target_employee" class="form-label fw-bold">Target % Patuh Karyawan:</label>
                     <input type="number" name="target" id="target_employee" class="form-control" value="{{ $targetEmployee ?? '' }}" min="0" max="100" disabled>
                   </div>
-                  
                 </div>
               </div>
 
@@ -169,7 +147,6 @@
                     <label for="target_contractor" class="form-label fw-bold">Target % Patuh Kontraktor:</label>
                     <input type="number" name="target" id="target_contractor" class="form-control" value="{{ $targetContractor ?? '' }}" min="0" max="100" disabled>
                   </div>
-                  
                 </div>
               </div>
 

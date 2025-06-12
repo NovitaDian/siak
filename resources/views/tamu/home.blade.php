@@ -33,29 +33,16 @@
                                     <a href="{{ asset('storage/' . optional($attachment)->file_path) }}" target="_blank">{{ optional($attachment)->file_name }}</a><br>
                                     @endforeach
                                     @endif
-
-                                <form action="{{ route('tamu.destroy', $note->id) }}" method="POST" style="display: inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus catatan ini?')">Hapus</button>
-                                </form>
                             </div>
                         </div>
                         @endforeach
                     </div>
-
-
-
                 </div>
             </div>
         </div>
     </div>
 
-    <script>
-        function addNewTimelineItem() {
-            document.getElementById('new-timeline-item').style.display = 'block';
-        }
-    </script>
+   
     <style>
         .timeline-item {
             border-bottom: 1px solid #ddd;

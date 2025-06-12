@@ -12,7 +12,7 @@
                 <h6 class="mb-0">{{ __('Edit Data Inspektor') }}</h6>
             </div>
             <div class="card-body pt-4 p-3">
-                <form action="{{ route('operator.hse-inspector.update', $inspector->id) }}" method="POST" role="form text-left">
+                <form action="{{ route('operator.hse_inspector.update', $inspector->id) }}" method="POST" role="form text-left">
                     @csrf
                     @method('PUT')
 
