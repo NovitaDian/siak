@@ -351,7 +351,7 @@ class NcrController extends Controller
         }
 
         $pdf = Pdf::loadView('adminsystem.ncr.pdf', compact('ncr_fixs'))
-            ->setPaper('a4', 'landscape');;
+            ->setPaper('a4', 'potrait');
 
         return $pdf->download('ncr.pdf');
     }
@@ -512,7 +512,7 @@ class NcrController extends Controller
         if ($start && $end) {
             $ncr_fixs = SentNcr::whereBetween('tanggal_shift_kerja', [$start, $end])->get();
         } else {
-        $ncr_fixs = SentNcr::where('writer', $user->name)->get();
+            $ncr_fixs = SentNcr::where('writer', $user->name)->get();
         }
 
         return view('operator.ncr.index', compact('ncrs', 'ncr_fixs', 'allRequests'));
@@ -522,7 +522,7 @@ class NcrController extends Controller
     // Menampilkan detail data NCR berdasarkan ID
     public function operator_show($id)
     {
-        $ncr = SentNcr::findOrFail($id);  
+        $ncr = SentNcr::findOrFail($id);
         return view('operator.ncr.show', compact('ncr'));
     }
 
@@ -811,19 +811,22 @@ class NcrController extends Controller
             return Excel::download(new NcrExport(null, null), 'ncr_all.xlsx');
         }
     }
+   
     public function operator_exportPdf(Request $request)
     {
         $start = $request->start_date;
         $end = $request->end_date;
+        $user = Auth::user();
 
         if ($start && $end) {
-            $ncr_fixs = SentNcr::whereBetween('tanggal_shift_kerja', [$start, $end])->get();
+            $ncr_fixs = SentNcr::where('writer', $user->name)
+                ->whereBetween('tanggal_shift_kerja', [$start, $end])
+                ->get();
         } else {
-            $ncr_fixs = SentNcr::all();
+            $ncr_fixs = SentNcr::where('writer', $user->name)->get();
         }
-
         $pdf = Pdf::loadView('operator.ncr.pdf', compact('ncr_fixs'))
-            ->setPaper('a4', 'landscape');;
+            ->setPaper('a4', 'potrait');;
 
         return $pdf->download('ncr.pdf');
     }
@@ -956,14 +959,4 @@ class NcrController extends Controller
 
         return redirect()->route('operator.ncr.index')->with('success', 'NCR berhasil di-close!');
     }
-    }
-
-
-
-
-
-
-
-
-
-
+}

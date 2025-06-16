@@ -217,7 +217,7 @@
                                     <div class="me-2" style="flex: 1;">
                                         <label for="jenis_luka_sakit">{{ __('Luka/Sakit 1') }}</label>
                                         <select class="form-control" id="jenis_luka_sakit" name="jenis_luka_sakit">
-                                            <option value="" disabled selected>Pilih Jenis Luka</option>
+                                            <option value="">Pilih Jenis Luka</option>
                                             @foreach($hilangs as $luka)
                                             <option value="{{ $luka->jenis_luka }}" {{ old('luka') == $luka->jenis_luka ? 'selected' : '' }}>
                                                 {{ $luka->jenis_luka }}
@@ -232,7 +232,7 @@
                                     <div class="ms-2" style="flex: 1;">
                                         <label for="jenis_luka_sakit2">{{ __('Luka/Sakit 2') }}</label>
                                         <select class="form-control" id="jenis_luka_sakit2" name="jenis_luka_sakit2">
-                                            <option value="" disabled selected>Pilih Jenis Luka</option>
+                                            <option value="">Pilih Jenis Luka</option>
                                             @foreach($hilangs as $luka)
                                             <option value="{{ $luka->jenis_luka }}" {{ old('luka') == $luka->jenis_luka ? 'selected' : '' }}>
                                                 {{ $luka->jenis_luka }}
@@ -247,7 +247,7 @@
                                     <div class="ms-2" style="flex: 1;">
                                         <label for="jenis_luka_sakit3">{{ __('Luka/Sakit 3') }}</label>
                                         <select class="form-control" id="jenis_luka_sakit3" name="jenis_luka_sakit3">
-                                            <option value="" disabled selected>Pilih Jenis Luka</option>
+                                            <option value="">Pilih Jenis Luka</option>
                                             @foreach($hilangs as $luka)
                                             <option value="{{ $luka->jenis_luka }}" {{ old('luka') == $luka->jenis_luka ? 'selected' : '' }}>
                                                 {{ $luka->jenis_luka }}

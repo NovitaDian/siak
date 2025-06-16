@@ -213,7 +213,7 @@
                                     id="foto"
                                     name="foto"
                                     accept="image/*"
-                                    capture="environment"
+
                                     readonly>
 
                                 @error('foto')

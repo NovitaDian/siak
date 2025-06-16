@@ -136,6 +136,9 @@ class IncidentFixSeeder extends Seeder
             'safe_shift_wlta',
             'safe_day_wlta',
             'total_safe_day_wlta',
+            'timing_1',
+            'timing_2',
+            'timing_3',
         ];
 
 

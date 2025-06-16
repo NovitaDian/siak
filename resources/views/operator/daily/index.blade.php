@@ -255,7 +255,7 @@
                                         </td>
 
                                         <td class="align-middle text-center">
-                                            <a href="{{ route('operator.daily.show', $daily_fix->id) }}"
+                                            <a href="{{ route('operator.daily.sent_show', $daily_fix->id) }}"
                                                 class="btn btn-info btn-xs"> <i class="fas fa-eye me-1" style="font-size: 12px;"></i> Show
                                             </a>
                                         </td>

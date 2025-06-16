@@ -213,7 +213,7 @@
                                     id="foto"
                                     name="foto"
                                     accept="image/*"
-                                    capture="environment"
+
                                     readonly>
 
                                 @error('foto')
@@ -231,7 +231,7 @@
                                     id="foto_closed"
                                     name="foto_closed"
                                     accept="image/*"
-                                    capture="environment"
+
                                     required>
                                 @error('foto_closed')
                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>

@@ -13,15 +13,14 @@ return new class extends Migration
     {
         Schema::create('daily_requests', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('sent_daily_id'); 
-            $table->unsignedBigInteger('user_id'); 
+            $table->unsignedBigInteger('sent_daily_id');
+            $table->unsignedBigInteger('user_id');
             $table->string('nama_pengirim', 100);
-            $table->string('type', 255);
+            $table->string('type', 6);
             $table->text('reason');
-            $table->string('status', 255)->default('Pending');
-            $table->timestamps(); 
+            $table->string('status', 7)->default('Pending');
+            $table->timestamps();
             $table->foreign('sent_daily_id')->references('id')->on('daily_fix')->onDelete('cascade');
-
         });
     }
 

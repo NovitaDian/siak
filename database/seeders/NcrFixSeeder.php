@@ -32,7 +32,7 @@ class NcrFixSeeder extends Seeder
                 'status' => $faker->randomElement(['Nothing']),
                 'status_note' => $faker->optional()->sentence,
                 'status_ncr' => $faker->randomElement(['Open', 'Closed']),
-                'durasi_ncr' => $faker->optional()->numberBetween(1, 30) . ' hari',
+                'durasi' => $faker->optional()->numberBetween(1, 30),
                 'estimasi' => $faker->optional()->date(),
                 'tindak_lanjut' => $faker->optional()->paragraph,
                 'foto' => null,

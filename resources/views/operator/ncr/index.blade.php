@@ -7,7 +7,7 @@
 </div>
 @endif
 <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg">
-   
+
 
     <div class="row">
         <div class="col-12">
@@ -169,6 +169,7 @@
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">HSE Inspector</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal Audit</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Auditee</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Target Penyelesaian</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Durasi NCR</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status Request</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Close</th>
@@ -184,6 +185,16 @@
                                     <td class="text-center text-xs">{{ $ncr_fix->nama_hs_officer_1 }}</td>
                                     <td class="text-center text-xs">{{ \Carbon\Carbon::parse($ncr_fix->tanggal_audit)->format('d/m/Y') }}</td>
                                     <td class="text-center text-xs">{{ $ncr_fix->nama_auditee }}</td>
+                                    @php
+                                    $estimasiDate = \Carbon\Carbon::parse($ncr_fix->estimasi);
+                                    $isLate = now()->greaterThanOrEqualTo($estimasiDate) && $ncr_fix->status_ncr == 'Open';
+                                    @endphp
+
+                                    <td class="text-center text-xs">
+                                        <span class="badge bg-{{ $isLate ? 'danger' : 'success' }}">
+                                            {{ $estimasiDate->format('d/m/Y') }}
+                                        </span>
+                                    </td>
                                     <td class="text-center text-xs">{{ $ncr_fix->durasi_ncr }}</td>
                                     <td class="text-center text-xs">{{ $ncr_fix->status }}</td>
                                     <td class="align-middle text-center text-xs">

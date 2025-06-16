@@ -12,7 +12,7 @@
                 <h6 class="mb-0">{{ __('DATA UMUM') }}</h6>
             </div>
             <div class="card-body pt-4 p-3">
-                <form action="{{ route('adminsystem.ncr.store') }}"  method="POST" enctype="multipart/form-data" role="form text-left">
+                <form action="{{ route('adminsystem.ncr.store') }}" method="POST" enctype="multipart/form-data" role="form text-left">
                     @csrf
                     @if($errors->any())
                     <div class="mt-3 alert alert-primary alert-dismissible fade show" role="alert">
@@ -202,7 +202,7 @@
                                     id="foto"
                                     name="foto"
                                     accept="image/*"
-                                    capture="environment"
+
                                     required>
                                 @error('foto')
                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>

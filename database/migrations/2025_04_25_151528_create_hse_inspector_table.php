@@ -12,8 +12,8 @@ class CreateHseInspectorTable extends Migration
     {
         Schema::create('hse_inspector', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('jabatan');
+            $table->string('name',100);
+            $table->string('jabatan',100);
             $table->timestamps();
         });
     }

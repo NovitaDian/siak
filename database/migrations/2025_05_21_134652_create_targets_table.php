@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('targets', function (Blueprint $table) {
             $table->id();
             $table->string('key')->unique();
-            $table->string('value');
+            $table->integer('value');
             $table->timestamps();
         });
     }

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('daily_draft', function (Blueprint $table) {
             $table->id();
-            $table->string('writer', 255);
+            $table->string('writer', 100);
             $table->date('tanggal_shift_kerja');
             $table->string('shift_kerja');
             $table->unsignedBigInteger('hse_inspector_id');

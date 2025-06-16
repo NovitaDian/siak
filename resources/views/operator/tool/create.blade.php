@@ -90,7 +90,7 @@
                                     id="foto"
                                     name="foto"
                                     accept="image/*"
-                                    capture="environment"
+
                                     required>
                                 @error('foto')
                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>

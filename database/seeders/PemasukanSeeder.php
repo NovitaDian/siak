@@ -15,22 +15,22 @@ class PemasukanSeeder extends Seeder
         $barangList = [
             [
                 'material_code' => '2309202K63738',
-                'material_name' => 'Topi safety',
+                'description' => 'Topi safety',
                 'unit' => 'PCS',
             ],
             [
                 'material_code' => '2309202K63988',
-                'material_name' => 'Sepatu safety',
+                'description' => 'Sepatu safety',
                 'unit' => 'PCS',
             ],
             [
                 'material_code' => '2309202K63789',
-                'material_name' => 'Thermometer',
+                'description' => 'Thermometer',
                 'unit' => 'PCS',
             ],
             [
                 'material_code' => '2309202K63784',
-                'material_name' => 'Sarung Tangan Kain',
+                'description' => 'Sarung Tangan Kain',
                 'unit' => 'PAC',
             ],
         ];
@@ -40,7 +40,7 @@ class PemasukanSeeder extends Seeder
             $barang = Barang::firstOrCreate(
                 ['material_code' => $item['material_code']],
                 [
-                    'material_name' => $item['material_name'],
+                    'description' => $item['description'],
                     'unit' => $item['unit'],
                     'quantity' => 0, 
                 ]

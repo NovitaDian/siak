@@ -207,7 +207,7 @@ class NonCompliantController extends Controller
         $perusahaans = Perusahaan::all();
         $bagians = Bagian::all();
 
-        return view('adminsystem.non_compliant.create', compact('ppeFix', 'perusahaans', 'bagians'));
+        return view('operator.non_compliant.create', compact('ppeFix', 'perusahaans', 'bagians'));
     }
     public function operator_getBagian($perusahaan_name)
     {

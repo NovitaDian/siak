@@ -146,7 +146,7 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::post('/request', [NonCompliantController::class, 'submitRequest'])->name('request');
 			Route::post('/approve/{id}', [NonCompliantController::class, 'approve'])->name('approve');
 			Route::post('/reject/{id}', [NonCompliantController::class, 'reject'])->name('reject');
-			Route::get('/get-bagian/{perusahaan_name}', [NonCompliantController::class, 'getBagian'])->name('getBagian');
+			Route::get('/get_bagian/{perusahaan_name}', [NonCompliantController::class, 'getBagian'])->name('getBagian');
 		});
 		Route::prefix('adminsystem/ncr')->name('adminsystem.ncr.')->group(function () {
 			Route::get('/', [NcrController::class, 'index'])->name('index');
@@ -221,6 +221,7 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('/{id}/edit', [DailyController::class, 'edit'])->name('edit');
 			Route::put('/{id}', [DailyController::class, 'update'])->name('update');
 			Route::get('/{id}', [DailyController::class, 'show'])->name('show');
+			Route::get('/sent_show/{id}', [DailyController::class, 'sent_show'])->name('sent_show');
 			Route::delete('/draft/{id}', [DailyController::class, 'draft_destroy'])->name('draft_destroy');
 			Route::delete('/{id}', [DailyController::class, 'destroy'])->name('destroy');
 			Route::get('/search', [DailyController::class, 'search'])->name('search');
@@ -499,13 +500,12 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::post('/reject/{id}', [PpeController::class, 'operator_reject'])->name('reject');
 		});
 		Route::prefix('operator/non_compliant')->name('operator.non_compliant.')->group(function () {
-			Route::get('/', [NonCompliantController::class, 'operator_index'])->name('index');
 			Route::get('/create/{id}', [NonCompliantController::class, 'operator_create'])->name('create');
-			Route::post('/', [NonCompliantController::class, 'operator_store'])->name('store');
-			Route::get('/{id}/edit', [NonCompliantController::class, 'operator_edit'])->name('edit');
+			Route::post('/storepelanggar', [NonCompliantController::class, 'operator_store'])->name('store');
+			Route::get('edit/{id}', [NonCompliantController::class, 'operator_edit'])->name('edit');
 			Route::put('/{id}', [NonCompliantController::class, 'operator_update'])->name('update');
-			Route::get('/{id}', [NonCompliantController::class, 'operator_show'])->name('show');
-			Route::get('/{id}', [NonCompliantController::class, 'operator_sent_show'])->name('sent_show');
+			Route::get('/show{id}', [NonCompliantController::class, 'operator_show'])->name('show');
+			Route::get('/sent_show{id}', [NonCompliantController::class, 'operator_sent_show'])->name('sent_show');
 			Route::delete('/{id}', [NonCompliantController::class, 'operator_destroy'])->name('destroy');
 			Route::get('/search', [NonCompliantController::class, 'operator_search'])->name('search');
 			Route::post('/non_compliant-request', [NonCompliantController::class, 'operator_storeRequest'])->name('storeRequest');
@@ -587,6 +587,7 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('/{id}/edit', [DailyController::class, 'operator_edit'])->name('edit');
 			Route::put('/{id}', [DailyController::class, 'operator_update'])->name('update');
 			Route::get('/{id}', [DailyController::class, 'operator_show'])->name('show');
+			Route::get('/sent_show/{id}', [DailyController::class, 'operator_sent_show'])->name('sent_show');
 			Route::delete('/draft/{id}', [DailyController::class, 'operator_draft_destroy'])->name('draft_destroy');
 			Route::delete('/{id}', [DailyController::class, 'operator_destroy'])->name('destroy');
 			Route::get('/search', [DailyController::class, 'operator_search'])->name('search');

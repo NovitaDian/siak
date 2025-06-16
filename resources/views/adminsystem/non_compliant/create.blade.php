@@ -6,7 +6,23 @@
 
     <h6 class="mb-0 mt-4">{{ __('DATA PELANGGAR') }}</h6>
     <form action="{{ route('adminsystem.non_compliant.store') }}" method="POST" enctype="multipart/form-data">
-        @csrf
+       @csrf
+                    @if($errors->any())
+                    <div class="mt-3 alert alert-primary alert-dismissible fade show" role="alert">
+                        <span class="alert-text text-white">{{ $errors->first() }}</span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                            <i class="fa fa-close" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    @endif
+                    @if(session('success'))
+                    <div class="m-3 alert alert-success alert-dismissible fade show" role="alert">
+                        <span class="alert-text text-white">{{ session('success') }}</span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                            <i class="fa fa-close" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    @endif
         <input type="hidden" name="id_ppe" value="{{ $ppeFix->id }}">
 
         <div class="row">
@@ -118,7 +134,7 @@
                                 id="foto"
                                 name="foto"
                                 accept="image/*"
-                                capture="environment"
+
                                 required>
                             @error('foto')
                             <p class="text-danger text-xs mt-2">{{ $message }}</p>

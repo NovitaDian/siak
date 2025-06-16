@@ -9,10 +9,9 @@ return new class extends Migration {
     {
         Schema::create('notes', function (Blueprint $table) {
             $table->id();
-            $table->string('writer')->nullable();
+            $table->string('writer',100)->nullable();
             $table->text('note')->nullable();
-            $table->timestamp('created_at')->useCurrent();
-            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
+            $table->timestamps();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });

@@ -18,16 +18,6 @@
                 </div>
 
                 <div class="card-body">
-
-                    <form action="{{ route('operator.references.store') }}" method="POST" enctype="multipart/form-data" class="mb-4">
-                        @csrf
-                        <div class="form-group">
-                            <label for="file">Pilih File:</label>
-                            <input type="file" class="form-control" name="file" id="file">
-                        </div>
-                        <button type="submit" class="btn btn-sm btn-primary mt-2">Tambah</button>
-                    </form>
-
                     <div class="table-responsive p-3">
                         <table class="table align-items-center mb-0" id="dataTable">
                             <thead>
@@ -35,7 +25,6 @@
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama File</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Ukuran File</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal Unggah</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -56,22 +45,11 @@
                                     <td class="text-center">
                                         <p class="text-xs font-weight-bold mb-0">{{ $document->created_at->format('d-m-Y H:i') }}</p>
                                     </td>
-
-                                    <td class="text-center">
-                                        <form action="{{ route('operator.references.destroy', $document->id) }}" method="POST" onsubmit="return confirm('Anda yakin akan menghapus data ini?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-xs">
-                                                <i class="fas fa-trash-alt me-1" style="font-size: 12px;"></i> Delete
-                                            </button>
-                                        </form>
-                                    </td>
                                 </tr>
                                 @endforeach
                             </tbody>
                         </table>
                     </div>
-
                 </div>
             </div>
         </div>

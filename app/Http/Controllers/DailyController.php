@@ -83,6 +83,11 @@ class DailyController extends Controller
         $daily = Daily::findOrFail($id);
         return view('adminsystem.daily.show', compact('daily'));
     }
+    public function sent_show($id)
+    {
+        $daily = SentDaily::findOrFail($id);
+        return view('adminsystem.daily.show', compact('daily'));
+    }
 
     // Menampilkan form edit data
     public function edit($id)
@@ -373,7 +378,11 @@ class DailyController extends Controller
         $daily = Daily::findOrFail($id);
         return view('operator.daily.show', compact('daily'));
     }
-
+    public function operator_sent_show($id)
+    {
+        $daily = SentDaily::findOrFail($id);
+        return view('adminsystem.daily.show', compact('daily'));
+    }
     // Menampilkan form edit data
     public function operator_edit($id)
     {
@@ -381,8 +390,6 @@ class DailyController extends Controller
         $inspectors = HseInspector::all();
         return view('operator.daily.edit', compact('daily', 'inspectors'));
     }
-
-
     // Mengupdate data ke database
     public function operator_update(Request $request, $id)
     {
@@ -443,7 +450,7 @@ class DailyController extends Controller
         return redirect()->route('operator.daily.index')->with('success', 'Data berhasil dikirim.');
     }
 
- 
+
     public function operator_sent_edit($id)
     {
         // Retrieve the NCR record by ID

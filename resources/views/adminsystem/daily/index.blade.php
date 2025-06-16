@@ -71,9 +71,7 @@
             </div>
         </div>
     </div>
-    <br>
 
-    <br>
     <div class="row">
         <div class="col-12">
             <div class="card mb-4">
@@ -161,16 +159,12 @@
                                                 </ul>
                                             </div>
                                         </div>
-
-                                        <!-- Font Awesome & Bootstrap JS (pindahkan ke layout utama jika belum ada) -->
-                                        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
                                     </td>
 
 
 
                                     <script>
                                         function editAction() {
-                                            // Redirect to the edit form for the item
                                             window.location.href = "{{ route('adminsystem.daily.edit', $daily->id) }}";
                                         }
                                     </script>
@@ -225,8 +219,6 @@
                                 </div>
                             </div>
                         </form>
-
-
                     </div>
 
                     <div class="card-body px-4 pt-4 pb-4">
@@ -259,7 +251,9 @@
                                             <p class="text-xs font-weight-bold mb-0">{{ $daily_fix->nama_hse_inspector }}</p>
                                         </td>
                                         <td class="text-center text-xs">
-                                            <p class="text-xs font-weight-bold mb-0">{{ $daily_fix->rincian_laporan }}</p>
+                                            <p class="text-xs font-bold mb-0" style="max-width: 200px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+                                                {{ $daily_fix->rincian_laporan }}
+                                            </p>
                                         </td>
 
 
@@ -317,7 +311,7 @@
                                         </td>
 
                                         <td class="align-middle text-center">
-                                            <a href="{{ route('adminsystem.daily.show', $daily_fix->id) }}"
+                                            <a href="{{ route('adminsystem.daily.sent_show', $daily_fix->id) }}"
                                                 class="btn btn-info btn-xs"> <i class="fas fa-eye me-1" style="font-size: 12px;"></i> Show
                                             </a>
                                         </td>
@@ -364,12 +358,6 @@
     </div>
 </main>
 <!-- Include jQuery and Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
-<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
 <script>
     // Ambil CSRF token dari meta tag
@@ -457,15 +445,16 @@
 <script>
     $(document).ready(function() {
         $('#dataTableReq').DataTable({
-            "pageLength": 10,
-            "lengthMenu": [10, 25, 50, 100],
-            "ordering": true,
-            "searching": true,
-            "info": true,
-            "paging": true,
-            "responsive": true
+            responsive: true,
+            pageLength: 10,
+            lengthMenu: [10, 25, 50, 100],
+            ordering: true,
+            searching: true,
+            info: true,
+            paging: true
         });
     });
+
     $(document).ready(function() {
         $('#dataTableDraft').DataTable({
             "pageLength": 10,

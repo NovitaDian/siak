@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('draft_id');
             $table->unsignedBigInteger('user_id');
-            $table->string('writer', 255);
+            $table->string('writer', 100);
             $table->date('tanggal_shift_kerja');
             $table->string('shift_kerja');
             $table->unsignedBigInteger('hse_inspector_id');

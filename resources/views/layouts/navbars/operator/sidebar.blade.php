@@ -25,7 +25,14 @@
           <span class="nav-link-text ms-1">Dashboard</span>
         </a>
       </li>
-
+<li class="nav-item">
+        <a class="nav-link {{ Request::is('operator/budget_pr') ? 'active' : '' }}" href="{{ url('operator/budget_pr') }}">
+          <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+            <img src="{{ asset('../assets/img/money.png') }}" alt="budget" width="16" height="16">
+          </div>
+          <span class="nav-link-text ms-1">Budget & PR</span>
+        </a>
+      </li>
       <li class="nav-item">
         <a class="nav-link {{ Request::is('operator/inventory') ? 'active' : '' }}" href="{{ url('operator/inventory') }}">
           <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">

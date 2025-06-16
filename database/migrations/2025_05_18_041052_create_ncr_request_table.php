@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('sent_ncr_id'); // Foreign key, bisa dihubungkan ke tabel lain
             $table->string('nama_pengirim', 100);
-            $table->string('type', 255);
+            $table->string('type', 6);
             $table->text('reason');
-            $table->string('status', 255)->default('Pending');
+            $table->string('status', 7)->default('Pending');
             $table->timestamps();
             $table->unsignedBigInteger('user_id');
             $table->foreign('sent_ncr_id')->references('id')->on('ncr_fix')->onDelete('cascade');

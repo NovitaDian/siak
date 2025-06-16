@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('jumlah_hari_hilang', function (Blueprint $table) {
            $table->id();
             $table->string('jenis_luka');
-            $table->string('jml_hari_hilang');
+            $table->integer('jml_hari_hilang');
             $table->timestamps();
         });
     }

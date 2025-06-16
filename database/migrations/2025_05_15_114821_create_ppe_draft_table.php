@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('ppe_draft', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('writer');
             $table->date('tanggal_shift_kerja');
             $table->string('shift_kerja', 50);
@@ -35,9 +37,8 @@ return new class extends Migration
             $table->integer('jumlah_tidak_patuh_pelindung_mata_kontraktor')->default(0);
             $table->integer('jumlah_tidak_patuh_safety_harness_kontraktor')->default(0);
             $table->integer('jumlah_tidak_patuh_apd_lainnya_kontraktor')->default(0);
-            $table->string('durasi_ppe')->nullable();
-            $table->string('status_note', 100)->nullable();
             $table->string('status_ppe', 100)->nullable();
+            $table->string('status', 30)->default('Nothing');
             $table->timestamps();
             $table->foreign('hse_inspector_id')->references('id')->on('hse_inspector')->onDelete('cascade');
         });

@@ -9,7 +9,7 @@
                 <h6 class="mb-0">{{ __('EDIT DATA UMUM') }}</h6>
             </div>
             <div class="card-body pt-4 p-3">
-                <form action="{{ route('adminsystem.ncr.close_ncr', $ncr_fixs->id) }}" method="POST" enctype="multipart/form-data"  role="form text-left">
+                <form action="{{ route('adminsystem.ncr.close_ncr', $ncr_fixs->id) }}" method="POST" enctype="multipart/form-data" role="form text-left">
                     @csrf
                     @method('PUT')
                     @if($errors->any())
@@ -213,7 +213,7 @@
                                     id="foto"
                                     name="foto"
                                     accept="image/*"
-                                    capture="environment"
+
                                     readonly>
 
                                 @error('foto')
@@ -231,7 +231,7 @@
                                     id="foto_closed"
                                     name="foto_closed"
                                     accept="image/*"
-                                    capture="environment"
+
                                     required>
                                 @error('foto_closed')
                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>

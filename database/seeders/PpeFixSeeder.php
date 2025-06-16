@@ -52,8 +52,6 @@ class PpeFixSeeder extends Seeder
                     'jumlah_tidak_patuh_pelindung_mata_kontraktor' => rand(0, 3),
                     'jumlah_tidak_patuh_safety_harness_kontraktor' => rand(0, 2),
                     'jumlah_tidak_patuh_apd_lainnya_kontraktor' => rand(0, 2),
-                    'durasi_ppe' => '08:00',
-                    'status_note' => $faker->randomElement($statusNote),
                     'status_ppe' => $faker->randomElement($statusPpe),
                     'status' => 'Nothing',
                     'user_id' => rand(1, 3),
