@@ -42,7 +42,7 @@
             <div class="card h-100 d-flex flex-row align-items-center p-3">
                 <img src="../assets/img/settings.png" alt="Tool Inspection" class="img-fluid" style="width: 80px; height: 80px; object-fit: cover; margin-right: 15px;">
                 <div class="card-body p-0 d-flex flex-column justify-content-between">
-                    <h6 class="text-center mb-3">TOOL & EQUIPMENT INSPECT</h6>
+                    <h6 class="text-center mb-3">TOOL & EQUIPMENT INSPECTION</h6>
                     <button class="btn btn-primary w-100" onclick="location.href='{{ route('adminsystem.tool.index') }}'">GO</button>
                 </div>
             </div>
