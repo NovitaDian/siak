@@ -4,7 +4,7 @@
 
 <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
     <div class="container-fluid py-4">
-    
+
 
         <div class="row"></div>
         <div class="card mb-4">
@@ -68,6 +68,10 @@
                             <tbody id="draftTableBody">
                                 @forelse ($nonCompliants as $nc)
                                 <tr>
+                                    @php
+                                    $request = $requests->firstWhere('sent_non_compliants_id', $nc->id);
+                                    @endphp
+
                                     <td class="text-center text-xs">{{ $loop->iteration }}</td>
                                     <td class="text-center text-xs">{{ $nc->nama_pelanggar }}</td>
                                     <td class="text-center text-xs">{{ $nc->deskripsi_ketidaksesuaian }}</td>

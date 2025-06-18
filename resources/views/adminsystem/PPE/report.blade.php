@@ -45,9 +45,9 @@
                             <div class="form-group">
                                 <label for="shift_kerja">{{ __('Shift Kerja') }}</label>
                                 <select class="form-control" id="shift_kerja" name="shift_kerja" required>
-                                    <option value="Shift 1" {{ old('shift_kerja') == 'Shift1' ? 'selected' : '' }}>SHIFT I</option>
-                                    <option value="ZONA II (PROSES, KAPURAN, CT)" {{ old('shift_kerja') == 'Shift2' ? 'selected' : '' }}>SHIFT II</option>
-                                    <option value="Shift 3" {{ old('shift_kerja') == 'Shift3' ? 'selected' : '' }}>SHIFT III</option>
+                                    <option value="Shift 1" {{ old('shift_kerja') ==  'Shift 1' ? 'selected' : '' }}>SHIFT I</option>
+                                    <option value="ZONA II (PROSES, KAPURAN, CT)" {{ old('shift_kerja') ==  'Shift 2' ? 'selected' : '' }}>SHIFT II</option>
+                                    <option value="Shift 3" {{ old('shift_kerja') ==  'Shift 3' ? 'selected' : '' }}>SHIFT III</option>
                                     <option value="Nonshift" {{ old('shift_kerja') == 'Nonshift' ? 'selected' : '' }}>NONSHIFT</option>
                                 </select>
                                 @error('shift_kerja')
@@ -115,18 +115,16 @@
                                 @enderror
                             </div>
                         </div>
-                        <h6 class="mb-0">{{ __('JUMLAH PATUH APD') }}</h6>
-
-                        <!-- Jumlah Patuh APD -->
+                           <!-- Jumlah Patuh APD -->
                         <div class="row mt-3">
                             <div class="col-md-4">
                                 <label>{{ __('Jumlah Patuh APD') }}</label>
                             </div>
                             <div class="col-md-4">
-                                <input class="form-control" type="number" id="jumlah_patuh_apd_karyawan" name="jumlah_patuh_apd_karyawan" min="0" placeholder="Karyawan" required>
+                                <input class="form-control" type="number" id="jumlah_patuh_apd_karyawan" name="jumlah_patuh_apd_karyawan" min="0" placeholder="Karyawan" value="{{ old('jumlah_patuh_apd_karyawan') }}">
                             </div>
                             <div class="col-md-4">
-                                <input class="form-control" type="number" id="jumlah_patuh_apd_kontraktor" name="jumlah_patuh_apd_kontraktor" min="0" placeholder="Kontraktor" required>
+                                <input class="form-control" type="number" id="jumlah_patuh_apd_kontraktor" name="jumlah_patuh_apd_kontraktor" min="0" placeholder="Kontraktor" value="{{ old('jumlah_patuh_apd_kontraktor') }}">
                             </div>
                         </div>
 
@@ -136,10 +134,10 @@
                                 <label>{{ __('Jumlah Tidak Patuh Helm') }}</label>
                             </div>
                             <div class="col-md-4">
-                                <input class="form-control" type="number" id="jumlah_tidak_patuh_helm_karyawan" name="jumlah_tidak_patuh_helm_karyawan" min="0" placeholder="Karyawan" required>
+                                <input class="form-control" type="number" id="jumlah_tidak_patuh_helm_karyawan" name="jumlah_tidak_patuh_helm_karyawan" min="0" placeholder="Karyawan" value="{{ old('jumlah_tidak_patuh_helm_karyawan') }}">
                             </div>
                             <div class="col-md-4">
-                                <input class="form-control" type="number" id="jumlah_tidak_patuh_helm_kontraktor" name="jumlah_tidak_patuh_helm_kontraktor" min="0" placeholder="Kontraktor" required>
+                                <input class="form-control" type="number" id="jumlah_tidak_patuh_helm_kontraktor" name="jumlah_tidak_patuh_helm_kontraktor" min="0" placeholder="Kontraktor" value="{{ old('jumlah_tidak_patuh_helm_kontraktor') }}">
                             </div>
                         </div>
 
@@ -149,10 +147,10 @@
                                 <label>{{ __('Jumlah Tidak Patuh Sepatu') }}</label>
                             </div>
                             <div class="col-md-4">
-                                <input class="form-control" type="number" id="jumlah_tidak_patuh_sepatu_karyawan" name="jumlah_tidak_patuh_sepatu_karyawan" min="0" placeholder="Karyawan" required>
+                                <input class="form-control" type="number" id="jumlah_tidak_patuh_sepatu_karyawan" name="jumlah_tidak_patuh_sepatu_karyawan" min="0" placeholder="Karyawan" value="{{ old('jumlah_tidak_patuh_sepatu_karyawan') }}">
                             </div>
                             <div class="col-md-4">
-                                <input class="form-control" type="number" id="jumlah_tidak_patuh_sepatu_kontraktor" name="jumlah_tidak_patuh_sepatu_kontraktor" min="0" placeholder="Kontraktor" required>
+                                <input class="form-control" type="number" id="jumlah_tidak_patuh_sepatu_kontraktor" name="jumlah_tidak_patuh_sepatu_kontraktor" min="0" placeholder="Kontraktor" value="{{ old('jumlah_tidak_patuh_sepatu_kontraktor') }}">
                             </div>
                         </div>
 
@@ -162,10 +160,10 @@
                                 <label>{{ __('Jumlah Tidak Patuh Pelindung Mata') }}</label>
                             </div>
                             <div class="col-md-4">
-                                <input class="form-control" type="number" id="jumlah_tidak_patuh_pelindung_mata_karyawan" name="jumlah_tidak_patuh_pelindung_mata_karyawan" min="0" placeholder="Karyawan" required>
+                                <input class="form-control" type="number" id="jumlah_tidak_patuh_pelindung_mata_karyawan" name="jumlah_tidak_patuh_pelindung_mata_karyawan" min="0" placeholder="Karyawan" value="{{ old('jumlah_tidak_patuh_pelindung_mata_karyawan') }}">
                             </div>
                             <div class="col-md-4">
-                                <input class="form-control" type="number" id="jumlah_tidak_patuh_pelindung_mata_kontraktor" name="jumlah_tidak_patuh_pelindung_mata_kontraktor" min="0" placeholder="Kontraktor" required>
+                                <input class="form-control" type="number" id="jumlah_tidak_patuh_pelindung_mata_kontraktor" name="jumlah_tidak_patuh_pelindung_mata_kontraktor" min="0" placeholder="Kontraktor" value="{{ old('jumlah_tidak_patuh_pelindung_mata_kontraktor') }}">
                             </div>
                         </div>
 
@@ -175,10 +173,10 @@
                                 <label>{{ __('Jumlah Tidak Patuh Safety Harness') }}</label>
                             </div>
                             <div class="col-md-4">
-                                <input class="form-control" type="number" id="jumlah_tidak_patuh_safety_harness_karyawan" name="jumlah_tidak_patuh_safety_harness_karyawan" min="0" placeholder="Karyawan" required>
+                                <input class="form-control" type="number" id="jumlah_tidak_patuh_safety_harness_karyawan" name="jumlah_tidak_patuh_safety_harness_karyawan" min="0" placeholder="Karyawan" value="{{ old('jumlah_tidak_patuh_safety_harness_karyawan') }}">
                             </div>
                             <div class="col-md-4">
-                                <input class="form-control" type="number" id="jumlah_tidak_patuh_safety_harness_kontraktor" name="jumlah_tidak_patuh_safety_harness_kontraktor" min="0" placeholder="Kontraktor" required>
+                                <input class="form-control" type="number" id="jumlah_tidak_patuh_safety_harness_kontraktor" name="jumlah_tidak_patuh_safety_harness_kontraktor" min="0" placeholder="Kontraktor" value="{{ old('jumlah_tidak_patuh_safety_harness_kontraktor') }}">
                             </div>
                         </div>
 
@@ -188,23 +186,22 @@
                                 <label>{{ __('Jumlah Tidak Patuh APD Lainnya') }}</label>
                             </div>
                             <div class="col-md-4">
-                                <input class="form-control" type="number" id="jumlah_tidak_patuh_apd_lainnya_karyawan" name="jumlah_tidak_patuh_apd_lainnya_karyawan" min="0" placeholder="Karyawan" required>
+                                <input class="form-control" type="number" id="jumlah_tidak_patuh_apd_lainnya_karyawan" name="jumlah_tidak_patuh_apd_lainnya_karyawan" min="0" placeholder="Karyawan" value="{{ old('jumlah_tidak_patuh_apd_lainnya_karyawan') }}">
                             </div>
                             <div class="col-md-4">
-                                <input class="form-control" type="number" id="jumlah_tidak_patuh_apd_lainnya_kontraktor" name="jumlah_tidak_patuh_apd_lainnya_kontraktor" min="0" placeholder="Kontraktor" required>
+                                <input class="form-control" type="number" id="jumlah_tidak_patuh_apd_lainnya_kontraktor" name="jumlah_tidak_patuh_apd_lainnya_kontraktor" min="0" placeholder="Kontraktor" value="{{ old('jumlah_tidak_patuh_apd_lainnya_kontraktor') }}">
                             </div>
                         </div>
-
                         <!-- Keterangan Tidak Patuh -->
                         <div class="row mt-3">
                             <div class="col-md-4">
                                 <label>{{ __('Keterangan Tidak Patuh') }}</label>
                             </div>
                             <div class="col-md-8">
-                                <textarea class="form-control" id="keterangan_tidak_patuh" name="keterangan_tidak_patuh" rows="3"></textarea>
+                                <textarea class="form-control" id="keterangan_tidak_patuh" name="keterangan_tidak_patuh" rows="3">{{ old('keterangan_tidak_patuh') }}</textarea>
                             </div>
-
                         </div>
+
                     </div>
                     <div class="d-flex justify-content-end">
                         <button type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">{{ __('Save Report') }}</button>

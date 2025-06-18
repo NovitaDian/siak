@@ -24,27 +24,30 @@ class NcrController extends Controller
 {
 
     public function index(Request $request)
-    {
-        $user = Auth::user();
+{
+    $user = Auth::user();
 
-        // Ambil data draft NCR oleh user login
-        $ncrs = Ncr::where('writer', $user->name)->get();
+    // Ambil data draft NCR oleh user login
+    $ncrs = Ncr::where('writer', $user->name)->get();
 
-        // Ambil semua request (Edit/Delete)
-        $allRequests = NcrRequest::all();
+    // Ambil semua request (Edit/Delete)
+    $allRequests = NcrRequest::all();
 
-        // Filter tanggal jika ada
-        $start = $request->start_date;
-        $end = $request->end_date;
+    // Filter tanggal jika ada
+    $start = $request->start_date;
+    $end = $request->end_date;
 
-        if ($start && $end) {
-            $ncr_fixs = SentNcr::whereBetween('tanggal_shift_kerja', [$start, $end])->get();
-        } else {
-            $ncr_fixs = SentNcr::all();
-        }
-
-        return view('adminsystem.ncr.index', compact('ncrs', 'ncr_fixs', 'allRequests'));
+    if ($start && $end) {
+        $ncr_fixs = SentNcr::whereBetween('tanggal_shift_kerja', [$start, $end])
+                            ->orderBy('tanggal_shift_kerja', 'desc') // Terbaru di atas
+                            ->get();
+    } else {
+        $ncr_fixs = SentNcr::orderBy('tanggal_shift_kerja', 'desc') // Terbaru di atas
+                           ->get();
     }
+
+    return view('adminsystem.ncr.index', compact('ncrs', 'ncr_fixs', 'allRequests'));
+}
 
 
     // Menampilkan detail data NCR berdasarkan ID
@@ -313,7 +316,7 @@ class NcrController extends Controller
             'status' => 'Approved',
         ]);
 
-        return redirect()->route('adminsystem.ncr.index');
+        return redirect()->route('adminsystem.ncr.index')->with('success', 'Request berhasil disetujui.');
     }
 
 
@@ -326,7 +329,7 @@ class NcrController extends Controller
         SentNcr::where('id', $request->sent_ncr_id)->update([
             'status' => 'Rejected',
         ]);
-        return redirect()->route('adminsystem.ncr.index');
+        return redirect()->route('adminsystem.ncr.index')->with('success', 'Request berhasil ditolak.');
     }
     public function export(Request $request)
     {
@@ -512,7 +515,7 @@ class NcrController extends Controller
         if ($start && $end) {
             $ncr_fixs = SentNcr::whereBetween('tanggal_shift_kerja', [$start, $end])->get();
         } else {
-            $ncr_fixs = SentNcr::where('writer', $user->name)->get();
+            $ncr_fixs = SentNcr::where('writer', $user->name)->orderBy('tanggal_shift_kerja', 'desc')->get();
         }
 
         return view('operator.ncr.index', compact('ncrs', 'ncr_fixs', 'allRequests'));
@@ -811,7 +814,7 @@ class NcrController extends Controller
             return Excel::download(new NcrExport(null, null), 'ncr_all.xlsx');
         }
     }
-   
+
     public function operator_exportPdf(Request $request)
     {
         $start = $request->start_date;

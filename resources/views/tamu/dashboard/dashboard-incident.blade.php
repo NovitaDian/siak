@@ -27,20 +27,23 @@
             <form action="{{ route('tamu.update-target-manhours') }}" method="POST">
                 @csrf
                 <label for="target_manhours" class="form-label fw-bold">Target Total Man Hours</label>
-                <p class="form-control form-control-sm mb-2">
-                    {{ number_format($targetManHours) }}
-                </p>
-
-
+                <input
+                    type="number"
+                    name="target_manhours"
+                    id="target_manhours"
+                    class="form-control form-control-sm mb-2"
+                    value="{{ old('target_manhours', $targetManHours) }}"
+                    min="0"
+                    disabled>
             </form>
         </div>
 
-        <!-- Right Column -->
+         <!-- Right Column -->
         <div class="col-md-9">
             <!-- Tanggal -->
             <div class="wrap-text d-flex justify-content-between">
                 <h6 class="fw-bold"><strong>Tanggal: {{ \Carbon\Carbon::parse($selectedDate)->format('d/m/Y') }}</strong></h6>
-                <h6 class="text-end fw-bold"><strong>Shift: {{($shift)}}</strong></h6>
+                <h6 class="text-end fw-bold"><strong>Shift: {{($shift ?? '-')}}</strong></h6>
             </div>
             <!-- Section 1: Counting Days Without Accident -->
             <div class="mb-4">

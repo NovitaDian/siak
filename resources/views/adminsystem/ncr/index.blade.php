@@ -244,7 +244,7 @@
                             </thead>
                             <tbody>
                                 @foreach ($ncr_fixs as $ncr_fix)
-                                <tr class="sent-ncr-row" data-ncr-id="{{ $ncr_fix->id }}">
+                                <tr>
                                     <td class="text-center text-xs">{{ \Carbon\Carbon::parse($ncr_fix->tanggal_shift_kerja)->format('d/m/Y') }}</td>
                                     <td class="text-center text-xs">{{ $ncr_fix->shift_kerja }}</td>
                                     <td class="text-center text-xs">{{ $ncr_fix->nama_hs_officer_1 }}</td>

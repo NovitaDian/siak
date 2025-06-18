@@ -18,6 +18,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Mail;
 
@@ -37,9 +38,10 @@ class IncidentController extends Controller
 
         // Jika filter tanggal diisi, gunakan whereBetween
         if ($start && $end) {
-            $incident_fixs = SentIncident::whereBetween('shift_date', [$start, $end])->get();
+            $incident_fixs = SentIncident::whereBetween('shift_date', [$start, $end])->orderBy('shift_date', 'desc')
+                ->get();
         } else {
-            $incident_fixs = SentIncident::orderByDesc('shift_date')->get();
+            $incident_fixs = SentIncident::orderByDesc('shift_date')->orderBy('shift_date', 'desc')->get();
         }
 
         return view('adminsystem.incident.index', compact('incidents', 'incident_fixs', 'requests'));
@@ -711,7 +713,8 @@ class IncidentController extends Controller
 
         // Susun no_laporan akhir
         $no_laporan = "{$incidentCount}/{$bulan}/HSE/{$tahun2Digit}";
-        $validated['no_laporan'] = $no_laporan;
+        unset($validated['no_laporan']);
+
         // Update semua nilai ke dalam model
 
         $incident->update($validated);
@@ -1266,32 +1269,24 @@ class IncidentController extends Controller
 
         return redirect()->route('adminsystem.incident.index')->with('success', 'Request berhasil dikirim dan email telah dikirim ke admin.');
     }
-    public function approve($sent_incident_id)
+    public function approve($id)
     {
-        $request = IncidentRequest::findOrFail($sent_incident_id);
+        $request = IncidentRequest::find($id);
         $request->status = 'Approved';
         $request->save();
+        SentIncident::where('id', $request->sent_incident_id)->update(['status_request' => 'Approved']);
 
-        SentIncident::where('id', $request->sent_incident_id)->update([
-            'status_request' => 'Approved',
-        ]);
-
-        return redirect()->route('adminsystem.incident.index');
+        return redirect()->route('adminsystem.incident.index')->with('success', 'Request berhasil disetujui.');
     }
-
-
     public function reject($id)
     {
         $request = IncidentRequest::find($id);
         $request->status = 'Rejected';
         $request->save();
-        // Update juga incident_fixs jika perlu
-        SentIncident::where('id', $request->sent_incident_id)->update([
-            'status_request' => 'Rejected',
-        ]);
-        return redirect()->route('adminsystem.incident.index');
-    }
+        SentIncident::where('id', $request->sent_incident_id)->update(['status_request' => 'Rejected']);
 
+        return redirect()->route('adminsystem.incident.index')->with('success', 'Request berhasil ditolak.');
+    }
     public function getBagian($perusahaan_name)
     {
         $bagians = Bagian::where('perusahaan_name', $perusahaan_name)->get();
@@ -1348,16 +1343,16 @@ class IncidentController extends Controller
     public function operator_index(Request $request)
     {
         $user = auth()->user();
-        $incidents = Incident::where('writer', $user->name)->get();
+        $incidents = Incident::where('writer', $user->name)->orderBy('shift_date', 'desc')->get();
         $requests = IncidentRequest::all();
         $start = $request->start_date;
         $end = $request->end_date;
 
         // Jika filter tanggal diisi, gunakan whereBetween
         if ($start && $end) {
-            $incident_fixs = SentIncident::whereBetween('shift_date', [$start, $end])->get();
+            $incident_fixs = SentIncident::whereBetween('shift_date', [$start, $end])->orderBy('shift_date', 'desc')->get();
         } else {
-            $incident_fixs = SentIncident::where('writer', $user->name)->get();
+            $incident_fixs = SentIncident::where('writer', $user->name)->orderBy('shift_date', 'desc')->get();
         }
         return view('operator.incident.index', compact('incidents', 'incident_fixs', 'requests'));
     }
@@ -2027,8 +2022,8 @@ class IncidentController extends Controller
         $tahun2Digit = $shiftDate->format('y');
 
         // Susun no_laporan akhir
-        $no_laporan = "{$incidentCount}/{$bulan}/HSE/{$tahun2Digit}";
-        $validated['no_laporan'] = $no_laporan;
+        unset($validated['no_laporan']);
+
         // Update semua nilai ke dalam model
 
         $incident->update($validated);
@@ -2582,31 +2577,7 @@ class IncidentController extends Controller
 
         return redirect()->route('operator.incident.index')->with('success', 'Request berhasil dikirim dan email telah dikirim ke admin.');
     }
-    public function operator_approve($sent_incident_id)
-    {
-        $request = IncidentRequest::findOrFail($sent_incident_id);
-        $request->status = 'Approved';
-        $request->save();
 
-        SentIncident::where('id', $request->sent_incident_id)->update([
-            'status_request' => 'Approved',
-        ]);
-
-        return redirect()->route('operator.incident.index');
-    }
-
-
-    public function operator_reject($id)
-    {
-        $request = IncidentRequest::find($id);
-        $request->status = 'Rejected';
-        $request->save();
-        // Update juga incident_fixs jika perlu
-        SentIncident::where('id', $request->sent_incident_id)->update([
-            'status_request' => 'Rejected',
-        ]);
-        return redirect()->route('operator.incident.index');
-    }
 
     public function operator_getBagian($perusahaan_name)
     {

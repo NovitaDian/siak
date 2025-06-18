@@ -45,7 +45,7 @@
             <!-- Tanggal -->
             <div class="wrap-text d-flex justify-content-between">
                 <h6 class="fw-bold"><strong>Tanggal: {{ \Carbon\Carbon::parse($selectedDate)->format('d/m/Y') }}</strong></h6>
-                <h6 class="text-end fw-bold"><strong>Shift: {{($shift)}}</strong></h6>
+                <h6 class="text-end fw-bold"><strong>Shift: {{($shift ?? '-')}}</strong></h6>
             </div>
             <!-- Section 1: Counting Days Without Accident -->
             <div class="mb-4">

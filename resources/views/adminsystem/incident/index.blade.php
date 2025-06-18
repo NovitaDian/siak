@@ -41,21 +41,22 @@
                                             </td>
                                             <td class="text-center">
                                                 @if ($request->status == 'Pending')
-                                                <button
-                                                    class="btn btn-success btn-xs me-1"
-                                                    onclick="approveRequest('{{ $request->id }}')"
-                                                    title="Approve this request">
-                                                    <i class="fas fa-check m-1"></i> Approve
-                                                </button>
+                                                <form action="{{ route('adminsystem.incident.approve', $request->id) }}" method="POST" class="d-inline">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-success btn-xs me-1"
+                                                        onclick="return confirm('Yakin ingin menyetujui permintaan ini?')">
+                                                        <i class="fas fa-check m-1"></i> Approve
+                                                    </button>
+                                                </form>
 
-                                                <button
-                                                    class="btn btn-danger btn-xs me-1"
-                                                    onclick="rejectRequest('{{ $request->id }}')"
-                                                    title="Reject this request">
-                                                    <i class="fas fa-times m-1"></i> Reject
-                                                </button>
+                                                <form action="{{ route('adminsystem.incident.reject', $request->id) }}" method="POST" class="d-inline">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-danger btn-xs me-1"
+                                                        onclick="return confirm('Yakin ingin menolak permintaan ini?')">
+                                                        <i class="fas fa-times m-1"></i> Reject
+                                                    </button>
+                                                </form>
                                                 @endif
-
                                                 <form
                                                     action="{{ route('adminsystem.incident.sent_show', ['id' => $request->id]) }}"
                                                     method="GET"
@@ -408,7 +409,6 @@
                 </div>
             </div>
         </div>
-
 </main>
 <!-- Include jQuery and Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -476,45 +476,6 @@
         });
     });
 
-    // Fungsi untuk menyetujui permintaan
-    function approveRequest(id) {
-        $.ajax({
-            url: "{{ route('adminsystem.incident.approve', '') }}/" + id, // Menggunakan route Laravel
-            type: 'POST',
-            data: {
-                _token: csrfToken // Menggunakan CSRF token
-            },
-            success: function(response) {
-                if (response.success) {
-                    $('#status-' + id).text('Approved'); // Perbarui status di tabel
-                } else {
-                    console.error("Approval failed:", response.message);
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error("Error approving request:", error);
-            }
-        });
-    }
-
-    // Fungsi untuk menolak permintaan
-    function rejectRequest(id) {
-        $.ajax({
-            url: "{{ route('adminsystem.incident.reject', '') }}/" + id, // Menggunakan route Laravel
-            type: 'POST',
-            data: {
-                _token: csrfToken // Menggunakan CSRF token
-            },
-            success: function(response) {
-                if (response.success) {
-                    $('#status-' + id).text('Rejected'); // Perbarui status di tabel
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error("Error rejecting request:", error);
-            }
-        });
-    }
 
     // Fungsi untuk mengedit item
     function editAction(id) {

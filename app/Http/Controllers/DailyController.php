@@ -258,7 +258,7 @@ class DailyController extends Controller
             'status' => 'Approved',
         ]);
 
-        return response()->json(['success' => true]);
+        return redirect()->route('adminsystem.daily.index')->with('success', 'Request berhasil disetujui.');
     }
 
 
@@ -271,7 +271,7 @@ class DailyController extends Controller
         SentDaily::where('id', $request->sent_daily_id)->update([
             'status' => 'Rejected',
         ]);
-        return response()->json(['success' => true]);
+        return redirect()->route('adminsystem.daily.index')->with('success', 'Request berhasil ditolak.');
     }
     public function export(Request $request)
     {

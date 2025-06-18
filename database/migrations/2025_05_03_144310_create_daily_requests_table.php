@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('nama_pengirim', 100);
             $table->string('type', 6);
             $table->text('reason');
-            $table->string('status', 7)->default('Pending');
+            $table->string('status', 8)->default('Pending');
             $table->timestamps();
             $table->foreign('sent_daily_id')->references('id')->on('daily_fix')->onDelete('cascade');
         });

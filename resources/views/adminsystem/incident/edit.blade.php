@@ -47,9 +47,9 @@
                             <div class="form-group">
                                 <label for="shift">{{ __('Shift Kerja') }}</label>
                                 <select class="form-control" id="shift" name="shift" required>
-                                    <option value="Shift 1" {{ old('shift', $incidents->shift) == 'Shift1' ? 'selected' : '' }}>SHIFT I</option>
-                                    <option value="Shift 2" {{ old('shift', $incidents->shift) == 'Shift2' ? 'selected' : '' }}>SHIFT II</option>
-                                    <option value="Shift 3" {{ old('shift', $incidents->shift) == 'Shift3' ? 'selected' : '' }}>SHIFT III</option>
+                                    <option value="Shift 1" {{ old('shift', $incidents->shift) == 'Shift 1' ? 'selected' : '' }}>SHIFT I</option>
+                                    <option value="Shift 2" {{ old('shift', $incidents->shift) == 'Shift 2' ? 'selected' : '' }}>SHIFT II</option>
+                                    <option value="Shift 3" {{ old('shift', $incidents->shift) == 'Shift 3' ? 'selected' : '' }}>SHIFT III</option>
                                     <option value="Nonshift" {{ old('shift', $incidents->shift) == 'Nonshift' ? 'selected' : '' }}>NONSHIFT</option>
                                 </select>
                                 @error('shift')

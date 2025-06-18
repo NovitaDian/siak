@@ -27,7 +27,7 @@ class RegisterController extends Controller
         $attributes = collect($validated)->except('agreement')->toArray();
     
         $attributes['password'] = bcrypt($attributes['password']);
-        $attributes['role'] = 'guest';
+        $attributes['role'] = 'tamu';
 
         // Buat user tanpa login otomatis
         $user = User::create($attributes);

@@ -235,6 +235,7 @@ class NonCompliantController extends Controller
 
         $data = $request->all();
         $data['writer'] = Auth::user()->name;
+        $data['user_id'] = Auth::user()->id;
 
         if ($request->hasFile('foto')) {
             $fotoPath = $request->file('foto')->store('pelanggar/foto', 'public');

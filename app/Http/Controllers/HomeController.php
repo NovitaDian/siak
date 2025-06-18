@@ -422,117 +422,6 @@ class HomeController extends Controller
 
 
 
-    public function operator_dashboard(Request $request)
-    {
-        $year = $request->input('year');
-        $month = $request->input('month');
-
-        $query = DB::table('ppe_fix');
-
-        if ($year) {
-            $query->whereYear('tanggal_shift_kerja', $year);
-        }
-
-        if ($month) {
-            $query->whereMonth('tanggal_shift_kerja', $month);
-            $groupBy = DB::raw('DATE(tanggal_shift_kerja)');
-            $selectDate = "DATE(tanggal_shift_kerja) as tanggal";
-        } else {
-            $groupBy = DB::raw('MONTH(tanggal_shift_kerja)');
-            $selectDate = "MONTH(tanggal_shift_kerja) as bulan";
-        }
-
-        $data = $query->selectRaw("
-        $selectDate,
-        SUM(jumlah_patuh_apd_karyawan) as patuh_karyawan,
-        (
-            SUM(jumlah_tidak_patuh_helm_karyawan) +
-            SUM(jumlah_tidak_patuh_sepatu_karyawan) +
-            SUM(jumlah_tidak_patuh_pelindung_mata_karyawan) +
-            SUM(jumlah_tidak_patuh_safety_harness_karyawan) +
-            SUM(jumlah_tidak_patuh_apd_lainnya_karyawan)
-        ) as tidak_patuh_karyawan,
-        SUM(jumlah_patuh_apd_kontraktor) as patuh_kontraktor,
-        (
-            SUM(jumlah_tidak_patuh_helm_kontraktor) +
-            SUM(jumlah_tidak_patuh_sepatu_kontraktor) +
-            SUM(jumlah_tidak_patuh_pelindung_mata_kontraktor) +
-            SUM(jumlah_tidak_patuh_safety_harness_kontraktor) +
-            SUM(jumlah_tidak_patuh_apd_lainnya_kontraktor)
-        ) as tidak_patuh_kontraktor,
-        SUM(jumlah_tidak_patuh_helm_karyawan) as tidak_patuh_helm_karyawan,
-        SUM(jumlah_tidak_patuh_sepatu_karyawan) as tidak_patuh_sepatu_karyawan,
-        SUM(jumlah_tidak_patuh_helm_kontraktor) as tidak_patuh_helm_kontraktor,
-        SUM(jumlah_tidak_patuh_sepatu_kontraktor) as tidak_patuh_sepatu_kontraktor
-    ")
-            ->groupBy($groupBy)
-            ->orderBy($groupBy)
-            ->get();
-
-        $labels = [];
-        $employeeData = [];
-        $contractorData = [];
-        $tidak_patuh_karyawan = [];
-        $patuh_karyawan = [];
-        $tidak_patuh_kontraktor = [];
-        $patuh_kontraktor = [];
-        $employeeHelmData = [];
-        $employeeSepatuData = [];
-        $contractorHelmData = [];
-        $contractorSepatuData = [];
-
-        foreach ($data as $item) {
-            if ($month) {
-                $labels[] = date('d M', strtotime($item->tanggal));
-            } else {
-                $labels[] = date('M', mktime(0, 0, 0, $item->bulan, 10));
-            }
-
-            $total_karyawan = $item->patuh_karyawan + $item->tidak_patuh_karyawan;
-            $total_kontraktor = $item->patuh_kontraktor + $item->tidak_patuh_kontraktor;
-
-            $employeeData[] = $total_karyawan > 0 ? round(($item->patuh_karyawan / $total_karyawan) * 100, 2) : 0;
-            $contractorData[] = $total_kontraktor > 0 ? round(($item->patuh_kontraktor / $total_kontraktor) * 100, 2) : 0;
-
-            $tidak_patuh_karyawan[] = $item->tidak_patuh_karyawan;
-            $patuh_karyawan[] = $item->patuh_karyawan;
-            $tidak_patuh_kontraktor[] = $item->tidak_patuh_kontraktor;
-            $patuh_kontraktor[] = $item->patuh_kontraktor;
-
-            $employeeHelmData[] = $item->tidak_patuh_helm_karyawan;
-            $employeeSepatuData[] = $item->tidak_patuh_sepatu_karyawan;
-            $contractorHelmData[] = $item->tidak_patuh_helm_kontraktor;
-            $contractorSepatuData[] = $item->tidak_patuh_sepatu_kontraktor;
-        }
-
-        $years = DB::table('ppe_fix')->selectRaw('YEAR(tanggal_shift_kerja) as year')->distinct()->orderBy('year', 'desc')->pluck('year');
-        $months = DB::table('ppe_fix')->selectRaw('MONTH(tanggal_shift_kerja) as month')->distinct()->orderBy('month', 'desc')->pluck('month');
-
-        $targetEmployee = Target::where('key', 'target_employee_compliance')->value('value');
-        $targetContractor = Target::where('key', 'target_contractor_compliance')->value('value');
-
-        return view('operator.dashboard.dashboard', compact(
-            'labels',
-            'employeeData',
-            'contractorData',
-            'years',
-            'months',
-            'year',
-            'month',
-            'targetEmployee',
-            'targetContractor',
-            'tidak_patuh_kontraktor',
-            'patuh_kontraktor',
-            'tidak_patuh_karyawan',
-            'patuh_karyawan',
-            'employeeHelmData',
-            'employeeSepatuData',
-            'contractorHelmData',
-            'contractorSepatuData'
-        ));
-    }
-
-
 
     public function operator_budget()
     {
@@ -576,7 +465,7 @@ class HomeController extends Controller
     }
 
 
-    public function operator_incident(Request $request)
+   public function operator_incident(Request $request)
 {
     // Ambil input shift_date dan shift
     $shiftDate = $request->input('shift_date');
@@ -667,6 +556,8 @@ class HomeController extends Controller
 }
 
 
+
+
     public function operator_updateTargetManHours(Request $request)
     {
         $request->validate([
@@ -728,6 +619,7 @@ class HomeController extends Controller
         return view('operator.dashboard.spi', compact('data'));
     }
 
+   
 
 
 
@@ -743,116 +635,12 @@ class HomeController extends Controller
 
 
 
-    public function tamu_dashboard(Request $request)
-    {
-        $year = $request->input('year');
-        $month = $request->input('month');
 
-        $query = DB::table('ppe_fix');
 
-        if ($year) {
-            $query->whereYear('tanggal_shift_kerja', $year);
-        }
 
-        if ($month) {
-            $query->whereMonth('tanggal_shift_kerja', $month);
-            $groupBy = DB::raw('DATE(tanggal_shift_kerja)');
-            $selectDate = "DATE(tanggal_shift_kerja) as tanggal";
-        } else {
-            $groupBy = DB::raw('MONTH(tanggal_shift_kerja)');
-            $selectDate = "MONTH(tanggal_shift_kerja) as bulan";
-        }
 
-        $data = $query->selectRaw("
-        $selectDate,
-        SUM(jumlah_patuh_apd_karyawan) as patuh_karyawan,
-        (
-            SUM(jumlah_tidak_patuh_helm_karyawan) +
-            SUM(jumlah_tidak_patuh_sepatu_karyawan) +
-            SUM(jumlah_tidak_patuh_pelindung_mata_karyawan) +
-            SUM(jumlah_tidak_patuh_safety_harness_karyawan) +
-            SUM(jumlah_tidak_patuh_apd_lainnya_karyawan)
-        ) as tidak_patuh_karyawan,
-        SUM(jumlah_patuh_apd_kontraktor) as patuh_kontraktor,
-        (
-            SUM(jumlah_tidak_patuh_helm_kontraktor) +
-            SUM(jumlah_tidak_patuh_sepatu_kontraktor) +
-            SUM(jumlah_tidak_patuh_pelindung_mata_kontraktor) +
-            SUM(jumlah_tidak_patuh_safety_harness_kontraktor) +
-            SUM(jumlah_tidak_patuh_apd_lainnya_kontraktor)
-        ) as tidak_patuh_kontraktor,
-        SUM(jumlah_tidak_patuh_helm_karyawan) as tidak_patuh_helm_karyawan,
-        SUM(jumlah_tidak_patuh_sepatu_karyawan) as tidak_patuh_sepatu_karyawan,
-        SUM(jumlah_tidak_patuh_helm_kontraktor) as tidak_patuh_helm_kontraktor,
-        SUM(jumlah_tidak_patuh_sepatu_kontraktor) as tidak_patuh_sepatu_kontraktor
-    ")
-            ->groupBy($groupBy)
-            ->orderBy($groupBy)
-            ->get();
 
-        $labels = [];
-        $employeeData = [];
-        $contractorData = [];
-        $tidak_patuh_karyawan = [];
-        $patuh_karyawan = [];
-        $tidak_patuh_kontraktor = [];
-        $patuh_kontraktor = [];
-        $employeeHelmData = [];
-        $employeeSepatuData = [];
-        $contractorHelmData = [];
-        $contractorSepatuData = [];
-
-        foreach ($data as $item) {
-            if ($month) {
-                $labels[] = date('d M', strtotime($item->tanggal));
-            } else {
-                $labels[] = date('M', mktime(0, 0, 0, $item->bulan, 10));
-            }
-
-            $total_karyawan = $item->patuh_karyawan + $item->tidak_patuh_karyawan;
-            $total_kontraktor = $item->patuh_kontraktor + $item->tidak_patuh_kontraktor;
-
-            $employeeData[] = $total_karyawan > 0 ? round(($item->patuh_karyawan / $total_karyawan) * 100, 2) : 0;
-            $contractorData[] = $total_kontraktor > 0 ? round(($item->patuh_kontraktor / $total_kontraktor) * 100, 2) : 0;
-
-            $tidak_patuh_karyawan[] = $item->tidak_patuh_karyawan;
-            $patuh_karyawan[] = $item->patuh_karyawan;
-            $tidak_patuh_kontraktor[] = $item->tidak_patuh_kontraktor;
-            $patuh_kontraktor[] = $item->patuh_kontraktor;
-
-            $employeeHelmData[] = $item->tidak_patuh_helm_karyawan;
-            $employeeSepatuData[] = $item->tidak_patuh_sepatu_karyawan;
-            $contractorHelmData[] = $item->tidak_patuh_helm_kontraktor;
-            $contractorSepatuData[] = $item->tidak_patuh_sepatu_kontraktor;
-        }
-
-        $years = DB::table('ppe_fix')->selectRaw('YEAR(tanggal_shift_kerja) as year')->distinct()->orderBy('year', 'desc')->pluck('year');
-        $months = DB::table('ppe_fix')->selectRaw('MONTH(tanggal_shift_kerja) as month')->distinct()->orderBy('month', 'desc')->pluck('month');
-
-        $targetEmployee = Target::where('key', 'target_employee_compliance')->value('value');
-        $targetContractor = Target::where('key', 'target_contractor_compliance')->value('value');
-
-        return view('tamu.dashboard.dashboard', compact(
-            'labels',
-            'employeeData',
-            'contractorData',
-            'years',
-            'months',
-            'year',
-            'month',
-            'targetEmployee',
-            'targetContractor',
-            'tidak_patuh_kontraktor',
-            'patuh_kontraktor',
-            'tidak_patuh_karyawan',
-            'patuh_karyawan',
-            'employeeHelmData',
-            'employeeSepatuData',
-            'contractorHelmData',
-            'contractorSepatuData'
-        ));
-    }
-    public function tamu_budget()
+     public function tamu_budget()
     {
         $budget_fixs = BudgetFix::all();
         return view('tamu.dashboard.budget', compact('budget_fixs'));
@@ -894,9 +682,8 @@ class HomeController extends Controller
     }
 
 
-    public function tamu_incident(Request $request)
-    {
-  
+   public function tamu_incident(Request $request)
+{
     // Ambil input shift_date dan shift
     $shiftDate = $request->input('shift_date');
     $shift = $request->input('shift');
@@ -982,8 +769,13 @@ class HomeController extends Controller
         'lastLTAIncidentDate' => $lastLtaDate,
         'selectedDate' => $shiftDateParsed,
         'targetManHours' => $targetManHours,
+        'shift' => $shift
+        
     ]);
 }
+
+
+
 
     public function tamu_updateTargetManHours(Request $request)
     {
@@ -1045,4 +837,4 @@ class HomeController extends Controller
 
         return view('tamu.dashboard.spi', compact('data'));
     }
-}
+    }

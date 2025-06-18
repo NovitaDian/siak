@@ -31,7 +31,7 @@
                   <img src="{{ asset('assets/img/logos/hse.png') }}" alt="HSE" style="height:40px;">
                   <img src="{{ asset('assets/img/logos/pt_dus.png') }}" alt="PT.DUS" style="height:40px;">
                 </div>
-                <h3 class="font-weight-bolder text-info text-gradient">Selamat Datang Kembali!</h3>
+                <h3 class="font-weight-bolder text-info text-gradient">Selamat Datang Kembali di SIAK3!</h3>
                 <p class="mb-0">Buat akun baru<br></p>
                 <p class="mb-0">Atau masuk dengan akun yang sudah ada</p>
               </div>
@@ -40,7 +40,7 @@
                   @csrf
                   <label>Email</label>
                   <div class="mb-3">
-                    <input type="email" class="form-control" name="email" id="email" placeholder="Email" value="example@gmail.com" aria-label="Email" aria-describedby="email-addon">
+                    <input type="email" class="form-control" name="email" id="email" placeholder="example@gmail.com" aria-label="Email" aria-describedby="email-addon">
                     @error('email')
                     <p class="text-danger text-xs mt-2">{{ $message }}</p>
                     @enderror

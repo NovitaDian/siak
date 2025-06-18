@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('nama_pengirim', 100);
             $table->string('type', 6);
             $table->text('reason');
-            $table->string('status', 7)->default('Pending');
+            $table->string('status', 8)->default('Pending');
             $table->timestamps();
             $table->foreign('sent_ppe_id')->references('id')->on('ppe_fix')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

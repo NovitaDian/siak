@@ -1,6 +1,11 @@
 @extends('layouts.user_type.auth')
 
 @section('content')
+@if (session('success'))
+<div class="alert alert-success alert-dismissible fade show" role="alert" style="background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 10px; margin: 10px;">
+  {{ session('success') }}
+</div>
+@endif
 
 <div>
     <div class="container-fluid">
@@ -85,7 +90,7 @@
                             <div class="form-group">
                                 <label for="user-phone" class="form-control-label">{{ __('Phone') }}</label>
                                 <div class="@error('phone') border border-danger rounded-3 @enderror">
-                                    <input class="form-control" value="{{ old('phone', auth()->user()->phone) }}" type="tel" placeholder="40770888444" id="user-phone" name="phone">
+                                    <input class="form-control" type="number" value="{{ old('phone', auth()->user()->phone) }}" type="tel" placeholder="40770888444" id="user-phone" name="phone">
                                     @error('phone')
                                     <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                     @enderror

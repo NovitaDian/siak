@@ -22,26 +22,31 @@ use Maatwebsite\Excel\Facades\Excel;
 class ToolController extends Controller
 {
 
-    public function index(Request $request)
-    {
+   public function index(Request $request)
+{
+    $user = Auth::user();
 
-        $user = Auth::user();
-        $tools = ToolReport::with('alat')
-            ->where('writer', $user->name)
+    $tools = ToolReport::with('alat')
+        ->where('writer', $user->name)
+        ->orderBy('created_at', 'desc') // urutkan dari yang terbaru
+        ->get();
+
+    $start = $request->start_date;
+    $end = $request->end_date;
+
+    if ($start && $end) {
+        $tool_fixs = SentToolReport::whereBetween('tanggal_pemeriksaan', [$start, $end])
+            ->orderBy('created_at', 'desc') // urutkan dari yang terbaru
             ->get();
-        $start = $request->start_date;
-        $end = $request->end_date;
-
-        // Jika filter tanggal diisi, gunakan whereBetween
-        if ($start && $end) {
-            $tool_fixs = SentToolReport::whereBetween('tanggal_pemeriksaan', [$start, $end])->get();
-        } else {
-            $tool_fixs = SentToolReport::all();
-        }
-        $requests = ToolRequest::all();
-
-        return view('adminsystem.tool.index', compact('tools', 'tool_fixs', 'requests'));
+    } else {
+        $tool_fixs = SentToolReport::orderBy('created_at', 'desc')->get();
     }
+
+    $requests = ToolRequest::orderBy('created_at', 'desc')->get(); // urutkan dari yang terbaru
+
+    return view('adminsystem.tool.index', compact('tools', 'tool_fixs', 'requests'));
+}
+
     public function create()
     {
         $alats = Alat::all();
@@ -297,7 +302,8 @@ class ToolController extends Controller
             'status' => 'Approved',
         ]);
 
-        return redirect()->route('adminsystem.tool.index');
+        return redirect()->route('adminsystem.tool.index')->with('success', 'Request berhasil disetujui.');
+
     }
 
 
@@ -310,7 +316,8 @@ class ToolController extends Controller
         SentToolReport::where('id', $request->sent_tool_id)->update([
             'status' => 'Rejected',
         ]);
-        return redirect()->route('adminsystem.tool.index');
+        return redirect()->route('adminsystem.tool.index')->with('success', 'Request berhasil ditolak.');
+
     }
     public function export(Request $request)
     {

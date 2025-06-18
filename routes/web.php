@@ -91,6 +91,8 @@ Route::group(['middleware' => 'auth'], function () {
 		// Incident management
 		Route::prefix('adminsystem/incident')->name('adminsystem.incident.')->group(function () {
 			Route::get('/', [IncidentController::class, 'index'])->name('index');
+			Route::post('/approve/{id}', [IncidentController::class, 'approve'])->name('approve');
+			Route::post('/reject/{id}', [IncidentController::class, 'reject'])->name('reject');
 			Route::get('/export', [IncidentController::class, 'export'])->name('export');
 			Route::get('/export-pdf', [IncidentController::class, 'exportPdf'])->name('exportPdf');
 			Route::get('/create', [IncidentController::class, 'create'])->name('create');
@@ -108,8 +110,6 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('/search', [IncidentController::class, 'search'])->name('search');
 			Route::post('/incident-request', [IncidentController::class, 'storeRequest'])->name('storeRequest');
 			Route::post('/request', [IncidentController::class, 'submitRequest'])->name('request');
-			Route::post('/approve/{id}', [IncidentController::class, 'approve'])->name('approve');
-			Route::post('/reject/{id}', [IncidentController::class, 'reject'])->name('reject');
 			Route::get('/get-bagian/{perusahaan_name}', [IncidentController::class, 'getBagian'])->name('getBagian');
 			Route::post('/get-jumlah-hari-hilang', [IncidentController::class, 'getJumlahHariHilang'])->name('getJumlahHariHilang');
 		});
@@ -146,7 +146,7 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::post('/request', [NonCompliantController::class, 'submitRequest'])->name('request');
 			Route::post('/approve/{id}', [NonCompliantController::class, 'approve'])->name('approve');
 			Route::post('/reject/{id}', [NonCompliantController::class, 'reject'])->name('reject');
-			Route::get('/get_bagian/{perusahaan_name}', [NonCompliantController::class, 'getBagian'])->name('getBagian');
+			Route::get('/get-bagian/{perusahaan_name}', [NonCompliantController::class, 'getBagian'])->name('getBagian');
 		});
 		Route::prefix('adminsystem/ncr')->name('adminsystem.ncr.')->group(function () {
 			Route::get('/', [NcrController::class, 'index'])->name('index');
