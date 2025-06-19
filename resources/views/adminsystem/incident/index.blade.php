@@ -243,11 +243,6 @@
                                             <i class="fas fa-file-excel text-success me-2"></i> Excel
                                         </a>
                                     </li>
-                                    <li>
-                                        <a class="dropdown-item" href="{{ route('adminsystem.incident.exportPdf', request()->all()) }}">
-                                            <i class="fas fa-file-pdf text-danger me-2"></i> PDF
-                                        </a>
-                                    </li>
                                 </ul>
                             </div>
                         </div>

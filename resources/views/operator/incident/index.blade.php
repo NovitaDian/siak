@@ -10,7 +10,7 @@
     <div class="container-fluid py-4 px-0">
         <div class="card mx-auto w-100" style="max-width: 200%; ">
 
-           
+
         </div>
     </div>
 
@@ -175,11 +175,6 @@
                                     <li>
                                         <a class="dropdown-item" href="{{ route('operator.incident.export', request()->all()) }}">
                                             <i class="fas fa-file-excel text-success me-2"></i> Excel
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="{{ route('operator.incident.exportPdf', request()->all()) }}">
-                                            <i class="fas fa-file-pdf text-danger me-2"></i> PDF
                                         </a>
                                     </li>
                                 </ul>
