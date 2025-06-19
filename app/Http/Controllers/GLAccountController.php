@@ -24,14 +24,12 @@ class GLAccountController extends Controller
         $request->validate([
             'gl_code' => 'required|string|max:50|unique:gl_account,gl_code',
             'gl_name' => 'required|string|max:100',
-            'description' => 'required|string|max:100',
         ]);
 
 
         Gl_Account::create([
             'gl_code' => $request->input('gl_code'),
             'gl_name' => $request->input('gl_name'),
-            'description' => $request->input('description'),
         ]);
 
         // Redirect back with a success message
@@ -52,7 +50,6 @@ class GLAccountController extends Controller
         $request->validate([
             'gl_code' => 'required|string|unique|max:50',
             'gl_name' => 'required|string|max:100',
-            'description' => 'required|string|max:100',
 
         ]);
 

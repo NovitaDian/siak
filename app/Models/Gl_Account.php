@@ -21,7 +21,6 @@ class Gl_Account extends Model
      protected $fillable = [
          'gl_code',
          'gl_name',
-         'description',
         
 
     ];
