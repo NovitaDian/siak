@@ -14,7 +14,6 @@
                     <div class="card-header pb-0">
                         <h6>REQUEST</h6>
                     </div>
-
                     <div class="card-body px-4 pt-4 pb-4">
                         <div class="table-responsive p-0">
                             <table class="table align-items-center mb-0" id="dataTableReq">
