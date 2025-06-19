@@ -48,7 +48,7 @@ class GLAccountController extends Controller
         $gl = Gl_Account::findOrFail($id);
 
         $request->validate([
-            'gl_code' => 'required|string|max:50|unique:gl_accounts,gl_code,' . $id,
+            'gl_code' => 'required|string|max:50|unique:gl_account,gl_code,' . $id,
             'gl_name' => 'required|string|max:100',
 
         ]);
