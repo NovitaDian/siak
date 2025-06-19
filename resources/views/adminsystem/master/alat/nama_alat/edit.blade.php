@@ -3,18 +3,18 @@
 @section('content')
 @if($errors->any())
 <div class="mt-3 alert alert-primary alert-dismissible fade show" role="alert">
-  <span class="alert-text text-white">{{ $errors->first() }}</span>
-  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-    <i class="fa fa-close" aria-hidden="true"></i>
-  </button>
+    <span class="alert-text text-white">{{ $errors->first() }}</span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+        <i class="fa fa-close" aria-hidden="true"></i>
+    </button>
 </div>
 @endif
 @if(session('success'))
 <div class="m-3 alert alert-success alert-dismissible fade show" role="alert">
-  <span class="alert-text text-white">{{ session('success') }}</span>
-  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-    <i class="fa fa-close" aria-hidden="true"></i>
-  </button>
+    <span class="alert-text text-white">{{ session('success') }}</span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+        <i class="fa fa-close" aria-hidden="true"></i>
+    </button>
 </div>
 @endif
 <div>
@@ -27,7 +27,7 @@
                 <h6 class="mb-0">{{ __('EDIT NAMA ALAT') }}</h6>
             </div>
             <div class="card-body pt-4 p-3">
-                <form action="{{ route('adminsystem.nama_alat.nama_alat_update', $nama_alat->id) }}" method="POST" role="form text-left">
+                <form action="{{ route('adminsystem.nama_alat.update', $nama_alat->id) }}" method="POST" role="form text-left">
                     @csrf
                     @method('PUT') <!-- Menandakan bahwa ini adalah request untuk update -->
                     @if($errors->any())
