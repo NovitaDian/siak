@@ -9,7 +9,7 @@
 <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
     <div class="container-fluid py-4 px-0">
         <div class="card mx-auto w-100" style="max-width: 200%; ">
-           
+
         </div>
     </div>
     <!-- SENT DOCUMENT TABLE -->
@@ -159,8 +159,8 @@
                                     </td>
 
                                     @empty
-                                
-                                @endforelse
+
+                                    @endforelse
                             </tbody>
                         </table>
                     </div>
