@@ -104,7 +104,7 @@
                                                             </a>
                                                         </li>
                                                         <li>
-                                                            <form action="{{ route('operator.incident.show', ['id' => $incident->id]) }}" method="GET" class="m-0">
+                                                            <form action="{{ route('operator.incident.show', ['id' => $incident->sent_incident_id]) }}" method="GET" class="m-0">
                                                                 <button type="submit" class="dropdown-item">
                                                                     <i class="fas fa-eye me-1" style="font-size: 12px;"></i> Show
                                                                 </button>
