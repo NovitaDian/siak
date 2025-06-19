@@ -32,7 +32,7 @@ class PerusahaanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'perusahaan_code' => 'required|unique:perusahaan',
+            'perusahaan_code' => 'required|unique:perusahaan|max:10',
             'perusahaan_name' => 'required',
             'city' => 'required',
             'street' => 'required',
@@ -120,7 +120,7 @@ class PerusahaanController extends Controller
     public function operator_store(Request $request)
     {
         $request->validate([
-            'perusahaan_code' => 'required|unique:perusahaan',
+            'perusahaan_code' => 'required|unique:perusahaan|max:10',
             'perusahaan_name' => 'required',
             'city' => 'required',
             'street' => 'required',
