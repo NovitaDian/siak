@@ -39,7 +39,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="perusahaan_code">{{ __('Kode Perusahaan') }}</label>
-                                <input class="form-control" type="text" id="perusahaan_code" name="perusahaan_code" value="{{ old('perusahaan_code', $perusahaan->perusahaan_code) }}" required>
+                                <input class="form-control" type="text" id="perusahaan_code" name="perusahaan_code" value="{{ old('perusahaan_code', $perusahaan->perusahaan_code) }}" required maxlength="10">
                                 @error('perusahaan_code')
                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                 @enderror
