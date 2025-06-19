@@ -39,14 +39,14 @@ class PpeController extends Controller
         }
 
         $requests = PpeRequest::all();
-        return view('adminsystem.ppe.index', compact('ppes', 'ppe_fixs', 'requests'));
+        return view('adminsystem.PPE.index', compact('ppes', 'ppe_fixs', 'requests'));
     }
 
     // Menampilkan form untuk membuat data baru
     public function create()
     {
         $inspectors = HseInspector::all();
-        return view('adminsystem.ppe.report', compact('inspectors'));
+        return view('adminsystem.PPE.report', compact('inspectors'));
     }
 
     // Menyimpan data baru ke database
@@ -131,7 +131,7 @@ class PpeController extends Controller
         $ppeFix = SentPpe::findOrFail($id);
         $nonCompliants = NonCompliant::where('id_ppe', $id)->get();
         $requests = NonCompliantRequest::all();
-        return view('adminsystem.ppe.show', compact('ppeFix', 'requests', 'nonCompliants'));
+        return view('adminsystem.PPE.show', compact('ppeFix', 'requests', 'nonCompliants'));
     }
 
     // Menampilkan form edit data
@@ -280,7 +280,7 @@ class PpeController extends Controller
         $ppeFixs = SentPpe::findOrFail($id);
         $inspectors = HseInspector::all();
 
-        return view('adminsystem.ppe.sent_edit', compact('ppeFixs', 'inspectors'));
+        return view('adminsystem.PPE.sent_edit', compact('ppeFixs', 'inspectors'));
     }
     public function sent_update(Request $request, $id)
     {
@@ -493,13 +493,13 @@ class PpeController extends Controller
         }
 
         $requests = PpeRequest::all();
-        return view('operator.ppe.index', compact('ppes', 'ppe_fixs', 'requests'));
+        return view('operator.PPE.index', compact('ppes', 'ppe_fixs', 'requests'));
     }
     // Menampilkan form untuk membuat data baru
     public function operator_create()
     {
         $inspectors = HseInspector::all();
-        return view('operator.ppe.report', compact('inspectors'));
+        return view('operator.PPE.report', compact('inspectors'));
     }
 
     // Menyimpan data baru ke database
@@ -584,7 +584,7 @@ class PpeController extends Controller
         $ppeFix = SentPpe::findOrFail($id);
         $nonCompliants = NonCompliant::where('id_ppe', $id)->get();
         $requests = NonCompliantRequest::all();
-        return view('operator.ppe.show', compact('ppeFix', 'requests', 'nonCompliants'));
+        return view('operator.PPE.show', compact('ppeFix', 'requests', 'nonCompliants'));
     }
 
     // Menampilkan form edit data
@@ -733,7 +733,7 @@ class PpeController extends Controller
         $ppeFixs = SentPpe::findOrFail($id);
         $inspectors = HseInspector::all();
 
-        return view('operator.ppe.sent_edit', compact('ppeFixs', 'inspectors'));
+        return view('operator.PPE.sent_edit', compact('ppeFixs', 'inspectors'));
     }
     public function operator_sent_update(Request $request, $id)
     {
