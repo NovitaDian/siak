@@ -58,7 +58,7 @@
                                                 </form>
                                                 @endif
                                                 <form
-                                                    action="{{ route('adminsystem.incident.sent_show', ['id' => $request->id]) }}"
+                                                    action="{{ route('adminsystem.incident.sent_show', ['id' => $request->sent_incident_id]) }}"
                                                     method="GET"
                                                     style="display:inline;"
                                                     title="View details">
