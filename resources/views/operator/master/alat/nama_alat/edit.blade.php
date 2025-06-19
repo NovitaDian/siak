@@ -12,7 +12,7 @@
                 <h6 class="mb-0">{{ __('EDIT NAMA ALAT') }}</h6>
             </div>
             <div class="card-body pt-4 p-3">
-                <form action="{{ route('operator.tool.update', $nama_alat->id) }}" method="POST" role="form text-left">
+                <form action="{{ route('operator.nama_alat.nama_alat_update', $nama_alat->id) }}" method="POST" role="form text-left">
                     @csrf
                     @method('PUT') <!-- Menandakan bahwa ini adalah request untuk update -->
                     @if($errors->any())
