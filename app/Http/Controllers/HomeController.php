@@ -245,95 +245,95 @@ class HomeController extends Controller
     }
 
 
-   public function incident(Request $request)
-{
-    // Ambil input shift_date dan shift
-    $shiftDate = $request->input('shift_date');
-    $shift = $request->input('shift');
+    public function incident(Request $request)
+    {
+        // Ambil input shift_date dan shift
+        $shiftDate = $request->input('shift_date');
+        $shift = $request->input('shift');
 
-    // Jika user mengisi filter, validasi input
-    if ($request->has(['shift_date', 'shift'])) {
-        $request->validate([
-            'shift_date' => 'required|date',
-            'shift' => 'required|string',
-        ]);
-    }
+        // Jika user mengisi filter, validasi input
+        if ($request->has(['shift_date', 'shift'])) {
+            $request->validate([
+                'shift_date' => 'required|date',
+                'shift' => 'required|string',
+            ]);
+        }
 
-    // Ambil target manhours
-    $targetManHours = TargetManHours::value('target_manhours');
+        // Ambil target manhours
+        $targetManHours = TargetManHours::value('target_manhours');
 
-    // Jika tidak ada filter (shift kosong), ambil data terakhir dari DB
-    if (!$shiftDate || !$shift) {
-        $latestData = SentIncident::orderByDesc('shift_date')
-            ->orderByDesc('created_at') // atau orderByDesc('id') jika perlu
-            ->first();
+        // Jika tidak ada filter (shift kosong), ambil data terakhir dari DB
+        if (!$shiftDate || !$shift) {
+            $latestData = SentIncident::orderByDesc('shift_date')
+                ->orderByDesc('created_at') // atau orderByDesc('id') jika perlu
+                ->first();
 
-        if (!$latestData) {
-            // Kalau database kosong
+            if (!$latestData) {
+                // Kalau database kosong
+                return view('adminsystem.dashboard.dashboard-incident', [
+                    'daysSinceLastLTA' => 0,
+                    'daysSinceLastWLTA' => 0,
+                    'manHoursSinceLastLTA' => 0,
+                    'manHoursSinceLastWLTA' => 0,
+                    'totalLTA' => 0,
+                    'totalWLTA' => 0,
+                    'totalManHours' => 0,
+                    'lastLTAIncidentDate' => null,
+                    'selectedDate' => now(),
+                    'targetManHours' => $targetManHours,
+                ]);
+            }
+
+            // Ambil last LTA date berdasar data terakhir
+            $lastLtaDate = SentIncident::where('lta', 1)
+                ->whereDate('shift_date', '<=', $latestData->shift_date)
+                ->orderByDesc('shift_date')
+                ->value('shift_date');
+
             return view('adminsystem.dashboard.dashboard-incident', [
-                'daysSinceLastLTA' => 0,
-                'daysSinceLastWLTA' => 0,
-                'manHoursSinceLastLTA' => 0,
-                'manHoursSinceLastWLTA' => 0,
-                'totalLTA' => 0,
-                'totalWLTA' => 0,
-                'totalManHours' => 0,
-                'lastLTAIncidentDate' => null,
-                'selectedDate' => now(),
+                'daysSinceLastLTA' => $latestData->total_safe_day_lta2 ?? 0,
+                'daysSinceLastWLTA' => $latestData->total_safe_day_wlta ?? 0,
+                'manHoursSinceLastLTA' => $latestData->total_man_hours_lta ?? 0,
+                'manHoursSinceLastWLTA' => $latestData->total_man_hours_wlta2 ?? 0,
+                'totalLTA' => $latestData->total_lta_by_year ?? 0,
+                'totalWLTA' => $latestData->total_wlta_by_year ?? 0,
+                'totalManHours' => $latestData->total_man_hours ?? 0,
+                'lastLTAIncidentDate' => $lastLtaDate,
+                'selectedDate' => $latestData->shift_date,
+                'shift' => $latestData->shift,
                 'targetManHours' => $targetManHours,
             ]);
         }
 
-        // Ambil last LTA date berdasar data terakhir
+        // Jika ada filter shift dan date, cari data berdasarkan input
+        $shiftDateParsed = Carbon::parse($shiftDate)->format('Y-m-d');
+
+        $data = SentIncident::whereDate('shift_date', $shiftDateParsed)
+            ->where('shift', $shift)
+            ->first();
+
+        if (!$data) {
+            return redirect()->back()->with('error', 'Data tidak ditemukan untuk tanggal dan shift tersebut.');
+        }
+
         $lastLtaDate = SentIncident::where('lta', 1)
-            ->whereDate('shift_date', '<=', $latestData->shift_date)
+            ->whereDate('shift_date', '<=', $shiftDateParsed)
             ->orderByDesc('shift_date')
             ->value('shift_date');
 
         return view('adminsystem.dashboard.dashboard-incident', [
-            'daysSinceLastLTA' => $latestData->total_safe_day_lta2 ?? 0,
-            'daysSinceLastWLTA' => $latestData->total_safe_day_wlta ?? 0,
-            'manHoursSinceLastLTA' => $latestData->total_man_hours_lta ?? 0,
-            'manHoursSinceLastWLTA' => $latestData->total_man_hours_wlta2 ?? 0,
-            'totalLTA' => $latestData->total_lta_by_year ?? 0,
-            'totalWLTA' => $latestData->total_wlta_by_year ?? 0,
-            'totalManHours' => $latestData->total_man_hours ?? 0,
+            'daysSinceLastLTA' => $data->total_safe_day_lta2 ?? 0,
+            'daysSinceLastWLTA' => $data->total_safe_day_wlta ?? 0,
+            'manHoursSinceLastLTA' => $data->total_man_hours_lta ?? 0,
+            'manHoursSinceLastWLTA' => $data->total_man_hours_wlta2 ?? 0,
+            'totalLTA' => $data->total_lta_by_year ?? 0,
+            'totalWLTA' => $data->total_wlta_by_year ?? 0,
+            'totalManHours' => $data->total_man_hours ?? 0,
             'lastLTAIncidentDate' => $lastLtaDate,
-            'selectedDate' => $latestData->shift_date,
-            'shift' => $latestData->shift,
+            'selectedDate' => $shiftDateParsed,
             'targetManHours' => $targetManHours,
         ]);
     }
-
-    // Jika ada filter shift dan date, cari data berdasarkan input
-    $shiftDateParsed = Carbon::parse($shiftDate)->format('Y-m-d');
-
-    $data = SentIncident::whereDate('shift_date', $shiftDateParsed)
-        ->where('shift', $shift)
-        ->first();
-
-    if (!$data) {
-        return redirect()->back()->with('error', 'Data tidak ditemukan untuk tanggal dan shift tersebut.');
-    }
-
-    $lastLtaDate = SentIncident::where('lta', 1)
-        ->whereDate('shift_date', '<=', $shiftDateParsed)
-        ->orderByDesc('shift_date')
-        ->value('shift_date');
-
-    return view('adminsystem.dashboard.dashboard-incident', [
-        'daysSinceLastLTA' => $data->total_safe_day_lta2 ?? 0,
-        'daysSinceLastWLTA' => $data->total_safe_day_wlta ?? 0,
-        'manHoursSinceLastLTA' => $data->total_man_hours_lta ?? 0,
-        'manHoursSinceLastWLTA' => $data->total_man_hours_wlta2 ?? 0,
-        'totalLTA' => $data->total_lta_by_year ?? 0,
-        'totalWLTA' => $data->total_wlta_by_year ?? 0,
-        'totalManHours' => $data->total_man_hours ?? 0,
-        'lastLTAIncidentDate' => $lastLtaDate,
-        'selectedDate' => $shiftDateParsed,
-        'targetManHours' => $targetManHours,
-    ]);
-}
 
 
 
@@ -422,7 +422,115 @@ class HomeController extends Controller
 
 
 
+    public function operator_dashboard(Request $request)
+    {
+        $year = $request->input('year');
+        $month = $request->input('month');
 
+        $query = DB::table('ppe_fix');
+
+        if ($year) {
+            $query->whereYear('tanggal_shift_kerja', $year);
+        }
+
+        if ($month) {
+            $query->whereMonth('tanggal_shift_kerja', $month);
+            $groupBy = DB::raw('DATE(tanggal_shift_kerja)');
+            $selectDate = "DATE(tanggal_shift_kerja) as tanggal";
+        } else {
+            $groupBy = DB::raw('MONTH(tanggal_shift_kerja)');
+            $selectDate = "MONTH(tanggal_shift_kerja) as bulan";
+        }
+
+        $data = $query->selectRaw("
+        $selectDate,
+        SUM(jumlah_patuh_apd_karyawan) as patuh_karyawan,
+        (
+            SUM(jumlah_tidak_patuh_helm_karyawan) +
+            SUM(jumlah_tidak_patuh_sepatu_karyawan) +
+            SUM(jumlah_tidak_patuh_pelindung_mata_karyawan) +
+            SUM(jumlah_tidak_patuh_safety_harness_karyawan) +
+            SUM(jumlah_tidak_patuh_apd_lainnya_karyawan)
+        ) as tidak_patuh_karyawan,
+        SUM(jumlah_patuh_apd_kontraktor) as patuh_kontraktor,
+        (
+            SUM(jumlah_tidak_patuh_helm_kontraktor) +
+            SUM(jumlah_tidak_patuh_sepatu_kontraktor) +
+            SUM(jumlah_tidak_patuh_pelindung_mata_kontraktor) +
+            SUM(jumlah_tidak_patuh_safety_harness_kontraktor) +
+            SUM(jumlah_tidak_patuh_apd_lainnya_kontraktor)
+        ) as tidak_patuh_kontraktor,
+        SUM(jumlah_tidak_patuh_helm_karyawan) as tidak_patuh_helm_karyawan,
+        SUM(jumlah_tidak_patuh_sepatu_karyawan) as tidak_patuh_sepatu_karyawan,
+        SUM(jumlah_tidak_patuh_helm_kontraktor) as tidak_patuh_helm_kontraktor,
+        SUM(jumlah_tidak_patuh_sepatu_kontraktor) as tidak_patuh_sepatu_kontraktor
+    ")
+            ->groupBy($groupBy)
+            ->orderBy($groupBy)
+            ->get();
+
+        $labels = [];
+        $employeeData = [];
+        $contractorData = [];
+        $tidak_patuh_karyawan = [];
+        $patuh_karyawan = [];
+        $tidak_patuh_kontraktor = [];
+        $patuh_kontraktor = [];
+        $employeeHelmData = [];
+        $employeeSepatuData = [];
+        $contractorHelmData = [];
+        $contractorSepatuData = [];
+
+        foreach ($data as $item) {
+            if ($month) {
+                $labels[] = date('d M', strtotime($item->tanggal));
+            } else {
+                $labels[] = date('M', mktime(0, 0, 0, $item->bulan, 10));
+            }
+
+            $total_karyawan = $item->patuh_karyawan + $item->tidak_patuh_karyawan;
+            $total_kontraktor = $item->patuh_kontraktor + $item->tidak_patuh_kontraktor;
+
+            $employeeData[] = $total_karyawan > 0 ? round(($item->patuh_karyawan / $total_karyawan) * 100, 2) : 0;
+            $contractorData[] = $total_kontraktor > 0 ? round(($item->patuh_kontraktor / $total_kontraktor) * 100, 2) : 0;
+
+            $tidak_patuh_karyawan[] = $item->tidak_patuh_karyawan;
+            $patuh_karyawan[] = $item->patuh_karyawan;
+            $tidak_patuh_kontraktor[] = $item->tidak_patuh_kontraktor;
+            $patuh_kontraktor[] = $item->patuh_kontraktor;
+
+            $employeeHelmData[] = $item->tidak_patuh_helm_karyawan;
+            $employeeSepatuData[] = $item->tidak_patuh_sepatu_karyawan;
+            $contractorHelmData[] = $item->tidak_patuh_helm_kontraktor;
+            $contractorSepatuData[] = $item->tidak_patuh_sepatu_kontraktor;
+        }
+
+        $years = DB::table('ppe_fix')->selectRaw('YEAR(tanggal_shift_kerja) as year')->distinct()->orderBy('year', 'desc')->pluck('year');
+        $months = DB::table('ppe_fix')->selectRaw('MONTH(tanggal_shift_kerja) as month')->distinct()->orderBy('month', 'desc')->pluck('month');
+
+        $targetEmployee = Target::where('key', 'target_employee_compliance')->value('value');
+        $targetContractor = Target::where('key', 'target_contractor_compliance')->value('value');
+
+        return view('operator.dashboard.dashboard', compact(
+            'labels',
+            'employeeData',
+            'contractorData',
+            'years',
+            'months',
+            'year',
+            'month',
+            'targetEmployee',
+            'targetContractor',
+            'tidak_patuh_kontraktor',
+            'patuh_kontraktor',
+            'tidak_patuh_karyawan',
+            'patuh_karyawan',
+            'employeeHelmData',
+            'employeeSepatuData',
+            'contractorHelmData',
+            'contractorSepatuData'
+        ));
+    }
     public function operator_budget()
     {
         $budget_fixs = BudgetFix::all();
@@ -465,95 +573,95 @@ class HomeController extends Controller
     }
 
 
-   public function operator_incident(Request $request)
-{
-    // Ambil input shift_date dan shift
-    $shiftDate = $request->input('shift_date');
-    $shift = $request->input('shift');
+    public function operator_incident(Request $request)
+    {
+        // Ambil input shift_date dan shift
+        $shiftDate = $request->input('shift_date');
+        $shift = $request->input('shift');
 
-    // Jika user mengisi filter, validasi input
-    if ($request->has(['shift_date', 'shift'])) {
-        $request->validate([
-            'shift_date' => 'required|date',
-            'shift' => 'required|string',
-        ]);
-    }
+        // Jika user mengisi filter, validasi input
+        if ($request->has(['shift_date', 'shift'])) {
+            $request->validate([
+                'shift_date' => 'required|date',
+                'shift' => 'required|string',
+            ]);
+        }
 
-    // Ambil target manhours
-    $targetManHours = TargetManHours::value('target_manhours');
+        // Ambil target manhours
+        $targetManHours = TargetManHours::value('target_manhours');
 
-    // Jika tidak ada filter (shift kosong), ambil data terakhir dari DB
-    if (!$shiftDate || !$shift) {
-        $latestData = SentIncident::orderByDesc('shift_date')
-            ->orderByDesc('created_at') // atau orderByDesc('id') jika perlu
-            ->first();
+        // Jika tidak ada filter (shift kosong), ambil data terakhir dari DB
+        if (!$shiftDate || !$shift) {
+            $latestData = SentIncident::orderByDesc('shift_date')
+                ->orderByDesc('created_at') // atau orderByDesc('id') jika perlu
+                ->first();
 
-        if (!$latestData) {
-            // Kalau database kosong
+            if (!$latestData) {
+                // Kalau database kosong
+                return view('operator.dashboard.dashboard-incident', [
+                    'daysSinceLastLTA' => 0,
+                    'daysSinceLastWLTA' => 0,
+                    'manHoursSinceLastLTA' => 0,
+                    'manHoursSinceLastWLTA' => 0,
+                    'totalLTA' => 0,
+                    'totalWLTA' => 0,
+                    'totalManHours' => 0,
+                    'lastLTAIncidentDate' => null,
+                    'selectedDate' => now(),
+                    'targetManHours' => $targetManHours,
+                ]);
+            }
+
+            // Ambil last LTA date berdasar data terakhir
+            $lastLtaDate = SentIncident::where('lta', 1)
+                ->whereDate('shift_date', '<=', $latestData->shift_date)
+                ->orderByDesc('shift_date')
+                ->value('shift_date');
+
             return view('operator.dashboard.dashboard-incident', [
-                'daysSinceLastLTA' => 0,
-                'daysSinceLastWLTA' => 0,
-                'manHoursSinceLastLTA' => 0,
-                'manHoursSinceLastWLTA' => 0,
-                'totalLTA' => 0,
-                'totalWLTA' => 0,
-                'totalManHours' => 0,
-                'lastLTAIncidentDate' => null,
-                'selectedDate' => now(),
+                'daysSinceLastLTA' => $latestData->total_safe_day_lta2 ?? 0,
+                'daysSinceLastWLTA' => $latestData->total_safe_day_wlta ?? 0,
+                'manHoursSinceLastLTA' => $latestData->total_man_hours_lta ?? 0,
+                'manHoursSinceLastWLTA' => $latestData->total_man_hours_wlta2 ?? 0,
+                'totalLTA' => $latestData->total_lta_by_year ?? 0,
+                'totalWLTA' => $latestData->total_wlta_by_year ?? 0,
+                'totalManHours' => $latestData->total_man_hours ?? 0,
+                'lastLTAIncidentDate' => $lastLtaDate,
+                'selectedDate' => $latestData->shift_date,
+                'shift' => $latestData->shift,
                 'targetManHours' => $targetManHours,
             ]);
         }
 
-        // Ambil last LTA date berdasar data terakhir
+        // Jika ada filter shift dan date, cari data berdasarkan input
+        $shiftDateParsed = Carbon::parse($shiftDate)->format('Y-m-d');
+
+        $data = SentIncident::whereDate('shift_date', $shiftDateParsed)
+            ->where('shift', $shift)
+            ->first();
+
+        if (!$data) {
+            return redirect()->back()->with('error', 'Data tidak ditemukan untuk tanggal dan shift tersebut.');
+        }
+
         $lastLtaDate = SentIncident::where('lta', 1)
-            ->whereDate('shift_date', '<=', $latestData->shift_date)
+            ->whereDate('shift_date', '<=', $shiftDateParsed)
             ->orderByDesc('shift_date')
             ->value('shift_date');
 
         return view('operator.dashboard.dashboard-incident', [
-            'daysSinceLastLTA' => $latestData->total_safe_day_lta2 ?? 0,
-            'daysSinceLastWLTA' => $latestData->total_safe_day_wlta ?? 0,
-            'manHoursSinceLastLTA' => $latestData->total_man_hours_lta ?? 0,
-            'manHoursSinceLastWLTA' => $latestData->total_man_hours_wlta2 ?? 0,
-            'totalLTA' => $latestData->total_lta_by_year ?? 0,
-            'totalWLTA' => $latestData->total_wlta_by_year ?? 0,
-            'totalManHours' => $latestData->total_man_hours ?? 0,
+            'daysSinceLastLTA' => $data->total_safe_day_lta2 ?? 0,
+            'daysSinceLastWLTA' => $data->total_safe_day_wlta ?? 0,
+            'manHoursSinceLastLTA' => $data->total_man_hours_lta ?? 0,
+            'manHoursSinceLastWLTA' => $data->total_man_hours_wlta2 ?? 0,
+            'totalLTA' => $data->total_lta_by_year ?? 0,
+            'totalWLTA' => $data->total_wlta_by_year ?? 0,
+            'totalManHours' => $data->total_man_hours ?? 0,
             'lastLTAIncidentDate' => $lastLtaDate,
-            'selectedDate' => $latestData->shift_date,
-            'shift' => $latestData->shift,
+            'selectedDate' => $shiftDateParsed,
             'targetManHours' => $targetManHours,
         ]);
     }
-
-    // Jika ada filter shift dan date, cari data berdasarkan input
-    $shiftDateParsed = Carbon::parse($shiftDate)->format('Y-m-d');
-
-    $data = SentIncident::whereDate('shift_date', $shiftDateParsed)
-        ->where('shift', $shift)
-        ->first();
-
-    if (!$data) {
-        return redirect()->back()->with('error', 'Data tidak ditemukan untuk tanggal dan shift tersebut.');
-    }
-
-    $lastLtaDate = SentIncident::where('lta', 1)
-        ->whereDate('shift_date', '<=', $shiftDateParsed)
-        ->orderByDesc('shift_date')
-        ->value('shift_date');
-
-    return view('operator.dashboard.dashboard-incident', [
-        'daysSinceLastLTA' => $data->total_safe_day_lta2 ?? 0,
-        'daysSinceLastWLTA' => $data->total_safe_day_wlta ?? 0,
-        'manHoursSinceLastLTA' => $data->total_man_hours_lta ?? 0,
-        'manHoursSinceLastWLTA' => $data->total_man_hours_wlta2 ?? 0,
-        'totalLTA' => $data->total_lta_by_year ?? 0,
-        'totalWLTA' => $data->total_wlta_by_year ?? 0,
-        'totalManHours' => $data->total_man_hours ?? 0,
-        'lastLTAIncidentDate' => $lastLtaDate,
-        'selectedDate' => $shiftDateParsed,
-        'targetManHours' => $targetManHours,
-    ]);
-}
 
 
 
@@ -619,7 +727,6 @@ class HomeController extends Controller
         return view('operator.dashboard.spi', compact('data'));
     }
 
-   
 
 
 
@@ -640,7 +747,8 @@ class HomeController extends Controller
 
 
 
-     public function tamu_budget()
+
+    public function tamu_budget()
     {
         $budget_fixs = BudgetFix::all();
         return view('tamu.dashboard.budget', compact('budget_fixs'));
@@ -682,97 +790,97 @@ class HomeController extends Controller
     }
 
 
-   public function tamu_incident(Request $request)
-{
-    // Ambil input shift_date dan shift
-    $shiftDate = $request->input('shift_date');
-    $shift = $request->input('shift');
+    public function tamu_incident(Request $request)
+    {
+        // Ambil input shift_date dan shift
+        $shiftDate = $request->input('shift_date');
+        $shift = $request->input('shift');
 
-    // Jika user mengisi filter, validasi input
-    if ($request->has(['shift_date', 'shift'])) {
-        $request->validate([
-            'shift_date' => 'required|date',
-            'shift' => 'required|string',
-        ]);
-    }
+        // Jika user mengisi filter, validasi input
+        if ($request->has(['shift_date', 'shift'])) {
+            $request->validate([
+                'shift_date' => 'required|date',
+                'shift' => 'required|string',
+            ]);
+        }
 
-    // Ambil target manhours
-    $targetManHours = TargetManHours::value('target_manhours');
+        // Ambil target manhours
+        $targetManHours = TargetManHours::value('target_manhours');
 
-    // Jika tidak ada filter (shift kosong), ambil data terakhir dari DB
-    if (!$shiftDate || !$shift) {
-        $latestData = SentIncident::orderByDesc('shift_date')
-            ->orderByDesc('created_at') // atau orderByDesc('id') jika perlu
-            ->first();
+        // Jika tidak ada filter (shift kosong), ambil data terakhir dari DB
+        if (!$shiftDate || !$shift) {
+            $latestData = SentIncident::orderByDesc('shift_date')
+                ->orderByDesc('created_at') // atau orderByDesc('id') jika perlu
+                ->first();
 
-        if (!$latestData) {
-            // Kalau database kosong
+            if (!$latestData) {
+                // Kalau database kosong
+                return view('tamu.dashboard.dashboard-incident', [
+                    'daysSinceLastLTA' => 0,
+                    'daysSinceLastWLTA' => 0,
+                    'manHoursSinceLastLTA' => 0,
+                    'manHoursSinceLastWLTA' => 0,
+                    'totalLTA' => 0,
+                    'totalWLTA' => 0,
+                    'totalManHours' => 0,
+                    'lastLTAIncidentDate' => null,
+                    'selectedDate' => now(),
+                    'targetManHours' => $targetManHours,
+                ]);
+            }
+
+            // Ambil last LTA date berdasar data terakhir
+            $lastLtaDate = SentIncident::where('lta', 1)
+                ->whereDate('shift_date', '<=', $latestData->shift_date)
+                ->orderByDesc('shift_date')
+                ->value('shift_date');
+
             return view('tamu.dashboard.dashboard-incident', [
-                'daysSinceLastLTA' => 0,
-                'daysSinceLastWLTA' => 0,
-                'manHoursSinceLastLTA' => 0,
-                'manHoursSinceLastWLTA' => 0,
-                'totalLTA' => 0,
-                'totalWLTA' => 0,
-                'totalManHours' => 0,
-                'lastLTAIncidentDate' => null,
-                'selectedDate' => now(),
+                'daysSinceLastLTA' => $latestData->total_safe_day_lta2 ?? 0,
+                'daysSinceLastWLTA' => $latestData->total_safe_day_wlta ?? 0,
+                'manHoursSinceLastLTA' => $latestData->total_man_hours_lta ?? 0,
+                'manHoursSinceLastWLTA' => $latestData->total_man_hours_wlta2 ?? 0,
+                'totalLTA' => $latestData->total_lta_by_year ?? 0,
+                'totalWLTA' => $latestData->total_wlta_by_year ?? 0,
+                'totalManHours' => $latestData->total_man_hours ?? 0,
+                'lastLTAIncidentDate' => $lastLtaDate,
+                'selectedDate' => $latestData->shift_date,
+                'shift' => $latestData->shift,
                 'targetManHours' => $targetManHours,
             ]);
         }
 
-        // Ambil last LTA date berdasar data terakhir
+        // Jika ada filter shift dan date, cari data berdasarkan input
+        $shiftDateParsed = Carbon::parse($shiftDate)->format('Y-m-d');
+
+        $data = SentIncident::whereDate('shift_date', $shiftDateParsed)
+            ->where('shift', $shift)
+            ->first();
+
+        if (!$data) {
+            return redirect()->back()->with('error', 'Data tidak ditemukan untuk tanggal dan shift tersebut.');
+        }
+
         $lastLtaDate = SentIncident::where('lta', 1)
-            ->whereDate('shift_date', '<=', $latestData->shift_date)
+            ->whereDate('shift_date', '<=', $shiftDateParsed)
             ->orderByDesc('shift_date')
             ->value('shift_date');
 
         return view('tamu.dashboard.dashboard-incident', [
-            'daysSinceLastLTA' => $latestData->total_safe_day_lta2 ?? 0,
-            'daysSinceLastWLTA' => $latestData->total_safe_day_wlta ?? 0,
-            'manHoursSinceLastLTA' => $latestData->total_man_hours_lta ?? 0,
-            'manHoursSinceLastWLTA' => $latestData->total_man_hours_wlta2 ?? 0,
-            'totalLTA' => $latestData->total_lta_by_year ?? 0,
-            'totalWLTA' => $latestData->total_wlta_by_year ?? 0,
-            'totalManHours' => $latestData->total_man_hours ?? 0,
+            'daysSinceLastLTA' => $data->total_safe_day_lta2 ?? 0,
+            'daysSinceLastWLTA' => $data->total_safe_day_wlta ?? 0,
+            'manHoursSinceLastLTA' => $data->total_man_hours_lta ?? 0,
+            'manHoursSinceLastWLTA' => $data->total_man_hours_wlta2 ?? 0,
+            'totalLTA' => $data->total_lta_by_year ?? 0,
+            'totalWLTA' => $data->total_wlta_by_year ?? 0,
+            'totalManHours' => $data->total_man_hours ?? 0,
             'lastLTAIncidentDate' => $lastLtaDate,
-            'selectedDate' => $latestData->shift_date,
-            'shift' => $latestData->shift,
+            'selectedDate' => $shiftDateParsed,
             'targetManHours' => $targetManHours,
+            'shift' => $shift
+
         ]);
     }
-
-    // Jika ada filter shift dan date, cari data berdasarkan input
-    $shiftDateParsed = Carbon::parse($shiftDate)->format('Y-m-d');
-
-    $data = SentIncident::whereDate('shift_date', $shiftDateParsed)
-        ->where('shift', $shift)
-        ->first();
-
-    if (!$data) {
-        return redirect()->back()->with('error', 'Data tidak ditemukan untuk tanggal dan shift tersebut.');
-    }
-
-    $lastLtaDate = SentIncident::where('lta', 1)
-        ->whereDate('shift_date', '<=', $shiftDateParsed)
-        ->orderByDesc('shift_date')
-        ->value('shift_date');
-
-    return view('tamu.dashboard.dashboard-incident', [
-        'daysSinceLastLTA' => $data->total_safe_day_lta2 ?? 0,
-        'daysSinceLastWLTA' => $data->total_safe_day_wlta ?? 0,
-        'manHoursSinceLastLTA' => $data->total_man_hours_lta ?? 0,
-        'manHoursSinceLastWLTA' => $data->total_man_hours_wlta2 ?? 0,
-        'totalLTA' => $data->total_lta_by_year ?? 0,
-        'totalWLTA' => $data->total_wlta_by_year ?? 0,
-        'totalManHours' => $data->total_man_hours ?? 0,
-        'lastLTAIncidentDate' => $lastLtaDate,
-        'selectedDate' => $shiftDateParsed,
-        'targetManHours' => $targetManHours,
-        'shift' => $shift
-        
-    ]);
-}
 
 
 
@@ -837,4 +945,4 @@ class HomeController extends Controller
 
         return view('tamu.dashboard.spi', compact('data'));
     }
-    }
+}
