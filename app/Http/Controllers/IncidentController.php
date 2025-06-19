@@ -1325,7 +1325,12 @@ class IncidentController extends Controller
 
         return response()->json(['total' => $total]);
     }
-
+    public function downloadSatuan($id)
+    {
+        $incident = SentIncident::findOrFail($id);
+        $pdf = Pdf::loadView('adminsystem.incident.view', compact('incident'));
+        return $pdf->download('Incident_Report_' . $incident->id . '.pdf');
+    }
 
 
 
@@ -2617,4 +2622,11 @@ class IncidentController extends Controller
 
         return response()->json(['total' => $total]);
     }
+      public function operator_downloadSatuan($id)
+    {
+        $incident = SentIncident::findOrFail($id);
+        $pdf = Pdf::loadView('operator.incident.view', compact('incident'));
+        return $pdf->download('Incident_Report_' . $incident->id . '.pdf');
+    }
+
 }

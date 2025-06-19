@@ -95,6 +95,7 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::post('/reject/{id}', [IncidentController::class, 'reject'])->name('reject');
 			Route::get('/export', [IncidentController::class, 'export'])->name('export');
 			Route::get('/export-pdf', [IncidentController::class, 'exportPdf'])->name('exportPdf');
+			Route::get('/pdf-satuan/{id}/', [IncidentController::class, 'downloadSatuan'])->name('downloadSatuan');
 			Route::get('/create', [IncidentController::class, 'create'])->name('create');
 			Route::get('/master', [IncidentController::class, 'master'])->name('master');
 			Route::post('/', [IncidentController::class, 'store'])->name('store');
@@ -459,6 +460,7 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('/', [IncidentController::class, 'operator_index'])->name('index');
 			Route::get('/export', [IncidentController::class, 'operator_export'])->name('export');
 			Route::get('/export-pdf', [IncidentController::class, 'operator_exportPdf'])->name('exportPdf');
+			Route::get('/pdf-satuan/{id}/', [IncidentController::class, 'operator_downloadSatuan'])->name('downloadSatuan');
 			Route::get('/create', [IncidentController::class, 'operator_create'])->name('create');
 			Route::get('/master', [IncidentController::class, 'operator_master'])->name('master');
 			Route::post('/', [IncidentController::class, 'operator_store'])->name('store');

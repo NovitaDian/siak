@@ -42,6 +42,55 @@
         .checked {
             background-color: black;
         }
+
+        @media print {
+            body {
+                font-size: 14px !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            .container,
+            .form-container {
+                padding: 10px !important;
+                margin: 0px !important;
+                width: 150% !important;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+
+            table {
+                font-size: 14px !important;
+            }
+        }
+    </style>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            margin: 20px;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        th,
+        td {
+            border: 1px solid #000;
+            padding: 4px;
+            vertical-align: top;
+        }
     </style>
 </head>
 
@@ -49,7 +98,13 @@
     <div class="container my-4">
         <div class="form-container">
             <div class="d-flex justify-content-between">
-                <img src="{{ asset('assets/img/logodus.png') }}" alt="Logo" class="logo">
+                @if (request()->routeIs('operator.incident.downloadSatuan'))
+                {{-- Saat PDF --}}
+                <img src="{{ public_path('assets/img/logodus.png') }}" style="width: 100px; height: 100px;">
+                @else
+                {{-- Saat ditampilkan di web --}}
+                <img src="{{ asset('assets/img/logodus.png') }}" style="width: 100px; height: 100px;">
+                @endif
                 <div>
                     <h4 class="text-center">Accident / Incident Report</h4>
                     <table class="table table-bordered">
@@ -309,6 +364,21 @@
                     <p><b>Mengetahui:</b> __________</p>
                 </div>
             </div>
+
+            @if (!request()->routeIs('operator.incident.downloadSatuan'))
+            <div class="mb-3 d-flex justify-content-end gap-2">
+                <button class="btn btn-primary" onclick="window.print()">
+                    <i class="fas fa-print me-1"></i> Print
+                </button>
+
+                <a href="{{ route('operator.incident.downloadSatuan', $incident->id) }}" class="btn btn-danger" target="_blank">
+                    <i class="fas fa-file-pdf me-1"></i> Unduh PDF
+                </a>
+            </div>
+            @endif
+
+
+
 </body>
 
 </html>

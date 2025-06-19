@@ -66,7 +66,7 @@
                         <select class="form-control" id="role" name="role" required>
                             <option value="adminsystem" {{ old('role') == 'adminsystem' ? 'selected' : '' }}>Admin System</option>
                             <option value="operator" {{ old('role') == 'operator' ? 'selected' : '' }}>Operator</option>
-                            <option value="guest" {{ old('role') == 'guest' ? 'selected' : '' }}>Guest</option>
+                            <option value="tamu" {{ old('role') == 'tamu' ? 'selected' : '' }}>Guest</option>
                         </select>
                         @error('role')
                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
