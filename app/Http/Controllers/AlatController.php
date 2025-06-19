@@ -65,7 +65,7 @@ class AlatController extends Controller
     public function alat_update(Request $request, $id)
     {
         $request->validate([
-            'nama_alat' => 'required|exists:nama_alats,nama_alat',
+            'nama_alat_id' => 'required|exists:nama_alats,id',
             'nomor' => 'required|string|max:255',
             'waktu_inspeksi' => 'nullable|date',
             'durasi_inspeksi' => 'required|integer|min:0',
@@ -304,5 +304,4 @@ class AlatController extends Controller
 
         return redirect()->route('operator.alat.index')->with('success', 'Nama alat berhasil dihapus.');
     }
-    
 }
