@@ -51,17 +51,19 @@
                                                 <i class="fas fa-times m-1"></i> Reject
                                             </button>
                                             @endif
-
-                                            <form
-                                                action="{{ route('adminsystem.ncr.show', ['id' => $request->id]) }}"
-                                                method="GET"
-                                                style="display:inline;"
-                                                title="View details">
-                                                <button type="submit" class="btn btn-light btn-xs">
-                                                    <i class="fas fa-eye"></i> Show
-                                                </button>
-                                            </form>
+                                          
                                         </td>
+                                        <td class="text-center"></td>
+                                        <form
+                                        action="{{ route('adminsystem.ncr.show', ['id' => $request->id]) }}"
+                                        method="GET"
+                                        style="display:inline;"
+                                        title="View details">
+                                        <button type="submit" class="btn btn-light btn-xs">
+                                            <i class="fas fa-eye"></i> Show
+                                        </button>
+                                    </form>
+                                </td>
 
                                     </tr>
                                     @endforeach
