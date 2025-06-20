@@ -306,17 +306,16 @@
                                                     <i class="fas fa-check-circle me-1" style="font-size: 12px;"></i> Approved
                                                 </button>
                                                 <ul class="dropdown-menu">
-                                                    @if ($editRequest)
+                                                    @if ($editRequest && !$deleteRequest)
                                                     <li>
                                                         <a href="{{ $ncr_fix->status_ncr === 'Closed' 
-                                ? route('adminsystem.ncr.edit_closed', $ncr_fix->id)
-                                : route('adminsystem.ncr.sent_edit', $ncr_fix->id) }}"
+            ? route('adminsystem.ncr.edit_closed', $ncr_fix->id)
+            : route('adminsystem.ncr.sent_edit', $ncr_fix->id) }}"
                                                             class="dropdown-item">
                                                             <i class="fas fa-edit me-1"></i> Edit
                                                         </a>
                                                     </li>
-                                                    @endif
-                                                    @if ($deleteRequest)
+                                                    @elseif ($deleteRequest && !$editRequest)
                                                     <li>
                                                         <form action="{{ route('adminsystem.ncr.sent_destroy', $ncr_fix->id) }}" method="POST" onsubmit="return confirm('Anda yakin akan menghapus data ini?')">
                                                             @csrf
@@ -328,6 +327,7 @@
                                                     </li>
                                                     @endif
                                                 </ul>
+
                                             </div>
                                             @endif
                                         </div>
