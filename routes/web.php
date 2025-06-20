@@ -252,7 +252,7 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('/', [BudgetController::class, 'pr_index'])->name('index');
 			Route::get('/master', [BudgetController::class, 'pr_master'])->name('master');
 			Route::post('/', [BudgetController::class, 'pr_store'])->name('store');
-			Route::put('/{id)', [BudgetController::class, 'pr_update'])->name('update');
+			Route::put('/{id}', [BudgetController::class, 'pr_update'])->name('update');
 			Route::delete('/{document}', [BudgetController::class, 'pr_destroy'])->name('destroy');
 			Route::get('/search', [BudgetController::class, 'pr_search'])->name('search');
 			Route::get('/create', [BudgetController::class, 'pr_create'])->name('create');
