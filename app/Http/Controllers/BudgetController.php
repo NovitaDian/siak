@@ -134,7 +134,37 @@ class BudgetController extends Controller
 
         return redirect()->route('adminsystem.budget.index')->with('success', 'Data budget berhasil dihapus.');
     }
+    public function budget_store(Request $request)
+    {
+        $request->validate([
+            'internal_order' => 'nullable|string|max:50',
+            'gl_code' => 'required|string|max:50',
+            'gl_name' => 'required|string|max:100',
+            'setahun_total' => 'required|numeric',
+            'kategori' => 'required|string|max:100',
+            'year' => 'required|string|max:100',
+        ]);
 
+        // Store the data in the database
+        Budget::create([
+            'internal_order' => $request->internal_order,
+            'gl_code' => $request->gl_code,
+            'gl_name' => $request->gl_name,
+            'setahun_total' => $request->setahun_total,
+            'kategori' => $request->kategori,
+            'year' => $request->year
+        ]);
+        BudgetFix::create([
+            'internal_order'   => $request->internal_order,
+            'gl_code'          => $request->gl_code,
+            'gl_name'          => $request->gl_name,
+            'year'             => $request->year,
+            'kategori'         => $request->kategori,
+            'bg_approve'       => $request->setahun_total,
+            'sisa'       => $request->setahun_total,
+        ]);
+        return redirect()->route('adminsystem.budget.index')->with('success', 'Dokumen berhasil diunggah.');
+    }
     public function budget_update(Request $request, $id)
     {
         // Validasi input
@@ -496,7 +526,7 @@ class BudgetController extends Controller
 
 
 
-    
+
     // budget
     public function operator_budget_index()
     {
@@ -810,5 +840,35 @@ class BudgetController extends Controller
         return redirect()->route('operator.pr.index')
             ->with('success', 'Purchase Request dan data budget terkait berhasil diperbarui.');
     }
+    public function operator_budget_store(Request $request)
+    {
+        $request->validate([
+            'internal_order' => 'nullable|string|max:50',
+            'gl_code' => 'required|string|max:50',
+            'gl_name' => 'required|string|max:100',
+            'setahun_total' => 'required|numeric',
+            'kategori' => 'required|string|max:100',
+            'year' => 'required|string|max:100',
+        ]);
 
+        // Store the data in the database
+        Budget::create([
+            'internal_order' => $request->internal_order,
+            'gl_code' => $request->gl_code,
+            'gl_name' => $request->gl_name,
+            'setahun_total' => $request->setahun_total,
+            'kategori' => $request->kategori,
+            'year' => $request->year
+        ]);
+        BudgetFix::create([
+            'internal_order'   => $request->internal_order,
+            'gl_code'          => $request->gl_code,
+            'gl_name'          => $request->gl_name,
+            'year'             => $request->year,
+            'kategori'         => $request->kategori,
+            'bg_approve'       => $request->setahun_total,
+            'sisa'       => $request->setahun_total,
+        ]);
+        return redirect()->route('operator.budget.index')->with('success', 'Dokumen berhasil diunggah.');
+    }
 }
