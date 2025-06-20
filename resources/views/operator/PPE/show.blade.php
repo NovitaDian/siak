@@ -57,6 +57,7 @@
                             <thead>
                                 <tr>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">No</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Foto</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Pelanggar</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Deskripsi Ketidaksesuaian</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Perusahaan</th>
@@ -73,6 +74,16 @@
                                     @endphp
 
                                     <td class="text-center text-xs">{{ $loop->iteration }}</td>
+                                    <td class="text-center text-xs">
+                                        <div style="width:60px; height:60px; overflow:hidden; border-radius:4px; display:inline-block;">
+                                            <img src="{{ asset('storage/' . $nc->foto) }}"
+                                                alt="{{ $nc->description }}"
+                                                style="width:100%; height:100%; object-fit:cover;">
+
+
+                                        </div>
+                                    </td>
+                                    <td class="text-center text-xs">{{ $nc->nama_pelanggar }}</td>
                                     <td class="text-center text-xs">{{ $nc->nama_pelanggar }}</td>
                                     <td class="text-center text-xs">{{ $nc->deskripsi_ketidaksesuaian }}</td>
                                     <td class="text-center text-xs">{{ $nc->perusahaan }}</td>
