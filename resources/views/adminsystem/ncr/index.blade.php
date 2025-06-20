@@ -250,18 +250,21 @@
                                     <td class="text-center text-xs">{{ $ncr_fix->nama_hs_officer_1 }}</td>
                                     <td class="text-center text-xs">{{ \Carbon\Carbon::parse($ncr_fix->tanggal_audit)->format('d/m/Y') }}</td>
                                     <td class="text-center text-xs">{{ $ncr_fix->nama_auditee }}</td>
+
                                     @php
                                     $estimasiDate = \Carbon\Carbon::parse($ncr_fix->estimasi);
                                     $isLate = now()->greaterThanOrEqualTo($estimasiDate) && $ncr_fix->status_ncr == 'Open';
                                     @endphp
-
                                     <td class="text-center text-xs">
                                         <span class="badge bg-{{ $isLate ? 'danger' : 'success' }}">
                                             {{ $estimasiDate->format('d/m/Y') }}
                                         </span>
                                     </td>
+
                                     <td class="text-center text-xs">{{ $ncr_fix->durasi_ncr }}</td>
                                     <td class="text-center text-xs">{{ $ncr_fix->status }}</td>
+
+                                    {{-- Tombol Close/Open --}}
                                     <td class="align-middle text-center text-xs">
                                         <div class="d-flex flex-wrap gap-1 justify-content-center">
                                             @if ($ncr_fix->status_ncr === 'Open')
@@ -269,12 +272,12 @@
                                                 <i class="fas fa-lock me-1" style="font-size: 12px;"></i> Close
                                             </a>
                                             @elseif ($ncr_fix->status_ncr === 'Closed')
-                                            <span class="text-center text-xs">
-                                                Closed
-                                            </span>
+                                            <span class="text-center text-xs">Closed</span>
                                             @endif
                                         </div>
                                     </td>
+
+                                    {{-- Tombol Request/Edit/Delete --}}
                                     <td class="align-middle text-center text-xs">
                                         <div class="d-flex justify-content-center gap-1 flex-nowrap">
                                             @php
@@ -298,8 +301,8 @@
                                                     @if ($isEditRequest)
                                                     <li>
                                                         <a href="{{ $ncr_fix->status_ncr === 'Closed' 
-                                    ? route('adminsystem.ncr.edit_closed', $ncr_fix->id)
-                                    : route('adminsystem.ncr.sent_edit', $ncr_fix->id) }}"
+                                                ? route('adminsystem.ncr.edit_closed', $ncr_fix->id)
+                                                : route('adminsystem.ncr.sent_edit', $ncr_fix->id) }}"
                                                             class="dropdown-item">
                                                             <i class="fas fa-edit me-1"></i> Edit
                                                         </a>
@@ -322,18 +325,19 @@
                                                 <i class="fas fa-exclamation-triangle me-1"></i> No request found
                                             </span>
                                             @endif
+                                            @endif
+                                        </div>
                                     </td>
-                    </div>
-                    </td>
-                    </tr>
-                    @endforeach
-                    </tbody>
+                                </tr>
+                                @endforeach
+                            </tbody>
 
-                    </table>
+
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
     </div>
 
     <!-- Modal Request -->
