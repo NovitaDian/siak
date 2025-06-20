@@ -43,6 +43,7 @@
                     <table class="table align-items-center mb-0" id="dataTable">
                         <thead>
                             <tr>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">PR Date</th>
                                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">GL Account</th>
                                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Internal Order</th>
                                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Year</th>
@@ -57,6 +58,9 @@
                             @foreach ($budget_fixs as $budget_fix)
                             <tr>
                                 <!-- Data from gl_account table -->
+                                <td class="text-center">
+                                    <p class="text-xs font-weight-bold mb-0">{{ $budget_fix->pr_date ?? '-' }}</p>
+                                </td>
                                 <td class="text-center">
                                     <p class="text-xs font-weight-bold mb-0">{{ $budget_fix->gl_code }} - {{ $budget_fix->gl_name }}</p>
                                 </td>
