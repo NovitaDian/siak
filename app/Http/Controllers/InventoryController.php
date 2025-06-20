@@ -51,7 +51,7 @@ class InventoryController extends Controller
         $barang = Barang::findOrFail($id);
         $material_groups = MaterialGroup::all();
         $units = Unit::all();
-        return view('adminsystem.inventory.barang.edit', compact('barang','units', 'material_groups'));
+        return view('adminsystem.inventory.barang.edit', compact('barang', 'units', 'material_groups'));
     }
     public function barang_detail($id)
     {
@@ -131,13 +131,13 @@ class InventoryController extends Controller
             'unit' => 'nullable|string|max:20', // akan diambil dari relasi
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
-    
+
         $barang = Barang::findOrFail($id);
-    
+
         // Ambil relasi unit dan material group
         $unit = Unit::findOrFail($request->unit_id);
         $material_group = MaterialGroup::findOrFail($request->material_group_id);
-    
+
         // Update field
         $barang->material_code = $request->material_code;
         $barang->material_group_id = $request->material_group_id;
@@ -147,24 +147,24 @@ class InventoryController extends Controller
         $barang->remark = $request->remark;
         $barang->unit_id = $request->unit_id;
         $barang->unit = $unit->unit;
-    
+
         // Jika ada gambar baru
         if ($request->hasFile('image')) {
             // Opsional: hapus gambar lama jika ada
             if ($barang->image && file_exists(public_path('storage/images/' . $barang->image))) {
                 unlink(public_path('storage/images/' . $barang->image));
             }
-    
+
             $imageName = time() . '.' . $request->image->extension();
             $request->image->move(public_path('storage/images'), $imageName);
             $barang->image = $imageName;
         }
-    
+
         $barang->save();
-    
+
         return redirect()->route('adminsystem.inventory.index')->with('success', 'Barang berhasil diperbarui!');
     }
-    
+
     public function barang_destroy($id)
     {
         $barang = Barang::findOrFail($id);
@@ -257,28 +257,28 @@ class InventoryController extends Controller
             'keterangan' => 'nullable|string|max:255',
             'tanggal' => 'required|date',
         ]);
-    
+
         // Ambil data pemasukan lama
         $pemasukan = Pemasukan::findOrFail($id);
         $oldBarangId = $pemasukan->barang_id;
         $oldTanggal = $pemasukan->tanggal;
-    
+
         // Kurangi stok lama
         $oldBarang = Barang::findOrFail($oldBarangId);
         $oldBarang->quantity -= $pemasukan->quantity;
         $oldBarang->save();
-    
+
         // Jika barang_id diganti
         if ($request->barang_id != $oldBarangId) {
             $newBarang = Barang::findOrFail($request->barang_id);
         } else {
             $newBarang = $oldBarang;
         }
-    
+
         // Tambahkan stok baru
         $newBarang->quantity += $request->quantity;
         $newBarang->save();
-    
+
         // Update data pemasukan
         $pemasukan->barang_id = $request->barang_id;
         $pemasukan->quantity = $request->quantity;
@@ -286,13 +286,13 @@ class InventoryController extends Controller
         $pemasukan->keterangan = $request->keterangan;
         $pemasukan->tanggal = $request->tanggal;
         $pemasukan->save();
-    
+
         // Update transaction terkait
         $transaction = Transaction::where('type', 'Pemasukan')
             ->where('barang_id', $oldBarangId)
             ->where('tanggal', $oldTanggal)
             ->first();
-    
+
         if ($transaction) {
             $transaction->barang_id = $request->barang_id;
             $transaction->quantity = $request->quantity;
@@ -301,16 +301,40 @@ class InventoryController extends Controller
             $transaction->tanggal = $request->tanggal;
             $transaction->save();
         }
-    
+
         return redirect()->route('adminsystem.pemasukan.index')->with('success', 'Data Pemasukan berhasil diperbarui');
     }
-    
+
 
     public function pemasukan_destroy($id)
     {
-        $pemasukan = Pemasukan::find($id);
+        // Ambil data pemasukan
+        $pemasukan = Pemasukan::findOrFail($id);
+
+        // Ambil data barang terkait
+        $barang = Barang::findOrFail($pemasukan->barang_id);
+
+        // Kurangi jumlah stok barang
+        $barang->quantity -= $pemasukan->quantity;
+
+        // Pastikan quantity tidak negatif
+        if ($barang->quantity < 0) {
+            $barang->quantity = 0;
+        }
+
+        $barang->save();
+
+        // Hapus data pemasukan
         $pemasukan->delete();
-        return redirect()->route('adminsystem.pemasukan.index')->with('success', 'Pemasukan Berhasil Dihapus');
+
+        // Hapus transaksi yang sesuai
+        Transaction::where('barang_id', $pemasukan->barang_id)
+            ->where('quantity', $pemasukan->quantity)
+            ->where('tanggal', $pemasukan->tanggal)
+            ->where('type', 'Pemasukan')
+            ->first()?->delete();
+
+        return redirect()->route('adminsystem.pemasukan.index')->with('success', 'Data pemasukan berhasil dihapus dan stok barang diperbarui.');
     }
 
     public function pengeluaran_store(Request $request)
@@ -354,24 +378,24 @@ class InventoryController extends Controller
             'keterangan' => 'nullable|string|max:255',
             'tanggal' => 'required|date',
         ]);
-    
+
         // Ambil data pengeluaran lama
         $pengeluaran = Pengeluaran::findOrFail($id);
         $barang = Barang::findOrFail($pengeluaran->barang_id);
-    
+
         // Kembalikan stok lama terlebih dahulu
         $barang->quantity += $pengeluaran->quantity;
-    
+
         // Jika barang diganti, update stok lama & ambil barang baru
         if ($request->barang_id != $pengeluaran->barang_id) {
             $barang->save();
             $barang = Barang::findOrFail($request->barang_id);
         }
-    
+
         // Kurangi stok dengan quantity baru
         $barang->quantity -= $request->quantity;
         $barang->save();
-    
+
         // Update data pengeluaran
         $pengeluaran->barang_id = $request->barang_id;
         $pengeluaran->quantity = $request->quantity;
@@ -379,13 +403,13 @@ class InventoryController extends Controller
         $pengeluaran->keterangan = $request->keterangan;
         $pengeluaran->tanggal = $request->tanggal;
         $pengeluaran->save();
-    
+
         // Update transaction terkait
         $transaction = Transaction::where('type', 'Pengeluaran')
             ->where('barang_id', $pengeluaran->barang_id)
             ->where('tanggal', $pengeluaran->tanggal)
             ->first();
-    
+
         if ($transaction) {
             $transaction->barang_id = $request->barang_id;
             $transaction->quantity = $request->quantity;
@@ -394,16 +418,41 @@ class InventoryController extends Controller
             $transaction->tanggal = $request->tanggal;
             $transaction->save();
         }
-    
+
         return redirect()->route('adminsystem.pengeluaran.index')->with('success', 'Data Pengeluaran berhasil diperbarui');
     }
-   
+
     public function pengeluaran_destroy($id)
     {
-        $pengeluaran = Pengeluaran::find($id);
+        // Ambil data pemasukan
+        $pengeluaran = Pengeluaran::findOrFail($id);
+
+        // Ambil data barang terkait
+        $barang = Barang::findOrFail($pengeluaran->barang_id);
+
+        // Kurangi jumlah stok barang
+        $barang->quantity -= $pengeluaran->quantity;
+
+        // Pastikan quantity tidak negatif
+        if ($barang->quantity < 0) {
+            $barang->quantity = 0;
+        }
+
+        $barang->save();
+
+        // Hapus data pengeluaran
         $pengeluaran->delete();
-        return redirect()->route('adminsystem.pengeluaran.index')->with('success', 'Pengeluaran Berhasil Dihapus');
+
+        // Hapus transaksi yang sesuai
+        Transaction::where('barang_id', $pengeluaran->barang_id)
+            ->where('quantity', $pengeluaran->quantity)
+            ->where('tanggal', $pengeluaran->tanggal)
+            ->where('type', 'Pengeluaran')
+            ->first()?->delete();
+
+        return redirect()->route('adminsystem.pengeluaran.index')->with('success', 'Data pengeluaran berhasil dihapus dan stok barang diperbarui.');
     }
+
 
 
 
@@ -456,7 +505,7 @@ class InventoryController extends Controller
         $barang = Barang::findOrFail($id);
         $material_groups = MaterialGroup::all();
         $units = Unit::all();
-        return view('operator.inventory.barang.edit', compact('barang','units', 'material_groups'));
+        return view('operator.inventory.barang.edit', compact('barang', 'units', 'material_groups'));
     }
     public function operator_barang_detail($id)
     {
@@ -536,13 +585,13 @@ class InventoryController extends Controller
             'unit' => 'nullable|string|max:20', // akan diambil dari relasi
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
-    
+
         $barang = Barang::findOrFail($id);
-    
+
         // Ambil relasi unit dan material group
         $unit = Unit::findOrFail($request->unit_id);
         $material_group = MaterialGroup::findOrFail($request->material_group_id);
-    
+
         // Update field
         $barang->material_code = $request->material_code;
         $barang->material_group_id = $request->material_group_id;
@@ -552,24 +601,24 @@ class InventoryController extends Controller
         $barang->remark = $request->remark;
         $barang->unit_id = $request->unit_id;
         $barang->unit = $unit->unit;
-    
+
         // Jika ada gambar baru
         if ($request->hasFile('image')) {
             // Opsional: hapus gambar lama jika ada
             if ($barang->image && file_exists(public_path('storage/images/' . $barang->image))) {
                 unlink(public_path('storage/images/' . $barang->image));
             }
-    
+
             $imageName = time() . '.' . $request->image->extension();
             $request->image->move(public_path('storage/images'), $imageName);
             $barang->image = $imageName;
         }
-    
+
         $barang->save();
-    
+
         return redirect()->route('operator.inventory.index')->with('success', 'Barang berhasil diperbarui!');
     }
-    
+
     public function operator_barang_destroy($id)
     {
         $barang = Barang::findOrFail($id);
@@ -662,28 +711,28 @@ class InventoryController extends Controller
             'keterangan' => 'nullable|string|max:255',
             'tanggal' => 'required|date',
         ]);
-    
+
         // Ambil data pemasukan lama
         $pemasukan = Pemasukan::findOrFail($id);
         $oldBarangId = $pemasukan->barang_id;
         $oldTanggal = $pemasukan->tanggal;
-    
+
         // Kurangi stok lama
         $oldBarang = Barang::findOrFail($oldBarangId);
         $oldBarang->quantity -= $pemasukan->quantity;
         $oldBarang->save();
-    
+
         // Jika barang_id diganti
         if ($request->barang_id != $oldBarangId) {
             $newBarang = Barang::findOrFail($request->barang_id);
         } else {
             $newBarang = $oldBarang;
         }
-    
+
         // Tambahkan stok baru
         $newBarang->quantity += $request->quantity;
         $newBarang->save();
-    
+
         // Update data pemasukan
         $pemasukan->barang_id = $request->barang_id;
         $pemasukan->quantity = $request->quantity;
@@ -691,13 +740,13 @@ class InventoryController extends Controller
         $pemasukan->keterangan = $request->keterangan;
         $pemasukan->tanggal = $request->tanggal;
         $pemasukan->save();
-    
+
         // Update transaction terkait
         $transaction = Transaction::where('type', 'Pemasukan')
             ->where('barang_id', $oldBarangId)
             ->where('tanggal', $oldTanggal)
             ->first();
-    
+
         if ($transaction) {
             $transaction->barang_id = $request->barang_id;
             $transaction->quantity = $request->quantity;
@@ -706,16 +755,40 @@ class InventoryController extends Controller
             $transaction->tanggal = $request->tanggal;
             $transaction->save();
         }
-    
+
         return redirect()->route('operator.pemasukan.index')->with('success', 'Data Pemasukan berhasil diperbarui');
     }
-    
+
 
     public function operator_pemasukan_destroy($id)
     {
-        $pemasukan = Pemasukan::find($id);
+        // Ambil data pemasukan
+        $pemasukan = Pemasukan::findOrFail($id);
+
+        // Ambil data barang terkait
+        $barang = Barang::findOrFail($pemasukan->barang_id);
+
+        // Kurangi jumlah stok barang
+        $barang->quantity -= $pemasukan->quantity;
+
+        // Pastikan quantity tidak negatif
+        if ($barang->quantity < 0) {
+            $barang->quantity = 0;
+        }
+
+        $barang->save();
+
+        // Hapus data pemasukan
         $pemasukan->delete();
-        return redirect()->route('operator.pemasukan.index')->with('success', 'Pemasukan Berhasil Dihapus');
+
+        // Hapus transaksi yang sesuai
+        Transaction::where('barang_id', $pemasukan->barang_id)
+            ->where('quantity', $pemasukan->quantity)
+            ->where('tanggal', $pemasukan->tanggal)
+            ->where('type', 'Pemasukan')
+            ->first()?->delete();
+
+        return redirect()->route('operator.pemasukan.index')->with('success', 'Data pemasukan berhasil dihapus dan stok barang diperbarui.');
     }
 
     public function operator_pengeluaran_store(Request $request)
@@ -759,24 +832,24 @@ class InventoryController extends Controller
             'keterangan' => 'nullable|string|max:255',
             'tanggal' => 'required|date',
         ]);
-    
+
         // Ambil data pengeluaran lama
         $pengeluaran = Pengeluaran::findOrFail($id);
         $barang = Barang::findOrFail($pengeluaran->barang_id);
-    
+
         // Kembalikan stok lama terlebih dahulu
         $barang->quantity += $pengeluaran->quantity;
-    
+
         // Jika barang diganti, update stok lama & ambil barang baru
         if ($request->barang_id != $pengeluaran->barang_id) {
             $barang->save();
             $barang = Barang::findOrFail($request->barang_id);
         }
-    
+
         // Kurangi stok dengan quantity baru
         $barang->quantity -= $request->quantity;
         $barang->save();
-    
+
         // Update data pengeluaran
         $pengeluaran->barang_id = $request->barang_id;
         $pengeluaran->quantity = $request->quantity;
@@ -784,13 +857,13 @@ class InventoryController extends Controller
         $pengeluaran->keterangan = $request->keterangan;
         $pengeluaran->tanggal = $request->tanggal;
         $pengeluaran->save();
-    
+
         // Update transaction terkait
         $transaction = Transaction::where('type', 'Pengeluaran')
             ->where('barang_id', $pengeluaran->barang_id)
             ->where('tanggal', $pengeluaran->tanggal)
             ->first();
-    
+
         if ($transaction) {
             $transaction->barang_id = $request->barang_id;
             $transaction->quantity = $request->quantity;
@@ -799,14 +872,38 @@ class InventoryController extends Controller
             $transaction->tanggal = $request->tanggal;
             $transaction->save();
         }
-    
+
         return redirect()->route('operator.pengeluaran.index')->with('success', 'Data Pengeluaran berhasil diperbarui');
     }
-   
+
     public function operator_pengeluaran_destroy($id)
     {
-        $pengeluaran = Pengeluaran::find($id);
+        // Ambil data pemasukan
+        $pengeluaran = Pengeluaran::findOrFail($id);
+
+        // Ambil data barang terkait
+        $barang = Barang::findOrFail($pengeluaran->barang_id);
+
+        // Kurangi jumlah stok barang
+        $barang->quantity -= $pengeluaran->quantity;
+
+        // Pastikan quantity tidak negatif
+        if ($barang->quantity < 0) {
+            $barang->quantity = 0;
+        }
+
+        $barang->save();
+
+        // Hapus data pengeluaran
         $pengeluaran->delete();
-        return redirect()->route('operator.pengeluaran.index')->with('success', 'Pengeluaran Berhasil Dihapus');
+
+        // Hapus transaksi yang sesuai
+        Transaction::where('barang_id', $pengeluaran->barang_id)
+            ->where('quantity', $pengeluaran->quantity)
+            ->where('tanggal', $pengeluaran->tanggal)
+            ->where('type', 'Pengeluaran')
+            ->first()?->delete();
+
+        return redirect()->route('operator.pengeluaran.index')->with('success', 'Data pengeluaran berhasil dihapus dan stok barang diperbarui.');
     }
 }
