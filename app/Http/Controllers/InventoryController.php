@@ -400,7 +400,7 @@ class InventoryController extends Controller
         if ($request->quantity > $newBarang->quantity) {
             return redirect()->back()
                 ->withInput()
-                ->withErrors(['quantity' => 'Quantity melebihi stok yang tersedia (' . $barang->quantity . ')']);
+                ->withErrors(['quantity' => 'Quantity melebihi stok yang tersedia (' . $newBarang->quantity . ')']);
         }
 
 
@@ -812,7 +812,11 @@ class InventoryController extends Controller
             'tanggal' => 'required|date',
         ]);
         $barang = Barang::findOrFail($request->barang_id);
-
+        if ($request->quantity > $barang->quantity) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['quantity' => 'Quantity melebihi stok yang tersedia (' . $barang->quantity . ')']);
+        }
         $pengeluaran = new Pengeluaran();
         $pengeluaran->barang_id = $request->barang_id;
         $pengeluaran->quantity = $request->quantity;
@@ -840,37 +844,39 @@ class InventoryController extends Controller
         $request->validate([
             'barang_id' => 'required|exists:barang,id',
             'quantity' => 'required|integer|min:1',
-            'unit' => 'required|string|max:50',
             'keterangan' => 'nullable|string|max:255',
             'tanggal' => 'required|date',
         ]);
 
-        // Ambil data pengeluaran lama
         $pengeluaran = Pengeluaran::findOrFail($id);
-        $barang = Barang::findOrFail($pengeluaran->barang_id);
+        $oldBarang = Barang::findOrFail($pengeluaran->barang_id);
 
-        // Kembalikan stok lama terlebih dahulu
-        $barang->quantity += $pengeluaran->quantity;
+        // Kembalikan stok lama
+        $oldBarang->quantity += $pengeluaran->quantity;
+        $oldBarang->save();
 
-        // Jika barang diganti, update stok lama & ambil barang baru
-        if ($request->barang_id != $pengeluaran->barang_id) {
-            $barang->save();
-            $barang = Barang::findOrFail($request->barang_id);
+        // Ambil barang baru
+        $newBarang = Barang::findOrFail($request->barang_id);
+
+        if ($request->quantity > $newBarang->quantity) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['quantity' => 'Quantity melebihi stok yang tersedia (' . $newBarang->quantity . ')']);
         }
 
-        // Kurangi stok dengan quantity baru
-        $barang->quantity -= $request->quantity;
-        $barang->save();
 
-        // Update data pengeluaran
+        // Kurangi stok baru
+        $newBarang->quantity -= $request->quantity;
+        $newBarang->save();
+
         $pengeluaran->barang_id = $request->barang_id;
         $pengeluaran->quantity = $request->quantity;
-        $pengeluaran->unit = $request->unit;
+        $pengeluaran->unit = $newBarang->unit;
         $pengeluaran->keterangan = $request->keterangan;
         $pengeluaran->tanggal = $request->tanggal;
         $pengeluaran->save();
 
-        // Update transaction terkait
+        // Update transaction
         $transaction = Transaction::where('type', 'Pengeluaran')
             ->where('barang_id', $pengeluaran->barang_id)
             ->where('tanggal', $pengeluaran->tanggal)
@@ -879,7 +885,7 @@ class InventoryController extends Controller
         if ($transaction) {
             $transaction->barang_id = $request->barang_id;
             $transaction->quantity = $request->quantity;
-            $transaction->unit = $request->unit;
+            $transaction->unit = $newBarang->unit;
             $transaction->keterangan = $request->keterangan;
             $transaction->tanggal = $request->tanggal;
             $transaction->save();

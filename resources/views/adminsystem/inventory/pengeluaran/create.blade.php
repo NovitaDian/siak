@@ -1,23 +1,7 @@
 @extends('layouts.user_type.auth')
 
 @section('content')
- @if($errors->any())
-                <div class="mt-3 alert alert-danger alert-dismissible fade show" role="alert">
-                    <span class="alert-text text-white">{{ $errors->first() }}</span>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-                        <i class="fa fa-close" aria-hidden="true"></i>
-                    </button>
-                </div>
-                @endif
 
-                @if(session('success'))
-                <div class="m-3 alert alert-success alert-dismissible fade show" role="alert">
-                    <span class="alert-text text-white">{{ session('success') }}</span>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-                        <i class="fa fa-close" aria-hidden="true"></i>
-                    </button>
-                </div>
-                @endif
 <div class="container-fluid py-4">
     <div class="card mx-auto w-100" style="max-width: 95%;">
         <div class="card-header pb-0 px-3">
