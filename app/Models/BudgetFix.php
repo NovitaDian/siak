@@ -28,6 +28,7 @@ class BudgetFix extends Model
         'kategori',
         'sisa',
         'year',
+        'pr_date',
     ];
 
 

@@ -21,6 +21,7 @@ return new class extends Migration
             $table->decimal('sisa', 15, 2)->nullable();
             $table->decimal('percentage_usage', 5, 2)->default(0);
             $table->integer('year');
+            $table->date('pr_date');
             $table->string('kategori', 255);
             $table->timestamps();
         });
