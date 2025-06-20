@@ -24,30 +24,31 @@ class NcrController extends Controller
 {
 
     public function index(Request $request)
-{
-    $user = Auth::user();
+    {
+        $user = Auth::user();
 
-    // Ambil data draft NCR oleh user login
-    $ncrs = Ncr::where('writer', $user->name)->get();
+        // Ambil data draft NCR oleh user login
+        $ncrs = Ncr::where('writer', $user->name)->get();
 
-    // Ambil semua request (Edit/Delete)
-    $allRequests = NcrRequest::all();
+        // Ambil semua request (Edit/Delete)
+        $latestRequests = NcrRequest::orderByDesc('id')
+            ->get()
+            ->unique('sent_ncr_id');
+        // Filter tanggal jika ada
+        $start = $request->start_date;
+        $end = $request->end_date;
 
-    // Filter tanggal jika ada
-    $start = $request->start_date;
-    $end = $request->end_date;
+        if ($start && $end) {
+            $ncr_fixs = SentNcr::whereBetween('tanggal_shift_kerja', [$start, $end])
+                ->orderBy('tanggal_shift_kerja', 'desc') // Terbaru di atas
+                ->get();
+        } else {
+            $ncr_fixs = SentNcr::orderBy('tanggal_shift_kerja', 'desc') // Terbaru di atas
+                ->get();
+        }
 
-    if ($start && $end) {
-        $ncr_fixs = SentNcr::whereBetween('tanggal_shift_kerja', [$start, $end])
-                            ->orderBy('tanggal_shift_kerja', 'desc') // Terbaru di atas
-                            ->get();
-    } else {
-        $ncr_fixs = SentNcr::orderBy('tanggal_shift_kerja', 'desc') // Terbaru di atas
-                           ->get();
+        return view('adminsystem.ncr.index', compact('ncrs', 'ncr_fixs', 'latestRequests'));
     }
-
-    return view('adminsystem.ncr.index', compact('ncrs', 'ncr_fixs', 'allRequests'));
-}
 
 
     // Menampilkan detail data NCR berdasarkan ID

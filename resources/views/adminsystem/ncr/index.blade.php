@@ -277,20 +277,17 @@
                                     </td>
                                     <td class="align-middle text-center text-xs">
                                         <div class="d-flex justify-content-center gap-1 flex-nowrap">
-
                                             @php
-                                            $matchedRequest = $allRequests->firstWhere('sent_ncr_id', $ncr_fix->id);
+                                            $matchedRequest = $latestRequests->firstWhere('sent_ncr_id', $ncr_fix->id);
                                             $isDeleteRequest = $matchedRequest && $matchedRequest->type === 'Delete';
                                             $isEditRequest = $matchedRequest && $matchedRequest->type === 'Edit';
                                             @endphp
 
-                                            {{-- STATUS: Nothing --}}
                                             @if ($ncr_fix->status === 'Nothing')
                                             <button class="btn btn-info btn-xs" onclick="showRequestModal('{{ $ncr_fix->id }}')">
                                                 <i class="fas fa-paper-plane me-1" style="font-size: 12px;"></i> Request
                                             </button>
 
-                                            {{-- STATUS: Approved --}}
                                             @elseif ($ncr_fix->status === 'Approved')
                                             @if ($matchedRequest)
                                             <div class="dropdown d-inline">
@@ -302,7 +299,8 @@
                                                     <li>
                                                         <a href="{{ $ncr_fix->status_ncr === 'Closed' 
                                     ? route('adminsystem.ncr.edit_closed', $ncr_fix->id)
-                                    : route('adminsystem.ncr.sent_edit', $ncr_fix->id) }}" class="dropdown-item">
+                                    : route('adminsystem.ncr.sent_edit', $ncr_fix->id) }}"
+                                                            class="dropdown-item">
                                                             <i class="fas fa-edit me-1"></i> Edit
                                                         </a>
                                                     </li>
@@ -324,14 +322,6 @@
                                                 <i class="fas fa-exclamation-triangle me-1"></i> No request found
                                             </span>
                                             @endif
-                                            @endif
-                                    <td> @if ($ncr_fix->status_ncr === 'Closed')
-                                        <form action="{{ route('adminsystem.ncr.show', ['id' => $ncr_fix->id]) }}" method="GET" class="m-0">
-                                            <button type="submit" class="btn btn-light btn-xs d-flex align-items-center">
-                                                <i class="fas fa-eye me-1" style="font-size: 12px;"></i> Show
-                                            </button>
-                                        </form>
-                                        @endif
                                     </td>
                     </div>
                     </td>
