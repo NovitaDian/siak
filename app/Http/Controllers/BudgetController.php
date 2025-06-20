@@ -403,18 +403,21 @@ class BudgetController extends Controller
         $valuation = $pr->valuation_price;
         $gl_code = $pr->gl_code;
 
+        // Ambil BudgetFix terakhir untuk gl_code yang sama
+        $budgetFix = BudgetFix::where('gl_code', $gl_code)->latest()->first();
+
         // Hapus PR
         $pr->delete();
 
-        // Update BudgetFix (optional: sesuaikan logika sesuai kebutuhan kamu)
-        $budgetFix = BudgetFix::where('gl_code', $gl_code)->latest()->first();
-
-        if ($budgetFix) {
+        // Jika BudgetFix cocok dengan nilai PR yang dihapus, hapus juga baris tersebut
+        if ($budgetFix && $budgetFix->usage == $valuation) {
+            $budgetFix->delete(); // Hapus baris BudgetFix terakhir jika hanya menyimpan nilai PR ini
+        } else if ($budgetFix) {
+            // Kalau ada lebih dari satu PR, hanya kurangi nilainya
             $newUsage = $budgetFix->usage - $valuation;
             $newSisa = $budgetFix->sisa + $valuation;
             $newPercentageUsage = ($budgetFix->bg_approve > 0) ? ($newUsage / $budgetFix->bg_approve) * 100 : 0;
 
-            // Simpan perubahan budget
             $budgetFix->update([
                 'usage' => $newUsage,
                 'sisa' => $newSisa,
@@ -422,7 +425,7 @@ class BudgetController extends Controller
             ]);
         }
 
-        return redirect()->route('adminsystem.pr.index')->with('success', 'Purchase Request berhasil dihapus.');
+        return redirect()->route('adminsystem.pr.index')->with('success', 'Purchase Request dan data budget terkait berhasil dihapus atau diperbarui.');
     }
 
 
