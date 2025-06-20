@@ -261,7 +261,6 @@
                                             @endif
                                             @endif
                                     <td> @if ($ncr_fix->status_ncr === 'Closed')
-                                        <form action="{{ route('operator.ncr.show', ['id' => $ncr_fix->id]) }}" method="GET" class="m-0">
                                             <button type="submit" class="btn btn-light btn-xs d-flex align-items-center">
                                                 <i class="fas fa-eye me-1" style="font-size: 12px;"></i> Show
                                             </button>
