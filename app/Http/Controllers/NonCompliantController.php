@@ -40,36 +40,36 @@ class NonCompliantController extends Controller
     }
 
     // Menyimpan data NonCompliant baru
+    use Illuminate\Support\Facades\Auth;
+    use Illuminate\Support\Facades\Storage;
+    use App\Models\NonCompliant;
+
     public function store(Request $request)
     {
         $request->validate([
-            'id_ppe' => 'required|integer',
-            'tipe_observasi' => 'required|string',
-            'nama_pelanggar' => 'required|string',
-            'perusahaan' => 'required|string',
-            'nama_bagian' => 'required|string',
-            'nama_hse_inspector' => 'required|string',
-            'shift_kerja' => 'required|string',
-            'jam_mulai' => 'required|string',
-            'jam_selesai' => 'required|string',
-            'zona_pengawasan' => 'required|string',
-            'lokasi_observasi' => 'required|string',
-            'foto' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'id_ppe'              => 'required|integer',
+            'tipe_observasi'      => 'required|string',
+            'nama_pelanggar'      => 'required|string',
+            'perusahaan'          => 'required|string',
+            'nama_bagian'         => 'required|string',
+            'nama_hse_inspector'  => 'required|string',
+            'shift_kerja'         => 'required|string',
+            'jam_mulai'           => 'required|string',
+            'jam_selesai'         => 'required|string',
+            'zona_pengawasan'     => 'required|string',
+            'lokasi_observasi'    => 'required|string',
+            'foto'                => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $data = $request->except('foto'); // jangan langsung include file upload
-        $data['user_id'] = Auth::user()->id;
+        $data = $request->except('foto'); // Ambil semua data kecuali file foto
+        $data['user_id'] = Auth::id();
         $data['writer'] = Auth::user()->name;
 
         if ($request->hasFile('foto')) {
-            // Cek dan buat folder jika belum ada
-            if (!Storage::disk('public')->exists('pelanggar')) {
-                Storage::disk('public')->makeDirectory('pelanggar');
-            }
-
-            // Simpan file ke folder pelanggar
-            $fotoPath = $request->file('foto')->store('pelanggar', 'public');
-            $data['foto'] = $fotoPath;
+            // Buat nama file unik dan simpan ke folder 'images' dalam storage/public
+            $imageName = time() . '.' . $request->foto->extension();
+            $request->foto->move(public_path('storage/pelanggar'), $imageName);
+            $data['foto'] = 'images/' . $imageName;
         }
 
         NonCompliant::create($data);
@@ -77,6 +77,7 @@ class NonCompliantController extends Controller
         return redirect()->route('adminsystem.ppe.show', $data['id_ppe'])
             ->with('success', 'Pelanggar berhasil ditambahkan!');
     }
+
 
     // Menampilkan form untuk mengedit NonCompliant
     public function edit($id)
