@@ -300,7 +300,7 @@
 
                                         @elseif ($ncr_fix->status == 'Approved')
                                         @php
-                                        $request = $requests->firstWhere('sent_ncr_id', $ncr_fix->id);
+                                        $request = $allRequests->firstWhere('sent_ncr_id', $ncr_fix->id);
                                         @endphp
 
                                         @if ($request)
