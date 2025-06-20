@@ -127,7 +127,7 @@
                                     <td class="text-center text-xs">
                                         <div style="width:60px; height:60px; overflow:hidden; border-radius:4px; display:inline-block;">
                               <img src="{{ asset('storage/pelanggar/'.$nc->image) }}"
-                                            alt="{{ $barang->description }}"
+                                            alt="{{ $nc->description }}"
                                             style="width:100%; height:100%; object-fit:cover;">
 
                                         </div>
