@@ -28,7 +28,7 @@
                                     </tr>
                                 </thead>
                                 <tbody id="notificationTableBody">
-                                    @foreach ($allRequests as $request)
+                                    @foreach ($latestRequests as $request)
                                     <tr>
                                         <td class="text-center text-xs">{{ $request->nama_pengirim }}</td>
                                         <td class="text-center text-xs">{{ $request->created_at->format('d/m/Y') }}</td>
