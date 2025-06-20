@@ -61,9 +61,14 @@ class NonCompliantController extends Controller
         $data['user_id'] = Auth::user()->id;
         $data['writer'] = Auth::user()->name;
 
-        // Upload foto ke folder storage/app/public/pelanggar
         if ($request->hasFile('foto')) {
-            $fotoPath = $request->file('foto')->store('pelanggar', 'public'); // path: pelanggar/nama.jpg
+            // Cek dan buat folder jika belum ada
+            if (!Storage::disk('public')->exists('pelanggar')) {
+                Storage::disk('public')->makeDirectory('pelanggar');
+            }
+
+            // Simpan file ke folder pelanggar
+            $fotoPath = $request->file('foto')->store('pelanggar', 'public');
             $data['foto'] = $fotoPath;
         }
 
