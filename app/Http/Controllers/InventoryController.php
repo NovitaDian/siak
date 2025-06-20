@@ -431,7 +431,7 @@ class InventoryController extends Controller
         $barang = Barang::findOrFail($pengeluaran->barang_id);
 
         // Kurangi jumlah stok barang
-        $barang->quantity -= $pengeluaran->quantity;
+        $barang->quantity += $pengeluaran->quantity;
 
         // Pastikan quantity tidak negatif
         if ($barang->quantity < 0) {
@@ -885,7 +885,7 @@ class InventoryController extends Controller
         $barang = Barang::findOrFail($pengeluaran->barang_id);
 
         // Kurangi jumlah stok barang
-        $barang->quantity -= $pengeluaran->quantity;
+        $barang->quantity += $pengeluaran->quantity;
 
         // Pastikan quantity tidak negatif
         if ($barang->quantity < 0) {
