@@ -303,21 +303,21 @@
                                             </button>
                                             {{-- STATUS: Approved --}}
                                             @elseif ($ncr_fix->status === 'Approved')
-                                            @if ($matchedRequest)
                                             <div class="dropdown d-inline">
-                                                <button class="btn btn-success btn-xs dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <button class="btn btn-success btn-xs dropdown-toggle" type="button" data-bs-toggle="dropdown">
                                                     <i class="fas fa-check-circle me-1" style="font-size: 12px;"></i> Approved
                                                 </button>
                                                 <ul class="dropdown-menu">
-                                                    @if ($isEditRequest)
+                                                    @if ($editRequest)
                                                     <li>
                                                         <a href="{{ $ncr_fix->status_ncr === 'Closed' 
-                                    ? route('adminsystem.ncr.edit_closed', $ncr_fix->id)
-                                    : route('adminsystem.ncr.sent_edit', $ncr_fix->id) }}" class="dropdown-item">
+                        ? route('adminsystem.ncr.edit_closed', $ncr_fix->id)
+                        : route('adminsystem.ncr.sent_edit', $ncr_fix->id) }}" class="dropdown-item">
                                                             <i class="fas fa-edit me-1"></i> Edit
                                                         </a>
                                                     </li>
-                                                    @elseif ($isDeleteRequest)
+                                                    @endif
+                                                    @if ($deleteRequest)
                                                     <li>
                                                         <form action="{{ route('adminsystem.ncr.sent_destroy', $ncr_fix->id) }}" method="POST" onsubmit="return confirm('Anda yakin akan menghapus data ini?')">
                                                             @csrf
@@ -331,10 +331,9 @@
                                                 </ul>
                                             </div>
                                             @else
-                                            <span class="text-danger" title="Request data not found">
-                                                <i class="fas fa-exclamation-triangle me-1"></i> No request found
-                                            </span>
+                                            {{-- kondisi lainnya --}}
                                             @endif
+
                                             @endif
                                     <td> @if ($ncr_fix->status_ncr === 'Closed')
                                         <form action="{{ route('adminsystem.ncr.show', ['id' => $ncr_fix->id]) }}" method="GET" class="m-0">

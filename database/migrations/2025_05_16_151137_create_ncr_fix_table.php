@@ -30,7 +30,7 @@ return new class extends Migration
             $table->string('status', 30)->default('Nothing');
             $table->string('status_note', 255)->nullable();
             $table->string('status_ncr', 7)->default('Open');
-            $table->integer('durasi')->nullable();
+            $table->string('durasi_ncr',20)->nullable();
             $table->date('estimasi')->nullable();
             $table->string('tindak_lanjut', 255)->nullable();
             $table->binary('foto')->nullable();
