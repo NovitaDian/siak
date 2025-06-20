@@ -54,17 +54,17 @@ class NonCompliantController extends Controller
             'jam_selesai' => 'required|string',
             'zona_pengawasan' => 'required|string',
             'lokasi_observasi' => 'required|string',
-            'foto' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'foto' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $data = $request->all();
+        $data = $request->except('foto'); // jangan langsung include file upload
         $data['user_id'] = Auth::user()->id;
         $data['writer'] = Auth::user()->name;
 
-        if ($request->hasFile('image')) {
-            $imageName = time() . '.' . $request->image->extension();
-            $request->image->move(public_path('storage/pelanggar'), $imageName);
-            $request->image = $imageName; // pastikan kolom image di DB adalah string, bukan binary
+        // Upload foto ke folder storage/app/public/pelanggar
+        if ($request->hasFile('foto')) {
+            $fotoPath = $request->file('foto')->store('pelanggar', 'public'); // path: pelanggar/nama.jpg
+            $data['foto'] = $fotoPath;
         }
 
         NonCompliant::create($data);
@@ -72,6 +72,7 @@ class NonCompliantController extends Controller
         return redirect()->route('adminsystem.ppe.show', $data['id_ppe'])
             ->with('success', 'Pelanggar berhasil ditambahkan!');
     }
+
     // Menampilkan form untuk mengedit NonCompliant
     public function edit($id)
     {
@@ -220,6 +221,7 @@ class NonCompliantController extends Controller
     // Menyimpan data NonCompliant baru
     public function operator_store(Request $request)
     {
+
         $request->validate([
             'id_ppe' => 'required|integer',
             'tipe_observasi' => 'required|string',
@@ -232,15 +234,16 @@ class NonCompliantController extends Controller
             'jam_selesai' => 'required|string',
             'zona_pengawasan' => 'required|string',
             'lokasi_observasi' => 'required|string',
-            'foto' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'foto' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $data = $request->all();
-        $data['writer'] = Auth::user()->name;
+        $data = $request->except('foto'); // jangan langsung include file upload
         $data['user_id'] = Auth::user()->id;
+        $data['writer'] = Auth::user()->name;
 
+        // Upload foto ke folder storage/app/public/pelanggar
         if ($request->hasFile('foto')) {
-            $fotoPath = $request->file('foto')->store('pelanggar/foto', 'public');
+            $fotoPath = $request->file('foto')->store('pelanggar', 'public'); // path: pelanggar/nama.jpg
             $data['foto'] = $fotoPath;
         }
 
@@ -249,6 +252,7 @@ class NonCompliantController extends Controller
         return redirect()->route('operator.ppe.show', $data['id_ppe'])
             ->with('success', 'Pelanggar berhasil ditambahkan!');
     }
+
     // Menampilkan form untuk mengedit NonCompliant
     public function operator_edit($id)
     {
