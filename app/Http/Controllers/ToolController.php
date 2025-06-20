@@ -156,7 +156,7 @@ class ToolController extends Controller
             'user_id' => Auth::user()->id,
         ];
 
-        $toolReport = ToolReport::findOrFail($id);
+        $toolReport = SentToolReport::findOrFail($id);
         if ($request->hasFile('foto')) {
             // Hapus foto lama jika ada
             if ($toolReport->foto && Storage::disk('public')->exists($toolReport->foto)) {
