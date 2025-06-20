@@ -132,46 +132,44 @@ class NcrController extends Controller
 
         return redirect()->route('adminsystem.ncr.index')->with('success', 'Data berhasil disimpan!');
     }
-
-
     // Memperbarui data NCR yang ada
-  public function update(Request $request, $id)
-{
-    $request->validate([
-        'tanggal_shift_kerja' => 'required|date',
-        'shift_kerja' => 'required|string|max:255',
-        'nama_hs_officer_1' => 'nullable|string|max:255',
-        'nama_hs_officer_2' => 'nullable|string|max:255',
-        'tanggal_audit' => 'required|date',
-        'nama_auditee' => 'required|string|max:255',
-        'perusahaan' => 'required|string|max:255',
-        'nama_bagian' => 'nullable|string|max:255',
-        'element_referensi_ncr' => 'required|string|max:255',
-        'kategori_ketidaksesuaian' => 'required|string|max:255',
-        'estimasi' => 'required|string',
-        'tindak_lanjut' => 'required|string',
-        'foto' => 'nullable|file|mimes:pdf,jpeg,png,jpg,gif|max:2048',
-    ]);
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'tanggal_shift_kerja' => 'required|date',
+            'shift_kerja' => 'required|string|max:255',
+            'nama_hs_officer_1' => 'nullable|string|max:255',
+            'nama_hs_officer_2' => 'nullable|string|max:255',
+            'tanggal_audit' => 'required|date',
+            'nama_auditee' => 'required|string|max:255',
+            'perusahaan' => 'required|string|max:255',
+            'nama_bagian' => 'nullable|string|max:255',
+            'element_referensi_ncr' => 'required|string|max:255',
+            'kategori_ketidaksesuaian' => 'required|string|max:255',
+            'estimasi' => 'required|string',
+            'tindak_lanjut' => 'required|string',
+            'foto' => 'nullable|file|mimes:pdf,jpeg,png,jpg,gif|max:2048',
+        ]);
 
-    $ncr = Ncr::findOrFail($id);
-    $data = $request->except('foto');
-    $data['status'] = 'Nothing';
-    $data['updated_by'] = Auth::user()->name;
+        $ncr = Ncr::findOrFail($id);
+        $data = $request->except('foto');
+        $data['status'] = 'Nothing';
+        $data['updated_by'] = Auth::user()->name;
 
-    if ($request->hasFile('foto')) {
-        if ($ncr->foto && file_exists(public_path('storage/' . $ncr->foto))) {
-            unlink(public_path('storage/' . $ncr->foto));
+        if ($request->hasFile('foto')) {
+            if ($ncr->foto && file_exists(public_path('storage/' . $ncr->foto))) {
+                unlink(public_path('storage/' . $ncr->foto));
+            }
+
+            $imageName = time() . '.' . $request->foto->extension();
+            $request->foto->move(public_path('storage/ncr'), $imageName);
+            $data['foto'] = 'ncr/' . $imageName;
         }
 
-        $imageName = time() . '.' . $request->foto->extension();
-        $request->foto->move(public_path('storage/ncr'), $imageName);
-        $data['foto'] = 'ncr/' . $imageName;
+        $ncr->update($data);
+
+        return redirect()->route('adminsystem.ncr.index')->with('success', 'Data berhasil diperbarui!');
     }
-
-    $ncr->update($data);
-
-    return redirect()->route('adminsystem.ncr.index')->with('success', 'Data berhasil diperbarui!');
-}
 
 
     public function sent_update(Request $request, $id)
@@ -200,19 +198,14 @@ class NcrController extends Controller
         $data['updated_by'] = Auth::user()->name;
 
         if ($request->hasFile('foto')) {
-            // Optional: delete old file first
-            if ($ncr_fixs->foto && Storage::disk('public')->exists($ncr_fixs->foto)) {
-                Storage::disk('public')->delete($ncr_fixs->foto);
+            if ($ncr_fixs->foto && file_exists(public_path('storage/' . $ncr_fixs->foto))) {
+                unlink(public_path('storage/' . $ncr_fixs->foto));
             }
 
-            $foto = $request->file('foto');
-            $fotoPath = $foto->store('uploads/ncr/foto', 'public');
-            $data['foto'] = $fotoPath;
-        } else {
-            // Remove 'foto' key if no new file uploaded
-            unset($data['foto']);
+            $imageName = time() . '.' . $request->foto->extension();
+            $request->foto->move(public_path('storage/ncr'), $imageName);
+            $data['foto'] = 'ncr/' . $imageName;
         }
-
         $ncr_fixs->update($data);
 
         return redirect()->route('adminsystem.ncr.index')->with('success', 'Data berhasil diperbarui!');
@@ -595,17 +588,16 @@ class NcrController extends Controller
         $data['writer'] = Auth::user()->name;
 
         if ($request->hasFile('foto')) {
-            $foto = $request->file('foto');
-            $fotoPath = $foto->store('uploads/foto', 'public');
-            $data['foto'] = $fotoPath;
+            // Buat nama file unik dan simpan ke folder 'images' dalam storage/public
+            $imageName = time() . '.' . $request->foto->extension();
+            $request->foto->move(public_path('storage/ncr'), $imageName);
+            $data['foto'] = 'ncr/' . $imageName;
         }
 
         Ncr::create($data);
 
         return redirect()->route('operator.ncr.index')->with('success', 'Data berhasil disimpan!');
     }
-
-
     // Memperbarui data NCR yang ada
     public function operator_update(Request $request, $id)
     {
@@ -626,30 +618,25 @@ class NcrController extends Controller
         ]);
 
         $ncr = Ncr::findOrFail($id);
-        $data = $request->all();
+        $data = $request->except('foto');
         $data['status'] = 'Nothing';
-
-        // Optional: track who last updated
         $data['updated_by'] = Auth::user()->name;
 
         if ($request->hasFile('foto')) {
-            // Optional: delete old file first
-            if ($ncr->foto && Storage::disk('public')->exists($ncr->foto)) {
-                Storage::disk('public')->delete($ncr->foto);
+            if ($ncr->foto && file_exists(public_path('storage/' . $ncr->foto))) {
+                unlink(public_path('storage/' . $ncr->foto));
             }
 
-            $foto = $request->file('foto');
-            $fotoPath = $foto->store('uploads/foto', 'public');
-            $data['foto'] = $fotoPath;
-        } else {
-            // Remove 'foto' key if no new file uploaded
-            unset($data['foto']);
+            $imageName = time() . '.' . $request->foto->extension();
+            $request->foto->move(public_path('storage/ncr'), $imageName);
+            $data['foto'] = 'ncr/' . $imageName;
         }
 
         $ncr->update($data);
 
         return redirect()->route('operator.ncr.index')->with('success', 'Data berhasil diperbarui!');
     }
+
 
     public function operator_sent_update(Request $request, $id)
     {
@@ -677,19 +664,14 @@ class NcrController extends Controller
         $data['updated_by'] = Auth::user()->name;
 
         if ($request->hasFile('foto')) {
-            // Optional: delete old file first
-            if ($ncr_fixs->foto && Storage::disk('public')->exists($ncr_fixs->foto)) {
-                Storage::disk('public')->delete($ncr_fixs->foto);
+            if ($ncr_fixs->foto && file_exists(public_path('storage/' . $ncr_fixs->foto))) {
+                unlink(public_path('storage/' . $ncr_fixs->foto));
             }
 
-            $foto = $request->file('foto');
-            $fotoPath = $foto->store('uploads/ncr/foto', 'public');
-            $data['foto'] = $fotoPath;
-        } else {
-            // Remove 'foto' key if no new file uploaded
-            unset($data['foto']);
+            $imageName = time() . '.' . $request->foto->extension();
+            $request->foto->move(public_path('storage/ncr'), $imageName);
+            $data['foto'] = 'ncr/' . $imageName;
         }
-
         $ncr_fixs->update($data);
 
         return redirect()->route('operator.ncr.index')->with('success', 'Data berhasil diperbarui!');
