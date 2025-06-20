@@ -126,7 +126,8 @@ class NonCompliantController extends Controller
         $nonCompliant = NonCompliant::findOrFail($id);
         $nonCompliant->delete();
 
-        return redirect()->route('adminsystem.non_compliant.index')->with('success', 'Non-Compliant deleted successfully!');
+        return redirect()->route('adminsystem.ppe.show', $data['id_ppe'])
+            ->with('success', 'Data pelanggar berhasil diperbarui!');
     }
     public function storeRequest(Request $request)
     {
@@ -304,8 +305,9 @@ class NonCompliantController extends Controller
         $nonCompliant = NonCompliant::findOrFail($id);
         $nonCompliant->delete();
 
-        return redirect()->route('operator.non_compliant.index')->with('success', 'Non-Compliant deleted successfully!');
-    }
+ return redirect()->route('operator.ppe.show', $data['id_ppe'])
+            ->with('success', 'Data pelanggar berhasil diperbarui!');
+    }    }
     public function operator_storeRequest(Request $request)
     {
         // Validate input
