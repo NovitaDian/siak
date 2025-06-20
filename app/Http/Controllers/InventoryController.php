@@ -349,9 +349,10 @@ class InventoryController extends Controller
 
         $barang = Barang::findOrFail($request->barang_id);
 
-        // Cek apakah quantity yang diminta lebih dari stok
         if ($request->quantity > $barang->quantity) {
-            return redirect()->back()->with('error', 'Quantity melebihi stok barang yang tersedia.');
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['quantity' => 'Quantity melebihi stok yang tersedia (' . $barang->quantity . ')']);
         }
 
         $pengeluaran = new Pengeluaran();
@@ -396,10 +397,12 @@ class InventoryController extends Controller
         // Ambil barang baru
         $newBarang = Barang::findOrFail($request->barang_id);
 
-        // Cek stok cukup atau tidak
         if ($request->quantity > $newBarang->quantity) {
-            return redirect()->back()->with('error', 'Quantity melebihi stok barang yang tersedia.');
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['quantity' => 'Quantity melebihi stok yang tersedia (' . $barang->quantity . ')']);
         }
+
 
         // Kurangi stok baru
         $newBarang->quantity -= $request->quantity;
