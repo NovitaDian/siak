@@ -251,9 +251,11 @@
                                     <td class="text-center text-xs">{{ \Carbon\Carbon::parse($ncr_fix->tanggal_audit)->format('d/m/Y') }}</td>
 
                                     @php
-                                    $estimasiDate = \Carbon\Carbon::parse($ncr_fix->estimasi);
-                                    $isLate = now()->greaterThanOrEqualTo($estimasiDate) && $ncr_fix->status_ncr == 'Open';
+                                    $matchedRequest = $allRequests->firstWhere('sent_ncr_id', $ncr_fix->id);
+                                    $isDeleteRequest = $matchedRequest && $matchedRequest->type === 'Delete';
+                                    $isEditRequest = $matchedRequest && $matchedRequest->type === 'Edit';
                                     @endphp
+
                                     <td class="text-center text-xs">
                                         <span class="badge bg-{{ $isLate ? 'danger' : 'success' }}">
                                             {{ $estimasiDate->format('d/m/Y') }}
