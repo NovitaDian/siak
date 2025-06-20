@@ -255,7 +255,6 @@ class InventoryController extends Controller
         $request->validate([
             'barang_id' => 'required|exists:barang,id',
             'quantity' => 'required|integer|min:1',
-            'unit' => 'required|string|max:50',
             'keterangan' => 'nullable|string|max:255',
             'tanggal' => 'required|date',
         ]);
@@ -344,71 +343,76 @@ class InventoryController extends Controller
         $request->validate([
             'barang_id' => 'required|exists:barang,id',
             'quantity' => 'required|integer|min:1',
-            'unit' => 'required|string|max:50',
             'keterangan' => 'nullable|string|max:255',
             'tanggal' => 'required|date',
         ]);
 
         $barang = Barang::findOrFail($request->barang_id);
 
+        // Cek apakah quantity yang diminta lebih dari stok
+        if ($request->quantity > $barang->quantity) {
+            return redirect()->back()->with('error', 'Quantity melebihi stok barang yang tersedia.');
+        }
+
         $pengeluaran = new Pengeluaran();
-        $pengeluaran->barang_id = $request->barang_id;
+        $pengeluaran->barang_id = $barang->id;
         $pengeluaran->quantity = $request->quantity;
         $pengeluaran->unit = $barang->unit;
         $pengeluaran->keterangan = $request->keterangan;
         $pengeluaran->tanggal = $request->tanggal;
         $pengeluaran->save();
-        $barang = Barang::findOrFail($request->barang_id);
+
         $barang->quantity -= $request->quantity;
         $barang->save();
 
-        // Simpan ke tabel transaction
         $transaction = new Transaction();
-        $transaction->barang_id = $request->barang_id;
+        $transaction->barang_id = $barang->id;
         $transaction->quantity = $request->quantity;
         $transaction->unit = $barang->unit;
         $transaction->keterangan = $request->keterangan;
         $transaction->tanggal = $request->tanggal;
         $transaction->type = 'Pengeluaran';
         $transaction->save();
+
         return redirect()->route('adminsystem.pengeluaran.index')->with('success', 'Pengeluaran Barang Berhasil');
     }
+
     public function pengeluaran_update(Request $request, $id)
     {
         $request->validate([
             'barang_id' => 'required|exists:barang,id',
             'quantity' => 'required|integer|min:1',
-            'unit' => 'required|string|max:50',
             'keterangan' => 'nullable|string|max:255',
             'tanggal' => 'required|date',
         ]);
 
-        // Ambil data pengeluaran lama
         $pengeluaran = Pengeluaran::findOrFail($id);
-        $barang = Barang::findOrFail($pengeluaran->barang_id);
+        $oldBarang = Barang::findOrFail($pengeluaran->barang_id);
 
-        // Kembalikan stok lama terlebih dahulu
-        $barang->quantity += $pengeluaran->quantity;
+        // Kembalikan stok lama
+        $oldBarang->quantity += $pengeluaran->quantity;
+        $oldBarang->save();
 
-        // Jika barang diganti, update stok lama & ambil barang baru
-        if ($request->barang_id != $pengeluaran->barang_id) {
-            $barang->save();
-            $barang = Barang::findOrFail($request->barang_id);
+        // Ambil barang baru
+        $newBarang = Barang::findOrFail($request->barang_id);
+
+        // Cek stok cukup atau tidak
+        if ($request->quantity > $newBarang->quantity) {
+            return redirect()->back()->with('error', 'Quantity melebihi stok barang yang tersedia.');
         }
 
-        // Kurangi stok dengan quantity baru
-        $barang->quantity -= $request->quantity;
-        $barang->save();
+        // Kurangi stok baru
+        $newBarang->quantity -= $request->quantity;
+        $newBarang->save();
 
-        // Update data pengeluaran
         $pengeluaran->barang_id = $request->barang_id;
         $pengeluaran->quantity = $request->quantity;
-        $pengeluaran->unit = $request->unit;
+        $pengeluaran->unit = $newBarang->unit;
         $pengeluaran->keterangan = $request->keterangan;
         $pengeluaran->tanggal = $request->tanggal;
         $pengeluaran->save();
 
-        // Update transaction terkait
+        // Update transaction
         $transaction = Transaction::where('type', 'Pengeluaran')
             ->where('barang_id', $pengeluaran->barang_id)
             ->where('tanggal', $pengeluaran->tanggal)
@@ -417,7 +421,7 @@ class InventoryController extends Controller
         if ($transaction) {
             $transaction->barang_id = $request->barang_id;
             $transaction->quantity = $request->quantity;
-            $transaction->unit = $request->unit;
+            $transaction->unit = $newBarang->unit;
             $transaction->keterangan = $request->keterangan;
             $transaction->tanggal = $request->tanggal;
             $transaction->save();
@@ -425,6 +429,7 @@ class InventoryController extends Controller
 
         return redirect()->route('adminsystem.pengeluaran.index')->with('success', 'Data Pengeluaran berhasil diperbarui');
     }
+
 
     public function pengeluaran_destroy($id)
     {
@@ -712,7 +717,6 @@ class InventoryController extends Controller
         $request->validate([
             'barang_id' => 'required|exists:barang,id',
             'quantity' => 'required|integer|min:1',
-            'unit' => 'required|string|max:50',
             'keterangan' => 'nullable|string|max:255',
             'tanggal' => 'required|date',
         ]);
