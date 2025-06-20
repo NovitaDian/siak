@@ -133,11 +133,37 @@ class BudgetController extends Controller
 
     public function budget_destroy($id)
     {
+        // Ambil data Budget
         $budget = Budget::findOrFail($id);
+        $glCode = $budget->gl_code;
+        $year = $budget->year;
+
+        // Cek apakah ada PR yang menggunakan gl_code dan year ini
+        $prCount = PurchaseRequest::where('gl_code', $glCode)
+            ->whereYear('pr_date', $year)
+            ->count();
+
+        if ($prCount > 0) {
+            return redirect()->route('adminsystem.budget.index')
+                ->with('error', 'Tidak dapat menghapus budget karena masih ada PR yang berhubungan.');
+        }
+
+        // Hapus Budget
         $budget->delete();
 
-        return redirect()->route('adminsystem.budget.index')->with('success', 'Budget Plan berhasil dihapus.');
+        // Opsional: Hapus BudgetFix jika usage = 0
+        $budgetFix = BudgetFix::where('gl_code', $glCode)
+            ->where('year', $year)
+            ->latest()
+            ->first();
+
+        if ($budgetFix && $budgetFix->usage == 0) {
+            $budgetFix->delete();
+        }
+
+        return redirect()->route('adminsystem.budget.index')->with('success', 'Data budget berhasil dihapus.');
     }
+
     public function budget_update(Request $request, $id)
     {
         // Validasi input
@@ -372,13 +398,36 @@ class BudgetController extends Controller
     public function pr_destroy($id)
     {
         $pr = PurchaseRequest::findOrFail($id);
+
+        // Ambil data terkait untuk penyesuaian budget
+        $valuation = $pr->valuation_price;
+        $gl_code = $pr->gl_code;
+
+        // Hapus PR
         $pr->delete();
 
-        return redirect()->route('adminsystem.budget_pr.pr.index')->with('success', 'Purchase Request berhasil dihapus.');
+        // Update BudgetFix (optional: sesuaikan logika sesuai kebutuhan kamu)
+        $budgetFix = BudgetFix::where('gl_code', $gl_code)->latest()->first();
+
+        if ($budgetFix) {
+            $newUsage = $budgetFix->usage - $valuation;
+            $newSisa = $budgetFix->sisa + $valuation;
+            $newPercentageUsage = ($budgetFix->bg_approve > 0) ? ($newUsage / $budgetFix->bg_approve) * 100 : 0;
+
+            // Simpan perubahan budget
+            $budgetFix->update([
+                'usage' => $newUsage,
+                'sisa' => $newSisa,
+                'percentage_usage' => $newPercentageUsage,
+            ]);
+        }
+
+        return redirect()->route('adminsystem.pr.index')->with('success', 'Purchase Request berhasil dihapus.');
     }
 
 
-                                                                                                                                      
+
+
 
 
 
