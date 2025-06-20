@@ -65,7 +65,7 @@ class NonCompliantController extends Controller
             // Buat nama file unik dan simpan ke folder 'images' dalam storage/public
             $imageName = time() . '.' . $request->foto->extension();
             $request->foto->move(public_path('storage/pelanggar'), $imageName);
-            $data['foto'] = 'images/' . $imageName;
+            $data['foto'] = 'pelanggar/' . $imageName;
         }
 
         NonCompliant::create($data);
