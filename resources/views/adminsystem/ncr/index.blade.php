@@ -51,19 +51,17 @@
                                                 <i class="fas fa-times m-1"></i> Reject
                                             </button>
                                             @endif
-                                          
+
+                                            <form
+                                                action="{{ route('adminsystem.ncr.show', ['id' => $request->id]) }}"
+                                                method="GET"
+                                                style="display:inline;"
+                                                title="View details">
+                                                <button type="submit" class="btn btn-light btn-xs">
+                                                    <i class="fas fa-eye"></i> Show
+                                                </button>
+                                            </form>
                                         </td>
-                                        <td class="text-center"></td>
-                                        <form
-                                        action="{{ route('adminsystem.ncr.show', ['id' => $request->id]) }}"
-                                        method="GET"
-                                        style="display:inline;"
-                                        title="View details">
-                                        <button type="submit" class="btn btn-light btn-xs">
-                                            <i class="fas fa-eye"></i> Show
-                                        </button>
-                                    </form>
-                                </td>
 
                                     </tr>
                                     @endforeach
@@ -329,6 +327,17 @@
                                             @endif
                                             @endif
                                         </div>
+                                    </td>
+                                    <td class="align-middle text-center text-xs">
+                                        <form
+                                            action="{{ route('adminsystem.ncr.show', ['id' => $nc->id]) }}"
+                                            method="GET"
+                                            style="display:inline;"
+                                            title="View details">
+                                            <button type="submit" class="btn btn-light btn-xs">
+                                                <i class="fas fa-eye"></i> Show
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                                 @endforeach
