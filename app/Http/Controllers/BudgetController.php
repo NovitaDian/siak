@@ -281,6 +281,7 @@ class BudgetController extends Controller
 
         if ($budgetFix) {
             $usage = $validated['valuation_price'];
+            $pr_date = $validated['pr_date'];
             $bg_approve = $budgetFix->bg_approve ?? 0;
             $internal_order = $validated['io_assetcode'] ?? null;
             $sisa_usage = $budgetFix->sisa - $usage;
@@ -300,6 +301,7 @@ class BudgetController extends Controller
                     'plan' => $budgetFix->plan,
                     'kategori' => $budgetFix->kategori,
                     'year' => $budgetFix->year,
+                    'pr_date' => $pr_date,
                 ]);
                 // Update sisa pada record sebelumnya (budgetFix lama)
                 $budgetFix->update([
@@ -312,6 +314,8 @@ class BudgetController extends Controller
                     'internal_order' => $internal_order,
                     'percentage_usage' => $percentage_usage,
                     'sisa' => $sisa_usage, // update dengan sisa yang benar
+                    'pr_date' => $pr_date,
+
                 ]);
             }
         }
@@ -361,6 +365,7 @@ class BudgetController extends Controller
 
             $bg_approve = $budgetFix->bg_approve ?? 0;
             $internal_order = $validated['io_assetcode'] ?? null;
+            $pr_date = $validated['pr_date'] ?? null;
 
             $newSisa = $budgetFix->sisa - $diffUsage;
             $newPercentageUsage = ($bg_approve > 0) ? (($budgetFix->usage + $diffUsage) / $bg_approve) * 100 : 0;
@@ -379,6 +384,7 @@ class BudgetController extends Controller
                     'plan' => $budgetFix->plan,
                     'kategori' => $budgetFix->kategori,
                     'year' => $budgetFix->year,
+                    'pr_date' => $pr_date,
                 ]);
             } elseif ($budgetFix->usage == 0) {
                 // Jika belum ada usage, update baris yang sama
@@ -387,6 +393,8 @@ class BudgetController extends Controller
                     'internal_order' => $internal_order,
                     'percentage_usage' => $newPercentageUsage,
                     'sisa' => $newSisa,
+                    'pr_date' => $pr_date,
+
                 ]);
             }
         }
