@@ -255,8 +255,6 @@
                                                 {{ $daily_fix->rincian_laporan }}
                                             </p>
                                         </td>
-
-
                                         <td class="align-middle text-center">
                                             @if ($daily_fix->status == 'Nothing')
                                             <button class="btn btn-secondary btn-xs" onclick="showRequestModal('{{ $daily_fix->id }}')">
@@ -358,6 +356,13 @@
     </div>
 </main>
 <!-- Include jQuery and Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
 <script>
     // Ambil CSRF token dari meta tag
