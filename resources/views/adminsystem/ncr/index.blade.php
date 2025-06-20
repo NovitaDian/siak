@@ -289,17 +289,17 @@
                                             @endif
                                         </div>
                                     </td>
- <td class="align-middle text-center">
-                                        @if ($ppe_fix->status == 'Nothing')
-                                        <button class="btn btn-info btn-xs" onclick="showRequestModal('{{ $ppe_fix->id }}')">
+                                    <td class="align-middle text-center">
+                                        @if ($ncr_fix->status == 'Nothing')
+                                        <button class="btn btn-info btn-xs" onclick="showRequestModal('{{ $ncr_fix->id }}')">
                                             <i class="fas fa-paper-plane me-1" style="font-size: 12px;"></i> Request
                                         </button>
 
-                                        @elseif ($ppe_fix->status == 'Pending')
+                                        @elseif ($ncr_fix->status == 'Pending')
                                         <span class="badge bg-warning text-dark">Pending</span>
-                                        @elseif ($ppe_fix->status == 'Approved')
+                                        @elseif ($ncr_fix->status == 'Approved')
                                         @php
-                                        $request = $requests->firstWhere('sent_ppe_id', $ppe_fix->id);
+                                        $request = $requests->firstWhere('sent_ppe_id', $ncr_fix->id);
                                         @endphp
 
                                         @if ($request)
@@ -310,16 +310,16 @@
                                             <ul class="dropdown-menu">
                                                 @if ($request->type == 'Edit')
                                                 <li>
-                                                        <a href="{{ $ncr_fix->status_ncr === 'Closed' 
+                                                    <a href="{{ $ncr_fix->status_ncr === 'Closed' 
             ? route('adminsystem.ncr.edit_closed', $ncr_fix->id)
             : route('adminsystem.ncr.sent_edit', $ncr_fix->id) }}"
-                                                            class="dropdown-item">
-                                                            <i class="fas fa-edit me-1"></i> Edit
-                                                        </a>
-                                                    </li>
+                                                        class="dropdown-item">
+                                                        <i class="fas fa-edit me-1"></i> Edit
+                                                    </a>
+                                                </li>
                                                 @elseif ($request->type == 'Delete')
                                                 <li>
-                                                    <form action="{{ route('adminsystem.ppe.sent_destroy', $ppe_fix->id) }}" method="POST" onsubmit="return confirm('Anda yakin akan menghapus data ini?')">
+                                                    <form action="{{ route('adminsystem.ncr.sent_destroy', $ncr_fix->id) }}" method="POST" onsubmit="return confirm('Anda yakin akan menghapus data ini?')">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit" class="dropdown-item text-danger">
@@ -334,11 +334,11 @@
                                         <span class="text-danger">No corresponding request found</span>
                                         @endif
 
-                                        @elseif ($ppe_fix->status == 'Rejected')
+                                        @elseif ($ncr_fix->status == 'Rejected')
                                         <span class="badge bg-danger text-white">Rejected</span>
                                         @endif
                                     </td>
-                                   
+
 
                                     <td class="text-center text-xs">
                                         @if ($ncr_fix->status_ncr === 'Closed')
