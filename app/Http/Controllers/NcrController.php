@@ -122,9 +122,10 @@ class NcrController extends Controller
         $data['writer'] = Auth::user()->name;
 
         if ($request->hasFile('foto')) {
-            $foto = $request->file('foto');
-            $fotoPath = $foto->store('uploads/foto', 'public');
-            $data['foto'] = $fotoPath;
+            // Buat nama file unik dan simpan ke folder 'images' dalam storage/public
+            $imageName = time() . '.' . $request->foto->extension();
+            $request->foto->move(public_path('storage/ncr'), $imageName);
+            $data['foto'] = 'ncr/' . $imageName;
         }
 
         Ncr::create($data);
