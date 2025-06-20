@@ -25,6 +25,7 @@
                         <table class="table align-items-center mb-0" id="search">
                             <thead>
                                 <tr>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">PR Date</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Kode GL Account</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama GL Account</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Internal Order</th>
@@ -35,6 +36,9 @@
                             <tbody>
                                 @foreach ($budgets as $budget)
                                 <tr>
+                                    <td class="text-center">
+                                        <p class="text-xs font-weight-bold mb-0">{{ $budget->pr_date }}</p>
+                                    </td>
                                     <td class="text-center">
                                         <p class="text-xs font-weight-bold mb-0">{{ $budget->gl_code }}</p>
                                     </td>
