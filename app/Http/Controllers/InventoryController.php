@@ -216,30 +216,32 @@ class InventoryController extends Controller
         $request->validate([
             'barang_id' => 'required|exists:barang,id',
             'quantity' => 'required|integer|min:1',
-            'unit' => 'required|string|max:50',
+            'unit' => 'required|string|max:50', // Validasi tetap digunakan meskipun diset otomatis
             'keterangan' => 'nullable|string|max:255',
             'tanggal' => 'required|date',
         ]);
 
+        // Ambil data barang hanya sekali
+        $barang = Barang::findOrFail($request->barang_id);
+
         // Simpan ke tabel pemasukan
         $pemasukan = new Pemasukan();
-        $pemasukan->barang_id = $request->barang_id;
+        $pemasukan->barang_id = $barang->id;
         $pemasukan->quantity = $request->quantity;
-        $pemasukan->unit = $request->unit;
+        $pemasukan->unit = $barang->unit; // Diambil dari tabel barang, bukan dari input
         $pemasukan->keterangan = $request->keterangan;
         $pemasukan->tanggal = $request->tanggal;
         $pemasukan->save();
 
         // Update quantity barang
-        $barang = Barang::findOrFail($request->barang_id);
         $barang->quantity += $request->quantity;
         $barang->save();
 
         // Simpan ke tabel transaction
         $transaction = new Transaction();
-        $transaction->barang_id = $request->barang_id;
+        $transaction->barang_id = $barang->id;
         $transaction->quantity = $request->quantity;
-        $transaction->unit = $request->unit;
+        $transaction->unit = $barang->unit;
         $transaction->keterangan = $request->keterangan;
         $transaction->tanggal = $request->tanggal;
         $transaction->type = 'Pemasukan';
@@ -247,6 +249,7 @@ class InventoryController extends Controller
 
         return redirect()->route('adminsystem.pemasukan.index')->with('success', 'Pemasukan Barang Berhasil');
     }
+
 
     public function pemasukan_update(Request $request, $id)
     {

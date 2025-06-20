@@ -47,7 +47,7 @@
                             <select class="form-control" id="barang_id" name="barang_id" required>
                                 <option value="">Pilih Barang</option>
                                 @foreach($barangs as $barang)
-                                <option value="{{ $barang->id }}" data-unit="{{ $barang->unit }}">{{ $barang->description }}</option>
+                                <option value="{{ $barang->id }}">{{ $barang->description }}</option>
                                 @endforeach
                             </select>
                             @error('barang_id')
@@ -67,16 +67,7 @@
                             @enderror
                         </div>
                     </div>
-                    <!-- Unit -->
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="unit">{{ __('Unit') }}</label>
-                            <input class="form-control" type="text" id="unit" name="unit" value="{{ old('unit') }}" required>
-                            @error('unit')
-                            <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                            @enderror
-                        </div>
-                    </div>
+
                 </div>
 
 
@@ -91,26 +82,15 @@
                         @enderror
                     </div>
                 </div>
-       
 
-        <!-- Submit Button -->
-        <div class="d-flex justify-content-end">
-            <button type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">{{ __('Submit Pemasukan') }}</button>
+
+                <!-- Submit Button -->
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">{{ __('Submit Pemasukan') }}</button>
+                </div>
+            </form>
         </div>
-        </form>
     </div>
 </div>
-</div>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const barangSelect = document.getElementById('barang_id');
-        const unitInput = document.getElementById('unit');
 
-        barangSelect.addEventListener('change', function() {
-            const selectedOption = barangSelect.options[barangSelect.selectedIndex];
-            const unit = selectedOption.getAttribute('data-unit');
-            unitInput.value = unit; // Set value of unit input
-        });
-    });
-</script>
 @endsection
