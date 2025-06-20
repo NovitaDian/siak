@@ -7,7 +7,72 @@
 </div>
 @endif
 <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg">
+    <div class="row">
+        <div class="col-12">
+            <div class="card mb-4">
+                <div class="card-header pb-0">
+                    <h6>REQUEST</h6>
+                </div>
+                <div class="card-body px-0 pt-0 pb-2">
+                    <div class="table-responsive p-0">
+                        <div class="card-header pb-0">
+                            <table class="table align-items-center mb-0" id="requestTable">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Pengirim</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Waktu Pengajuan</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Jenis Pengajuan</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Alasan</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="notificationTableBody">
+                                    @foreach ($allRequests as $request)
+                                    <tr>
+                                        <td class="text-center text-xs">{{ $request->nama_pengirim }}</td>
+                                        <td class="text-center text-xs">{{ $request->created_at->format('d/m/Y') }}</td>
+                                        <td class="text-center text-xs">{{ $request->type }}</td>
+                                        <td class="text-center text-xs">{{ $request->reason }}</td>
+                                        <td class="text-center" id="status-{{$request->id}}">{{ $request->status }}</td>
+                                        <td class="text-center">
+                                            @if ($request->status == 'Pending')
+                                            <button
+                                                class="btn btn-success btn-xs me-1"
+                                                onclick="approveRequest('{{ $request->id }}')"
+                                                title="Approve this request">
+                                                <i class="fas fa-check m-1"></i> Approve
+                                            </button>
 
+                                            <button
+                                                class="btn btn-danger btn-xs me-1"
+                                                onclick="rejectRequest('{{ $request->id }}')"
+                                                title="Reject this request">
+                                                <i class="fas fa-times m-1"></i> Reject
+                                            </button>
+                                            @endif
+
+                                            <form
+                                                action="{{ route('operator.ncr.show', ['id' => $request->id]) }}"
+                                                method="GET"
+                                                style="display:inline;"
+                                                title="View details">
+                                                <button type="submit" class="btn btn-light btn-xs">
+                                                    <i class="fas fa-eye"></i> Show
+                                                </button>
+                                            </form>
+                                        </td>
+
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="row">
         <div class="col-12">
@@ -169,7 +234,7 @@
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">HSE Inspector</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal Audit</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Auditee</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Target Penyelesaian</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Target Perbaikan</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Durasi NCR</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status Request</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Close</th>
@@ -185,18 +250,21 @@
                                     <td class="text-center text-xs">{{ $ncr_fix->nama_hs_officer_1 }}</td>
                                     <td class="text-center text-xs">{{ \Carbon\Carbon::parse($ncr_fix->tanggal_audit)->format('d/m/Y') }}</td>
                                     <td class="text-center text-xs">{{ $ncr_fix->nama_auditee }}</td>
+
                                     @php
                                     $estimasiDate = \Carbon\Carbon::parse($ncr_fix->estimasi);
                                     $isLate = now()->greaterThanOrEqualTo($estimasiDate) && $ncr_fix->status_ncr == 'Open';
                                     @endphp
-
                                     <td class="text-center text-xs">
                                         <span class="badge bg-{{ $isLate ? 'danger' : 'success' }}">
                                             {{ $estimasiDate->format('d/m/Y') }}
                                         </span>
                                     </td>
+
                                     <td class="text-center text-xs">{{ $ncr_fix->durasi_ncr }}</td>
                                     <td class="text-center text-xs">{{ $ncr_fix->status }}</td>
+
+                                    {{-- Tombol Close/Open --}}
                                     <td class="align-middle text-center text-xs">
                                         <div class="d-flex flex-wrap gap-1 justify-content-center">
                                             @if ($ncr_fix->status_ncr === 'Open')
@@ -204,28 +272,25 @@
                                                 <i class="fas fa-lock me-1" style="font-size: 12px;"></i> Close
                                             </a>
                                             @elseif ($ncr_fix->status_ncr === 'Closed')
-                                            <span class="text-center text-xs">
-                                                Closed
-                                            </span>
+                                            <span class="text-center text-xs">Closed</span>
                                             @endif
                                         </div>
                                     </td>
+
+                                    {{-- Tombol Request/Edit/Delete --}}
                                     <td class="align-middle text-center text-xs">
                                         <div class="d-flex justify-content-center gap-1 flex-nowrap">
-
                                             @php
-                                            $matchedRequest = $allRequests->firstWhere('sent_ncr_id', $ncr_fix->id);
+                                            $matchedRequest = $latestRequests->firstWhere('sent_ncr_id', $ncr_fix->id);
                                             $isDeleteRequest = $matchedRequest && $matchedRequest->type === 'Delete';
                                             $isEditRequest = $matchedRequest && $matchedRequest->type === 'Edit';
                                             @endphp
 
-                                            {{-- STATUS: Nothing --}}
                                             @if ($ncr_fix->status === 'Nothing')
                                             <button class="btn btn-info btn-xs" onclick="showRequestModal('{{ $ncr_fix->id }}')">
                                                 <i class="fas fa-paper-plane me-1" style="font-size: 12px;"></i> Request
                                             </button>
 
-                                            {{-- STATUS: Approved --}}
                                             @elseif ($ncr_fix->status === 'Approved')
                                             @if ($matchedRequest)
                                             <div class="dropdown d-inline">
@@ -236,8 +301,9 @@
                                                     @if ($isEditRequest)
                                                     <li>
                                                         <a href="{{ $ncr_fix->status_ncr === 'Closed' 
-                                    ? route('operator.ncr.edit_closed', $ncr_fix->id)
-                                    : route('operator.ncr.sent_edit', $ncr_fix->id) }}" class="dropdown-item">
+                                                ? route('operator.ncr.edit_closed', $ncr_fix->id)
+                                                : route('operator.ncr.sent_edit', $ncr_fix->id) }}"
+                                                            class="dropdown-item">
                                                             <i class="fas fa-edit me-1"></i> Edit
                                                         </a>
                                                     </li>
@@ -260,23 +326,29 @@
                                             </span>
                                             @endif
                                             @endif
-                                    <td> @if ($ncr_fix->status_ncr === 'Closed')
-                                            <button type="submit" class="btn btn-light btn-xs d-flex align-items-center">
-                                                <i class="fas fa-eye me-1" style="font-size: 12px;"></i> Show
+                                        </div>
+                                    </td>
+                                    <td class="align-middle text-center text-xs">
+                                        <form
+                                            action="{{ route('operator.ncr.sent_show', ['id' => $ncr_fix->id]) }}"
+                                            method="GET"
+                                            style="display:inline;"
+                                            title="View details">
+                                            <button type="submit" class="btn btn-light btn-xs">
+                                                <i class="fas fa-eye"></i> Show
                                             </button>
                                         </form>
-                                        @endif
                                     </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+
+
+                        </table>
                     </div>
-                    </td>
-                    </tr>
-                    @endforeach
-                    </tbody>
-                    </table>
                 </div>
             </div>
         </div>
-    </div>
     </div>
 
     <!-- Modal Request -->
@@ -357,25 +429,43 @@
         $('#sentNcrId').val(ncrId);
         $('#requestModal').modal('show');
     }
-
-    // Handle approve request
-    function approveRequest(requestId) {
+    const csrfToken = '{{ csrf_token() }}';
+    // Fungsi untuk menyetujui permintaan
+    function approveRequest(id) {
         $.ajax({
-            url: '/operator/ncr/approve/' + requestId,
-            type: 'GET',
+            url: "{{ route('operator.ncr.approve', '') }}/" + id, // Menggunakan route Laravel
+            type: 'POST',
+            data: {
+                _token: csrfToken // Menggunakan CSRF token
+            },
             success: function(response) {
-                $('#status-' + requestId).text('Approved');
+                if (response.success) {
+                    $('#status-' + id).text('Approved'); // Perbarui status di tabel
+                } else {
+                    console.error("Approval failed:", response.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Error approving request:", error);
             }
         });
     }
 
-    // Handle reject request
-    function rejectRequest(requestId) {
+    // Fungsi untuk menolak permintaan
+    function rejectRequest(id) {
         $.ajax({
-            url: '/operator/ncr/reject/' + requestId,
-            type: 'GET',
+            url: "{{ route('operator.ncr.reject', '') }}/" + id, // Menggunakan route Laravel
+            type: 'POST',
+            data: {
+                _token: csrfToken // Menggunakan CSRF token
+            },
             success: function(response) {
-                $('#status-' + requestId).text('Rejected');
+                if (response.success) {
+                    $('#status-' + id).text('Rejected'); // Perbarui status di tabel
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Error rejecting request:", error);
             }
         });
     }

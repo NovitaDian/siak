@@ -166,6 +166,7 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::put('/{id}', [NcrController::class, 'update'])->name('update');
 			Route::put('/sent_update/{id}', [NcrController::class, 'sent_update'])->name('sent_update');
 			Route::put('/update_closed/{id}', [NcrController::class, 'updateClose'])->name('update_closed');
+			Route::get('/sent_show{id}', [NcrController::class, 'sent_show'])->name('sent_show');
 			Route::get('/show{id}', [NcrController::class, 'show'])->name('show');
 			Route::delete('/{id}', [NcrController::class, 'destroy'])->name('destroy');
 			Route::delete('/draft_destroy/{id}', [NcrController::class, 'draft_destroy'])->name('draft_destroy');
@@ -247,7 +248,7 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('/search', [BudgetController::class, 'search'])->name('search');
 			Route::get('/create', [BudgetController::class, 'create'])->name('create');
 		});
-	
+
 		Route::prefix('adminsystem/pr')->name('adminsystem.pr.')->group(function () {
 			Route::get('/', [BudgetController::class, 'pr_index'])->name('index');
 			Route::get('/master', [BudgetController::class, 'pr_master'])->name('master');
@@ -529,6 +530,8 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::put('/sent_update/{id}', [NcrController::class, 'operator_sent_update'])->name('sent_update');
 			Route::put('/update_closed/{id}', [NcrController::class, 'operator_updateClose'])->name('update_closed');
 			Route::get('/show{id}', [NcrController::class, 'operator_show'])->name('show');
+			Route::get('/sent_show{id}', [NcrController::class, 'operator_sent_show'])->name('sent_show');
+
 			Route::delete('/{id}', [NcrController::class, 'operator_destroy'])->name('destroy');
 			Route::delete('/draft_destroy/{id}', [NcrController::class, 'operator_draft_destroy'])->name('draft_destroy');
 			Route::delete('/sent_destroy/{id}', [NcrController::class, 'operator_sent_destroy'])->name('sent_destroy');
