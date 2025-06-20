@@ -20,7 +20,7 @@ class BudgetController extends Controller
     {
         $budgets = Budget::all();
         $prs = PurchaseRequest::all();
-        $budget_fixs = BudgetFix::all();
+        $budget_fixs = BudgetFix::orderBy('created_at', 'desc')->get();
         $danaTerpakai = Budget::all();
         $danaTersisa = Budget::all();
         return view('adminsystem.budget_pr.index', compact('budgets', 'danaTerpakai', 'danaTersisa', 'prs', 'budget_fixs'));
