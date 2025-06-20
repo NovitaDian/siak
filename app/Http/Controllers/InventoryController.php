@@ -349,10 +349,12 @@ class InventoryController extends Controller
             'tanggal' => 'required|date',
         ]);
 
+        $barang = Barang::findOrFail($request->barang_id);
+
         $pengeluaran = new Pengeluaran();
         $pengeluaran->barang_id = $request->barang_id;
         $pengeluaran->quantity = $request->quantity;
-        $pengeluaran->unit = $request->unit;
+        $pengeluaran->unit = $barang->unit;
         $pengeluaran->keterangan = $request->keterangan;
         $pengeluaran->tanggal = $request->tanggal;
         $pengeluaran->save();
@@ -364,7 +366,7 @@ class InventoryController extends Controller
         $transaction = new Transaction();
         $transaction->barang_id = $request->barang_id;
         $transaction->quantity = $request->quantity;
-        $transaction->unit = $request->unit;
+        $transaction->unit = $barang->unit;
         $transaction->keterangan = $request->keterangan;
         $transaction->tanggal = $request->tanggal;
         $transaction->type = 'Pengeluaran';
@@ -672,30 +674,31 @@ class InventoryController extends Controller
         $request->validate([
             'barang_id' => 'required|exists:barang,id',
             'quantity' => 'required|integer|min:1',
-            'unit' => 'required|string|max:50',
             'keterangan' => 'nullable|string|max:255',
             'tanggal' => 'required|date',
         ]);
 
+        // Ambil data barang hanya sekali
+        $barang = Barang::findOrFail($request->barang_id);
+
         // Simpan ke tabel pemasukan
         $pemasukan = new Pemasukan();
-        $pemasukan->barang_id = $request->barang_id;
+        $pemasukan->barang_id = $barang->id;
         $pemasukan->quantity = $request->quantity;
-        $pemasukan->unit = $request->unit;
+        $pemasukan->unit = $barang->unit; // Diambil dari tabel barang, bukan dari input
         $pemasukan->keterangan = $request->keterangan;
         $pemasukan->tanggal = $request->tanggal;
         $pemasukan->save();
 
         // Update quantity barang
-        $barang = Barang::findOrFail($request->barang_id);
         $barang->quantity += $request->quantity;
         $barang->save();
 
         // Simpan ke tabel transaction
         $transaction = new Transaction();
-        $transaction->barang_id = $request->barang_id;
+        $transaction->barang_id = $barang->id;
         $transaction->quantity = $request->quantity;
-        $transaction->unit = $request->unit;
+        $transaction->unit = $barang->unit;
         $transaction->keterangan = $request->keterangan;
         $transaction->tanggal = $request->tanggal;
         $transaction->type = 'Pemasukan';
@@ -798,15 +801,15 @@ class InventoryController extends Controller
         $request->validate([
             'barang_id' => 'required|exists:barang,id',
             'quantity' => 'required|integer|min:1',
-            'unit' => 'required|string|max:50',
             'keterangan' => 'nullable|string|max:255',
             'tanggal' => 'required|date',
         ]);
+        $barang = Barang::findOrFail($request->barang_id);
 
         $pengeluaran = new Pengeluaran();
         $pengeluaran->barang_id = $request->barang_id;
         $pengeluaran->quantity = $request->quantity;
-        $pengeluaran->unit = $request->unit;
+        $pengeluaran->unit = $barang->unit;
         $pengeluaran->keterangan = $request->keterangan;
         $pengeluaran->tanggal = $request->tanggal;
         $pengeluaran->save();
@@ -818,7 +821,7 @@ class InventoryController extends Controller
         $transaction = new Transaction();
         $transaction->barang_id = $request->barang_id;
         $transaction->quantity = $request->quantity;
-        $transaction->unit = $request->unit;
+        $transaction->unit = $barang->unit;
         $transaction->keterangan = $request->keterangan;
         $transaction->tanggal = $request->tanggal;
         $transaction->type = 'Pengeluaran';
