@@ -61,9 +61,10 @@ class NonCompliantController extends Controller
         $data['user_id'] = Auth::user()->id;
         $data['writer'] = Auth::user()->name;
 
-        if ($request->hasFile('foto')) {
-            $fotoPath = $request->file('foto')->store('pelanggar/foto', 'public');
-            $data['foto'] = $fotoPath;
+        if ($request->hasFile('image')) {
+            $imageName = time() . '.' . $request->image->extension();
+            $request->image->move(public_path('storage/pelanggar'), $imageName);
+            $request->image = $imageName; // pastikan kolom image di DB adalah string, bukan binary
         }
 
         NonCompliant::create($data);
