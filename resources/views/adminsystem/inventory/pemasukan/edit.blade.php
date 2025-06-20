@@ -46,7 +46,7 @@
                             <select class="form-control" id="barang_id" name="barang_id" required>
                                 <option value="">Pilih Barang</option>
                                 @foreach($barangs as $barang)
-                                <option value="{{ $barang->id }}" data-unit="{{ $barang->unit }}"
+                                <option value="{{ $barang->id }}"
                                     {{ old('barang_id', $pemasukan->barang_id) == $barang->id ? 'selected' : '' }}>
                                     {{ $barang->description }}
                                 </option>
@@ -57,9 +57,8 @@
                             @enderror
                         </div>
                     </div>
-                </div>
 
-                <div class="row">
+
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="quantity">{{ __('Quantity') }}</label>
@@ -70,37 +69,27 @@
                         </div>
                     </div>
 
+
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="unit">{{ __('Unit') }}</label>
-                            <input class="form-control" type="text" id="unit" name="unit" value="{{ old('unit', $pemasukan->unit) }}" required>
-                            @error('unit')
+                            <label for="keterangan">{{ __('Keterangan') }}</label>
+                            <textarea class="form-control" id="keterangan" name="keterangan" rows="3">{{ old('keterangan', $pemasukan->keterangan) }}</textarea>
+                            @error('keterangan')
                             <p class="text-danger text-xs mt-2">{{ $message }}</p>
                             @enderror
                         </div>
                     </div>
-                </div>
 
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="keterangan">{{ __('Keterangan') }}</label>
-                        <textarea class="form-control" id="keterangan" name="keterangan" rows="3">{{ old('keterangan', $pemasukan->keterangan) }}</textarea>
-                        @error('keterangan')
-                        <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                        @enderror
+                    <div class="d-flex justify-content-end">
+                        <button type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">{{ __('Update Pemasukan') }}</button>
                     </div>
-                </div>
-
-                <div class="d-flex justify-content-end">
-                    <button type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">{{ __('Update Pemasukan') }}</button>
-                </div>
             </form>
         </div>
     </div>
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         const barangSelect = document.getElementById('barang_id');
         const unitInput = document.getElementById('unit');
 
@@ -110,7 +99,7 @@
             unitInput.value = selectedOption.getAttribute('data-unit');
         }
 
-        barangSelect.addEventListener('change', function () {
+        barangSelect.addEventListener('change', function() {
             const selectedOption = barangSelect.options[barangSelect.selectedIndex];
             const unit = selectedOption.getAttribute('data-unit');
             unitInput.value = unit;

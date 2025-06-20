@@ -58,17 +58,7 @@
                             @enderror
                         </div>
                     </div>
-              
-
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="unit">{{ __('Unit') }}</label>
-                            <input class="form-control" type="text" id="unit" name="unit" value="{{ old('unit', $pengeluaran->unit) }}" required>
-                            @error('unit')
-                            <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                            @enderror
-                        </div>
-                    </div>
+                               
 
                     <div class="col-md-6">
                         <div class="form-group">
