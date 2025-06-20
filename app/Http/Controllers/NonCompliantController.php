@@ -114,7 +114,7 @@ class NonCompliantController extends Controller
             $fotoPath = $request->file('foto')->store('pelanggar/foto', 'public');
             $data['foto'] = $fotoPath;
         }
-        $data['status'] = 'Pending';
+        $data['status'] = 'Nothing';
         $nonCompliant->update($data);
 
         return redirect()->route('adminsystem.ppe.show', $data['id_ppe'])
@@ -291,7 +291,7 @@ class NonCompliantController extends Controller
             $fotoPath = $request->file('foto')->store('pelanggar/foto', 'public');
             $data['foto'] = $fotoPath;
         }
-        $data['status'] = 'Pending';
+        $data['status'] = 'Nothing';
         $nonCompliant->update($data);
 
         return redirect()->route('operator.ppe.show', $data['id_ppe'])
