@@ -131,7 +131,7 @@ class BudgetController extends Controller
         return redirect()->route('adminsystem.budget.index')->with('success', 'Dokumen berhasil diunggah.');
     }
 
-    public function budget_destroy(Document $id)
+    public function budget_destroy($id)
     {
         $budget = PurchaseRequest::findOrFail($id);
         $budget->delete();

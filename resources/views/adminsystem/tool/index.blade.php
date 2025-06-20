@@ -413,10 +413,6 @@
             }
         });
     }
-
-
-
-
     // Fungsi untuk mengedit item yang telah dikirim
     function sentEditAction(id) {
         window.location.href = "{{ url('adminsystem/tool/sent_edit') }}/" + id; // Menggunakan URL Laravel
