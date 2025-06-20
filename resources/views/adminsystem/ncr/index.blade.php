@@ -330,7 +330,7 @@
                                     </td>
                                     <td class="align-middle text-center text-xs">
                                         <form
-                                            action="{{ route('adminsystem.ncr.show', ['id' => $nc->id]) }}"
+                                            action="{{ route('adminsystem.ncr.sent_show', ['id' => $ncr_fix->id]) }}"
                                             method="GET"
                                             style="display:inline;"
                                             title="View details">
