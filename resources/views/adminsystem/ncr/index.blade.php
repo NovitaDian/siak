@@ -297,29 +297,31 @@
 
                                         @elseif ($ncr_fix->status == 'Pending')
                                         <span class="badge bg-warning text-dark">Pending</span>
+
                                         @elseif ($ncr_fix->status == 'Approved')
                                         @php
-                                        $request = $requests->firstWhere('sent_ppe_id', $ncr_fix->id);
+                                        $request = $requests->firstWhere('sent_ncr_id', $ncr_fix->id);
                                         @endphp
 
                                         @if ($request)
                                         <div class="dropdown d-inline">
-                                            <button class="btn btn-success btn-xs dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <button class="btn btn-success btn-xs dropdown-toggle" type="button" data-bs-toggle="dropdown">
                                                 <i class="fas fa-check-circle me-1" style="font-size: 12px;"></i> Approved
                                             </button>
                                             <ul class="dropdown-menu">
-                                                @if ($request->type == 'Edit')
+                                                @if ($request->type === 'Edit')
                                                 <li>
                                                     <a href="{{ $ncr_fix->status_ncr === 'Closed' 
-            ? route('adminsystem.ncr.edit_closed', $ncr_fix->id)
-            : route('adminsystem.ncr.sent_edit', $ncr_fix->id) }}"
+                                ? route('adminsystem.ncr.edit_closed', $ncr_fix->id)
+                                : route('adminsystem.ncr.sent_edit', $ncr_fix->id) }}"
                                                         class="dropdown-item">
                                                         <i class="fas fa-edit me-1"></i> Edit
                                                     </a>
                                                 </li>
-                                                @elseif ($request->type == 'Delete')
+                                                @elseif ($request->type === 'Delete')
                                                 <li>
-                                                    <form action="{{ route('adminsystem.ncr.sent_destroy', $ncr_fix->id) }}" method="POST" onsubmit="return confirm('Anda yakin akan menghapus data ini?')">
+                                                    <form action="{{ route('adminsystem.ncr.sent_destroy', $ncr_fix->id) }}" method="POST"
+                                                        onsubmit="return confirm('Anda yakin akan menghapus data ini?')">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit" class="dropdown-item text-danger">
@@ -338,6 +340,7 @@
                                         <span class="badge bg-danger text-white">Rejected</span>
                                         @endif
                                     </td>
+
 
 
                                     <td class="text-center text-xs">
