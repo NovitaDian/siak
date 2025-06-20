@@ -133,7 +133,7 @@ class BudgetController extends Controller
 
     public function budget_destroy($id)
     {
-        $budget = PurchaseRequest::findOrFail($id);
+        $budget = Budget::findOrFail($id);
         $budget->delete();
 
         return redirect()->route('adminsystem.budget_pr.bug=dget.index')->with('success', 'Budget Plan berhasil dihapus.');
@@ -516,7 +516,7 @@ class BudgetController extends Controller
 
     public function operator_budget_destroy(Document $id)
     {
-        $budget = PurchaseRequest::findOrFail($id);
+        $budget = Budget::findOrFail($id);
         $budget->delete();
 
         return redirect()->route('operator.budget_pr.bug=dget.index')->with('success', 'Budget Plan berhasil dihapus.');
