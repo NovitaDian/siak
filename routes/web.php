@@ -247,12 +247,7 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('/search', [BudgetController::class, 'search'])->name('search');
 			Route::get('/create', [BudgetController::class, 'create'])->name('create');
 		});
-		Route::prefix('adminsystem/budget')->name('adminsystem.budget.')->group(function () {
-			Route::get('/', [BudgetController::class, 'budget_index'])->name('index');
-			Route::post('/', [BudgetController::class, 'budget_store'])->name('store');
-			Route::delete('/{document}', [BudgetController::class, 'budget_destroy'])->name('destroy');
-			Route::get('/search', [BudgetController::class, 'budget_search'])->name('search');
-		});
+	
 		Route::prefix('adminsystem/pr')->name('adminsystem.pr.')->group(function () {
 			Route::get('/', [BudgetController::class, 'pr_index'])->name('index');
 			Route::get('/master', [BudgetController::class, 'pr_master'])->name('master');
