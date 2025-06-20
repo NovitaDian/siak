@@ -39,11 +39,7 @@ class NonCompliantController extends Controller
         return response()->json($bagians);
     }
 
-    // Menyimpan data NonCompliant baru
-    use Illuminate\Support\Facades\Auth;
-    use Illuminate\Support\Facades\Storage;
-    use App\Models\NonCompliant;
-
+  
     public function store(Request $request)
     {
         $request->validate([
