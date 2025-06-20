@@ -29,6 +29,7 @@ class NcrController extends Controller
 
         // Ambil data draft NCR oleh user login
         $ncrs = Ncr::where('writer', $user->name)->get();
+        $allRequests = NcrRequest::all();
 
         // Ambil semua request (Edit/Delete)
         $latestRequests = NcrRequest::orderByDesc('id')
@@ -47,7 +48,7 @@ class NcrController extends Controller
                 ->get();
         }
 
-        return view('adminsystem.ncr.index', compact('ncrs', 'ncr_fixs', 'latestRequests'));
+        return view('adminsystem.ncr.index', compact('ncrs', 'ncr_fixs', 'latestRequests', 'allRequests'));
     }
 
 
