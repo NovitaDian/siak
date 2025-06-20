@@ -136,7 +136,7 @@ class BudgetController extends Controller
         $budget = Budget::findOrFail($id);
         $budget->delete();
 
-        return redirect()->route('adminsystem.budget_pr.bug=dget.index')->with('success', 'Budget Plan berhasil dihapus.');
+        return redirect()->route('adminsystem.budget.index')->with('success', 'Budget Plan berhasil dihapus.');
     }
     public function budget_update(Request $request, $id)
     {
@@ -519,7 +519,7 @@ class BudgetController extends Controller
         $budget = Budget::findOrFail($id);
         $budget->delete();
 
-        return redirect()->route('operator.budget_pr.bug=dget.index')->with('success', 'Budget Plan berhasil dihapus.');
+        return redirect()->route('operator.budget.index')->with('success', 'Budget Plan berhasil dihapus.');
     }
     public function operator_budget_update(Request $request, $id)
     {
