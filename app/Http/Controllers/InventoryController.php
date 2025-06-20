@@ -216,7 +216,6 @@ class InventoryController extends Controller
         $request->validate([
             'barang_id' => 'required|exists:barang,id',
             'quantity' => 'required|integer|min:1',
-            'unit' => 'required|string|max:50', // Validasi tetap digunakan meskipun diset otomatis
             'keterangan' => 'nullable|string|max:255',
             'tanggal' => 'required|date',
         ]);
