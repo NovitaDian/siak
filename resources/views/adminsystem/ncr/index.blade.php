@@ -289,27 +289,27 @@
                                             @endif
                                         </div>
                                     </td>
+ <td class="align-middle text-center">
+                                        @if ($ppe_fix->status == 'Nothing')
+                                        <button class="btn btn-info btn-xs" onclick="showRequestModal('{{ $ppe_fix->id }}')">
+                                            <i class="fas fa-paper-plane me-1" style="font-size: 12px;"></i> Request
+                                        </button>
 
-                                    <td class="text-center text-xs">
-                                        <div class="d-flex justify-content-center gap-1 flex-nowrap">
-                                            @php
-                                            $matchedRequest = $allRequests->firstWhere('sent_ncr_id', $ncr_fix->id);
-                                            $isDeleteRequest = $matchedRequest && $matchedRequest->type === 'Delete';
-                                            $isEditRequest = $matchedRequest && $matchedRequest->type === 'Edit';
-                                            @endphp
+                                        @elseif ($ppe_fix->status == 'Pending')
+                                        <span class="badge bg-warning text-dark">Pending</span>
+                                        @elseif ($ppe_fix->status == 'Approved')
+                                        @php
+                                        $request = $requests->firstWhere('sent_ppe_id', $ppe_fix->id);
+                                        @endphp
 
-                                            @if ($ncr_fix->status === 'Nothing')
-                                            <button class="btn btn-info btn-xs" onclick="showRequestModal('{{ $ncr_fix->id }}')">
-                                                <i class="fas fa-paper-plane me-1" style="font-size: 12px;"></i> Request
+                                        @if ($request)
+                                        <div class="dropdown d-inline">
+                                            <button class="btn btn-success btn-xs dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="fas fa-check-circle me-1" style="font-size: 12px;"></i> Approved
                                             </button>
-                                            @elseif ($ncr_fix->status === 'Approved')
-                                            <div class="dropdown d-inline">
-                                                <button class="btn btn-success btn-xs dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                                    <i class="fas fa-check-circle me-1" style="font-size: 12px;"></i> Approved
-                                                </button>
-                                                <ul class="dropdown-menu">
-                                                    @if ($isEditRequest && !$isDeleteRequest)
-                                                    <li>
+                                            <ul class="dropdown-menu">
+                                                @if ($request->type == 'Edit')
+                                                <li>
                                                         <a href="{{ $ncr_fix->status_ncr === 'Closed' 
             ? route('adminsystem.ncr.edit_closed', $ncr_fix->id)
             : route('adminsystem.ncr.sent_edit', $ncr_fix->id) }}"
@@ -317,24 +317,28 @@
                                                             <i class="fas fa-edit me-1"></i> Edit
                                                         </a>
                                                     </li>
-                                                    @elseif ($isDeleteRequest && !$isEditRequest)
-                                                    <li>
-                                                        <form action="{{ route('adminsystem.ncr.sent_destroy', $ncr_fix->id) }}" method="POST" onsubmit="return confirm('Anda yakin akan menghapus data ini?')">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="dropdown-item text-danger">
-                                                                <i class="fas fa-trash-alt me-1"></i> Hapus
-                                                            </button>
-                                                        </form>
-                                                    </li>
-                                                    @endif
-                                                </ul>
-
-
-                                            </div>
-                                            @endif
+                                                @elseif ($request->type == 'Delete')
+                                                <li>
+                                                    <form action="{{ route('adminsystem.ppe.sent_destroy', $ppe_fix->id) }}" method="POST" onsubmit="return confirm('Anda yakin akan menghapus data ini?')">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="dropdown-item text-danger">
+                                                            <i class="fas fa-trash-alt me-1"></i> Hapus
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                                @endif
+                                            </ul>
                                         </div>
+                                        @else
+                                        <span class="text-danger">No corresponding request found</span>
+                                        @endif
+
+                                        @elseif ($ppe_fix->status == 'Rejected')
+                                        <span class="badge bg-danger text-white">Rejected</span>
+                                        @endif
                                     </td>
+                                   
 
                                     <td class="text-center text-xs">
                                         @if ($ncr_fix->status_ncr === 'Closed')
