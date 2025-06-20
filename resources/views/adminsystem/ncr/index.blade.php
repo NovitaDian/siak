@@ -302,7 +302,7 @@
                                                 <i class="fas fa-paper-plane me-1" style="font-size: 12px;"></i> Request
                                             </button>
                                             {{-- STATUS: Approved --}}
-                                            @if ($ncr_fix->status === 'Approved')
+                                            @elseif ($ncr_fix->status === 'Approved')
                                             <div class="dropdown d-inline">
                                                 <button class="btn btn-success btn-xs dropdown-toggle" type="button" data-bs-toggle="dropdown">
                                                     <i class="fas fa-check-circle me-1" style="font-size: 12px;"></i> Approved
@@ -331,6 +331,7 @@
                                                 </ul>
                                             </div>
                                             @else
+                                            {{-- kondisi lainnya --}}
                                             @endif
                                     <td> @if ($ncr_fix->status_ncr === 'Closed')
                                         <form action="{{ route('adminsystem.ncr.show', ['id' => $ncr_fix->id]) }}" method="GET" class="m-0">
