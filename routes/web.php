@@ -465,7 +465,7 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('/{id}/sent_edit', [IncidentController::class, 'operator_sent_edit'])->name('sent_edit');
 			Route::put('/sent{id}', [IncidentController::class, 'operator_sent_update'])->name('sent_update');
 			Route::put('/{id}', [IncidentController::class, 'operator_update'])->name('update');
-			Route::get('/{id}', [IncidentController::class, 'operator_show'])->name('show');
+			Route::get('/show{id}', [IncidentController::class, 'operator_show'])->name('show');
 			Route::delete('/{id}', [IncidentController::class, 'operator_destroy'])->name('destroy');
 			Route::delete('/sent_destroy/{id}', [IncidentController::class, 'operator_sent_destroy'])->name('sent_destroy');
 			Route::delete('/draft_destroy/{id}', [IncidentController::class, 'operator_draft_destroy'])->name('draft_destroy');
