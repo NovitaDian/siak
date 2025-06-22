@@ -30,6 +30,7 @@
                         </button>
                     </div>
                     @endif
+                    <input type="hidden" name="budget_id" value="{{ request('budget_id') }}">
 
                     <div class="row">
                         <div class="col-md-6">

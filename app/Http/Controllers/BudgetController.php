@@ -157,21 +157,30 @@ class BudgetController extends Controller
         return view('adminsystem.budget_pr.pr.index', compact('prs', 'gls'));
     }
 
-    public function pr_create()
+    public function pr_create(Request $request)
     {
+        $budgetId = $request->query('budget_id');
+        $budget = Budget::findOrFail($budgetId);
+
         $purs = PurchasingGroup::all();
         $units = Unit::all();
-        $budgets = Budget::all();
         $material_groups = MaterialGroup::all();
         $materials = Barang::all();
-        $gls = Gl_Account::all();
-        return view('adminsystem.budget_pr.pr.create', compact('purs', 'budgets', 'units', 'material_groups', 'gls', 'materials'));
+
+        return view('adminsystem.budget_pr.pr.create', compact(
+            'purs',
+            'units',
+            'material_groups',
+            'materials',
+            'budget'
+        ));
     }
+
 
     public function pr_store(Request $request)
     {
         $validated = $request->validate([
-            'budget_id' => 'nullable|exists:budget,id',
+            'budget_id' => 'required|exists:budget,id',
             'pr_date' => 'required|date',
             'pr_no' => 'required|string|unique:pr,pr_no',
             'purchase_for' => 'required|string',
