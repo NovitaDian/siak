@@ -338,10 +338,22 @@ class NonCompliantController extends Controller
         ]);
         NonCompliant::where('id', $request->sent_non_compliant_id)->update(['status' => 'Pending']);
 
-        // Return JSON response with a 201 status code (Created)
+        // Kirim email ke semua adminsystem
+        $admins = User::where('role', 'adminsystem')->get();
+        foreach ($admins as $admin) {
+            Mail::to($admin->email)->send(new NonCompliantRequestNotification($request));
+        }
+
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Request berhasil dikirim dan email telah dikirim ke admin.',
+            ]);
+        }
+
         return response()->json([
             'success' => true,
-            'message' => 'Request submitted successfully.'
+            'message' => 'Request berhasil dikirim dan email telah dikirim ke admin.'
         ], 201);
     }
 

@@ -49,7 +49,7 @@ class IncidentController extends Controller
             $incident_fixs = SentIncident::orderByDesc('shift_date')->orderBy('shift_date', 'desc')->get();
         }
 
-        return view('adminsystem.incident.index', compact('incidents', 'incident_fixs', 'requests','latestRequests'));
+        return view('adminsystem.incident.index', compact('incidents', 'incident_fixs', 'requests', 'latestRequests'));
     }
 
     // Form untuk membuat data baru (create)
@@ -1350,7 +1350,7 @@ class IncidentController extends Controller
 
 
 
-   public function operator_index(Request $request)
+    public function operator_index(Request $request)
     {
         $user = auth()->user();
         $incidents = Incident::where('writer', $user->name)->latest()
@@ -1365,14 +1365,14 @@ class IncidentController extends Controller
         $start = $request->start_date;
         $end = $request->end_date;
 
-       // Jika filter tanggal diisi, gunakan whereBetween
+        // Jika filter tanggal diisi, gunakan whereBetween
         if ($start && $end) {
             $incident_fixs = SentIncident::whereBetween('shift_date', [$start, $end])->orderBy('shift_date', 'desc')->get();
         } else {
             $incident_fixs = SentIncident::where('writer', $user->name)->orderBy('shift_date', 'desc')->get();
         }
 
-        return view('operator.incident.index', compact('incidents', 'incident_fixs', 'requests','latestRequests'));
+        return view('operator.incident.index', compact('incidents', 'incident_fixs', 'requests', 'latestRequests'));
     }
 
     // Form untuk membuat data baru (create)
@@ -2581,7 +2581,7 @@ class IncidentController extends Controller
         ]);
 
         // Kirim email ke semua operator
-        $admins = User::where('role', 'operator')->get();
+        $admins = User::where('role', 'adminsystem')->get();
         foreach ($admins as $admin) {
             Mail::to($admin->email)->send(new IncidentRequestNotification($incidentRequest));
         }

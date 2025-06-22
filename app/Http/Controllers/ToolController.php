@@ -635,7 +635,7 @@ class ToolController extends Controller
         ]);
 
         // Kirim email ke semua operator
-        $admins = User::where('role', 'operator')->get();
+        $admins = User::where('role', 'adminsystem')->get();
         foreach ($admins as $admin) {
             Mail::to($admin->email)->send(new ToolRequestNotification($toolRequest));
         }
@@ -662,7 +662,7 @@ class ToolController extends Controller
         return redirect()->route('operator.tool.index');
     }
 
- public function operator_sent_show($id)
+    public function operator_sent_show($id)
     {
         $tools = SentToolReport::find($id);
         $alats = Alat::all();

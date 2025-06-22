@@ -849,7 +849,7 @@ class PpeController extends Controller
         ]);
 
         // Kirim email ke semua operator
-        $admins = User::where('role', 'operator')->get();
+        $admins = User::where('role', 'adminsystem')->get();
         foreach ($admins as $admin) {
             Mail::to($admin->email)->send(new PpeRequestNotification($ppeRequest));
         }

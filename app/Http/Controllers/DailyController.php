@@ -24,7 +24,7 @@ class DailyController extends Controller
     {
         $user = Auth::user();
         $dailys = Daily::where('writer', $user->name)->get();
- $latestRequests = DailyRequest::orderByDesc('id')
+        $latestRequests = DailyRequest::orderByDesc('id')
             ->get()
             ->unique('sent_daily_id');
         $start = $request->start_date;
@@ -38,7 +38,7 @@ class DailyController extends Controller
         }
 
         $requests = DailyRequest::all();
-        return view('adminsystem.daily.index', compact('dailys', 'daily_fixs', 'requests','latestRequests'));
+        return view('adminsystem.daily.index', compact('dailys', 'daily_fixs', 'requests', 'latestRequests'));
     }
 
 
@@ -532,7 +532,7 @@ class DailyController extends Controller
         ]);
 
         // Kirim email ke semua operator
-        $admins = User::where('role', 'operator')->get();
+        $admins = User::where('role', 'adminsystem')->get();
         foreach ($admins as $admin) {
             Mail::to($admin->email)->send(new DailyRequestNotification($dailyRequest));
         }
