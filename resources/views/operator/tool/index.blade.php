@@ -217,7 +217,7 @@
                                         </td>
 
                                         <td class="align-middle text-center">
-                                            <a href="{{ route('operator.tool.show', $tool_fix->id) }}"
+                                            <a href="{{ route('operator.tool.sent_show', $tool_fix->id) }}"
                                                 class="btn btn-info btn-xs"> <i class="fas fa-eye me-1" style="font-size: 12px;"></i> Show
                                             </a>
                                         </td>

@@ -762,6 +762,7 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('/edit/{id}', [ToolController::class, 'operator_edit'])->name('edit');
 			Route::get('/detail/{id}', [ToolController::class, 'operator_detail'])->name('detail');
 			Route::put('/{id}', [ToolController::class, 'operator_update'])->name('update');
+			Route::get('/sent{id}', [ToolController::class, 'operator_sent_show'])->name('sent_show');
 			Route::get('/{id}', [ToolController::class, 'operator_show'])->name('show');
 			Route::get('/sent_edit/{id}', [ToolController::class, 'operator_sent_edit'])->name('sent_edit');
 			Route::put('/sent_update/{id}', [ToolController::class, 'operator_sent_update'])->name('sent_update');
