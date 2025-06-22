@@ -910,8 +910,7 @@ class NcrController extends Controller
             return response()->json(['message' => 'Data NCR tidak ditemukan'], 404);
         }
 
-
-        // Validasi field-field lain, kecuali `status_ncr` dan `durasi_ncr` yang akan diisi otomatis
+        // Validasi input
         $request->validate([
             'tanggal_shift_kerja' => 'required|date',
             'shift_kerja' => 'required|string|max:255',
@@ -928,12 +927,11 @@ class NcrController extends Controller
             'foto' => 'nullable|file|mimes:pdf,jpeg,png,jpg,gif|max:2048',
             'foto_closed' => 'nullable|file|mimes:pdf,jpeg,png,jpg,gif|max:2048',
             'status_note' => 'required|string',
-
         ]);
 
-        // Hitung durasi
-        $createdAt = Carbon::parse($ncr_fix->created_at);
-        $now = Carbon::now();
+        // Hitung durasi dari created_at
+        $createdAt = \Carbon\Carbon::parse($ncr_fix->created_at);
+        $now = now();
         $diff = $createdAt->diff($now);
 
         $durasi = sprintf(
@@ -945,16 +943,21 @@ class NcrController extends Controller
             $diff->i,
             $diff->s
         );
-        if ($request->hasFile('foto')) {
-            $fotoPath = $request->file('foto')->store('uploads/ncr/foto', 'public');
-            $ncr_fix->foto = $fotoPath;
+
+        // Upload foto baru (jika ada)
+        if ($request->hasFile('foto_closed')) {
+            // Hapus file lama
+            if ($ncr_fix->foto_closed && file_exists(public_path('storage/' . $ncr_fix->foto_closed))) {
+                unlink(public_path('storage/' . $ncr_fix->foto_closed));
+            }
+
+            // Simpan file baru
+            $imageName = time() . '.' . $request->foto_closed->extension();
+            $request->foto_closed->move(public_path('storage/closed'), $imageName);
+            $ncr_fix->foto_closed = 'closed/' . $imageName;
         }
 
-        if ($request->hasFile('foto_closed')) {
-            $fotoClosedPath = $request->file('foto_closed')->store('uploads/ncr/foto_closed', 'public');
-            $ncr_fix->foto_closed = $fotoClosedPath;
-        }
-        // Update data
+        // Update data NCR
         $ncr_fix->update([
             'tanggal_shift_kerja' => $request->tanggal_shift_kerja,
             'shift_kerja' => $request->shift_kerja,
@@ -967,12 +970,13 @@ class NcrController extends Controller
             'element_referensi_ncr' => $request->element_referensi_ncr,
             'kategori_ketidaksesuaian' => $request->kategori_ketidaksesuaian,
             'deskripsi_ketidaksesuaian' => $request->deskripsi_ketidaksesuaian,
+            'estimasi' => $request->estimasi,
+            'tindak_lanjut' => $request->tindak_lanjut,
             'status_ncr' => 'Closed',
             'status_note' => $request->status_note,
             'durasi_ncr' => $durasi,
-            'estimasi' => $request->estimasi,
-            'tindak_lanjut' => $request->tindak_lanjut,
             'waktu_closed' => now(),
+            'foto_closed' => $ncr_fix->foto_closed, // update jika ada
         ]);
 
         return redirect()->route('operator.ncr.index')->with('success', 'NCR berhasil di-close!');
