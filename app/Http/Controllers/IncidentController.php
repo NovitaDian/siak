@@ -1365,12 +1365,11 @@ class IncidentController extends Controller
         $start = $request->start_date;
         $end = $request->end_date;
 
-        // Jika filter tanggal diisi, gunakan whereBetween
+       // Jika filter tanggal diisi, gunakan whereBetween
         if ($start && $end) {
-            $incident_fixs = SentIncident::whereBetween('shift_date', [$start, $end])->orderBy('shift_date', 'desc')
-                ->get();
+            $incident_fixs = SentIncident::whereBetween('shift_date', [$start, $end])->orderBy('shift_date', 'desc')->get();
         } else {
-            $incident_fixs = SentIncident::orderByDesc('shift_date')->orderBy('shift_date', 'desc')->get();
+            $incident_fixs = SentIncident::where('writer', $user->name)->orderBy('shift_date', 'desc')->get();
         }
 
         return view('operator.incident.index', compact('incidents', 'incident_fixs', 'requests','latestRequests'));
