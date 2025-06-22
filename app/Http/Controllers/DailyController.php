@@ -406,13 +406,13 @@ class DailyController extends Controller
         ]);
 
         // Ambil data Daily yang akan diupdate
-        $daily_fix = SentDaily::findOrFail($id);
+        $daily = Daily::findOrFail($id);
 
         // Ambil data HSE Inspector
         $inspector = HseInspector::findOrFail($request->hse_inspector_id);
 
         // Update data
-        $daily_fix->update([
+        $daily->update([
             'tanggal_shift_kerja' => $request->tanggal_shift_kerja,
             'shift_kerja' => $request->shift_kerja,
             'nama_hse_inspector' => $inspector->name,
