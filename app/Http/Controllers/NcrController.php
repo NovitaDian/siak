@@ -391,12 +391,17 @@ class NcrController extends Controller
 
         if ($request->hasFile('foto_closed')) {
 
-            if ($ncr->foto_closed && Storage::disk('public')->exists($ncr->foto_closed)) {
-                Storage::disk('public')->delete($ncr->foto_closed);
+            // Hapus file lama jika ada
+            if ($ncr->foto_closed && file_exists(public_path('storage/' . $ncr->foto_closed))) {
+                unlink(public_path('storage/' . $ncr->foto_closed));
             }
 
-            $fotoClosed = $request->file('foto_closed')->store('uploads/ncr/foto_closed', 'public');
-            $ncr->foto_closed = $fotoClosed;
+            // Simpan file baru ke folder public/storage/uploads/ncr
+            $imageName = time() . '.' . $request->file('foto_closed')->extension();
+            $request->file('foto_closed')->move(public_path('storage/uploads/ncr'), $imageName);
+
+            // Simpan path relatif ke DB
+            $ncr->foto_closed = 'uploads/ncr/' . $imageName;
         }
 
         $ncr->status_note = $request->status_note;
@@ -868,12 +873,17 @@ class NcrController extends Controller
 
         if ($request->hasFile('foto_closed')) {
 
-            if ($ncr->foto_closed && Storage::disk('public')->exists($ncr->foto_closed)) {
-                Storage::disk('public')->delete($ncr->foto_closed);
+            // Hapus file lama jika ada
+            if ($ncr->foto_closed && file_exists(public_path('storage/' . $ncr->foto_closed))) {
+                unlink(public_path('storage/' . $ncr->foto_closed));
             }
 
-            $fotoClosed = $request->file('foto_closed')->store('uploads/ncr/foto_closed', 'public');
-            $ncr->foto_closed = $fotoClosed;
+            // Simpan file baru ke folder public/storage/uploads/ncr
+            $imageName = time() . '.' . $request->file('foto_closed')->extension();
+            $request->file('foto_closed')->move(public_path('storage/uploads/ncr'), $imageName);
+
+            // Simpan path relatif ke DB
+            $ncr->foto_closed = 'uploads/ncr/' . $imageName;
         }
 
         $ncr->status_note = $request->status_note;
