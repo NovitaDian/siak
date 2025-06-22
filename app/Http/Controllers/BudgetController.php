@@ -38,10 +38,10 @@ class BudgetController extends Controller
         $gls = Gl_Account::all();
         return view('adminsystem.budget_pr.budget.create', compact('gls'));
     }
-    public function pr()
+    public function pr($id)
     {
 
-        $prs = PurchaseRequest::where('id', 'budget_id');
+        $prs = PurchaseRequest::where('budget_id', $id)->get();
         $gls = Gl_Account::all();
         return view('adminsystem.budget_pr.pr.index', compact('prs', 'gls'));
     }
@@ -168,27 +168,27 @@ class BudgetController extends Controller
         return view('adminsystem.budget_pr.pr.create', compact('purs', 'budgets', 'units', 'material_groups', 'gls', 'materials'));
     }
 
-   public function pr_store(Request $request)
-{
-    $validated = $request->validate([
-        'budget_id' => 'required|exists:budget,id',
-        'pr_date' => 'required|date',
-        'pr_no' => 'required|string|unique:pr,pr_no',
-        'purchase_for' => 'required|string',
-        'material' => 'required|string',
-        'quantity' => 'required|numeric',
-        'unit' => 'required|string',
-        'valuation_price' => 'required|numeric',
-        'io_assetcode' => 'nullable|string',
-        'gl_code' => 'required|string',
-        'description' => 'nullable|string',
-    ]);
+    public function pr_store(Request $request)
+    {
+        $validated = $request->validate([
+            'budget_id' => 'required|exists:budget,id',
+            'pr_date' => 'required|date',
+            'pr_no' => 'required|string|unique:pr,pr_no',
+            'purchase_for' => 'required|string',
+            'material' => 'required|string',
+            'quantity' => 'required|numeric',
+            'unit' => 'required|string',
+            'valuation_price' => 'required|numeric',
+            'io_assetcode' => 'nullable|string',
+            'gl_code' => 'required|string',
+            'description' => 'nullable|string',
+        ]);
 
-    PurchaseRequest::create($validated);
+        PurchaseRequest::create($validated);
 
-    return redirect()->route('adminsystem.budget.pr.detail', $validated['budget_id'])
-        ->with('success', 'PR berhasil ditambahkan');
-}
+        return redirect()->route('adminsystem.budget.pr.detail', $validated['budget_id'])
+            ->with('success', 'PR berhasil ditambahkan');
+    }
 
 
     public function pr_update(Request $request, $id)
@@ -264,15 +264,15 @@ class BudgetController extends Controller
     }
 
 
-   public function pr_destroy($id)
-{
-    $pr = PurchaseRequest::findOrFail($id);
-    $budgetId = $pr->budget_id;
-    $pr->delete();
+    public function pr_destroy($id)
+    {
+        $pr = PurchaseRequest::findOrFail($id);
+        $budgetId = $pr->budget_id;
+        $pr->delete();
 
-    return redirect()->route('adminsystem.budget.pr.detail', $budgetId)
-        ->with('success', 'PR berhasil dihapus dan budget diperbarui.');
-}
+        return redirect()->route('adminsystem.budget.pr.detail', $budgetId)
+            ->with('success', 'PR berhasil dihapus dan budget diperbarui.');
+    }
 
 
 
