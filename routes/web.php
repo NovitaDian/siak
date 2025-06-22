@@ -689,6 +689,7 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('/create', [BudgetController::class, 'operator_budget_create'])->name('create');
 			Route::get('/{id}/edit', [BudgetController::class, 'operator_budget_edit'])->name('edit');
 			Route::put('/{id}', [BudgetController::class, 'operator_budget_update'])->name('update');
+			Route::get('/{id}/detail', [BudgetController::class, 'pr'])->name('pr');
 			Route::get('/get-gl-name/{gl_code}', [BudgetController::class, 'operator_getGlName'])->name('getGlName');
 		});
 		Route::prefix('operator/inventory')->name('operator.inventory.')->group(function () {
