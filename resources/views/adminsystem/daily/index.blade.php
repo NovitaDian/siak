@@ -268,7 +268,7 @@
                                             @elseif ($daily_fix->status == 'Approved')
                                             @php
                                             // Cari request: prioritaskan 'Delete', jika tidak ada ambil 'Edit'
-                                            $request = $requests->where('sent_daily_id', $daily_fix->id)->firstWhere('type', 'Delete')
+                                            $request = $latestRequests->where('sent_daily_id', $daily_fix->id)->firstWhere('type', 'Delete')
                                             ?? $requests->where('sent_daily_id', $daily_fix->id)->firstWhere('type', 'Edit');
                                             @endphp
 

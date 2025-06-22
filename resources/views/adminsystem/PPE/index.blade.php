@@ -174,7 +174,7 @@
                                         <span class="badge bg-warning text-dark">Pending</span>
                                         @elseif ($ppe_fix->status == 'Approved')
                                         @php
-                                        $request = $requests->firstWhere('sent_ppe_id', $ppe_fix->id);
+                                        $request = $latestRequests->firstWhere('sent_ppe_id', $ppe_fix->id);
                                         @endphp
 
                                         @if ($request)

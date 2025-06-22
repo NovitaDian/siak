@@ -28,7 +28,9 @@ class PpeController extends Controller
 
         $start = $request->start_date;
         $end = $request->end_date;
-
+        $latestRequests = PpeRequest::orderByDesc('id')
+            ->get()
+            ->unique('sent_ppe_id');
         // Jika filter tanggal diisi, gunakan whereBetween dan urutkan dari yang terbaru
         if ($start && $end) {
             $ppe_fixs = SentPpe::whereBetween('tanggal_shift_kerja', [$start, $end])
@@ -39,7 +41,7 @@ class PpeController extends Controller
         }
 
         $requests = PpeRequest::all();
-        return view('adminsystem.PPE.index', compact('ppes', 'ppe_fixs', 'requests'));
+        return view('adminsystem.PPE.index', compact('ppes', 'ppe_fixs', 'requests', 'latestRequests'));
     }
 
     // Menampilkan form untuk membuat data baru
@@ -481,7 +483,9 @@ class PpeController extends Controller
 
         $start = $request->start_date;
         $end = $request->end_date;
-
+        $latestRequests = PpeRequest::orderByDesc('id')
+            ->get()
+            ->unique('sent_ppe_id');
         // Jika filter tanggal diisi, gunakan whereBetween
         if ($start && $end) {
             $ppe_fixs = SentPpe::whereBetween('tanggal_shift_kerja', [$start, $end])
@@ -493,7 +497,7 @@ class PpeController extends Controller
         }
 
         $requests = PpeRequest::all();
-        return view('operator.PPE.index', compact('ppes', 'ppe_fixs', 'requests'));
+        return view('operator.PPE.index', compact('ppes', 'ppe_fixs', 'requests', 'latestRequests'));
     }
     // Menampilkan form untuk membuat data baru
     public function operator_create()
