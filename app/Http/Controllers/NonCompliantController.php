@@ -351,10 +351,8 @@ class NonCompliantController extends Controller
             ]);
         }
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Request berhasil dikirim dan email telah dikirim ke admin.'
-        ], 201);
+        return redirect()->route('operator.ppe.show', $request['id_ppe'])
+            ->with('success', 'Data pelanggar berhasil diperbarui!');
     }
 
     public function operator_approve($id)
