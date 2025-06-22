@@ -49,7 +49,7 @@ class IncidentController extends Controller
             $incident_fixs = SentIncident::orderByDesc('shift_date')->orderBy('shift_date', 'desc')->get();
         }
 
-        return view('adminsystem.incident.index', compact('incidents', 'incident_fixs', 'requests'));
+        return view('adminsystem.incident.index', compact('incidents', 'incident_fixs', 'requests','latestRequests'));
     }
 
     // Form untuk membuat data baru (create)
