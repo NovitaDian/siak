@@ -5,11 +5,12 @@
     <div class="title-board text-center fw-bold fs-4 mb-4">SAFETY PERFORMANCE BOARD</div>
 
     <div class="row">
+
         <!-- Left Column -->
         <div class="col-md-3">
             <form action="{{ route('operator.dashboard-incident') }}" method="GET" class="mb-3">
                 <label class="form-label fw-bold">Filter Tanggal</label>
-                <input type="date" name="filter_date" value="{{ request('filter_date') }}" class="form-control form-control-sm mb-2">
+                <input type="date" name="shift_date" value="{{ request('shift_date') }}" class="form-control form-control-sm mb-2">
 
                 <label for="shift" class="form-label fw-bold">Shift</label>
                 <select class="form-control form-control-sm mb-2" name="shift" required>
@@ -34,16 +35,16 @@
                     class="form-control form-control-sm mb-2"
                     value="{{ old('target_manhours', $targetManHours) }}"
                     min="0"
-                    disabled>
+                    readonly>
             </form>
         </div>
 
-         <!-- Right Column -->
+        <!-- Right Column -->
         <div class="col-md-9">
             <!-- Tanggal -->
             <div class="wrap-text d-flex justify-content-between">
                 <h6 class="fw-bold"><strong>Tanggal: {{ \Carbon\Carbon::parse($selectedDate)->format('d/m/Y') }}</strong></h6>
-                <h6 class="text-end fw-bold"><strong>Shift: {{($shift)}}</strong></h6>
+                <h6 class="text-end fw-bold"><strong>Shift: {{($shift ?? '-')}}</strong></h6>
             </div>
             <!-- Section 1: Counting Days Without Accident -->
             <div class="mb-4">
@@ -118,30 +119,29 @@
             </div>
         </div>
     </div>
-</div>
 
-<style>
-    .title-board {
-        font-weight: bold;
-        font-size: 24px;
-        margin-top: 20px;
-    }
+    <style>
+        .title-board {
+            font-weight: bold;
+            font-size: 24px;
+            margin-top: 20px;
+        }
 
-    .section-title {
-        background: #d9edf7;
-        color: #31708f;
-        text-align: center;
-        padding: 10px;
-        font-weight: bold;
-        font-size: 18px;
-    }
+        .section-title {
+            background: #d9edf7;
+            color: #31708f;
+            text-align: center;
+            padding: 10px;
+            font-weight: bold;
+            font-size: 18px;
+        }
 
-    .table-bordered td,
-    .table-bordered th {
-        vertical-align: middle;
-        text-align: left;
-        padding: 8px;
-        border: 1px solid #ddd;
-    }
-</style>
-@endsection
+        .table-bordered td,
+        .table-bordered th {
+            vertical-align: middle;
+            text-align: left;
+            padding: 8px;
+            border: 1px solid #ddd;
+        }
+    </style>
+    @endsection
