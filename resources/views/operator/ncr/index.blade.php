@@ -263,23 +263,15 @@
                                         </div>
                                     </td>
                                     <td class="align-middle text-center text-xs">
-                                        <form
-                                            action="{{ route('operator.ncr.sent_show', ['id' => $ncr_fix->id]) }}"
-                                            method="GET"
-                                            style="display:inline;"
-                                            title="View details">
-                                            <li>
-                                                <a href="{{ $ncr_fix->status_ncr === 'Closed' 
+                                        <a href="{{ $ncr_fix->status_ncr === 'Closed' 
                 ? route('operator.ncr.closed_show', $ncr_fix->id) 
                 : route('operator.ncr.sent_show', $ncr_fix->id) }}"
-                                                    class="dropdown-item"
-                                                    title="View details">
-                                                    <i class="fas fa-edit me-1"></i> Edit
-                                                </a>
-                                            </li>
-
-                                        </form>
+                                            class="dropdown-item"
+                                            title="View details">
+                                            <i class="fas fa-edit me-1"></i> Edit
+                                        </a>
                                     </td>
+
                                 </tr>
                                 @endforeach
                             </tbody>
