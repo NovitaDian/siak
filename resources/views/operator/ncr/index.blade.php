@@ -268,7 +268,7 @@
                 : route('operator.ncr.sent_show', $ncr_fix->id) }}"
                                             class="dropdown-item"
                                             title="View details">
-                                            <i class="fas fa-edit me-1"></i> Show
+                                            <i class="fas fa-eye me-1"></i> Show
                                         </a>
                                     </td>
 
