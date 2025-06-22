@@ -40,10 +40,10 @@ class BudgetController extends Controller
     }
     public function pr($id)
     {
-
+        $budget = Budget::with('prs')->findOrFail($id); // pastikan relasi sudah didefinisikan
         $prs = PurchaseRequest::where('budget_id', $id)->get();
         $gls = Gl_Account::all();
-        return view('adminsystem.budget_pr.pr.index', compact('prs', 'gls'));
+        return view('adminsystem.budget_pr.pr.index', compact('prs', 'gls', 'budget'));
     }
     public function budget_destroy($id)
     {
