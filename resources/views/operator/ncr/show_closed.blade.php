@@ -77,6 +77,10 @@
                     <label class="form-label fw-bold">Estimasi Penyelesaian</label>
                     <div class="border p-2 rounded bg-light">{{ $ncr->estimasi }}</div>
                 </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Status Note</label>
+                    <div class="border p-2 rounded bg-light">{{ $ncr->status_note }}</div>
+                </div>
 
                 <div class="col-md-6 mb-3">
                     <label class="form-label fw-bold">Foto</label><br>
@@ -86,12 +90,20 @@
                     <div class="border p-2 rounded bg-light">Tidak ada foto</div>
                     @endif
                 </div>
-               <form action="{{ route('operator.ncr.index') }}" method="GET" style="display:inline;">
-                        @csrf
-                        <button type="submit" class="btn btn-sm btn-primary btn-sm active mb-0 text-white" role="button" aria-pressed="true">
-                            Kembali
-                        </button>
-                    </form>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Foto Close</label><br>
+                    @if($ncr->foto_closed)
+                    <img src="{{ asset('storage/' . $ncr->foto_closed) }}" alt="Foto NCR" class="img-fluid rounded" style="max-height: 300px;">
+                    @else
+                    <div class="border p-2 rounded bg-light">Tidak ada foto</div>
+                    @endif
+                </div>
+                <form action="{{ route('operator.ncr.index') }}" method="GET" style="display:inline;">
+                    @csrf
+                    <button type="submit" class="btn btn-sm btn-primary btn-sm active mb-0 text-white" role="button" aria-pressed="true">
+                        Kembali
+                    </button>
+                </form>
             </div>
         </div>
     </div>

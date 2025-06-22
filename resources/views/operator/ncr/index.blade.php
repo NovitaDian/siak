@@ -268,9 +268,14 @@
                                             method="GET"
                                             style="display:inline;"
                                             title="View details">
-                                            <button type="submit" class="btn btn-light btn-xs">
-                                                <i class="fas fa-eye"></i> Show
-                                            </button>
+                                            <li>
+                                                        <a href="{{ $ncr_fix->status_ncr === 'Closed' 
+                                                ? route('operator.ncr.show_closed', $ncr_fix->id)
+                                                : route('operator.ncr.ahow', $ncr_fix->id) }}"
+                                                            class="dropdown-item">
+                                                            <i class="fas fa-edit me-1"></i> Edit
+                                                        </a>
+                                                    </li>
                                         </form>
                                     </td>
                                 </tr>
