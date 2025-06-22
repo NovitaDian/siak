@@ -70,12 +70,12 @@ class ToolController extends Controller
         $alat = Alat::findOrFail($request->alat_id);
         $inspector = HseInspector::findOrFail($request->hse_inspector_id);
 
-        $fotoPath = null;
         if ($request->hasFile('foto')) {
-            $foto = $request->file('foto');
-            $fotoPath = $foto->store('uploads/foto', 'public'); // string path yang valid
+            // Buat nama file unik dan simpan ke folder 'images' dalam storage/public
+            $imageName = time() . '.' . $request->foto->extension();
+            $request->foto->move(public_path('storage/tool'), $imageName);
+            $data['foto'] = 'tool/' . $imageName;
         }
-
 
 
         ToolReport::create([
@@ -85,7 +85,7 @@ class ToolController extends Controller
             'hse_inspector' => $inspector->name,
             'tanggal_pemeriksaan' => $request->tanggal_pemeriksaan,
             'status_pemeriksaan' => $request->status_pemeriksaan,
-            'foto' => $fotoPath,
+            'foto' => $imageName,
             'writer' => Auth::user()->name,
             'user_id' => Auth::user()->id,
 
@@ -118,14 +118,20 @@ class ToolController extends Controller
         // Jika ada upload foto baru
         if ($request->hasFile('foto')) {
             // Hapus foto lama jika ada
-            if ($toolReport->foto && Storage::disk('public')->exists($toolReport->foto)) {
-                Storage::disk('public')->delete($toolReport->foto);
+            $oldPath = public_path('storage/' . $toolReport->foto);
+            if ($toolReport->foto && file_exists($oldPath)) {
+                unlink($oldPath);
             }
 
             // Simpan foto baru
-            $fotoPath = $request->file('foto')->store('uploads/foto', 'public');
-            $data['foto'] = $fotoPath;
+            $extension = $request->foto->getClientOriginalExtension(); // aman untuk nama ekstensi
+            $imageName = time() . '.' . $extension;
+            $request->foto->move(public_path('storage/tool'), $imageName);
+
+            // Simpan path ke DB
+            $data['foto'] = 'tool/' . $imageName;
         }
+
 
         // Update data
         $toolReport->update($data);
