@@ -1046,7 +1046,7 @@ class IncidentController extends Controller
         if (!$incident) {
             abort(404, 'Data tidak ditemukan');
         }
-        return view('adminsystem.incident.view ', compact('incident'));
+        return view('adminsystem.incident.show ', compact('incident'));
     }
     public function sent_show($id)
     {
@@ -2360,7 +2360,7 @@ class IncidentController extends Controller
         if (!$incident) {
             abort(404, 'Data tidak ditemukan');
         }
-        return view('operator.incident.view ', compact('incident'));
+        return view('operator.incident.show ', compact('incident'));
     }
     public function operator_sent_show($id)
     {
