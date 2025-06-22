@@ -662,7 +662,7 @@ class ToolController extends Controller
         return redirect()->route('operator.tool.index');
     }
 
- public function operrator_sent_show($id)
+ public function operator_sent_show($id)
     {
         $tools = SentToolReport::find($id);
         $alats = Alat::all();
