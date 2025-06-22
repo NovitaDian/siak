@@ -35,6 +35,7 @@ return new class extends Migration
             $table->string('tindak_lanjut', 255)->nullable();
             $table->binary('foto')->nullable();
             $table->binary('foto_closed')->nullable();
+            $table->binary('waktu_closed')->nullable();
             $table->timestamps();
         });
     }
