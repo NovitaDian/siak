@@ -31,6 +31,7 @@
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Internal Order</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Total 1 Tahun</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Aksi</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Detail PR</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -69,6 +70,15 @@
                                                 class="btn btn-danger btn-xs mb-2"> <i class="fas fa-trash me-1" style="font-size: 12px;"></i> Hapus
                                             </button>
                                         </form>
+                                    </td>
+                                    <td class="align-middle text-center">
+                                        <!-- Tombol Edit -->
+                                        <a href="{{ route('adminsystem.budget.pr', $budget->id) }}"
+                                            class="btn btn-warning btn-xs mb-2"> <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Detail
+
+                                        </a>
+
+                                      
                                     </td>
                                 </tr>
                                 @endforeach

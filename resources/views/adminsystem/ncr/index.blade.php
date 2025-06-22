@@ -251,15 +251,30 @@
                                     <td class="text-center text-xs">{{ \Carbon\Carbon::parse($ncr_fix->tanggal_audit)->format('d/m/Y') }}</td>
                                     <td class="text-center text-xs">{{ $ncr_fix->nama_auditee }}</td>
 
+
                                     @php
                                     $estimasiDate = \Carbon\Carbon::parse($ncr_fix->estimasi);
-                                    $isLate = now()->greaterThanOrEqualTo($estimasiDate) && $ncr_fix->status_ncr == 'Open';
+                                    $closedDate = $ncr_fix->waktu_closed ? \Carbon\Carbon::parse($ncr_fix->waktu_closed) : null;
+
+                                    $isLate = false;
+
+                                    // Jika masih open dan hari ini >= estimasi
+                                    if ($ncr_fix->status_ncr === 'Open' && now()->greaterThanOrEqualTo($estimasiDate)) {
+                                    $isLate = true;
+                                    }
+
+                                    // Jika sudah closed dan tanggal closed > estimasi
+                                    if ($ncr_fix->status_ncr === 'Closed' && $closedDate && $closedDate->greaterThan($estimasiDate)) {
+                                    $isLate = true;
+                                    }
                                     @endphp
                                     <td class="text-center text-xs">
                                         <span class="badge bg-{{ $isLate ? 'danger' : 'success' }}">
                                             {{ $estimasiDate->format('d/m/Y') }}
                                         </span>
                                     </td>
+
+
 
                                     <td class="text-center text-xs">{{ $ncr_fix->durasi_ncr }}</td>
                                     <td class="text-center text-xs">{{ $ncr_fix->status }}</td>

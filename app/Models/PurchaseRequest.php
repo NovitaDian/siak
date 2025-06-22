@@ -35,6 +35,6 @@ class PurchaseRequest extends Model
 
     public function budget()
     {
-        return $this->hasOne(Budget::class, 'gl_code', 'gl_account');
+        return $this->belongsTo(Budget::class, 'budget_id');
     }
 }

@@ -317,6 +317,7 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('/search', [BudgetController::class, 'budget_search'])->name('search');
 			Route::get('/create', [BudgetController::class, 'budget_create'])->name('create');
 			Route::get('/{id}/edit', [BudgetController::class, 'budget_edit'])->name('edit');
+			Route::get('/{id}/detail', [BudgetController::class, 'pr'])->name('pr');
 			Route::put('/{id}', [BudgetController::class, 'budget_update'])->name('update');
 			Route::get('/get-gl-name/{gl_code}', [BudgetController::class, 'getGlName'])->name('getGlName');
 		});

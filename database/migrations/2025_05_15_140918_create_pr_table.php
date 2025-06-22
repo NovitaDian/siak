@@ -24,6 +24,8 @@ return new class extends Migration
             $table->string('gl_code', 50)->nullable();
             $table->string('gl_name', 50)->nullable();
             $table->timestamps();
+            $table->unsignedBigInteger('budget_id')->after('id');
+            $table->foreign('budget_id')->references('id')->on('budget')->onDelete('cascade');
         });
     }
 

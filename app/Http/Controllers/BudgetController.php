@@ -25,68 +25,6 @@ class BudgetController extends Controller
         $danaTersisa = Budget::all();
         return view('adminsystem.budget_pr.index', compact('budgets', 'danaTerpakai', 'danaTersisa', 'prs', 'budget_fixs'));
     }
-
-    public function create()
-    {
-        $gl_accounts = Gl_Account::all();
-        $material_groups = MaterialGroup::all();
-        $units = Unit::all();
-        $purs = PurchasingGroup::all();
-        return view('adminsystem.budget_pr.create', compact('gl_accounts', 'material_groups', 'units', 'purs'));
-    }
-
-    // Store the new Purchase Request
-    public function store(Request $request)
-    {
-        // Validate the form data
-        $request->validate([
-            'gl_code' => 'required|string|max:255',
-            'io_assetcode' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
-            'bg_approve' => 'required|numeric',
-            'usage' => 'required|numeric',
-            'plan' => 'required|numeric',
-            'percentage_usage' => 'required|numeric',
-            'year' => 'required|integer',
-        ]);
-
-        // Hitung persentase pemakaian
-        $percentage_usage = ($request->usage / $request->bg_approve) * 100;
-
-        // Simpan ke tabel PurchaseRequest
-        PurchaseRequest::create([
-            'gl_code' => $request->gl_code,
-            'io_assetcode' => $request->io_assetcode,
-            'description' => $request->description,
-            'bg_approve' => $request->bg_approve,
-            'usage' => $request->usage,
-            'plan' => $request->plan,
-            'percentage_usage' => $percentage_usage,
-            'year' => $request->year,
-        ]);
-
-        // Update budget_fix berdasarkan internal_order
-        BudgetFix::where('internal_order', $request->io_assetcode)
-            ->update([
-                'usage' => $request->plan
-            ]);
-
-        return redirect()->route('adminsystem.budget_pr.create')
-            ->with('success', 'Purchase Request successfully created!');
-    }
-
-
-    public function destroy(Document $document)
-    {
-        Storage::disk('public')->delete($document->file_path);
-        $document->delete();
-
-        return redirect()->route('adminsystem.budget_pr.index')->with('success', 'Dokumen berhasil dihapus.');
-    }
-
-
-
-
     // budget
     public function budget_index()
     {
@@ -99,9 +37,13 @@ class BudgetController extends Controller
         $gls = Gl_Account::all();
         return view('adminsystem.budget_pr.budget.create', compact('gls'));
     }
+    public function pr()
+    {
 
-
-
+        $prs = PurchaseRequest::where('id', 'budget_id');
+        $gls = Gl_Account::all();
+        return view('adminsystem.budget_pr.pr.index', compact('prs', 'gls'));
+    }
     public function budget_destroy($id)
     {
         // Ambil data Budget
@@ -154,15 +96,7 @@ class BudgetController extends Controller
             'kategori' => $request->kategori,
             'year' => $request->year
         ]);
-        BudgetFix::create([
-            'internal_order'   => $request->internal_order,
-            'gl_code'          => $request->gl_code,
-            'gl_name'          => $request->gl_name,
-            'year'             => $request->year,
-            'kategori'         => $request->kategori,
-            'bg_approve'       => $request->setahun_total,
-            'sisa'       => $request->setahun_total,
-        ]);
+
         return redirect()->route('adminsystem.budget.index')->with('success', 'Dokumen berhasil diunggah.');
     }
     public function budget_update(Request $request, $id)
@@ -187,28 +121,6 @@ class BudgetController extends Controller
             'kategori'       => $request->kategori,
             'year'           => $request->year,
         ]);
-
-        // Cari BudgetFix yang cocok berdasarkan GL Code dan Year
-        $budgetFix = BudgetFix::where('gl_code', $request->gl_code)
-            ->where('year', $request->year)
-            ->latest()
-            ->first();
-
-        if ($budgetFix) {
-            // Update budget_fix sesuai data baru
-            $used = $budgetFix->usage ?? 0;
-            $bgApprove = $request->setahun_total;
-            $sisa = $bgApprove - $used;
-
-            $budgetFix->update([
-                'internal_order' => $request->internal_order,
-                'gl_name'        => $request->gl_name,
-                'bg_approve'     => $bgApprove,
-                'sisa'           => $sisa,
-                'kategori'       => $request->kategori,
-            ]);
-        }
-
         return redirect()->route('adminsystem.budget.index')->with('success', 'Data budget berhasil diperbarui.');
     }
     public function budget_edit($id)
