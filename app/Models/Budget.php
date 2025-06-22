@@ -36,7 +36,7 @@ class Budget extends Model
     // Total yang sudah dipakai
     public function getUsageAttribute()
     {
-        return $this->purchaseRequests()->sum('valuation_price');
+        return $this->prs()->sum('valuation_price');
     }
 
     // Sisa budget
