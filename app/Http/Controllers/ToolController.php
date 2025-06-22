@@ -551,6 +551,13 @@ public function operator_store(Request $request)
     }
     public function operator_show($id)
     {
+        $tools = ToolReport::find($id);
+        $alats = Alat::all();
+        $inspectors = HseInspector::all();
+        return view('operator.tool.show', compact('alats', 'inspectors', 'tools'));
+    }
+    public function operator_sent__show($id)
+    {
         $tools = SentToolReport::find($id);
         $alats = Alat::all();
         $inspectors = HseInspector::all();
