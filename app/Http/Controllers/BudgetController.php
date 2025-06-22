@@ -171,7 +171,7 @@ class BudgetController extends Controller
     public function pr_store(Request $request)
     {
         $validated = $request->validate([
-            'budget_id' => 'required|exists:budget,id',
+            'budget_id' => 'nullable|exists:budget,id',
             'pr_date' => 'required|date',
             'pr_no' => 'required|string|unique:pr,pr_no',
             'purchase_for' => 'required|string',
