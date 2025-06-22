@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('pr', function (Blueprint $table) {
             $table->id(); // Primary key
+            $table->unsignedBigInteger('budget_id')->nullable();
+            $table->foreign('budget_id')->references('id')->on('budget')->onDelete('cascade');
             $table->date('pr_date')->nullable();
             $table->string('pr_no', 50)->unique();
             $table->string('purchase_for', 100)->nullable();
@@ -24,8 +26,7 @@ return new class extends Migration
             $table->string('gl_code', 50)->nullable();
             $table->string('gl_name', 50)->nullable();
             $table->timestamps();
-            $table->unsignedBigInteger('budget_id')->after('id');
-            $table->foreign('budget_id')->references('id')->on('budget')->onDelete('cascade');
+           
         });
     }
 
