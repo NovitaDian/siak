@@ -67,34 +67,82 @@
                                 </tr>
                             </thead>
                             <tbody id="draftTableBody">
-                                @foreach($nonCompliants as $nc)
-                                @php
-                                $request = $latestRequests->firstWhere('sent_non_compliant_id', $nc->id);
-                                @endphp
+                                
+                                @forelse ($nonCompliants as $nc)
                                 <tr>
-                                    <td>{{ $nc->nama_pelanggar }}</td>
-                                    <td>{{ $nc->deskripsi_ketidaksesuaian }}</td>
-                                    <td>{{ $nc->perusahaan }}</td>
-                                    <td>{{ $nc->nama_bagian }}</td>
-                                    <td>{{ $nc->tindakan }}</td>
-                                    <td>
-                                        @if ($request && $request->status == 'Approved' && $request->type == 'Edit')
-                                        <a href="{{ route('operator.non_compliant.edit', $nc->id) }}" class="btn btn-warning btn-xs">
-                                            <i class="fas fa-edit me-1"></i> Edit
-                                        </a>
-                                        @elseif ($request && $request->status == 'Pending')
-                                        <span class="badge bg-warning text-dark">Pending</span>
-                                        @elseif ($request && $request->status == 'Rejected')
-                                        <span class="badge bg-danger">Rejected</span>
-                                        @else
-                                        <button class="btn btn-info btn-xs" onclick="showRequestModal('{{ $nc->id }}')">
+                                    @php
+                                    $request = $requests->firstWhere('sent_non_compliants_id', $nc->id);
+                                    @endphp
+
+                                    <td class="text-center text-xs">{{ $loop->iteration }}</td>
+                                    <td class="text-center text-xs">
+                                        <div style="width:60px; height:60px; overflow:hidden; border-radius:4px; display:inline-block;">
+                                            <img src="{{ asset('storage/' . $nc->foto) }}"
+                                                alt="{{ $nc->description }}"
+                                                style="width:100%; height:100%; object-fit:cover;">
+
+
+                                        </div>
+                                    </td>
+                                    <td class="text-center text-xs">{{ $nc->nama_pelanggar }}</td>
+                                    <td class="text-center text-xs">{{ $nc->deskripsi_ketidaksesuaian }}</td>
+                                    <td class="text-center text-xs">{{ $nc->perusahaan }}</td>
+                                    <td class="text-center text-xs">{{ $nc->nama_bagian }}</td>
+                                    <td class="text-center text-xs">{{ $nc->tindakan }}</td>
+                                    <td class="align-middle text-center text-xs">
+                                        @if ($nc->status == 'Nothing')
+                                        <button class="btn btn-secondary btn-xs" onclick="showRequestModal('{{ $nc->id }}')">
                                             <i class="fas fa-paper-plane me-1" style="font-size: 12px;"></i> Request
                                         </button>
+
+                                        @elseif ($nc->status == 'Pending')
+                                        <span class="badge bg-warning text-dark">Pending</span>
+
+                                        @elseif ($nc->status == 'Approved')
+                                        @php
+                                        $request = $latestRequests->firstWhere('sent_non_compliant_id', $nc->id);
+                                        @endphp
+                                        @if ($request)
+                                        <div class="dropdown d-inline">
+                                            <button class="btn btn-success btn-xs dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="fas fa-check-circle me-1" style="font-size: 12px;"></i> Approved
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                @if ($request->type == 'Edit')
+                                                <li>
+                                                    <a href="{{ route('operator.non_compliant.edit', $nc->id) }}" class="dropdown-item">
+                                                        <i class="fas fa-edit me-1"></i> Edit
+                                                    </a>
+                                                </li>
+                                                @elseif ($request->type == 'Delete')
+                                                <li>
+                                                    <form action="{{ route('operator.non_compliant.destroy', $nc->id) }}" method="POST" onsubmit="return confirm('Anda yakin akan menghapus data ini?')">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="dropdown-item text-danger">
+                                                            <i class="fas fa-trash-alt me-1"></i> Hapus
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                                @endif
+                                            </ul>
+                                        </div>
+                                        @else
+                                        <span class="text-danger">No corresponding request found</span>
+                                        @endif
+
+                                        @elseif ($nc->status == 'Rejected')
+                                        <span class="badge bg-danger text-white">Rejected</span>
                                         @endif
                                     </td>
-                                </tr>
-                                @endforeach
 
+                                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="13" class="text-center text-muted">Data tidak ditemukan.</td>
+                                </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>

@@ -586,13 +586,16 @@ class PpeController extends Controller
     // Menampilkan detail data
     public function operator_show($id)
     {
+        $user = Auth::user();
+
         $ppeFix = SentPpe::findOrFail($id);
-        $nonCompliants = NonCompliant::where('id_ppe', $id)->get();
+
+        $nonCompliants = NonCompliant::where('id_ppe', $id)->where('writer', $user->name)->get();
         $requests = NonCompliantRequest::all();
         $latestRequests = NonCompliantRequest::orderByDesc('id')
             ->get()
             ->unique('sent_non_compliant_id');
-        return view('operator.PPE.show', compact('ppeFix', 'requests', 'nonCompliants','latestRequests'));
+        return view('operator.PPE.show', compact('ppeFix', 'requests', 'nonCompliants', 'latestRequests'));
     }
 
     // Menampilkan form edit data
