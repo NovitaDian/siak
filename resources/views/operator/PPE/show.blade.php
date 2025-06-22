@@ -88,7 +88,7 @@
                                     <td class="text-center text-xs">{{ $nc->perusahaan }}</td>
                                     <td class="text-center text-xs">{{ $nc->nama_bagian }}</td>
                                     <td class="text-center text-xs">{{ $nc->tindakan }}</td>
-                                 <td class="align-middle text-center text-xs">
+                                    <td class="align-middle text-center text-xs">
                                         @if ($nc->status == 'Nothing')
                                         <button class="btn btn-secondary btn-xs" onclick="showRequestModal('{{ $nc->id }}')">
                                             <i class="fas fa-paper-plane me-1" style="font-size: 12px;"></i> Request
@@ -98,6 +98,9 @@
                                         <span class="badge bg-warning text-dark">Pending</span>
 
                                         @elseif ($nc->status == 'Approved')
+                                        @php
+                                        $request = $latestRequests->firstWhere('sent_non_compliant_id', $nc->id);
+                                        @endphp
                                         @if ($request)
                                         <div class="dropdown d-inline">
                                             <button class="btn btn-success btn-xs dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
