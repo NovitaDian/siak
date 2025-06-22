@@ -74,7 +74,7 @@
                                     <td class="align-middle text-center">
                                         <!-- Tombol Edit -->
                                         <a href="{{ route('adminsystem.budget.pr', $budget->id) }}"
-                                            class="btn btn-warning btn-xs mb-2"> <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Detail
+                                            class="btn btn-info btn-xs mb-2"> <i class="fas fa-eye me-1" style="font-size: 12px;"></i> Detail
 
                                         </a>
 
