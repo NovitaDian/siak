@@ -25,6 +25,7 @@ class PurchaseRequest extends Model
         'cost_center',
         'total_price',
         'io_assetcode',
+        'budget_id',
     ];
 
     protected $dates = ['pr_date'];

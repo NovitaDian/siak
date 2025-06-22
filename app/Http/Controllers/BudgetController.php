@@ -180,16 +180,30 @@ class BudgetController extends Controller
             'unit' => 'required|string',
             'valuation_price' => 'required|numeric',
             'io_assetcode' => 'nullable|string',
-            'gl_code' => 'required|string',
             'description' => 'nullable|string',
         ]);
 
-        PurchaseRequest::create($validated);
+        // Ambil gl_code dan gl_name dari budget_id
+        $budget = Budget::findOrFail($validated['budget_id']);
 
-        return redirect()->route('adminsystem.budget.pr.detail', $validated['budget_id'])
+        PurchaseRequest::create([
+            'budget_id' => $validated['budget_id'],
+            'pr_date' => $validated['pr_date'],
+            'pr_no' => $validated['pr_no'],
+            'purchase_for' => $validated['purchase_for'],
+            'material' => $validated['material'],
+            'quantity' => $validated['quantity'],
+            'unit' => $validated['unit'],
+            'valuation_price' => $validated['valuation_price'],
+            'io_assetcode' => $validated['io_assetcode'] ?? null,
+            'gl_code' => $budget->gl_code,
+            'gl_name' => $budget->gl_name,
+            'description' => $validated['description'] ?? null,
+        ]);
+
+        return redirect()->route('adminsystem.budget.pr', $validated['budget_id'])
             ->with('success', 'PR berhasil ditambahkan');
     }
-
 
     public function pr_update(Request $request, $id)
     {
