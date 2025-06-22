@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('kategori', 255);
             $table->string('year', 100);
             $table->timestamps();
+            $table->string('is_main', 5);
             $table->foreign('gl_code')->references('gl_code')->on('gl_account')->onDelete('cascade');
         });
     }

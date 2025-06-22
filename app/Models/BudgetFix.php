@@ -29,6 +29,7 @@ class BudgetFix extends Model
         'sisa',
         'year',
         'pr_date',
+        'is_main',
     ];
 
 
