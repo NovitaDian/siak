@@ -35,7 +35,8 @@ class SentNcr extends Model
         'estimasi',
         'foto',
         'foto_closed',
-        'tindak_lanjut'
+        'tindak_lanjut',
+        'waktu_closed'
     ];
 
     // Menentukan tipe data untuk tanggal agar bisa otomatis di-convert menjadi format date
