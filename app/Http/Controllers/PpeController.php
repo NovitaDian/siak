@@ -809,6 +809,8 @@ class PpeController extends Controller
             'status_ppe' => ($total_tidak_patuh == 0) ? 'Compliant' : 'Non-Compliant',
             'writer' => Auth::user()->name,
             'user_id' => Auth::user()->id,
+            'status' => 'Nothing',
+
         ]);
 
         return redirect()->route('operator.ppe.index')->with('success', 'Data PPE telah diperbarui di sent_ppe!');
