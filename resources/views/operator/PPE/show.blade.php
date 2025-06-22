@@ -84,7 +84,6 @@
                                         </div>
                                     </td>
                                     <td class="text-center text-xs">{{ $nc->nama_pelanggar }}</td>
-                                    <td class="text-center text-xs">{{ $nc->nama_pelanggar }}</td>
                                     <td class="text-center text-xs">{{ $nc->deskripsi_ketidaksesuaian }}</td>
                                     <td class="text-center text-xs">{{ $nc->perusahaan }}</td>
                                     <td class="text-center text-xs">{{ $nc->nama_bagian }}</td>
