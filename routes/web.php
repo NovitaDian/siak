@@ -628,6 +628,7 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('/search', [BudgetController::class, 'operator_pr_search'])->name('search');
 			Route::get('/create', [BudgetController::class, 'operator_pr_create'])->name('create');
 			Route::get('/{id}/edit', [BudgetController::class, 'operator_pr_edit'])->name('edit');
+			Route::put('/{id}', [BudgetController::class, 'operator_pr_update'])->name('update');
 		});
 		Route::prefix('operator/material_group')->name('operator.material_group.')->group(function () {
 			Route::get('/', [MaterialGroupController::class, 'operator_index'])->name('index');
