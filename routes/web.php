@@ -588,7 +588,7 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::post('/', [DailyController::class, 'operator_store'])->name('store');
 			Route::get('/{id}/edit', [DailyController::class, 'operator_edit'])->name('edit');
 			Route::put('/{id}', [DailyController::class, 'operator_update'])->name('update');
-			Route::get('/{id}', [DailyController::class, 'operator_show'])->name('show');
+			Route::get('/show{id}', [DailyController::class, 'operator_show'])->name('show');
 			Route::get('/sent_show/{id}', [DailyController::class, 'operator_sent_show'])->name('sent_show');
 			Route::delete('/draft/{id}', [DailyController::class, 'operator_draft_destroy'])->name('draft_destroy');
 			Route::delete('/{id}', [DailyController::class, 'operator_destroy'])->name('destroy');
