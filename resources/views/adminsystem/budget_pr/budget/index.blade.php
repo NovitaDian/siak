@@ -62,7 +62,7 @@
                                         <p class="text-xs font-weight-bold mb-0">{{ $budget->sisa }}</p>
                                     </td>
                                     <td class="text-center">
-                                        <p class="text-xs font-weight-bold mb-0">{{ $budget->persentage_usage }}</p>
+                                        <p class="text-xs font-weight-bold mb-0">{{ $budget->percentage_usage }}</p>
                                     </td>
 
 
