@@ -972,7 +972,7 @@ class NcrController extends Controller
             'durasi_ncr' => $durasi,
             'estimasi' => $request->estimasi,
             'tindak_lanjut' => $request->tindak_lanjut,
-            'waktu_closed' => $createdAt,
+            'waktu_closed' => now(),
         ]);
 
         return redirect()->route('operator.ncr.index')->with('success', 'NCR berhasil di-close!');
