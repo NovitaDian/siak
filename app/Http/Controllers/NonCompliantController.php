@@ -260,8 +260,8 @@ class NonCompliantController extends Controller
     // Menampilkan form untuk mengedit NonCompliant
     public function operator_edit($id)
     {
-        $ppeFix = SentPpe::findOrFail($id);
-        $nonCompliant = NonCompliant::where('id_ppe', $ppeFix->id)->first(); // Get the first matching record, assuming one exists.
+        $nonCompliant = NonCompliant::findOrFail($id);
+        $ppeFix = SentPpe::findOrFail($nonCompliant->id_ppe);
         $perusahaans = Perusahaan::all();
         $bagians = Bagian::all();
         return view('operator.non_compliant.edit', compact('nonCompliant', 'ppeFix', 'perusahaans', 'bagians'));
