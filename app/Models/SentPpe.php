@@ -36,7 +36,8 @@ class SentPpe extends Model
         'jumlah_tidak_patuh_pelindung_mata_kontraktor',
         'jumlah_tidak_patuh_safety_harness_kontraktor',
         'jumlah_tidak_patuh_apd_lainnya_kontraktor',
-        'keterangan_tidak_patuh'
+        'keterangan_tidak_patuh',
+        'status'
     ];
     public function requests()
     {

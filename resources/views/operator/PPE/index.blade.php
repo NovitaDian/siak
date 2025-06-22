@@ -283,10 +283,6 @@
         });
     }
 
-    // Fungsi untuk mengedit item
-    function editAction(id) {
-        window.location.href = "{{ url('operator/ppe/edit') }}/" + id; // Menggunakan URL Laravel
-    }
 
     // Fungsi untuk mengedit item yang telah dikirim
     function sentEditAction(id) {

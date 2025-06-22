@@ -308,8 +308,6 @@ class PpeController extends Controller
             'jumlah_tidak_patuh_safety_harness_kontraktor' => 'nullable|integer|min:0',
             'jumlah_tidak_patuh_apd_lainnya_kontraktor' => 'nullable|integer|min:0',
             'keterangan_tidak_patuh' => 'nullable|string|max:255',
-            'durasi_ppe' => 'nullable|string|max:50',
-            'status_note' => 'nullable|string|max:100',
         ]);
 
         $sent = SentPpe::findOrFail($id);
@@ -349,11 +347,11 @@ class PpeController extends Controller
             'jumlah_tidak_patuh_safety_harness_kontraktor' => $request->jumlah_tidak_patuh_safety_harness_kontraktor,
             'jumlah_tidak_patuh_apd_lainnya_kontraktor' => $request->jumlah_tidak_patuh_apd_lainnya_kontraktor,
             'keterangan_tidak_patuh' => $request->keterangan_tidak_patuh,
-            'durasi_ppe' => $request->durasi_ppe,
-            'status_note' => $request->status_note,
             'status_ppe' => ($total_tidak_patuh == 0) ? 'Compliant' : 'Non-Compliant',
             'writer' => Auth::user()->name,
             'user_id' => Auth::user()->id,
+            'status' => 'Nothing',
+
         ]);
 
         return redirect()->route('adminsystem.ppe.index')->with('success', 'Data PPE telah diperbarui!');
@@ -763,8 +761,6 @@ class PpeController extends Controller
             'jumlah_tidak_patuh_safety_harness_kontraktor' => 'nullable|integer|min:0',
             'jumlah_tidak_patuh_apd_lainnya_kontraktor' => 'nullable|integer|min:0',
             'keterangan_tidak_patuh' => 'nullable|string|max:255',
-            'durasi_ppe' => 'nullable|string|max:50',
-            'status_note' => 'nullable|string|max:100',
         ]);
 
         $sent = SentPpe::findOrFail($id);
@@ -804,8 +800,6 @@ class PpeController extends Controller
             'jumlah_tidak_patuh_safety_harness_kontraktor' => $request->jumlah_tidak_patuh_safety_harness_kontraktor,
             'jumlah_tidak_patuh_apd_lainnya_kontraktor' => $request->jumlah_tidak_patuh_apd_lainnya_kontraktor,
             'keterangan_tidak_patuh' => $request->keterangan_tidak_patuh,
-            'durasi_ppe' => $request->durasi_ppe,
-            'status_note' => $request->status_note,
             'status_ppe' => ($total_tidak_patuh == 0) ? 'Compliant' : 'Non-Compliant',
             'writer' => Auth::user()->name,
             'user_id' => Auth::user()->id,
