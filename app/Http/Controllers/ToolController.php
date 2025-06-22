@@ -430,7 +430,7 @@ class ToolController extends Controller
             'hse_inspector_id' => 'required|exists:hse_inspector,id',
             'tanggal_pemeriksaan' => 'required|date',
             'status_pemeriksaan' => 'required|in:Layak operasi,Layak operasi dengan catatan,Tidak layak operasi',
-            'foto' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
 
         ]);
 

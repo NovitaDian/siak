@@ -12,7 +12,6 @@ use App\Models\Gl_Account;
 use App\Models\MaterialGroup;
 use App\Models\PurchasingGroup;
 use App\Models\Unit;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class BudgetController extends Controller
@@ -135,7 +134,7 @@ class BudgetController extends Controller
 
         return redirect()->route('adminsystem.budget.index')->with('success', 'Data budget berhasil dihapus.');
     }
-     public function budget_store(Request $request)
+    public function budget_store(Request $request)
     {
         $request->validate([
             'internal_order' => 'nullable|string|max:50',
@@ -146,10 +145,15 @@ class BudgetController extends Controller
             'year' => 'required|string|max:100',
         ]);
 
-        // Simpan ke Budget utama
-        Budget::create($request->all());
-
-        // Simpan BudgetFix sebagai data utama
+        // Store the data in the database
+        Budget::create([
+            'internal_order' => $request->internal_order,
+            'gl_code' => $request->gl_code,
+            'gl_name' => $request->gl_name,
+            'setahun_total' => $request->setahun_total,
+            'kategori' => $request->kategori,
+            'year' => $request->year
+        ]);
         BudgetFix::create([
             'internal_order'   => $request->internal_order,
             'gl_code'          => $request->gl_code,
@@ -157,10 +161,8 @@ class BudgetController extends Controller
             'year'             => $request->year,
             'kategori'         => $request->kategori,
             'bg_approve'       => $request->setahun_total,
-            'sisa'             => $request->setahun_total,
-            'is_main'          => true
+            'sisa'       => $request->setahun_total,
         ]);
-
         return redirect()->route('adminsystem.budget.index')->with('success', 'Dokumen berhasil diunggah.');
     }
     public function budget_update(Request $request, $id)
@@ -663,62 +665,62 @@ class BudgetController extends Controller
         return view('operator.budget_pr.pr.create', compact('purs', 'budgets', 'units', 'material_groups', 'gls', 'materials'));
     }
 
-    // public function operator_pr_store(Request $request)
-    // {
-    //     $validated = $request->validate([
-    //         'pr_date' => 'required|date',
-    //         'pr_no' => 'required|string|unique:pr,pr_no',
-    //         'purchase_for' => 'required|string',
-    //         'material' => 'required|string',
-    //         'quantity' => 'required|numeric',
-    //         'unit' => 'required|string',
-    //         'valuation_price' => 'required|numeric',
-    //         'io_assetcode' => 'nullable|string',
-    //         'gl_code' => 'required|string',
-    //         'description' => 'nullable|string',
-    //     ]);
+    public function operator_pr_store(Request $request)
+    {
+        $validated = $request->validate([
+            'pr_date' => 'required|date',
+            'pr_no' => 'required|string|unique:pr,pr_no',
+            'purchase_for' => 'required|string',
+            'material' => 'required|string',
+            'quantity' => 'required|numeric',
+            'unit' => 'required|string',
+            'valuation_price' => 'required|numeric',
+            'io_assetcode' => 'nullable|string',
+            'gl_code' => 'required|string',
+            'description' => 'nullable|string',
+        ]);
 
-    //     $glaccount = Gl_Account::where('gl_code', $validated['gl_code'])->firstOrFail();
-    //     PurchaseRequest::create($validated);
+        $glaccount = Gl_Account::where('gl_code', $validated['gl_code'])->firstOrFail();
+        PurchaseRequest::create($validated);
 
-    //     $budgetFix = BudgetFix::where('gl_code', $validated['gl_code'])->latest()->first();
+        $budgetFix = BudgetFix::where('gl_code', $validated['gl_code'])->latest()->first();
 
-    //     if ($budgetFix) {
-    //         $usage = $validated['valuation_price'];
-    //         $pr_date = $validated['pr_date'];
-    //         $bg_approve = $budgetFix->bg_approve ?? 0;
-    //         $internal_order = $validated['io_assetcode'] ?? null;
-    //         $sisa_usage = $budgetFix->sisa - $usage;
-    //         $percentage_usage = ($bg_approve > 0) ? ($usage / $bg_approve) * 100 : 0;
+        if ($budgetFix) {
+            $usage = $validated['valuation_price'];
+            $pr_date = $validated['pr_date'];
+            $bg_approve = $budgetFix->bg_approve ?? 0;
+            $internal_order = $validated['io_assetcode'] ?? null;
+            $sisa_usage = $budgetFix->sisa - $usage;
+            $percentage_usage = ($bg_approve > 0) ? ($usage / $bg_approve) * 100 : 0;
 
-    //         if ($budgetFix->usage > 0) {
-    //             BudgetFix::create([
-    //                 'gl_code' => $validated['gl_code'],
-    //                 'usage' => $usage,
-    //                 'internal_order' => $internal_order,
-    //                 'gl_name' => $glaccount->gl_name,
-    //                 'percentage_usage' => $percentage_usage,
-    //                 'sisa' => $sisa_usage,
-    //                 'description' => $validated['description'] ?? null,
-    //                 'bg_approve' => $budgetFix->bg_approve,
-    //                 'plan' => $budgetFix->plan,
-    //                 'kategori' => $budgetFix->kategori,
-    //                 'year' => $budgetFix->year,
-    //                 'pr_date' => $pr_date,
-    //             ]);
-    //         } else {
-    //             $budgetFix->update([
-    //                 'usage' => $usage,
-    //                 'internal_order' => $internal_order,
-    //                 'percentage_usage' => $percentage_usage,
-    //                 'sisa' => $sisa_usage,
-    //                 'pr_date' => $pr_date,
-    //             ]);
-    //         }
-    //     }
+            if ($budgetFix->usage > 0) {
+                BudgetFix::create([
+                    'gl_code' => $validated['gl_code'],
+                    'usage' => $usage,
+                    'internal_order' => $internal_order,
+                    'gl_name' => $glaccount->gl_name,
+                    'percentage_usage' => $percentage_usage,
+                    'sisa' => $sisa_usage,
+                    'description' => $validated['description'] ?? null,
+                    'bg_approve' => $budgetFix->bg_approve,
+                    'plan' => $budgetFix->plan,
+                    'kategori' => $budgetFix->kategori,
+                    'year' => $budgetFix->year,
+                    'pr_date' => $pr_date,
+                ]);
+            } else {
+                $budgetFix->update([
+                    'usage' => $usage,
+                    'internal_order' => $internal_order,
+                    'percentage_usage' => $percentage_usage,
+                    'sisa' => $sisa_usage,
+                    'pr_date' => $pr_date,
+                ]);
+            }
+        }
 
-    //     return redirect()->route('operator.pr.index')->with('success', 'Purchase Request berhasil dibuat.');
-    // }
+        return redirect()->route('operator.pr.index')->with('success', 'Purchase Request berhasil dibuat.');
+    }
 
     public function operator_pr_update(Request $request, $id)
     {
@@ -838,39 +840,6 @@ class BudgetController extends Controller
         return redirect()->route('operator.pr.index')
             ->with('success', 'Purchase Request dan data budget terkait berhasil diperbarui.');
     }
-    // public function operator_budget_store(Request $request)
-    // {
-    //     $request->validate([
-    //         'internal_order' => 'nullable|string|max:50',
-    //         'gl_code' => 'required|string|max:50',
-    //         'gl_name' => 'required|string|max:100',
-    //         'setahun_total' => 'required|numeric',
-    //         'kategori' => 'required|string|max:100',
-    //         'year' => 'required|string|max:100',
-    //     ]);
-
-    //     // Store the data in the database
-    //     Budget::create([
-    //         'internal_order' => $request->internal_order,
-    //         'gl_code' => $request->gl_code,
-    //         'gl_name' => $request->gl_name,
-    //         'setahun_total' => $request->setahun_total,
-    //         'kategori' => $request->kategori,
-    //         'year' => $request->year
-    //     ]);
-    //     BudgetFix::create([
-    //         'internal_order'   => $request->internal_order,
-    //         'gl_code'          => $request->gl_code,
-    //         'gl_name'          => $request->gl_name,
-    //         'year'             => $request->year,
-    //         'kategori'         => $request->kategori,
-    //         'bg_approve'       => $request->setahun_total,
-    //         'sisa'       => $request->setahun_total,
-    //     ]);
-    //     return redirect()->route('operator.budget.index')->with('success', 'Dokumen berhasil diunggah.');
-    // }
-
-
     public function operator_budget_store(Request $request)
     {
         $request->validate([
@@ -882,10 +851,15 @@ class BudgetController extends Controller
             'year' => 'required|string|max:100',
         ]);
 
-        // Simpan ke Budget utama
-        Budget::create($request->all());
-
-        // Simpan BudgetFix sebagai data utama
+        // Store the data in the database
+        Budget::create([
+            'internal_order' => $request->internal_order,
+            'gl_code' => $request->gl_code,
+            'gl_name' => $request->gl_name,
+            'setahun_total' => $request->setahun_total,
+            'kategori' => $request->kategori,
+            'year' => $request->year
+        ]);
         BudgetFix::create([
             'internal_order'   => $request->internal_order,
             'gl_code'          => $request->gl_code,
@@ -893,65 +867,8 @@ class BudgetController extends Controller
             'year'             => $request->year,
             'kategori'         => $request->kategori,
             'bg_approve'       => $request->setahun_total,
-            'sisa'             => $request->setahun_total,
-            'is_main'          => true
+            'sisa'       => $request->setahun_total,
         ]);
-
         return redirect()->route('operator.budget.index')->with('success', 'Dokumen berhasil diunggah.');
     }
-
-public function operator_pr_store(Request $request)
-{
-    $validated = $request->validate([
-        'pr_no' => 'required|unique:pr,pr_no',
-        'pr_date' => 'required|date',
-        'gl_code' => 'required',
-        'valuation_price' => 'required|numeric',
-        'material' => 'required',
-        'quantity' => 'required|numeric',
-        'unit' => 'required',
-        'description' => 'nullable',
-        'io_assetcode' => 'nullable',
-    ]);
-
-    PurchaseRequest::create($validated);
-
-    $budgetFix = BudgetFix::where('gl_code', $validated['gl_code'])
-        ->where('is_main', true)
-        ->first();
-
-    if ($budgetFix) {
-        $usage = $budgetFix->usage + $validated['valuation_price'];
-        $sisa = $budgetFix->bg_approve - $usage;
-        $percentage = ($usage / $budgetFix->bg_approve) * 100;
-
-        $budgetFix->update([
-            'usage' => $usage,
-            'sisa' => $sisa,
-            'percentage_usage' => $percentage,
-        ]);
-    }
-
-    return redirect()->route('operator.pr.index')->with('success', 'PR berhasil dibuat');
 }
-    public function syncBudgetFix($gl_code)
-    {
-        // Hitung ulang total usage berdasarkan PR
-        $totalUsage = PurchaseRequest::where('gl_code', $gl_code)->sum('valuation_price');
-
-        $budgetFix = BudgetFix::where('gl_code', $gl_code)
-            ->where('is_main', true)
-            ->first();
-
-        if ($budgetFix) {
-            $budgetFix->usage = $totalUsage;
-            $budgetFix->sisa = $budgetFix->bg_approve - $totalUsage;
-            $budgetFix->percentage_usage = ($budgetFix->bg_approve > 0) ? ($totalUsage / $budgetFix->bg_approve) * 100 : 0;
-            $budgetFix->save();
-        }
-    }
-
-    // Panggil syncBudgetFix pada PR update & destroy agar selalu akurat
-}
-
-
