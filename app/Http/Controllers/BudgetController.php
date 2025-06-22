@@ -135,7 +135,7 @@ class BudgetController extends Controller
 
         return redirect()->route('adminsystem.budget.index')->with('success', 'Data budget berhasil dihapus.');
     }
-    public function budget_store(Request $request)
+     public function budget_store(Request $request)
     {
         $request->validate([
             'internal_order' => 'nullable|string|max:50',
@@ -146,15 +146,10 @@ class BudgetController extends Controller
             'year' => 'required|string|max:100',
         ]);
 
-        // Store the data in the database
-        Budget::create([
-            'internal_order' => $request->internal_order,
-            'gl_code' => $request->gl_code,
-            'gl_name' => $request->gl_name,
-            'setahun_total' => $request->setahun_total,
-            'kategori' => $request->kategori,
-            'year' => $request->year
-        ]);
+        // Simpan ke Budget utama
+        Budget::create($request->all());
+
+        // Simpan BudgetFix sebagai data utama
         BudgetFix::create([
             'internal_order'   => $request->internal_order,
             'gl_code'          => $request->gl_code,
@@ -162,8 +157,10 @@ class BudgetController extends Controller
             'year'             => $request->year,
             'kategori'         => $request->kategori,
             'bg_approve'       => $request->setahun_total,
-            'sisa'       => $request->setahun_total,
+            'sisa'             => $request->setahun_total,
+            'is_main'          => true
         ]);
+
         return redirect()->route('adminsystem.budget.index')->with('success', 'Dokumen berhasil diunggah.');
     }
     public function budget_update(Request $request, $id)
