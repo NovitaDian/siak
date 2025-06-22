@@ -63,6 +63,11 @@ class NcrController extends Controller
         $ncr = SentNcr::findOrFail($id);
         return view('adminsystem.ncr.show', compact('ncr'));
     }
+    public function closed_show($id)
+    {
+        $ncr = SentNcr::findOrFail($id);
+        return view('adminsystem.ncr.closedshow', compact('ncr'));
+    }
 
 
     public function edit($id)
@@ -532,6 +537,12 @@ class NcrController extends Controller
         return view('operator.ncr.show', compact('ncr'));
     }
 
+
+    public function operator_closed_show($id)
+    {
+        $ncr = SentNcr::findOrFail($id);
+        return view('operator.ncr.closedshow', compact('ncr'));
+    }
 
     public function operator_edit($id)
     {

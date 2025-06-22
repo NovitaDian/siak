@@ -7,7 +7,7 @@
 </div>
 @endif
 <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg">
- 
+
     <div class="row">
         <div class="col-12">
             <div class="card mb-4">
@@ -269,13 +269,13 @@
                                             style="display:inline;"
                                             title="View details">
                                             <li>
-                                                        <a href="{{ $ncr_fix->status_ncr === 'Closed' 
-                                                ? route('operator.ncr.show_closed', $ncr_fix->id)
-                                                : route('operator.ncr.ahow', $ncr_fix->id) }}"
-                                                            class="dropdown-item">
-                                                            <i class="fas fa-edit me-1"></i> Edit
-                                                        </a>
-                                                    </li>
+                                                <a href="{{ $ncr_fix->status_ncr === 'Closed' 
+                                                ? route('operator.ncr.closed_show', $ncr_fix->id)
+                                                : route('operator.ncr.sent_show', $ncr_fix->id) }}"
+                                                    class="dropdown-item">
+                                                    <i class="fas fa-edit me-1"></i> Edit
+                                                </a>
+                                            </li>
                                         </form>
                                     </td>
                                 </tr>
