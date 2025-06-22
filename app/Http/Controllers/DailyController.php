@@ -513,7 +513,7 @@ class DailyController extends Controller
     public function operator_storeRequest(Request $request)
     {
         $request->validate([
-            'sent_daily_id' => 'required|exists:daily_inspections_fix,id',
+            'sent_daily_id' => 'required|exists:daily_fix,id',
             'type' => 'required|string',
             'reason' => 'required|string',
         ]);
