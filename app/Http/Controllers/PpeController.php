@@ -136,7 +136,7 @@ class PpeController extends Controller
         $latestRequests = NonCompliantRequest::orderByDesc('id')
             ->get()
             ->unique('sent_non_compliant_id');
-        return view('adminsystem.PPE.show', compact('ppeFix', 'requests', 'nonCompliants','allRequests'));
+        return view('adminsystem.PPE.show', compact('ppeFix', 'requests', 'nonCompliants','latestRequests'));
     }
 
     // Menampilkan form edit data
