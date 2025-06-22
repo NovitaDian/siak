@@ -662,7 +662,13 @@ class ToolController extends Controller
         return redirect()->route('operator.tool.index');
     }
 
-
+ public function operrator_sent_show($id)
+    {
+        $tools = SentToolReport::find($id);
+        $alats = Alat::all();
+        $inspectors = HseInspector::all();
+        return view('operator.tool.show', compact('alats', 'inspectors', 'tools'));
+    }
     public function operator_reject($id)
     {
         $request = ToolRequest::find($id);
