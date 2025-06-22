@@ -30,6 +30,7 @@
                         </button>
                     </div>
                     @endif
+                    <input type="hidden" name="budget_id" value="{{ request('budget_id') }}">
 
                     <div class="row">
                         <div class="col-md-6">
@@ -108,9 +109,9 @@
                                 <label for="io_assetcode">{{ __('IO / Assetcode') }}</label>
                                 <select class="form-control" id="io_assetcode" name="io_assetcode">
                                     <option value="">Pilih Internal Order</option>
-                                    @foreach($budget as $bud)
-                                    @if(!empty($bud->internal_order))
-                                    <option value="{{ $bud->internal_order }}" {{ old('io_assetcode') == $bud->internal_order ? 'selected' : '' }}>{{ $budget->internal_order }}</option>
+                                    @foreach($budgets as $budget)
+                                    @if(!empty($budget->internal_order))
+                                    <option value="{{ $budget->internal_order }}" {{ old('io_assetcode') == $budget->internal_order ? 'selected' : '' }}>{{ $budget->internal_order }}</option>
                                     @endif
                                     @endforeach
                                 </select>

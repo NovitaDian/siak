@@ -163,6 +163,7 @@ class BudgetController extends Controller
         $budget = Budget::findOrFail($budgetId);
 
         $purs = PurchasingGroup::all();
+        $budgets = Budget::all();
         $units = Unit::all();
         $material_groups = MaterialGroup::all();
         $materials = Barang::all();
@@ -172,7 +173,8 @@ class BudgetController extends Controller
             'units',
             'material_groups',
             'materials',
-            'budget'
+            'budget',
+            'budgets'
         ));
     }
 
