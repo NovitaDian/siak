@@ -7,73 +7,7 @@
 </div>
 @endif
 <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg">
-    <div class="row">
-        <div class="col-12">
-            <div class="card mb-4">
-                <div class="card-header pb-0">
-                    <h6>REQUEST</h6>
-                </div>
-                <div class="card-body px-0 pt-0 pb-2">
-                    <div class="table-responsive p-0">
-                        <div class="card-header pb-0">
-                            <table class="table align-items-center mb-0" id="requestTable">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Pengirim</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Waktu Pengajuan</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Jenis Pengajuan</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Alasan</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="notificationTableBody">
-                                    @foreach ($allRequests as $request)
-                                    <tr>
-                                        <td class="text-center text-xs">{{ $request->nama_pengirim }}</td>
-                                        <td class="text-center text-xs">{{ $request->created_at->format('d/m/Y') }}</td>
-                                        <td class="text-center text-xs">{{ $request->type }}</td>
-                                        <td class="text-center text-xs">{{ $request->reason }}</td>
-                                        <td class="text-center" id="status-{{$request->id}}">{{ $request->status }}</td>
-                                        <td class="text-center">
-                                            @if ($request->status == 'Pending')
-                                            <button
-                                                class="btn btn-success btn-xs me-1"
-                                                onclick="approveRequest('{{ $request->id }}')"
-                                                title="Approve this request">
-                                                <i class="fas fa-check m-1"></i> Approve
-                                            </button>
-
-                                            <button
-                                                class="btn btn-danger btn-xs me-1"
-                                                onclick="rejectRequest('{{ $request->id }}')"
-                                                title="Reject this request">
-                                                <i class="fas fa-times m-1"></i> Reject
-                                            </button>
-                                            @endif
-
-                                            <form
-                                                action="{{ route('operator.ncr.show', ['id' => $request->id]) }}"
-                                                method="GET"
-                                                style="display:inline;"
-                                                title="View details">
-                                                <button type="submit" class="btn btn-light btn-xs">
-                                                    <i class="fas fa-eye"></i> Show
-                                                </button>
-                                            </form>
-                                        </td>
-
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
+ 
     <div class="row">
         <div class="col-12">
             <div class="card mb-4">
