@@ -33,6 +33,11 @@ class IncidentController extends Controller
             ->get();
         $requests = IncidentRequest::latest()
             ->get();
+
+        // Ambil semua request (Edit/Delete)
+        $latestRequests = IncidentRequest::orderByDesc('id')
+            ->get()
+            ->unique('sent_incident_id');
         $start = $request->start_date;
         $end = $request->end_date;
 
@@ -2622,11 +2627,10 @@ class IncidentController extends Controller
 
         return response()->json(['total' => $total]);
     }
-      public function operator_downloadSatuan($id)
+    public function operator_downloadSatuan($id)
     {
         $incident = SentIncident::findOrFail($id);
         $pdf = Pdf::loadView('operator.incident.view', compact('incident'));
         return $pdf->download('Incident_Report_' . $incident->id . '.pdf');
     }
-
 }
