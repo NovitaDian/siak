@@ -877,8 +877,6 @@ class HomeController extends Controller
             'lastLTAIncidentDate' => $lastLtaDate,
             'selectedDate' => $shiftDateParsed,
             'targetManHours' => $targetManHours,
-            'shift' => $shift
-
         ]);
     }
 
