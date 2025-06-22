@@ -187,7 +187,7 @@
 
                                     @php
                                     $estimasiDate = \Carbon\Carbon::parse($ncr_fix->estimasi);
-                                    $closedDate = $ncr_fix->tanggal_closed ? \Carbon\Carbon::parse($ncr_fix->tanggal_closed) : null;
+                                    $closedDate = $ncr_fix->waktu_closed ? \Carbon\Carbon::parse($ncr_fix->waktu_closed) : null;
 
                                     $isLate = false;
 
