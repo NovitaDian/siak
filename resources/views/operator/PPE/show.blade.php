@@ -260,11 +260,6 @@
             }
         });
     }
-
-    // Fungsi untuk mengedit item
-    function editAction(id) {
-        window.location.href = "{{ url('operator/non_compliant/edit') }}/" + id; // Menggunakan URL Laravel
-    }
 </script>
 
 <script>
