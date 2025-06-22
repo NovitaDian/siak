@@ -246,9 +246,9 @@
 
                                             @elseif ($incident_fix->status_request == 'Approved')
                                             @php
-                                            $latestRequest = $requests->firstWhere('sent_incident_id', $incident_fix->id);
+                                            $request = $latestRequests->firstWhere('sent_incident_id', $incident_fix->id);
                                             \Log::info('Incident Fix ID: ' . $incident_fix->id . ' Looking for Request with sent_incident_id: ' . $incident_fix->id);
-                                            \Log::info('Requests: ', $requests->toArray());
+                                            \Log::info('Requests: ', $latestRequests->toArray());
                                             @endphp
 
                                             @if ($request)
