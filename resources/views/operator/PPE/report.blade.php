@@ -101,7 +101,7 @@
                                     <option value="ZONA IV (DEMIN, TURBIN, BOILER)" {{ old('zona_pengawasan') == 'ZONA IV (DEMIN, TURBIN, BOILER)' ? 'selected' : '' }}>ZONA IV (DEMIN, TURBIN, BOILER)</option>
                                     <option value="ZONA V (IPAL, WORKSHOP, MWH)" {{ old('zona_pengawasan') == 'ZONA V (IPAL, WORKSHOP, MWH)' ? 'selected' : '' }}>ZONA V (IPAL, WORKSHOP, MWH)</option>
                                 </select>
-                                @error('shift_kerja')
+                                @error('zona_pengawasan')
                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                 @enderror
                             </div>
