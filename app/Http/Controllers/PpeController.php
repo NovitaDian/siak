@@ -811,7 +811,7 @@ class PpeController extends Controller
             'user_id' => Auth::user()->id,
         ]);
 
-        return redirect()->route('operator.sent_ppe.index')->with('success', 'Data PPE telah diperbarui di sent_ppe!');
+        return redirect()->route('operator.ppe.index')->with('success', 'Data PPE telah diperbarui di sent_ppe!');
     }
 
 
