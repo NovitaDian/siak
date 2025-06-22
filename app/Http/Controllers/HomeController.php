@@ -573,7 +573,7 @@ class HomeController extends Controller
     }
 
 
-    public function operator_incident(Request $request)
+     public function operator_incident(Request $request)
     {
         // Ambil input shift_date dan shift
         $shiftDate = $request->input('shift_date');
