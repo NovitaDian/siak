@@ -23,7 +23,6 @@ return new class extends Migration
             $table->integer('year');
             $table->date('pr_date')->nullable();
             $table->string('kategori', 255);
-            $table->string('is_main', 5);
             $table->timestamps();
         });
     }

@@ -25,7 +25,6 @@ class Budget extends Model
         'setahun_total',
         'kategori',
         'year',
-        'is_main'
 
     ];
 
