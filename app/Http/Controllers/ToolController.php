@@ -22,30 +22,32 @@ use Maatwebsite\Excel\Facades\Excel;
 class ToolController extends Controller
 {
 
-   public function index(Request $request)
-{
-    $user = Auth::user();
+    public function index(Request $request)
+    {
+        $user = Auth::user();
 
-    $tools = ToolReport::with('alat')
-        ->where('writer', $user->name)
-        ->orderBy('created_at', 'desc') // urutkan dari yang terbaru
-        ->get();
-
-    $start = $request->start_date;
-    $end = $request->end_date;
-
-    if ($start && $end) {
-        $tool_fixs = SentToolReport::whereBetween('tanggal_pemeriksaan', [$start, $end])
+        $tools = ToolReport::with('alat')
+            ->where('writer', $user->name)
             ->orderBy('created_at', 'desc') // urutkan dari yang terbaru
             ->get();
-    } else {
-        $tool_fixs = SentToolReport::orderBy('created_at', 'desc')->get();
+ $latestRequests = ToolRequest::orderByDesc('id')
+            ->get()
+            ->unique('sent_tool_id');
+        $start = $request->start_date;
+        $end = $request->end_date;
+
+        if ($start && $end) {
+            $tool_fixs = SentToolReport::whereBetween('tanggal_pemeriksaan', [$start, $end])
+                ->orderBy('created_at', 'desc') // urutkan dari yang terbaru
+                ->get();
+        } else {
+            $tool_fixs = SentToolReport::orderBy('created_at', 'desc')->get();
+        }
+
+        $requests = ToolRequest::orderBy('created_at', 'desc')->get(); // urutkan dari yang terbaru
+
+        return view('adminsystem.tool.index', compact('tools', 'tool_fixs', 'requests', 'latestRequests'));
     }
-
-    $requests = ToolRequest::orderBy('created_at', 'desc')->get(); // urutkan dari yang terbaru
-
-    return view('adminsystem.tool.index', compact('tools', 'tool_fixs', 'requests'));
-}
 
     public function create()
     {
@@ -303,7 +305,6 @@ class ToolController extends Controller
         ]);
 
         return redirect()->route('adminsystem.tool.index')->with('success', 'Request berhasil disetujui.');
-
     }
 
 
@@ -317,7 +318,6 @@ class ToolController extends Controller
             'status' => 'Rejected',
         ]);
         return redirect()->route('adminsystem.tool.index')->with('success', 'Request berhasil ditolak.');
-
     }
     public function export(Request $request)
     {
@@ -368,17 +368,19 @@ class ToolController extends Controller
             ->get();
         $start = $request->start_date;
         $end = $request->end_date;
-
+        $latestRequests = ToolRequest::orderByDesc('id')
+            ->get()
+            ->unique('sent_tool_id');
         // Jika filter tanggal diisi, gunakan whereBetween
         if ($start && $end) {
             $tool_fixs = SentToolReport::whereBetween('tanggal_pemeriksaan', [$start, $end])->get();
         } else {
             $tool_fixs = SentToolReport::where('writer', $user->name)
-            ->get();
+                ->get();
         }
         $requests = ToolRequest::where('nama_pengirim', $user->name)->get();
 
-        return view('operator.tool.index', compact('tools', 'tool_fixs', 'requests'));
+        return view('operator.tool.index', compact('tools', 'tool_fixs', 'requests', 'latestRequests'));
     }
     public function operator_create()
     {

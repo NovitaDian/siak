@@ -503,7 +503,9 @@ class NcrController extends Controller
 
         // Ambil semua request (Edit/Delete)
         $allRequests = NcrRequest::all();
-
+        $latestRequests = NcrRequest::orderByDesc('id')
+            ->get()
+            ->unique('sent_ncr_id');
         // Filter tanggal jika ada
         $start = $request->start_date;
         $end = $request->end_date;
@@ -514,7 +516,7 @@ class NcrController extends Controller
             $ncr_fixs = SentNcr::where('writer', $user->name)->orderBy('tanggal_shift_kerja', 'desc')->get();
         }
 
-        return view('operator.ncr.index', compact('ncrs', 'ncr_fixs', 'allRequests'));
+        return view('operator.ncr.index', compact('ncrs', 'ncr_fixs', 'allRequests', 'latestRequests'));
     }
 
 
