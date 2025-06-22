@@ -26,7 +26,7 @@
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link {{ Request::is('adminsystem/budget_pr/budget') ? 'active' : '' }}" href="{{ url('adminsystem/budget_pr') }}">
+        <a class="nav-link {{ Request::is('adminsystem/budget_pr/budget') ? 'active' : '' }}" href="{{ url('adminsystem/budget_pr/budget') }}">
           <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
             <img src="{{ asset('../assets/img/money.png') }}" alt="budget" width="16" height="16">
           </div>
