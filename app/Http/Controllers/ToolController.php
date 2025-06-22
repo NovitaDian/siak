@@ -395,7 +395,7 @@ class ToolController extends Controller
         return view('operator.tool.create', compact('alats', 'inspectors'));
     }
 
-    public function operator_store(Request $request)
+      public function operator_store(Request $request)
     {
         $request->validate([
             'alat_id' => 'required|exists:alats,id',
@@ -410,9 +410,12 @@ class ToolController extends Controller
         $inspector = HseInspector::findOrFail($request->hse_inspector_id);
 
         if ($request->hasFile('foto')) {
-            $fotoPath = $request->file('foto')->store('pelanggar/foto', 'public');
-            $data['foto'] = $fotoPath;
+            // Buat nama file unik dan simpan ke folder 'images' dalam storage/public
+            $imageName = time() . '.' . $request->foto->extension();
+            $request->foto->move(public_path('storage/tool'), $imageName);
+            $data['foto'] = 'tool/' . $imageName;
         }
+
 
         ToolReport::create([
             'alat_id' => $alat->id,
@@ -421,7 +424,7 @@ class ToolController extends Controller
             'hse_inspector' => $inspector->name,
             'tanggal_pemeriksaan' => $request->tanggal_pemeriksaan,
             'status_pemeriksaan' => $request->status_pemeriksaan,
-            'foto' => $request->foto,
+            'foto' => $imageName,
             'writer' => Auth::user()->name,
             'user_id' => Auth::user()->id,
 
@@ -454,22 +457,26 @@ class ToolController extends Controller
         // Jika ada upload foto baru
         if ($request->hasFile('foto')) {
             // Hapus foto lama jika ada
-            if ($toolReport->foto && Storage::disk('public')->exists($toolReport->foto)) {
-                Storage::disk('public')->delete($toolReport->foto);
+            $oldPath = public_path('storage/' . $toolReport->foto);
+            if ($toolReport->foto && file_exists($oldPath)) {
+                unlink($oldPath);
             }
 
             // Simpan foto baru
-            $fotoPath = $request->file('foto')->store('uploads/foto', 'public');
-            $data['foto'] = $fotoPath;
+            $extension = $request->foto->getClientOriginalExtension(); // aman untuk nama ekstensi
+            $imageName = time() . '.' . $extension;
+            $request->foto->move(public_path('storage/tool'), $imageName);
+
+            // Simpan path ke DB
+            $data['foto'] = 'tool/' . $imageName;
         }
+
 
         // Update data
         $toolReport->update($data);
 
-
         return redirect()->route('operator.tool.index')->with('success', 'Data pemeriksaan berhasil diperbarui.');
-    }
-    public function operator_sent_update(Request $request, $id)
+    }    public function operator_sent_update(Request $request, $id)
     {
         $request->validate([
             'alat_id' => 'required|exists:alats,id',

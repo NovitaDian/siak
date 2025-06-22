@@ -129,8 +129,6 @@
                                             <img src="{{ asset('storage/' . $nc->foto) }}"
                                                 alt="{{ $nc->description }}"
                                                 style="width:100%; height:100%; object-fit:cover;">
-
-
                                         </div>
                                     </td>
                                     <td class="text-center text-xs">{{ $nc->nama_pelanggar }}</td>

@@ -48,12 +48,9 @@
                     <p>{{ $tools->created_at ??'-'}}</p>
                 </div>
                 <div class="col-md-12 mb-3">
-                    <strong>Foto Pemeriksaan:</strong><br>
-                    @if ($tools->foto && Storage::disk('public')->exists($tools->foto))
-                        <img src="{{ asset('storage/' . $tools->foto) ?? '-'}}" alt="Foto Pemeriksaan" class="img-fluid rounded" style="max-height: 400px;">
-                    @else
-                        <p>Tidak ada foto tersedia.</p>
-                    @endif
+                   <img src="{{ asset('storage/' . $tools->foto) }}"
+                                                alt="{{ $tools->description }}"
+                                                style="width:100%; height:100%; object-fit:cover;">
                 </div>
             </div>
             <div class="d-flex justify-content-end mt-3">
