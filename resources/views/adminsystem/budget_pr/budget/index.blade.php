@@ -58,9 +58,9 @@
                                         <p class="text-xs font-weight-bold mb-0">{{ $budget->year}}</p>
                                     </td>
                                     <td class="text-center">
-                                        <p class="text-xs font-weight-bold mb-0">
-                                            {{ $budget->setahun_total - $budget->prs->sum('valuation_price') }}
-                                        </p>
+                                        @foreach ($budget->prs as $pr)
+                                        {{ $pr->pr_no }} - {{ $pr->valuation_price }}
+                                        @endforeach
                                     </td>
 
                                     <td class="align-middle text-center">

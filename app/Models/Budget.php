@@ -28,7 +28,7 @@ class Budget extends Model
 
     ];
 
-    public function purchaseRequests()
+    public function prs()
     {
         return $this->hasMany(PurchaseRequest::class, 'budget_id');
     }

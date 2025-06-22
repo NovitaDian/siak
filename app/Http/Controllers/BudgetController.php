@@ -28,7 +28,7 @@ class BudgetController extends Controller
     // budget
     public function budget_index()
     {
-        $budgets = Budget::with('purchaseRequests')->get();
+        $budgets = Budget::with('prs')->get();
         return view('adminsystem.budget_pr.budget.index', compact('budgets'));
     }
 
