@@ -15,10 +15,12 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <h6 class="mb-0">Purchase Request</h6>
                     <form action="{{ route('adminsystem.pr.create') }}" method="GET">
+                        <input type="hidden" name="budget_id" value="{{ $budget->id }}">
                         <button type="submit" class="btn btn-primary btn-sm mb-0">
                             Tambah
                         </button>
                     </form>
+
                 </div>
             </div>
 
@@ -67,7 +69,7 @@
                                         <p class="text-xs font-weight-bold mb-0">{{ $pr->gl_code }}-{{ $pr->gl_name}}</p>
                                     </td>
                                     <td class="align-middle text-center">
-                                         <a href="{{ route('adminsystem.pr.edit', $pr->id) }}"
+                                        <a href="{{ route('adminsystem.pr.edit', $pr->id) }}"
                                             class="btn btn-warning btn-xs mb-2"> <i class="fas fa-edit me-1" style="font-size: 12px;"></i> Edit
 
                                         </a>
@@ -85,7 +87,7 @@
                                     </td>
                                 </tr>
                                 @empty
-                                
+
                                 @endforelse
                             </tbody>
                         </table>
