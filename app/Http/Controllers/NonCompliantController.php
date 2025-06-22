@@ -39,7 +39,7 @@ class NonCompliantController extends Controller
         return response()->json($bagians);
     }
 
-  
+
     public function store(Request $request)
     {
         $request->validate([
@@ -110,14 +110,16 @@ class NonCompliantController extends Controller
 
         if ($request->hasFile('foto')) {
             // Hapus foto lama jika ada
-            if ($nonCompliant->foto && Storage::disk('public')->exists($nonCompliant->foto)) {
-                Storage::disk('public')->delete($nonCompliant->foto);
+            if ($nonCompliant->foto && file_exists(public_path('storage/' . $nonCompliant->foto))) {
+                unlink(public_path('storage/' . $nonCompliant->foto));
             }
 
             // Simpan foto baru
-            $fotoPath = $request->file('foto')->store('pelanggar/foto', 'public');
-            $data['foto'] = $fotoPath;
+            $imageName = time() . '.' . $request->foto->extension();
+            $request->foto->move(public_path('storage/pelanggar'), $imageName);
+            $data['foto'] = 'pelanggar/' . $imageName;
         }
+
         $data['status'] = 'Nothing';
         $nonCompliant->update($data);
 
@@ -223,30 +225,30 @@ class NonCompliantController extends Controller
     // Menyimpan data NonCompliant baru
     public function operator_store(Request $request)
     {
-
         $request->validate([
-            'id_ppe' => 'required|integer',
-            'tipe_observasi' => 'required|string',
-            'nama_pelanggar' => 'required|string',
-            'perusahaan' => 'required|string',
-            'nama_bagian' => 'required|string',
-            'nama_hse_inspector' => 'required|string',
-            'shift_kerja' => 'required|string',
-            'jam_mulai' => 'required|string',
-            'jam_selesai' => 'required|string',
-            'zona_pengawasan' => 'required|string',
-            'lokasi_observasi' => 'required|string',
-            'foto' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'id_ppe'              => 'required|integer',
+            'tipe_observasi'      => 'required|string',
+            'nama_pelanggar'      => 'required|string',
+            'perusahaan'          => 'required|string',
+            'nama_bagian'         => 'required|string',
+            'nama_hse_inspector'  => 'required|string',
+            'shift_kerja'         => 'required|string',
+            'jam_mulai'           => 'required|string',
+            'jam_selesai'         => 'required|string',
+            'zona_pengawasan'     => 'required|string',
+            'lokasi_observasi'    => 'required|string',
+            'foto'                => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $data = $request->except('foto'); // jangan langsung include file upload
-        $data['user_id'] = Auth::user()->id;
+        $data = $request->except('foto'); // Ambil semua data kecuali file foto
+        $data['user_id'] = Auth::id();
         $data['writer'] = Auth::user()->name;
 
-        // Upload foto ke folder storage/app/public/pelanggar
         if ($request->hasFile('foto')) {
-            $fotoPath = $request->file('foto')->store('pelanggar', 'public'); // path: pelanggar/nama.jpg
-            $data['foto'] = $fotoPath;
+            // Buat nama file unik dan simpan ke folder 'images' dalam storage/public
+            $imageName = time() . '.' . $request->foto->extension();
+            $request->foto->move(public_path('storage/pelanggar'), $imageName);
+            $data['foto'] = 'pelanggar/' . $imageName;
         }
 
         NonCompliant::create($data);
@@ -291,14 +293,16 @@ class NonCompliantController extends Controller
 
         if ($request->hasFile('foto')) {
             // Hapus foto lama jika ada
-            if ($nonCompliant->foto && Storage::disk('public')->exists($nonCompliant->foto)) {
-                Storage::disk('public')->delete($nonCompliant->foto);
+            if ($nonCompliant->foto && file_exists(public_path('storage/' . $nonCompliant->foto))) {
+                unlink(public_path('storage/' . $nonCompliant->foto));
             }
 
             // Simpan foto baru
-            $fotoPath = $request->file('foto')->store('pelanggar/foto', 'public');
-            $data['foto'] = $fotoPath;
+            $imageName = time() . '.' . $request->foto->extension();
+            $request->foto->move(public_path('storage/pelanggar'), $imageName);
+            $data['foto'] = 'pelanggar/' . $imageName;
         }
+
         $data['status'] = 'Nothing';
         $nonCompliant->update($data);
 
