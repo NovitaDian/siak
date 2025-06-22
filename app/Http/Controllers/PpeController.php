@@ -136,7 +136,7 @@ class PpeController extends Controller
         $latestRequests = NonCompliantRequest::orderByDesc('id')
             ->get()
             ->unique('sent_non_compliant_id');
-        return view('adminsystem.PPE.show', compact('ppeFix', 'requests', 'nonCompliants','latestRequests'));
+        return view('adminsystem.PPE.show', compact('ppeFix', 'requests', 'nonCompliants', 'latestRequests'));
     }
 
     // Menampilkan form edit data
@@ -589,7 +589,10 @@ class PpeController extends Controller
         $ppeFix = SentPpe::findOrFail($id);
         $nonCompliants = NonCompliant::where('id_ppe', $id)->get();
         $requests = NonCompliantRequest::all();
-        return view('operator.PPE.show', compact('ppeFix', 'requests', 'nonCompliants'));
+        $latestRequests = NonCompliantRequest::orderByDesc('id')
+            ->get()
+            ->unique('sent_non_compliant_id');
+        return view('operator.PPE.show', compact('ppeFix', 'requests', 'nonCompliants','latestRequests'));
     }
 
     // Menampilkan form edit data
