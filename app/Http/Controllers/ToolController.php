@@ -57,46 +57,46 @@ class ToolController extends Controller
     }
 
     public function store(Request $request)
-{
-    $request->validate([
-        'alat_id' => 'required|exists:alats,id',
-        'hse_inspector_id' => 'required|exists:hse_inspector,id',
-        'tanggal_pemeriksaan' => 'required|date',
-        'status_pemeriksaan' => 'required|in:Layak operasi,Layak operasi dengan catatan,Tidak layak operasi',
-        'foto' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
-    ]);
+    {
+        $request->validate([
+            'alat_id' => 'required|exists:alats,id',
+            'hse_inspector_id' => 'required|exists:hse_inspector,id',
+            'tanggal_pemeriksaan' => 'required|date',
+            'status_pemeriksaan' => 'required|in:Layak operasi,Layak operasi dengan catatan,Tidak layak operasi',
+            'foto' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
 
-    $alat = Alat::findOrFail($request->alat_id);
-    $inspector = HseInspector::findOrFail($request->hse_inspector_id);
+        $alat = Alat::findOrFail($request->alat_id);
+        $inspector = HseInspector::findOrFail($request->hse_inspector_id);
 
-    // Inisialisasi variabel foto
-    $fotoPath = null;
+        // Inisialisasi variabel foto
+        $fotoPath = null;
 
-    if ($request->hasFile('foto')) {
-        // Simpan file dengan nama unik ke folder public/storage/tool
-        $extension = $request->file('foto')->getClientOriginalExtension();
-        $imageName = time() . '.' . $extension;
+        if ($request->hasFile('foto')) {
+            // Simpan file dengan nama unik ke folder public/storage/tool
+            $extension = $request->file('foto')->getClientOriginalExtension();
+            $imageName = time() . '.' . $extension;
 
-        $request->file('foto')->move(public_path('storage/tool'), $imageName);
+            $request->file('foto')->move(public_path('storage/tool'), $imageName);
 
-        // Path yang disimpan ke database
-        $fotoPath = 'tool/' . $imageName;
+            // Path yang disimpan ke database
+            $fotoPath = 'tool/' . $imageName;
+        }
+
+        ToolReport::create([
+            'alat_id'             => $alat->id,
+            'nama_alat'           => $alat->nama_alat,
+            'hse_inspector_id'    => $inspector->id,
+            'hse_inspector'       => $inspector->name,
+            'tanggal_pemeriksaan' => $request->tanggal_pemeriksaan,
+            'status_pemeriksaan'  => $request->status_pemeriksaan,
+            'foto'                => $fotoPath,
+            'writer'              => Auth::user()->name,
+            'user_id'             => Auth::id(), // disingkat
+        ]);
+
+        return redirect()->route('adminsystem.tool.index')->with('success', 'Data pemeriksaan berhasil disimpan.');
     }
-
-    ToolReport::create([
-        'alat_id'             => $alat->id,
-        'nama_alat'           => $alat->nama_alat,
-        'hse_inspector_id'    => $inspector->id,
-        'hse_inspector'       => $inspector->name,
-        'tanggal_pemeriksaan' => $request->tanggal_pemeriksaan,
-        'status_pemeriksaan'  => $request->status_pemeriksaan,
-        'foto'                => $fotoPath,
-        'writer'              => Auth::user()->name,
-        'user_id'             => Auth::id(), // disingkat
-    ]);
-
-    return redirect()->route('adminsystem.tool.index')->with('success', 'Data pemeriksaan berhasil disimpan.');
-}
 
     public function update(Request $request, $id)
     {
@@ -400,47 +400,47 @@ class ToolController extends Controller
         return view('operator.tool.create', compact('alats', 'inspectors'));
     }
 
-public function operator_store(Request $request)
-{
-    $request->validate([
-        'alat_id' => 'required|exists:alats,id',
-        'hse_inspector_id' => 'required|exists:hse_inspector,id',
-        'tanggal_pemeriksaan' => 'required|date',
-        'status_pemeriksaan' => 'required|in:Layak operasi,Layak operasi dengan catatan,Tidak layak operasi',
-        'foto' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
-    ]);
+    public function operator_store(Request $request)
+    {
+        $request->validate([
+            'alat_id' => 'required|exists:alats,id',
+            'hse_inspector_id' => 'required|exists:hse_inspector,id',
+            'tanggal_pemeriksaan' => 'required|date',
+            'status_pemeriksaan' => 'required|in:Layak operasi,Layak operasi dengan catatan,Tidak layak operasi',
+            'foto' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
 
-    $alat = Alat::findOrFail($request->alat_id);
-    $inspector = HseInspector::findOrFail($request->hse_inspector_id);
+        $alat = Alat::findOrFail($request->alat_id);
+        $inspector = HseInspector::findOrFail($request->hse_inspector_id);
 
-    // Inisialisasi variabel foto
-    $fotoPath = null;
+        // Inisialisasi variabel foto
+        $fotoPath = null;
 
-    if ($request->hasFile('foto')) {
-        // Simpan file dengan nama unik ke folder public/storage/tool
-        $extension = $request->file('foto')->getClientOriginalExtension();
-        $imageName = time() . '.' . $extension;
+        if ($request->hasFile('foto')) {
+            // Simpan file dengan nama unik ke folder public/storage/tool
+            $extension = $request->file('foto')->getClientOriginalExtension();
+            $imageName = time() . '.' . $extension;
 
-        $request->file('foto')->move(public_path('storage/tool'), $imageName);
+            $request->file('foto')->move(public_path('storage/tool'), $imageName);
 
-        // Path yang disimpan ke database
-        $fotoPath = 'tool/' . $imageName;
+            // Path yang disimpan ke database
+            $fotoPath = 'tool/' . $imageName;
+        }
+
+        ToolReport::create([
+            'alat_id'             => $alat->id,
+            'nama_alat'           => $alat->nama_alat,
+            'hse_inspector_id'    => $inspector->id,
+            'hse_inspector'       => $inspector->name,
+            'tanggal_pemeriksaan' => $request->tanggal_pemeriksaan,
+            'status_pemeriksaan'  => $request->status_pemeriksaan,
+            'foto'                => $fotoPath,
+            'writer'              => Auth::user()->name,
+            'user_id'             => Auth::id(), // disingkat
+        ]);
+
+        return redirect()->route('operator.tool.index')->with('success', 'Data pemeriksaan berhasil disimpan.');
     }
-
-    ToolReport::create([
-        'alat_id'             => $alat->id,
-        'nama_alat'           => $alat->nama_alat,
-        'hse_inspector_id'    => $inspector->id,
-        'hse_inspector'       => $inspector->name,
-        'tanggal_pemeriksaan' => $request->tanggal_pemeriksaan,
-        'status_pemeriksaan'  => $request->status_pemeriksaan,
-        'foto'                => $fotoPath,
-        'writer'              => Auth::user()->name,
-        'user_id'             => Auth::id(), // disingkat
-    ]);
-
-    return redirect()->route('operator.tool.index')->with('success', 'Data pemeriksaan berhasil disimpan.');
-}
 
     public function operator_update(Request $request, $id)
     {
@@ -486,7 +486,8 @@ public function operator_store(Request $request)
         $toolReport->update($data);
 
         return redirect()->route('operator.tool.index')->with('success', 'Data pemeriksaan berhasil diperbarui.');
-    }    public function operator_sent_update(Request $request, $id)
+    }
+    public function operator_sent_update(Request $request, $id)
     {
         $request->validate([
             'alat_id' => 'required|exists:alats,id',
@@ -580,6 +581,7 @@ public function operator_store(Request $request)
             'tanggal_pemeriksaan' => $tool->tanggal_pemeriksaan,
             'status_pemeriksaan' => $tool->status_pemeriksaan,
             'foto' => $tool->foto,
+            'user_id' => $tool->user_id,
 
         ]);
         $alat = Alat::findOrFail($tool->alat_id);
