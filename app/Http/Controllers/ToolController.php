@@ -30,7 +30,7 @@ class ToolController extends Controller
             ->where('writer', $user->name)
             ->orderBy('created_at', 'desc') // urutkan dari yang terbaru
             ->get();
- $latestRequests = ToolRequest::orderByDesc('id')
+        $latestRequests = ToolRequest::orderByDesc('id')
             ->get()
             ->unique('sent_tool_id');
         $start = $request->start_date;
@@ -431,25 +431,10 @@ class ToolController extends Controller
             'tanggal_pemeriksaan' => 'required|date',
             'status_pemeriksaan' => 'required|in:Layak operasi,Layak operasi dengan catatan,Tidak layak operasi',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
-
         ]);
 
         $toolReport = ToolReport::findOrFail($id);
-        if ($request->hasFile('foto')) {
-            // Optional: delete old file first
-            if ($request->foto && Storage::disk('public')->exists($request->foto)) {
-                Storage::disk('public')->delete($request->foto);
-            }
-
-            $foto = $request->file('foto');
-            $fotoPath = $foto->store('uploads/foto', 'public');
-            $data['foto'] = $fotoPath;
-        } else {
-            // Remove 'foto' key if no new file uploaded
-            unset($data['foto']);
-        }
-
-        $toolReport->update([
+        $data = [
             'alat_id' => $request->alat_id,
             'nama_alat' => Alat::find($request->alat_id)?->nama_alat,
             'hse_inspector_id' => $request->hse_inspector_id,
@@ -458,7 +443,23 @@ class ToolController extends Controller
             'status_pemeriksaan' => $request->status_pemeriksaan,
             'writer' => Auth::user()->name,
             'user_id' => Auth::user()->id,
-        ]);
+        ];
+
+        // Jika ada upload foto baru
+        if ($request->hasFile('foto')) {
+            // Hapus foto lama jika ada
+            if ($toolReport->foto && Storage::disk('public')->exists($toolReport->foto)) {
+                Storage::disk('public')->delete($toolReport->foto);
+            }
+
+            // Simpan foto baru
+            $fotoPath = $request->file('foto')->store('uploads/foto', 'public');
+            $data['foto'] = $fotoPath;
+        }
+
+        // Update data
+        $toolReport->update($data);
+
 
         return redirect()->route('operator.tool.index')->with('success', 'Data pemeriksaan berhasil diperbarui.');
     }
