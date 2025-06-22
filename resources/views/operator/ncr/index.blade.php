@@ -270,12 +270,14 @@
                                             title="View details">
                                             <li>
                                                 <a href="{{ $ncr_fix->status_ncr === 'Closed' 
-                                                ? route('operator.ncr.closed_show', $ncr_fix->id)
-                                                : route('operator.ncr.sent_show', $ncr_fix->id) }}"
-                                                    class="dropdown-item">
+                ? route('operator.ncr.closed_show', $ncr_fix->id) 
+                : route('operator.ncr.sent_show', $ncr_fix->id) }}"
+                                                    class="dropdown-item"
+                                                    title="View details">
                                                     <i class="fas fa-edit me-1"></i> Edit
                                                 </a>
                                             </li>
+
                                         </form>
                                     </td>
                                 </tr>
