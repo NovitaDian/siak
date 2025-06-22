@@ -12,12 +12,6 @@
             <div class="card mb-4">
                 <div class="card-header pb-0 d-flex justify-content-between align-items-center">
                     <h6>PERUSAHAAN</h6>
-                    <form action="{{ route('operator.perusahaan.create') }}" method="GET" class="d-inline">
-                        @csrf
-                        <button type="submit" class="btn btn-sm btn-primary text-white">
-                            Tambah
-                        </button>
-                    </form>
                 </div>
 
                 <div class="card-body px-0 pt-0 pb-2">
@@ -29,7 +23,6 @@
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Perusahaan</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Kota</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Alamat</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -46,22 +39,6 @@
                                     </td>
                                     <td class="align-middle text-center">
                                         <span class="text-secondary text-xs font-weight-bold">{{ $per->street }}</span>
-                                    </td>
-                                    <td class="align-middle text-center">
-                                        <!-- Tombol Edit -->
-                                        <a href="{{ route('operator.perusahaan.edit', $per->perusahaan_code) }}" class="btn btn-warning btn-xs">
-                                            <i class="fas fa-edit me-1"></i> Edit
-                                        </a>
-
-                                        <!-- Tombol Hapus -->
-                                        <form action="{{ route('operator.perusahaan.destroy', $per->id) }}" method="POST" class="d-inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-xs"
-                                                onclick="return confirm('Anda yakin ingin menghapus perusahaan ini?')">
-                                                <i class="fas fa-trash-alt me-1"></i> Hapus
-                                            </button>
-                                        </form>
                                     </td>
                                 </tr>
                                 @endforeach

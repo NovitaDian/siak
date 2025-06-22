@@ -14,12 +14,6 @@
             <div class="card mb-4">
                 <div class="card-header pb-0 d-flex justify-content-between align-items-center">
                     <h6 class="mb-0">Unit</h6>
-                    <form action="{{ route('operator.unit.create') }}" method="GET" class="d-inline">
-                        @csrf
-                        <button type="submit" class="btn btn-sm btn-primary text-white">
-                            Tambah
-                        </button>
-                    </form>
                 </div>
 
                 <div class="card-body px-0 pt-0 pb-2">
@@ -29,7 +23,6 @@
                                 <tr>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Unit</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Description</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -40,22 +33,6 @@
                                     </td>
                                     <td class="text-center">
                                         <p class="text-xs font-weight-bold mb-0">{{ $unit->description }}</p>
-                                    </td>
-                                    <td class="align-middle text-center">
-                                        <!-- Tombol Edit -->
-                                        <a href="{{ route('operator.unit.edit', $unit->id) }}" class="btn btn-warning btn-xs">
-                                            <i class="fas fa-edit me-1"></i> Edit
-                                        </a>
-
-                                        <!-- Tombol Hapus -->
-                                        <form action="{{ route('operator.unit.destroy', $unit->id) }}" method="POST" class="d-inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-xs"
-                                                onclick="return confirm('Anda yakin ingin menghapus unit ini?')">
-                                                <i class="fas fa-trash-alt me-1"></i> Hapus
-                                            </button>
-                                        </form>
                                     </td>
                                 </tr>
                                 @endforeach
