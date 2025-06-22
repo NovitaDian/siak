@@ -116,20 +116,6 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="gl_code">{{ __('GL Account') }}</label>
-                                <select class="form-control" id="gl_code" name="gl_code" required>
-                                    <option value="">Pilih GL Account</option>
-                                    @foreach($gls as $gl)
-                                    <option value="{{ $gl->gl_code }}" {{ old('gl_code') == $gl->gl_code ? 'selected' : '' }}>{{ $gl->gl_code }}-{{ $gl->gl_name }}</option>
-                                    @endforeach
-                                </select>
-                                @error('gl_code')
-                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                                @enderror
-                            </div>
-                        </div>
                         <div class="d-flex justify-content-end">
                             <button type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">{{ __('Simpan PR') }}</button>
                         </div>
