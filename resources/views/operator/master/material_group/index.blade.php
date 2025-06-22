@@ -19,7 +19,6 @@
                             <thead>
                                 <tr>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Material Group</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
