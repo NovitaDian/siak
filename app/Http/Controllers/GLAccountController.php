@@ -113,7 +113,7 @@ class GLAccountController extends Controller
 
         $gl->update($request->all());
 
-        return redirect()->route('operator.master.glaccount.index')->with('success', 'GL Account berhasil diperbarui.');
+        return redirect()->route('operator.glaccount.index')->with('success', 'GL Account berhasil diperbarui.');
     }
 
     public function operator_destroy($id)
@@ -121,6 +121,6 @@ class GLAccountController extends Controller
         $gl = Gl_Account::findOrFail($id);
         $gl->delete();
 
-        return redirect()->route('operator.master.glaccount.index')->with('success', 'Purchase Request berhasil dihapus.');
+        return redirect()->route('operator.glaccount.index')->with('success', 'Purchase Request berhasil dihapus.');
     }
 }
