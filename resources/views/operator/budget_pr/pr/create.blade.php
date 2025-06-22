@@ -30,6 +30,7 @@
                         </button>
                     </div>
                     @endif
+                    <input type="hidden" name="budget_id" value="{{ request('budget_id') }}">
 
                     <div class="row">
                         <div class="col-md-6">
@@ -114,20 +115,6 @@
                                     @endif
                                     @endforeach
                                 </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="gl_code">{{ __('GL Account') }}</label>
-                                <select class="form-control" id="gl_code" name="gl_code" required>
-                                    <option value="">Pilih GL Account</option>
-                                    @foreach($gls as $gl)
-                                    <option value="{{ $gl->gl_code }}" {{ old('gl_code') == $gl->gl_code ? 'selected' : '' }}>{{ $gl->gl_code }}-{{ $gl->gl_name }}</option>
-                                    @endforeach
-                                </select>
-                                @error('gl_code')
-                                <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                                @enderror
                             </div>
                         </div>
                         <div class="d-flex justify-content-end">
