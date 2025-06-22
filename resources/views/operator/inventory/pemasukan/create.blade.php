@@ -55,8 +55,6 @@
                             @enderror
                         </div>
                     </div>
-                </div>
-                <div class="row">
                     <!-- Quantity -->
                     <div class="col-md-6">
                         <div class="form-group">
@@ -67,50 +65,25 @@
                             @enderror
                         </div>
                     </div>
-                    <!-- Unit -->
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="unit">{{ __('Unit') }}</label>
-                            <input class="form-control" type="text" id="unit" name="unit" value="{{ old('unit') }}" required>
-                            @error('unit')
-                            <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                            @enderror
-                        </div>
+                </div>
+                <!-- Keterangan -->
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="keterangan">{{ __('Keterangan') }}</label>
+                        <textarea class="form-control" id="keterangan" name="keterangan" rows="3">{{ old('keterangan') }}</textarea>
+                        @error('keterangan')
+                        <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                        @enderror
                     </div>
                 </div>
         </div>
 
-
-        <!-- Keterangan -->
-        <div class="col-md-6">
-            <div class="form-group">
-                <label for="keterangan">{{ __('Keterangan') }}</label>
-                <textarea class="form-control" id="keterangan" name="keterangan" rows="3">{{ old('keterangan') }}</textarea>
-                @error('keterangan')
-                <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                @enderror
-            </div>
+        <!-- Submit Button -->
+        <div class="d-flex justify-content-end">
+            <button type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">{{ __('Submit Pemasukan') }}</button>
         </div>
+        </form>
     </div>
-
-    <!-- Submit Button -->
-    <div class="d-flex justify-content-end">
-        <button type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">{{ __('Submit Pemasukan') }}</button>
-    </div>
-    </form>
 </div>
 </div>
-</div>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const barangSelect = document.getElementById('barang_id');
-        const unitInput = document.getElementById('unit');
-
-        barangSelect.addEventListener('change', function() {
-            const selectedOption = barangSelect.options[barangSelect.selectedIndex];
-            const unit = selectedOption.getAttribute('data-unit');
-            unitInput.value = unit; // Set value of unit input
-        });
-    });
-</script>
 @endsection

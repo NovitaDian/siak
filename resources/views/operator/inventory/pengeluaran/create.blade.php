@@ -10,7 +10,7 @@
         <div class="card-body pt-4 p-3">
             <form action="{{ route('operator.pengeluaran.store') }}" method="POST" role="form text-left" enctype="multipart/form-data">
                 @csrf
-                
+
                 @if($errors->any())
                 <div class="mt-3 alert alert-danger alert-dismissible fade show" role="alert">
                     <span class="alert-text text-white">{{ $errors->first() }}</span>
@@ -19,7 +19,7 @@
                     </button>
                 </div>
                 @endif
-                
+
                 @if(session('success'))
                 <div class="m-3 alert alert-success alert-dismissible fade show" role="alert">
                     <span class="alert-text text-white">{{ session('success') }}</span>
@@ -30,7 +30,7 @@
                 @endif
 
                 <div class="row">
-                <div class="col-md-6">
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label for="tanggal">{{ __('Tanggal') }}</label>
                             <input class="form-control" type="date" id="tanggal" name="tanggal" value="{{ old('tanggal') }}" required>
@@ -45,7 +45,7 @@
                             <select class="form-control" id="barang_id" name="barang_id" required>
                                 <option value="">Pilih Barang</option>
                                 @foreach($barangs as $barang)
-                                    <option value="{{ $barang->id }}">{{ $barang->description }}</option>
+                                <option value="{{ $barang->id }}">{{ $barang->description }}</option>
                                 @endforeach
                             </select>
                             @error('barang_id')
@@ -63,19 +63,6 @@
                             @enderror
                         </div>
                     </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="unit">{{ __('Unit') }}</label>
-                            <input class="form-control" type="text" id="unit" name="unit" value="{{ old('unit') }}" required>
-                            @error('unit')
-                            <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                            @enderror
-                        </div>
-                    </div>
-
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="keterangan">{{ __('Keterangan') }}</label>

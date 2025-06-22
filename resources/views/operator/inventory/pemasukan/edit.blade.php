@@ -57,9 +57,6 @@
                             @enderror
                         </div>
                     </div>
-                </div>
-
-                <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="quantity">{{ __('Quantity') }}</label>
@@ -69,25 +66,14 @@
                             @enderror
                         </div>
                     </div>
-
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="unit">{{ __('Unit') }}</label>
-                            <input class="form-control" type="text" id="unit" name="unit" value="{{ old('unit', $pemasukan->unit) }}" required>
-                            @error('unit')
+                            <label for="keterangan">{{ __('Keterangan') }}</label>
+                            <textarea class="form-control" id="keterangan" name="keterangan" rows="3">{{ old('keterangan', $pemasukan->keterangan) }}</textarea>
+                            @error('keterangan')
                             <p class="text-danger text-xs mt-2">{{ $message }}</p>
                             @enderror
                         </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="keterangan">{{ __('Keterangan') }}</label>
-                        <textarea class="form-control" id="keterangan" name="keterangan" rows="3">{{ old('keterangan', $pemasukan->keterangan) }}</textarea>
-                        @error('keterangan')
-                        <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                        @enderror
                     </div>
                 </div>
 
@@ -100,7 +86,7 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         const barangSelect = document.getElementById('barang_id');
         const unitInput = document.getElementById('unit');
 
@@ -110,7 +96,7 @@
             unitInput.value = selectedOption.getAttribute('data-unit');
         }
 
-        barangSelect.addEventListener('change', function () {
+        barangSelect.addEventListener('change', function() {
             const selectedOption = barangSelect.options[barangSelect.selectedIndex];
             const unit = selectedOption.getAttribute('data-unit');
             unitInput.value = unit;
