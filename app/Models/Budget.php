@@ -33,4 +33,23 @@ class Budget extends Model
     {
         return $this->hasMany(PurchaseRequest::class, 'budget_id');
     }
+
+    // Total yang sudah dipakai
+    public function getUsageAttribute()
+    {
+        return $this->purchaseRequests()->sum('valuation_price');
+    }
+
+    // Sisa budget
+    public function getSisaAttribute()
+    {
+        return $this->setahun_total - $this->usage;
+    }
+
+    // Persentase pemakaian
+    public function getPercentageUsageAttribute()
+    {
+        if ($this->setahun_total == 0) return 0;
+        return ($this->usage / $this->setahun_total) * 100;
+    }
 }

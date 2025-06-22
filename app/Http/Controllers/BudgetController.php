@@ -28,9 +28,10 @@ class BudgetController extends Controller
     // budget
     public function budget_index()
     {
-        $budgets = Budget::all();
+        $budgets = Budget::with('prs')->get();
         return view('adminsystem.budget_pr.budget.index', compact('budgets'));
     }
+
     public function budget_create()
     {
 
@@ -167,62 +168,28 @@ class BudgetController extends Controller
         return view('adminsystem.budget_pr.pr.create', compact('purs', 'budgets', 'units', 'material_groups', 'gls', 'materials'));
     }
 
-    public function pr_store(Request $request)
-    {
-        $validated = $request->validate([
-            'pr_date' => 'required|date',
-            'pr_no' => 'required|string|unique:pr,pr_no',
-            'purchase_for' => 'required|string',
-            'material' => 'required|string',
-            'quantity' => 'required|numeric',
-            'unit' => 'required|string',
-            'valuation_price' => 'required|numeric',
-            'io_assetcode' => 'nullable|string',
-            'gl_code' => 'required|string',
-            'description' => 'nullable|string',
-        ]);
+   public function pr_store(Request $request)
+{
+    $validated = $request->validate([
+        'budget_id' => 'required|exists:budget,id',
+        'pr_date' => 'required|date',
+        'pr_no' => 'required|string|unique:pr,pr_no',
+        'purchase_for' => 'required|string',
+        'material' => 'required|string',
+        'quantity' => 'required|numeric',
+        'unit' => 'required|string',
+        'valuation_price' => 'required|numeric',
+        'io_assetcode' => 'nullable|string',
+        'gl_code' => 'required|string',
+        'description' => 'nullable|string',
+    ]);
 
-        $glaccount = Gl_Account::where('gl_code', $validated['gl_code'])->firstOrFail();
-        PurchaseRequest::create($validated);
+    PurchaseRequest::create($validated);
 
-        $budgetFix = BudgetFix::where('gl_code', $validated['gl_code'])->latest()->first();
+    return redirect()->route('adminsystem.budget.pr.detail', $validated['budget_id'])
+        ->with('success', 'PR berhasil ditambahkan');
+}
 
-        if ($budgetFix) {
-            $usage = $validated['valuation_price'];
-            $pr_date = $validated['pr_date'];
-            $bg_approve = $budgetFix->bg_approve ?? 0;
-            $internal_order = $validated['io_assetcode'] ?? null;
-            $sisa_usage = $budgetFix->sisa - $usage;
-            $percentage_usage = ($bg_approve > 0) ? ($usage / $bg_approve) * 100 : 0;
-
-            if ($budgetFix->usage > 0) {
-                BudgetFix::create([
-                    'gl_code' => $validated['gl_code'],
-                    'usage' => $usage,
-                    'internal_order' => $internal_order,
-                    'gl_name' => $glaccount->gl_name,
-                    'percentage_usage' => $percentage_usage,
-                    'sisa' => $sisa_usage,
-                    'description' => $validated['description'] ?? null,
-                    'bg_approve' => $budgetFix->bg_approve,
-                    'plan' => $budgetFix->plan,
-                    'kategori' => $budgetFix->kategori,
-                    'year' => $budgetFix->year,
-                    'pr_date' => $pr_date,
-                ]);
-            } else {
-                $budgetFix->update([
-                    'usage' => $usage,
-                    'internal_order' => $internal_order,
-                    'percentage_usage' => $percentage_usage,
-                    'sisa' => $sisa_usage,
-                    'pr_date' => $pr_date,
-                ]);
-            }
-        }
-
-        return redirect()->route('adminsystem.pr.index')->with('success', 'Purchase Request berhasil dibuat.');
-    }
 
     public function pr_update(Request $request, $id)
     {
@@ -297,51 +264,16 @@ class BudgetController extends Controller
     }
 
 
-    public function pr_destroy($id)
-    {
-        $pr = PurchaseRequest::findOrFail($id);
+   public function pr_destroy($id)
+{
+    $pr = PurchaseRequest::findOrFail($id);
+    $budgetId = $pr->budget_id;
+    $pr->delete();
 
-        // Ambil data terkait untuk penyesuaian budget
-        $valuation = $pr->valuation_price;
-        $gl_code = $pr->gl_code;
-        $internal_order = $pr->io_assetcode;
+    return redirect()->route('adminsystem.budget.pr.detail', $budgetId)
+        ->with('success', 'PR berhasil dihapus dan budget diperbarui.');
+}
 
-        // Hapus PR terlebih dahulu
-        $pr->delete();
-
-        // Ambil semua budgetFix terkait
-        $query = BudgetFix::where('gl_code', $gl_code)
-            ->where('usage', $valuation);
-
-        if ($internal_order) {
-            $query->where('internal_order', $internal_order);
-        }
-
-        $matchingBudgetFixes = $query->get();
-
-        if ($matchingBudgetFixes->count() === 1) {
-            // Kalau hanya ada 1, update sisa dan usage saja, jangan hapus
-            $fix = $matchingBudgetFixes->first();
-
-            $newUsage = 0;
-            $newSisa = $fix->bg_approve;
-            $newPercentageUsage = 0;
-
-            $fix->update([
-                'usage' => $newUsage,
-                'sisa' => $newSisa,
-                'percentage_usage' => $newPercentageUsage,
-            ]);
-        } elseif ($matchingBudgetFixes->count() > 1) {
-            // Kalau ada lebih dari 1, hapus baris yang sesuai
-            foreach ($matchingBudgetFixes as $fix) {
-                $fix->delete();
-            }
-        }
-
-        return redirect()->route('adminsystem.pr.index')
-            ->with('success', 'Purchase Request dan data budget terkait berhasil diperbarui.');
-    }
 
 
 
