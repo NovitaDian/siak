@@ -109,13 +109,13 @@
                                             <ul class="dropdown-menu">
                                                 @if ($request->type == 'Edit')
                                                 <li>
-                                                    <a href="{{ route('adminsystem.non_compliant.edit', $nc->id) }}" class="dropdown-item">
+                                                    <a href="{{ route('operator.non_compliant.edit', $nc->id) }}" class="dropdown-item">
                                                         <i class="fas fa-edit me-1"></i> Edit
                                                     </a>
                                                 </li>
                                                 @elseif ($request->type == 'Delete')
                                                 <li>
-                                                    <form action="{{ route('adminsystem.non_compliant.destroy', $nc->id) }}" method="POST" onsubmit="return confirm('Anda yakin akan menghapus data ini?')">
+                                                    <form action="{{ route('operator.non_compliant.destroy', $nc->id) }}" method="POST" onsubmit="return confirm('Anda yakin akan menghapus data ini?')">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit" class="dropdown-item text-danger">
