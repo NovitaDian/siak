@@ -58,10 +58,10 @@
                                         <p class="text-xs font-weight-bold mb-0">{{ $budget->year}}</p>
                                     </td>
                                     <td class="text-center">
-                                        @foreach ($budget->prs as $pr)
-                                        {{ $pr->pr_no }} - {{ $pr->valuation_price }}
-                                        @endforeach
+                                        <p class="text-xs font-weight-bold mb-0">{{ $budget->sisa }}</p>
                                     </td>
+
+
 
                                     <td class="align-middle text-center">
                                         <!-- Tombol Edit -->
