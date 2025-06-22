@@ -6,6 +6,7 @@ use App\Models\Attachment;
 use App\Models\Budget;
 use App\Models\BudgetFix;
 use App\Models\Note;
+use App\Models\PurchaseRequest;
 use App\Models\SentIncident;
 use App\Models\SentNcr;
 use App\Models\SentPpe;
@@ -205,8 +206,13 @@ class HomeController extends Controller
 
     public function budget()
     {
-        $budget_fixs = BudgetFix::all();
-        return view('adminsystem.dashboard.budget', compact('budget_fixs'));
+
+        $budgets = Budget::all();
+        $prs = PurchaseRequest::all();
+        $budget_fixs = BudgetFix::orderBy('created_at', 'desc')->get();
+        $danaTerpakai = Budget::all();
+        $danaTersisa = Budget::all();
+        return view('adminsystem.dashboard.budget', compact('budgets', 'danaTerpakai', 'danaTersisa', 'prs', 'budget_fixs'));
     }
     public function ncr(Request $request)
     {
@@ -533,8 +539,13 @@ class HomeController extends Controller
     }
     public function operator_budget()
     {
-        $budget_fixs = BudgetFix::all();
-        return view('operator.dashboard.budget', compact('budget_fixs'));
+
+        $budgets = Budget::all();
+        $prs = PurchaseRequest::all();
+        $budget_fixs = BudgetFix::orderBy('created_at', 'desc')->get();
+        $danaTerpakai = Budget::all();
+        $danaTersisa = Budget::all();
+        return view('operator.dashboard.budget', compact('budgets', 'danaTerpakai', 'danaTersisa', 'prs', 'budget_fixs'));
     }
     public function operator_ncr(Request $request)
     {
@@ -573,7 +584,7 @@ class HomeController extends Controller
     }
 
 
-     public function operator_incident(Request $request)
+    public function operator_incident(Request $request)
     {
         // Ambil input shift_date dan shift
         $shiftDate = $request->input('shift_date');
@@ -1052,5 +1063,4 @@ class HomeController extends Controller
             'contractorSepatuData'
         ));
     }
-
 }
