@@ -89,17 +89,19 @@
                                     <td class="text-center text-xs">{{ $nc->perusahaan }}</td>
                                     <td class="text-center text-xs">{{ $nc->nama_bagian }}</td>
                                     <td class="text-center text-xs">{{ $nc->tindakan }}</td>
-                                    <td class="align-middle text-center text-xs">
-                                        @if ($nc->status == 'Nothing')
-                                        <button class="btn btn-secondary btn-xs" onclick="showRequestModal('{{ $nc->id }}')">
+                                    <td class="align-middle text-center">
+                                        @if ($ppe_fix->status == 'Nothing')
+                                        <button class="btn btn-info btn-xs" onclick="showRequestModal('{{ $ppe_fix->id }}')">
                                             <i class="fas fa-paper-plane me-1" style="font-size: 12px;"></i> Request
                                         </button>
 
-                                        @elseif ($nc->status == 'Pending')
+                                        @elseif ($ppe_fix->status == 'Pending')
                                         <span class="badge bg-warning text-dark">Pending</span>
+                                        @elseif ($ppe_fix->status == 'Approved')
+                                        @php
+                                        $request = $latestRequests->firstWhere('sent_ppe_id', $ppe_fix->id);
+                                        @endphp
 
-
-                                        @elseif ($nc->status == 'Approved')
                                         @if ($request)
                                         <div class="dropdown d-inline">
                                             <button class="btn btn-success btn-xs dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -108,13 +110,13 @@
                                             <ul class="dropdown-menu">
                                                 @if ($request->type == 'Edit')
                                                 <li>
-                                                    <a href="{{ route('operator.non_compliant.edit', $nc->id) }}" class="dropdown-item">
+                                                    <a href="javascript:;" onclick="sentEditAction('{{ $ppe_fix->id }}');" class="dropdown-item">
                                                         <i class="fas fa-edit me-1"></i> Edit
                                                     </a>
                                                 </li>
                                                 @elseif ($request->type == 'Delete')
                                                 <li>
-                                                    <form action="{{ route('operator.non_compliant.destroy', $nc->id) }}" method="POST" onsubmit="return confirm('Anda yakin akan menghapus data ini?')">
+                                                    <form action="{{ route('adminsystem.ppe.sent_destroy', $ppe_fix->id) }}" method="POST" onsubmit="return confirm('Anda yakin akan menghapus data ini?')">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit" class="dropdown-item text-danger">
@@ -129,7 +131,7 @@
                                         <span class="text-danger">No corresponding request found</span>
                                         @endif
 
-                                        @elseif ($nc->status == 'Rejected')
+                                        @elseif ($ppe_fix->status == 'Rejected')
                                         <span class="badge bg-danger text-white">Rejected</span>
                                         @endif
                                     </td>
