@@ -11,4 +11,8 @@ class NamaAlat extends Model
     protected $fillable = [
         'nama_alat',
     ];
+      public function alats()
+    {
+        return $this->hasMany(Alat::class);
+    }
 }

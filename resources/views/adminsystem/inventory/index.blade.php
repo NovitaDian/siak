@@ -1,11 +1,7 @@
 @extends('layouts.user_type.auth')
 
 @section('content')
-@if (session('success'))
-<div class="alert alert-success alert-dismissible fade show" role="alert" style="background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 10px; margin: 10px;">
-    {{ session('success') }}
-</div>
-@endif
+
 <div class="row">
     <!-- First row with 2 columns for Penerimaan Barang and PR -->
     <div class="col-xl-6 col-sm-12 mb-xl-0 mb-4">

@@ -276,12 +276,12 @@ class PpeController extends Controller
         // Hapus data dari tabel ppe_draft
         $ppe->delete();
 
-        return redirect()->route('adminsystem.ppe.index')->with('notification', 'PPE berhasil dipindahkan ke ppe_fix!');
+        return redirect()->route('adminsystem.ppe.index')->with('success', 'PPE berhasil dipindahkan dikirim!');
     }
 
     public function sent_edit($id)
     {
-        // Retrieve the NCR record by ID
+        // Retrieve the PPE record by ID
         $ppeFixs = SentPpe::findOrFail($id);
         $inspectors = HseInspector::all();
 
@@ -366,7 +366,7 @@ class PpeController extends Controller
         // Ambil data PPE berdasarkan ID
         $ppe_fixs = SentPpe::findOrFail($id);
         $ppe_fixs->delete();
-        return redirect()->route('adminsystem.ppe.index')->with('notification', 'NCR berhasil dikirim!');
+        return redirect()->route('adminsystem.ppe.index')->with('success', 'PPE berhasil dihapus!');
     }
     public function storeRequest(Request $request)
     {
@@ -406,30 +406,23 @@ class PpeController extends Controller
     }
     public function approve($id)
     {
-        $request = PpeRequest::findOrFail($id);
+        $request = PpeRequest::find($id);
         $request->status = 'Approved';
         $request->save();
+        SentPpe::where('id', $request->sent_ppe_id)->update(['status' => 'Approved']);
 
-        // Update juga ppe_fixs jika perlu
-        SentPpe::where('id', $request->sent_ppe_id)->update([
-            'status' => 'Approved',
-        ]);
-
-        return response()->json(['success' => true]);
+        return redirect()->route('adminsystem.ppe.index')->with('success', 'Request berhasil disetujui.');
     }
-
-
     public function reject($id)
     {
         $request = PpeRequest::find($id);
         $request->status = 'Rejected';
         $request->save();
-        // Update juga ppe_fixs jika perlu
-        SentPpe::where('id', $request->sent_ppe_id)->update([
-            'status' => 'Rejected',
-        ]);
-        return response()->json(['success' => true]);
+        SentPpe::where('id', $request->sent_ppe_id)->update(['status' => 'Rejected']);
+
+        return redirect()->route('adminsystem.ppe.index')->with('success', 'Request berhasil ditolak.');
     }
+
     public function export(Request $request)
     {
         $start = $request->start_date;
@@ -735,12 +728,12 @@ class PpeController extends Controller
         // Hapus data dari tabel ppe_draft
         $ppe->delete();
 
-        return redirect()->route('operator.ppe.index')->with('notification', 'PPE berhasil dipindahkan ke ppe_fix!');
+        return redirect()->route('operator.ppe.index')->with('success', 'PPE berhasil dikirim!');
     }
 
     public function operator_sent_edit($id)
     {
-        // Retrieve the NCR record by ID
+        // Retrieve the PPE record by ID
         $ppeFixs = SentPpe::findOrFail($id);
         $inspectors = HseInspector::all();
 
@@ -816,7 +809,7 @@ class PpeController extends Controller
 
         ]);
 
-        return redirect()->route('operator.ppe.index')->with('success', 'Data PPE telah diperbarui di sent_ppe!');
+        return redirect()->route('operator.ppe.index')->with('success', 'Data PPE telah diperbarui!');
     }
 
 
@@ -825,7 +818,7 @@ class PpeController extends Controller
         // Ambil data PPE berdasarkan ID
         $ppe_fixs = SentPpe::findOrFail($id);
         $ppe_fixs->delete();
-        return redirect()->route('operator.ppe.index')->with('notification', 'NCR berhasil dikirim!');
+        return redirect()->route('operator.ppe.index')->with('success', 'PPE berhasil dihapus!');
     }
     public function operator_storeRequest(Request $request)
     {

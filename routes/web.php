@@ -153,6 +153,7 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('/', [NcrController::class, 'index'])->name('index');
 			Route::get('/export', [NcrController::class, 'export'])->name('export');
 			Route::get('/export-pdf', [NcrController::class, 'exportPdf'])->name('exportPdf');
+			Route::get('/{id}/export-pdf', [NcrController::class, 'exportSinglePdf'])->name('exportSinglePdf');
 			Route::post('/request', [NcrController::class, 'submitRequest'])->name('request');
 			Route::post('/approve/{sent_ncr_id}', [NcrController::class, 'approve'])->name('approve');
 			Route::post('/reject/{sent_ncr_id}', [NcrController::class, 'reject'])->name('reject');
@@ -311,6 +312,7 @@ Route::group(['middleware' => 'auth'], function () {
 		});
 		Route::prefix('adminsystem/budget')->name('adminsystem.budget.')->group(function () {
 			Route::get('/', [BudgetController::class, 'budget_index'])->name('index');
+			Route::get('/export-pdf', [BudgetController::class, 'exportPdf'])->name('exportPdf');
 			Route::get('/master', [BudgetController::class, 'budget_master'])->name('master');
 			Route::post('/', [BudgetController::class, 'budget_store'])->name('store');
 			Route::delete('/{id}', [BudgetController::class, 'budget_destroy'])->name('destroy');

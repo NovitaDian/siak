@@ -78,7 +78,7 @@ class PerusahaanController extends Controller
         }
 
         $perusahaan->delete();
-        return redirect()->route('adminsystem.perusahaan.index')->with('notification', 'Perusahaan berhasil dikirim!');
+        return redirect()->route('adminsystem.perusahaan.index')->with('success', 'Perusahaan berhasil dikirim!');
     }
     public function Perusahaanshow($id)
     {
@@ -166,7 +166,7 @@ class PerusahaanController extends Controller
         }
 
         $perusahaan->delete();
-        return redirect()->route('operator.perusahaan.index')->with('notification', 'Perusahaan berhasil dikirim!');
+        return redirect()->route('operator.perusahaan.index')->with('success', 'Perusahaan berhasil dikirim!');
     }
     public function operator_Perusahaanshow($id)
     {
@@ -177,5 +177,4 @@ class PerusahaanController extends Controller
             return response()->json(data: ['message' => 'Perusahaan tidak ditemukan']);
         }
     }
-    
 }

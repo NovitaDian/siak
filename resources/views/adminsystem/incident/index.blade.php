@@ -1,11 +1,12 @@
 @extends('layouts.user_type.auth')
 
 @section('content')
-@if (session('success'))
-<div class="alert alert-success alert-dismissible fade show" role="alert" style="background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 10px; margin: 10px;">
-    {{ session('success') }}
-</div>
-@endif
+
+<button type="button" class="btn btn-outline-secondary btn-md d-flex align-items-center gap-2"
+    onclick="window.location.href='{{ route('adminsystem.home') }}'">
+    <img src="{{ asset('assets/img/logos/arrow-back.png') }}" alt="Back" style="width: 40px; height: 40px;">
+</button>
+
 <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
     <div class="container-fluid py-4 px-0">
         <div class="card mx-auto w-100" style="max-width: 200%; ">
@@ -191,14 +192,7 @@
 
                                             <!-- Font Awesome & Bootstrap JS (pindahkan ke layout utama jika belum ada) -->
                                             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-                                        </td>
-                                        <script>
-                                            function editAction() {
-                                                // Redirect to the edit form for the item
-                                                window.location.href = "{{ route('adminsystem.incident.edit', $incident->id) }}";
-                                            }
-                                        </script>
-                                        </td>
+
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -398,12 +392,13 @@
                                 <label for="reason">Alasan Pengajuan Request</label>
                                 <textarea class="form-control" id="reason" name="reason" required></textarea>
                             </div>
-                            <button type="submit" class="btn btn-primary">Submit Request</button>
+                            <button type="submit" id="submitRequestBtn" class="btn btn-primary">Submit Request</button>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 </main>
 <!-- Include jQuery and Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -412,6 +407,13 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script>
+    document.getElementById('requestForm').addEventListener('submit', function() {
+        const btn = document.getElementById('submitRequestBtn');
+        btn.disabled = true;
+        btn.innerText = 'Mengirim...'; // Optional: ubah teks saat loading
+    });
+</script>
 
 <script>
     $(document).ready(function() {
@@ -472,14 +474,6 @@
     });
 
 
-    // Fungsi untuk mengedit item
-    function editAction(id) {
-        window.location.href = "{{ url('adminsystem/incident/edit') }}/" + id; // Menggunakan URL Laravel
-    }
-
-    // Fungsi untuk mengedit item yang telah dikirim
-    function sentEditAction(id) {
-        window.location.href = "{{ url('adminsystem/incident/sent_edit') }}/" + id; // Menggunakan URL Laravel
-    }
+  
 </script>
 @endsection

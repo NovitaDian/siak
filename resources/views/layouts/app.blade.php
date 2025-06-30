@@ -93,6 +93,32 @@
   <!-- Control Center for Soft Dashboard -->
   <script src="/assets/js/soft-ui-dashboard.min.js?v=1.0.3"></script>
 
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+@if (session('success') || session('error'))
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            icon: '{{ session('success') ? 'success' : 'error' }}',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            background: '{{ session('success') ? '#d4edda' : '#f8d7da' }}',
+            color: '{{ session('success') ? '#155724' : '#721c24' }}',
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        });
+
+        Toast.fire({
+            title: '{{ session('success') ?? session('error') }}'
+        });
+    });
+</script>
+@endif
 </body>
 
 

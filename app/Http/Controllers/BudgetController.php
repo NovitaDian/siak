@@ -12,17 +12,16 @@ use App\Models\Gl_Account;
 use App\Models\MaterialGroup;
 use App\Models\PurchasingGroup;
 use App\Models\Unit;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
 
 class BudgetController extends Controller
 {
     public function index()
     {
-        $budgets = Budget::all();
-        $prs = PurchaseRequest::all();
+  
         $budget_fixs = BudgetFix::orderBy('created_at', 'desc')->get();
-        $danaTerpakai = Budget::all();
-        $danaTersisa = Budget::all();
+       
         return view('adminsystem.budget_pr.index', compact('budgets', 'danaTerpakai', 'danaTersisa', 'prs', 'budget_fixs'));
     }
     // budget
@@ -283,6 +282,13 @@ class BudgetController extends Controller
         // Redirect kembali ke halaman detail budget PR terkait
         return redirect()->route('adminsystem.budget.pr', $budgetId)
             ->with('success', 'Purchase Request berhasil dihapus.');
+    }
+    public function exportPdf(Request $request)
+    {
+        $budgets = Budget::all();
+        $pdf = Pdf::loadView('adminsystem.budget_pr.budget.pdf', compact('budgets'));
+
+        return $pdf->download('budget.pdf');
     }
 
 

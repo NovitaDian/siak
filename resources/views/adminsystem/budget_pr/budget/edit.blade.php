@@ -1,7 +1,9 @@
 @extends('layouts.user_type.auth')
 
 @section('content')
-
+<button type="button" class="btn btn-outline-secondary btn-md d-flex align-items-center gap-2" onclick="history.back()">
+    <img src="{{ asset('assets/img/logos/arrow-back.png') }}" alt="Back" style="width: 40px; height: 40px;">
+</button>
 <div>
     <div class="container-fluid ">
         <h2 class="text-black font-weight-bolder text-center">EDIT BUDGET PLAN</h2>
@@ -49,7 +51,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
@@ -64,13 +66,13 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="kategori">{{ __('Kategori') }}</label>
                                 <select class="form-control" id="kategori" name="kategori" required>
-                                    <option value="APEX" {{ (old('kategori', $budget->kategori) == 'APEX') ? 'selected' : '' }}>APEX</option>
+                                    <option value="CAPEX" {{ (old('kategori', $budget->kategori) == 'CAPEX') ? 'selected' : '' }}>CAPEX</option>
                                     <option value="OPEX" {{ (old('kategori', $budget->kategori) == 'OPEX') ? 'selected' : '' }}>OPEX</option>
                                     <option value="Consumable" {{ (old('kategori', $budget->kategori) == 'Consumable') ? 'selected' : '' }}>Consumable</option>
                                 </select>

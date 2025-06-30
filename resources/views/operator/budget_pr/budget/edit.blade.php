@@ -49,7 +49,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
@@ -64,13 +64,13 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="kategori">{{ __('Kategori') }}</label>
                                 <select class="form-control" id="kategori" name="kategori" required>
-                                    <option value="APEX" {{ (old('kategori', $budget->kategori) == 'APEX') ? 'selected' : '' }}>APEX</option>
+                                    <option value="CAPEX" {{ (old('kategori', $budget->kategori) == 'CAPEX') ? 'selected' : '' }}>CAPEX</option>
                                     <option value="OPEX" {{ (old('kategori', $budget->kategori) == 'OPEX') ? 'selected' : '' }}>OPEX</option>
                                     <option value="Consumable" {{ (old('kategori', $budget->kategori) == 'Consumable') ? 'selected' : '' }}>Consumable</option>
                                 </select>

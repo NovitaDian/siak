@@ -13,7 +13,7 @@
         <div class="card card-body blur shadow-blur mx-4 mt-n6">
             <div class="row gx-4">
                 <div class="col-auto">
-                    
+
                 </div>
                 <div class="col-auto my-auto">
                     <div class="h-100">
@@ -32,24 +32,8 @@
                 <h6 class="mb-0">{{ __('Profile Information') }}</h6>
             </div>
             <div class="card-body pt-4 p-3">
-            <form action="{{ route('operator.info_user.store')}}" method="POST">
-            @csrf
-                    @if($errors->any())
-                    <div class="mt-3  alert alert-primary alert-dismissible fade show" role="alert">
-                        <span class="alert-text text-white">{{ $errors->first() }}</span>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-                            <i class="fa fa-close" aria-hidden="true"></i>
-                        </button>
-                    </div>
-                    @endif
-                    @if(session('success'))
-                    <div class="m-3  alert alert-success alert-dismissible fade show" id="alert-success" role="alert">
-                        <span class="alert-text text-white">{{ session('success') }}</span>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-                            <i class="fa fa-close" aria-hidden="true"></i>
-                        </button>
-                    </div>
-                    @endif
+                <form action="{{ route('operator.info_user.store')}}" method="POST">
+                    @csrf
 
                     <!-- Full Name Input -->
                     <div class="row">

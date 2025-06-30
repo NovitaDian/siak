@@ -1,6 +1,9 @@
 @extends('layouts.user_type.operator')
 
 @section('content')
+<button type="button" class="btn btn-outline-secondary btn-md d-flex align-items-center gap-2" onclick="history.back()">
+    <img src="{{ asset('assets/img/logos/arrow-back.png') }}" alt="Back" style="width: 40px; height: 40px;">
+</button>
 <div class="container-fluid">
     <h2 class="text-black font-weight-bolder text-center mb-4">
         NONCONFORMITY REPORT AND CORRECTIVE/PREVENTIVE ACTION REQUEST
@@ -86,12 +89,7 @@
                     <div class="border p-2 rounded bg-light">Tidak ada foto</div>
                     @endif
                 </div>
-               <form action="{{ route('operator.ncr.index') }}" method="GET" style="display:inline;">
-                        @csrf
-                        <button type="submit" class="btn btn-sm btn-primary btn-sm active mb-0 text-white" role="button" aria-pressed="true">
-                            Kembali
-                        </button>
-                    </form>
+             
             </div>
         </div>
     </div>

@@ -12,74 +12,77 @@ class BagianController extends Controller
     {
         $bagians = Bagian::all();
 
-        // Mengirim data ke view
+        // Mengirim data ke tampilan
         return view('adminsystem.master.bagian.index', compact('bagians'));
     }
+
     public function store(Request $request)
     {
-        // Validate the incoming data
+        // Validasi data yang masuk
         $validated = $request->validate([
             'perusahaan_code' => 'required|exists:perusahaan,perusahaan_code',
             'nama_bagian' => 'required|string|max:255',
         ]);
 
-        // Get perusahaan_name based on selected perusahaan_code
+        // Ambil nama perusahaan berdasarkan perusahaan_code
         $perusahaan = Perusahaan::where('perusahaan_code', $request->perusahaan_code)->first();
 
         if ($perusahaan) {
-            // Create a new Bagian record with the selected perusahaan_name
+            // Buat data Bagian baru dengan nama perusahaan yang dipilih
             Bagian::create([
                 'perusahaan_code' => $request->perusahaan_code,
-                'perusahaan_name' => $perusahaan->perusahaan_name,  // Auto-fill the perusahaan_name
+                'perusahaan_name' => $perusahaan->perusahaan_name,  // Isi otomatis nama perusahaan
                 'nama_bagian' => $request->nama_bagian,
             ]);
 
-            // Redirect with a success message
-            return redirect()->route('adminsystem.bagian.index')->with('success', 'Bagian created successfully.');
+            // Arahkan kembali dengan pesan sukses
+            return redirect()->route('adminsystem.bagian.index')->with('success', 'Bagian berhasil ditambahkan.');
         }
 
-        // In case of failure, redirect with error message
-        return redirect()->back()->with('error', 'Perusahaan not found.');
+        // Jika gagal, arahkan kembali dengan pesan error
+        return redirect()->back()->with('error', 'Perusahaan tidak ditemukan.');
     }
+
     public function edit($id)
     {
         $bagian = Bagian::findOrFail($id);
         $perusahaans = Perusahaan::all();
 
-        // Mengirim data ke view
-        return view('adminsystem.master.bagian.edit', compact('perusahaans','bagian'));
+        // Mengirim data ke tampilan
+        return view('adminsystem.master.bagian.edit', compact('perusahaans', 'bagian'));
     }
+
     public function create()
     {
         $perusahaans = Perusahaan::all();
 
-        // Mengirim data ke view
+        // Mengirim data ke tampilan
         return view('adminsystem.master.bagian.create', compact('perusahaans'));
     }
 
     public function update(Request $request, $id)
     {
-        // Validate the incoming data
+        // Validasi data yang masuk
         $request->validate([
             'perusahaan_code' => 'required|exists:perusahaan,perusahaan_code',
             'nama_bagian' => 'required|string|max:255',
         ]);
 
-        // Find the existing Bagian record
         $bagian = Bagian::findOrFail($id);
 
-        // Retrieve the Perusahaan name based on the selected perusahaan_code
+        // Ambil nama perusahaan berdasarkan perusahaan_code yang dipilih
         $perusahaan = Perusahaan::where('perusahaan_code', $request->perusahaan_code)->first();
 
-        // Update the Bagian record with new values
+        // Perbarui data Bagian
         $bagian->perusahaan_code = $request->perusahaan_code;
-        $bagian->perusahaan_name = $perusahaan->perusahaan_name; // Set the perusahaan_name from the selected perusahaan_code
+        $bagian->perusahaan_name = $perusahaan->perusahaan_name;
         $bagian->nama_bagian = $request->nama_bagian;
-        $bagian->save(); // Save the changes
+        $bagian->save(); // Simpan perubahan
 
-        // Redirect back with a success message
-        return redirect()->route('adminsystem.bagian.index')->with('success', 'Data Bagian updated successfully!');
+        // Arahkan kembali dengan pesan sukses
+        return redirect()->route('adminsystem.bagian.index')->with('success', 'Data Bagian berhasil diperbarui!');
     }
+
     public function destroy($id)
     {
         $bagian = Bagian::find($id);
@@ -88,86 +91,86 @@ class BagianController extends Controller
         }
 
         $bagian->delete();
-        return redirect()->route('adminsystem.bagian.index')->with('notification', 'Bagian berhasil dikirim!');
+        return redirect()->route('adminsystem.bagian.index')->with('success', 'Bagian berhasil dihapus!');
     }
 
+    //  OPERATOR 
 
-
-
-
-    
     public function operator_index()
     {
         $bagians = Bagian::all();
 
-        // Mengirim data ke view
+        // Mengirim data ke tampilan
         return view('operator.master.bagian.index', compact('bagians'));
     }
+
     public function operator_store(Request $request)
     {
-        // Validate the incoming data
+        // Validasi data yang masuk
         $validated = $request->validate([
             'perusahaan_code' => 'required|exists:perusahaan,perusahaan_code',
             'nama_bagian' => 'required|string|max:255',
         ]);
 
-        // Get perusahaan_name based on selected perusahaan_code
+        // Ambil nama perusahaan berdasarkan perusahaan_code
         $perusahaan = Perusahaan::where('perusahaan_code', $request->perusahaan_code)->first();
 
         if ($perusahaan) {
-            // Create a new Bagian record with the selected perusahaan_name
+            // Buat data Bagian baru dengan nama perusahaan yang dipilih
             Bagian::create([
                 'perusahaan_code' => $request->perusahaan_code,
-                'perusahaan_name' => $perusahaan->perusahaan_name,  // Auto-fill the perusahaan_name
+                'perusahaan_name' => $perusahaan->perusahaan_name,  // Isi otomatis nama perusahaan
                 'nama_bagian' => $request->nama_bagian,
             ]);
 
-            // Redirect with a success message
-            return redirect()->route('operator.bagian.index')->with('success', 'Bagian created successfully.');
+            // Arahkan kembali dengan pesan sukses
+            return redirect()->route('operator.bagian.index')->with('success', 'Bagian berhasil ditambahkan.');
         }
 
-        // In case of failure, redirect with error message
-        return redirect()->back()->with('error', 'Perusahaan not found.');
+        // Jika gagal, arahkan kembali dengan pesan error
+        return redirect()->back()->with('error', 'Perusahaan tidak ditemukan.');
     }
+
     public function operator_edit($id)
     {
         $bagian = Bagian::findOrFail($id);
         $perusahaans = Perusahaan::all();
 
-        // Mengirim data ke view
-        return view('operator.master.bagian.edit', compact('perusahaans','bagian'));
+        // Mengirim data ke tampilan
+        return view('operator.master.bagian.edit', compact('perusahaans', 'bagian'));
     }
+
     public function operator_create()
     {
         $perusahaans = Perusahaan::all();
 
-        // Mengirim data ke view
+        // Mengirim data ke tampilan
         return view('operator.master.bagian.create', compact('perusahaans'));
     }
 
     public function operator_update(Request $request, $id)
     {
-        // Validate the incoming data
+        // Validasi data yang masuk
         $request->validate([
             'perusahaan_code' => 'required|exists:perusahaan,perusahaan_code',
             'nama_bagian' => 'required|string|max:255',
         ]);
 
-        // Find the existing Bagian record
         $bagian = Bagian::findOrFail($id);
 
-        // Retrieve the Perusahaan name based on the selected perusahaan_code
+        // Ambil nama perusahaan berdasarkan perusahaan_code yang dipilih
         $perusahaan = Perusahaan::where('perusahaan_code', $request->perusahaan_code)->first();
 
-        // Update the Bagian record with new values
+        // Perbarui data Bagian
         $bagian->perusahaan_code = $request->perusahaan_code;
-        $bagian->perusahaan_name = $perusahaan->perusahaan_name; // Set the perusahaan_name from the selected perusahaan_code
+        $bagian->perusahaan_name = $perusahaan->perusahaan_name;
         $bagian->nama_bagian = $request->nama_bagian;
-        $bagian->save(); // Save the changes
+        $bagian->save(); // Simpan perubahan
 
-        // Redirect back with a success message
-        return redirect()->route('operator.bagian.index')->with('success', 'Data Bagian updated successfully!');
+        // Arahkan kembali dengan pesan sukses
+        return redirect()->route('operator.bagian.index')->with('success', 'Data Bagian berhasil diperbarui!');
     }
+
     public function operator_destroy($id)
     {
         $bagian = Bagian::find($id);
@@ -176,9 +179,6 @@ class BagianController extends Controller
         }
 
         $bagian->delete();
-        return redirect()->route('operator.bagian.index')->with('notification', 'Bagian berhasil dikirim!');
+        return redirect()->route('operator.bagian.index')->with('success', 'Bagian berhasil dihapus!');
     }
-
-
-
 }

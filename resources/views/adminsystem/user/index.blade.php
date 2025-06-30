@@ -1,11 +1,7 @@
 @extends('layouts.user_type.auth')
 
 @section('content')
-@if (session('success'))
-<div class="alert alert-success alert-dismissible fade show" role="alert" style="background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 10px; margin: 10px;">
-  {{ session('success') }}
-</div>
-@endif
+
 <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg">
   <div class="container-fluid py-4">
     <br>

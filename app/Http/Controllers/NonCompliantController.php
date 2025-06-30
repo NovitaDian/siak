@@ -133,7 +133,7 @@ class NonCompliantController extends Controller
         $nonCompliant->delete();
 
         return redirect()->route('adminsystem.ppe.show', $nonCompliant['id_ppe'])
-            ->with('success', 'Data pelanggar berhasil diperbarui!');
+            ->with('success', 'Data pelanggar berhasil dihapus!');
     }
     public function storeRequest(Request $request)
     {
@@ -175,24 +175,42 @@ class NonCompliantController extends Controller
 
     public function approve($id)
     {
-        $request = NonCompliantRequest::find($id);
+        // Ambil request, jika tidak ada akan lempar 404
+        $request = NonCompliantRequest::findOrFail($id);
+
+        // Set status Approved
         $request->status = 'Approved';
         $request->save();
-        NonCompliant::where('id', $request->sent_non_compliant_id)->update(['status' => 'Approved']);
 
-        return response()->json(['success' => true]);
+        // Ambil data NonCompliant terkait
+        $nonCompliant = NonCompliant::findOrFail($request->sent_non_compliant_id);
+        $nonCompliant->status = 'Approved';
+        $nonCompliant->save();
+
+        // Redirect ke halaman PPE sesuai ID PPE dari NonCompliant
+        return redirect()->route('adminsystem.ppe.show', $nonCompliant->id_ppe)
+            ->with('success', 'Request berhasil disetujui.');
     }
+
 
     public function reject($id)
     {
-        $request = NonCompliantRequest::find($id);
+        // Ambil request, jika tidak ada akan lempar 404
+        $request = NonCompliantRequest::findOrFail($id);
+
+        // Set status Approved
         $request->status = 'Rejected';
         $request->save();
-        NonCompliant::where('id', $request->sent_non_compliant_id)->update(['status' => 'Rejected']);
 
-        return response()->json(['success' => true]);
+        // Ambil data NonCompliant terkait
+        $nonCompliant = NonCompliant::findOrFail($request->sent_non_compliant_id);
+        $nonCompliant->status = 'Rejected';
+        $nonCompliant->save();
+
+        // Redirect ke halaman PPE sesuai ID PPE dari NonCompliant
+        return redirect()->route('adminsystem.ppe.show', $nonCompliant->id_ppe)
+            ->with('success', 'Request berhasil disetujui.');
     }
-
 
 
 

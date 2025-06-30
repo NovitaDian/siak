@@ -202,7 +202,7 @@ class DailyController extends Controller
         $daily = Daily::findOrFail($id);
         $daily->delete();
         // Redirect dengan notifikasi
-        return redirect()->route('adminsystem.daily.index')->with('notification', 'NCR berhasil dihapus!');
+        return redirect()->route('adminsystem.daily.index')->with('success', 'NCR berhasil dihapus!');
     }
     public function sent_destroy($id)
     {
@@ -210,7 +210,7 @@ class DailyController extends Controller
         $daily_fixs = SentDaily::findOrFail($id);
         $daily_fixs->delete();
         // Redirect dengan notifikasi
-        return redirect()->route('adminsystem.daily.index')->with('notification', 'NCR berhasil dihapus!');
+        return redirect()->route('adminsystem.daily.index')->with('success', 'NCR berhasil dihapus!');
     }
 
     public function storeRequest(Request $request)
@@ -251,30 +251,23 @@ class DailyController extends Controller
     }
     public function approve($id)
     {
-        $request = DailyRequest::findOrFail($id);
+        $request = DailyRequest::find($id);
         $request->status = 'Approved';
         $request->save();
-
-        // Update juga daily_fixs jika perlu
-        SentDaily::where('id', $request->sent_daily_id)->update([
-            'status' => 'Approved',
-        ]);
+        SentDaily::where('id', $request->sent_daily_id)->update(['status' => 'Approved']);
 
         return redirect()->route('adminsystem.daily.index')->with('success', 'Request berhasil disetujui.');
     }
-
-
     public function reject($id)
     {
         $request = DailyRequest::find($id);
         $request->status = 'Rejected';
         $request->save();
-        // Update juga daily_fixs jika perlu
-        SentDaily::where('id', $request->sent_daily_id)->update([
-            'status' => 'Rejected',
-        ]);
+        SentDaily::where('id', $request->sent_daily_id)->update(['status' => 'Rejected']);
+
         return redirect()->route('adminsystem.daily.index')->with('success', 'Request berhasil ditolak.');
     }
+
     public function export(Request $request)
     {
         $start = $request->start_date;
@@ -499,7 +492,7 @@ class DailyController extends Controller
         $daily = Daily::findOrFail($id);
         $daily->delete();
         // Redirect dengan notifikasi
-        return redirect()->route('operator.daily.index')->with('notification', 'NCR berhasil dihapus!');
+        return redirect()->route('operator.daily.index')->with('success', 'NCR berhasil dihapus!');
     }
     public function operator_sent_destroy($id)
     {
@@ -507,7 +500,7 @@ class DailyController extends Controller
         $daily_fixs = SentDaily::findOrFail($id);
         $daily_fixs->delete();
         // Redirect dengan notifikasi
-        return redirect()->route('operator.daily.index')->with('notification', 'NCR berhasil dihapus!');
+        return redirect()->route('operator.daily.index')->with('success', 'NCR berhasil dihapus!');
     }
 
     public function operator_storeRequest(Request $request)

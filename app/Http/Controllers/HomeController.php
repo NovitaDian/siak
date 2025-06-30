@@ -204,16 +204,34 @@ class HomeController extends Controller
 
 
 
-    public function budget()
-    {
+   // Controller Method
+public function budget(Request $request)
+{
+    $year = $request->year;
 
-        $budgets = Budget::all();
-        $prs = PurchaseRequest::all();
-        $budget_fixs = BudgetFix::orderBy('created_at', 'desc')->get();
-        $danaTerpakai = Budget::all();
-        $danaTersisa = Budget::all();
-        return view('adminsystem.dashboard.budget', compact('budgets', 'danaTerpakai', 'danaTersisa', 'prs', 'budget_fixs'));
+    $query = Budget::with('prs');
+
+    if ($year) {
+        $query->where('year', $year);
     }
+
+    $budgets = $query->get();
+
+    $labels = [];
+    $totalBudgets = [];
+    $usages = [];
+
+    foreach ($budgets as $budget) {
+        $labels[] = $budget->gl_name;
+        $totalBudgets[] = (int) $budget->setahun_total;
+        $usages[] = (int) $budget->usage; // Pastikan usage dikirim, bukan persentasenya
+    }
+
+    $years = Budget::select('year')->distinct()->orderBy('year', 'desc')->pluck('year');
+
+    return view('adminsystem.dashboard.budget', compact('labels', 'totalBudgets', 'usages', 'year', 'years'));
+}
+
     public function ncr(Request $request)
     {
         $year = $request->input('year');
@@ -537,16 +555,32 @@ class HomeController extends Controller
             'contractorSepatuData'
         ));
     }
-    public function operator_budget()
-    {
+    public function operator_budget(Request $request)
+{
+    $year = $request->year;
 
-        $budgets = Budget::all();
-        $prs = PurchaseRequest::all();
-        $budget_fixs = BudgetFix::orderBy('created_at', 'desc')->get();
-        $danaTerpakai = Budget::all();
-        $danaTersisa = Budget::all();
-        return view('operator.dashboard.budget', compact('budgets', 'danaTerpakai', 'danaTersisa', 'prs', 'budget_fixs'));
+    $query = Budget::with('prs');
+
+    if ($year) {
+        $query->where('year', $year);
     }
+
+    $budgets = $query->get();
+
+    $labels = [];
+    $totalBudgets = [];
+    $usages = [];
+
+    foreach ($budgets as $budget) {
+        $labels[] = $budget->gl_name;
+        $totalBudgets[] = (int) $budget->setahun_total;
+        $usages[] = (int) $budget->usage; // Pastikan usage dikirim, bukan persentasenya
+    }
+
+    $years = Budget::select('year')->distinct()->orderBy('year', 'desc')->pluck('year');
+
+    return view('operator.dashboard.budget', compact('labels', 'totalBudgets', 'usages', 'year', 'years'));
+}
     public function operator_ncr(Request $request)
     {
         $year = $request->input('year');

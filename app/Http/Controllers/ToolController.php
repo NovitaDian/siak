@@ -256,7 +256,7 @@ class ToolController extends Controller
         // Ambil data PPE berdasarkan ID
         $tool = ToolReport::findOrFail($id);
         $tool->delete();
-        return redirect()->route('adminsystem.tool.index')->with('notification', 'NCR berhasil dikirim!');
+        return redirect()->route('adminsystem.tool.index')->with('success', 'NCR berhasil dihapus!');
     }
     public function sent_destroy(Request $request, $id)
     {
@@ -267,7 +267,7 @@ class ToolController extends Controller
         SentToolReport::where('id', $request->sent_tool_id)->update([
             'status' => 'Nothing',
         ]);
-        return redirect()->route('adminsystem.tool.index')->with('notification', 'NCR berhasil dikirim!');
+        return redirect()->route('adminsystem.tool.index')->with('success', 'NCR berhasil dihapus!');
     }
     public function storeRequest(Request $request)
     {
@@ -600,7 +600,7 @@ class ToolController extends Controller
         // Ambil data PPE berdasarkan ID
         $tool = ToolReport::findOrFail($id);
         $tool->delete();
-        return redirect()->route('operator.tool.index')->with('notification', 'NCR berhasil dikirim!');
+        return redirect()->route('operator.tool.index')->with('success', 'NCR berhasil dihapus!');
     }
     public function operator_sent_destroy(Request $request, $id)
     {
@@ -611,7 +611,7 @@ class ToolController extends Controller
         SentToolReport::where('id', $request->sent_tool_id)->update([
             'status' => 'Nothing',
         ]);
-        return redirect()->route('operator.tool.index')->with('notification', 'NCR berhasil dikirim!');
+        return redirect()->route('operator.tool.index')->with('success', 'NCR berhasil dihapus!');
     }
     public function operator_storeRequest(Request $request)
     {

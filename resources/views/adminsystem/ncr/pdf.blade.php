@@ -11,186 +11,105 @@
             background: #fff;
         }
 
-        .logo {
+        .header-title {
             text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .logo img {
-            max-width: 150px;
-            height: auto;
-        }
-
-        h3.header-title {
-            text-align: center;
-            margin-bottom: 30px;
-            font-weight: 700;
-            font-size: 1.6rem;
-        }
-
-        .page-break-container {
-            page-break-after: always;
-            break-after: page;
-            margin-bottom: 40px;
-            padding: 15px 20px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-            background: #fefefe;
-        }
-
-        .entry-row {
-            display: flex;
-            gap: 20px;
-            align-items: flex-start;
             margin-bottom: 20px;
-        }
-
-        .image-container {
-            flex: 0 0 40%;
-            text-align: center;
-        }
-
-        .image-container img {
-            max-width: 100%;
-            height: auto;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-        }
-
-        .no-image {
-            padding: 40px 0;
-            color: #999;
-            font-style: italic;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            background: #f9f9f9;
-        }
-
-        .desc-container {
-            flex: 1 1 60%;
+            font-weight: bold;
+            font-size: 1.5rem;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 13px;
+            font-size: 12px;
         }
 
         td {
-            padding: 8px 10px;
+            padding: 8px;
             vertical-align: top;
+        }
+
+        .foto {
+            text-align: center;
+        }
+
+        .foto img {
+            max-width: 100%;
+            max-height: 250px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+
+        .desc td {
             border-bottom: 1px solid #eee;
         }
 
-        td.label {
+        .desc .label {
             font-weight: bold;
-            width: 40%;
+            width: 35%;
             white-space: nowrap;
             color: #333;
         }
 
-        td.value {
-            width: 60%;
+        .desc .value {
+            width: 65%;
             color: #000;
         }
 
         @media print {
-            body {
-                margin: 10mm;
-                background: none !important;
-            }
-
-            .page-break-container {
+            .page-break {
                 page-break-after: always;
-                break-after: page;
             }
         }
     </style>
 </head>
 
 <body>
-    <h3 class="header-title" style="text-align: center; margin-bottom: 20px;">Data Laporan NCR</h3>
+    <h3 class="header-title">Data Laporan NCR</h3>
 
     @foreach($ncr_fixs as $ncr)
-    <div style="page-break-after: always;">
+    <div class="page-break">
 
-        <table style="width: 100%; border: none;">
+        <table>
             <tr>
-                <!-- Foto di kiri -->
-                <td style="width: 35%; vertical-align: top;">
-                    @if($ncr->foto)
-                    <img src="{{ public_path('storage/' . $ncr->foto) }}"
-                        alt="Foto NCR"
-                        style="max-width: 100%; max-height: 300px;">
-                    @else
-                    <p>Tidak ada foto</p>
-                    @endif
+                <td style="width: 35%;">
+                    <div class="foto">
+                        <strong>Foto NCR</strong><br>
+                        @if($ncr->foto)
+                        <img src="{{ public_path('storage/' . $ncr->foto) }}" alt="Foto NCR">
+                        @else
+                        <div class="no-image">Tidak ada foto</div>
+                        @endif
+
+                        <br><strong>Foto Closed</strong><br>
+                        @if($ncr->foto_closed)
+                        <img src="{{ public_path('storage/' . $ncr->foto_closed) }}" alt="Foto Closed">
+                        @else
+                        <div class="no-image">Tidak ada foto</div>
+                        @endif
+                    </div>
                 </td>
 
-                <!-- Deskripsi di kanan -->
-                <td style="width: 65%; vertical-align: top;">
-                    <table style="width: 100%; font-size: 11px; border-collapse: collapse;">
-                        <tr>
-                            <td style="font-weight: bold;">Penulis:</td>
-                            <td>{{ $ncr->writer }}</td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: bold;">Tanggal Shift:</td>
-                            <td>{{ $ncr->tanggal_shift_kerja }}</td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: bold;">Shift:</td>
-                            <td>{{ $ncr->shift_kerja }}</td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: bold;">HS Officer 1:</td>
-                            <td>{{ $ncr->nama_hs_officer_1 }}</td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: bold;">HS Officer 2:</td>
-                            <td>{{ $ncr->nama_hs_officer_2 }}</td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: bold;">Tanggal Audit:</td>
-                            <td>{{ $ncr->tanggal_audit }}</td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: bold;">Auditee:</td>
-                            <td>{{ $ncr->nama_auditee }}</td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: bold;">Perusahaan:</td>
-                            <td>{{ $ncr->perusahaan }}</td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: bold;">Bagian:</td>
-                            <td>{{ $ncr->nama_bagian }}</td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: bold;">Referensi:</td>
-                            <td>{{ $ncr->element_referensi_ncr }}</td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: bold;">Kategori:</td>
-                            <td>{{ $ncr->kategori_ketidaksesuaian }}</td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: bold;">Status:</td>
-                            <td>{{ $ncr->status_ncr }}</td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: bold;">Estimasi:</td>
-                            <td>{{ $ncr->estimasi }}</td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: bold;">Tindak Lanjut:</td>
-                            <td>{{ $ncr->tindak_lanjut }}</td>
-                        </tr>
-                        <tr>
-                            <td style="font-weight: bold;">Dibuat:</td>
-                            <td>{{ $ncr->created_at ? $ncr->created_at->format('Y-m-d H:i') : '-' }}</td>
-                        </tr>
+                <td style="width: 65%;">
+                    <table class="desc">
+                        <tr><td class="label">Penulis:</td><td class="value">{{ $ncr->writer }}</td></tr>
+                        <tr><td class="label">Tanggal Shift:</td><td class="value">{{ $ncr->tanggal_shift_kerja }}</td></tr>
+                        <tr><td class="label">Shift:</td><td class="value">{{ $ncr->shift_kerja }}</td></tr>
+                        <tr><td class="label">HS Officer 1:</td><td class="value">{{ $ncr->nama_hs_officer_1 }}</td></tr>
+                        <tr><td class="label">HS Officer 2:</td><td class="value">{{ $ncr->nama_hs_officer_2 }}</td></tr>
+                        <tr><td class="label">Tanggal Audit:</td><td class="value">{{ $ncr->tanggal_audit }}</td></tr>
+                        <tr><td class="label">Auditee:</td><td class="value">{{ $ncr->nama_auditee }}</td></tr>
+                        <tr><td class="label">Perusahaan:</td><td class="value">{{ $ncr->perusahaan }}</td></tr>
+                        <tr><td class="label">Bagian:</td><td class="value">{{ $ncr->nama_bagian }}</td></tr>
+                        <tr><td class="label">Referensi:</td><td class="value">{{ $ncr->element_referensi_ncr }}</td></tr>
+                        <tr><td class="label">Kategori:</td><td class="value">{{ $ncr->kategori_ketidaksesuaian }}</td></tr>
+                        <tr><td class="label">Status:</td><td class="value">{{ $ncr->status_ncr }}</td></tr>
+                        <tr><td class="label">Estimasi:</td><td class="value">{{ $ncr->estimasi }}</td></tr>
+                        <tr><td class="label">Durasi:</td><td class="value">{{ $ncr->durasi_ncr ?? '-' }}</td></tr>
+                        <tr><td class="label">Tindak Lanjut:</td><td class="value">{{ $ncr->tindak_lanjut }}</td></tr>
+                        <tr><td class="label">Status Note:</td><td class="value">{{ $ncr->status_note ?? '-' }}</td></tr>
+                        <tr><td class="label">Dibuat:</td><td class="value">{{ $ncr->created_at ? $ncr->created_at->format('Y-m-d H:i') : '-' }}</td></tr>
                     </table>
                 </td>
             </tr>
@@ -199,6 +118,4 @@
     </div>
     @endforeach
 </body>
-
-
 </html>

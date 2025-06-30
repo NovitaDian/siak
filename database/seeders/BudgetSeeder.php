@@ -1,4 +1,5 @@
 <?php
+
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
@@ -42,7 +43,7 @@ class BudgetSeeder extends Seeder
             ['636903', 'Treating system'],
         ];
 
-        $kategoriList = ['OPEX', 'APEX'];
+        $kategoriList = ['OPEX', 'CAPEX'];
         $years = ['2023', '2024', '2025'];
 
         foreach ($glAccounts as [$glCode, $glName]) {

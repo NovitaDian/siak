@@ -1,6 +1,9 @@
 @extends('layouts.user_type.auth')
 
 @section('content')
+<button type="button" class="btn btn-outline-secondary btn-md d-flex align-items-center gap-2" onclick="history.back()">
+    <img src="{{ asset('/assets/img/logos/arrow-back.png') }}" alt="Back" style="width: 40px; height: 40px;">
+</button>
 <div class="container-fluid py-4">
     <div class="row justify-content-center">
         <div class="col-lg-10">
@@ -35,9 +38,7 @@
                         </div>
                     </div>
 
-                    <div class="d-flex justify-content-end">
-                        <a href="{{ route('adminsystem.daily.index') }}" class="btn btn-secondary">Kembali</a>
-                    </div>
+                   
 
                 </div>
             </div>

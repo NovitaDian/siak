@@ -17,34 +17,33 @@ class UserSeeder extends Seeder
     {
         $users = [
             [
-            'id' => 1,
-            'name' => 'admin',
-            'role' => 'adminsystem',
-            'email' => 'admin@softui.com',
-            'password' => Hash::make('secret'),
-            'created_at' => now(),
-            'updated_at' => now()
-        ],
-        [
-            'id' => 2,
-            'name' => 'operator',
-            'role' => 'operator',
-            'email' => 'operator@softui.com',
-            'password' => Hash::make('secret'),
-            'created_at' => now(),
-            'updated_at' => now()
-        ],
-        [
-            'id' => 3,
-            'name' => 'guest',
-            'role' => 'guest',
-            'email' => 'guest@softui.com',
-            'password' => Hash::make('secret'),
-            'created_at' => now(),
-            'updated_at' => now()
-        ]
+                'id' => 1,
+                'name' => 'admin',
+                'role' => 'adminsystem',
+                'email' => 'admin@softui.com',
+                'password' => Hash::make('secret'),
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'id' => 2,
+                'name' => 'operator',
+                'role' => 'operator',
+                'email' => 'operator@softui.com',
+                'password' => Hash::make('secret'),
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'id' => 3,
+                'name' => 'guest',
+                'role' => 'tamu',
+                'email' => 'guest@softui.com',
+                'password' => Hash::make('secret'),
+                'created_at' => now(),
+                'updated_at' => now()
+            ]
         ];
         DB::table('users')->insert($users);
-  
     }
 }

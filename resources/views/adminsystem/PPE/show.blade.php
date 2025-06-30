@@ -1,7 +1,9 @@
 @extends('layouts.user_type.auth')
 
 @section('content')
-
+<button type="button" class="btn btn-outline-secondary btn-md d-flex align-items-center gap-2" onclick="history.back()">
+    <img src="{{ asset('assets/img/logos/arrow-back.png') }}" alt="Back" style="width: 40px; height: 40px;">
+</button>
 <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
     <div class="container-fluid py-4">
         <div class="row">
@@ -34,19 +36,21 @@
                                             <td class="text-center" id="status-{{$request->id}}">{{ $request->status }}</td>
                                             <td class="text-center">
                                                 @if ($request->status == 'Pending')
-                                                <button
-                                                    class="btn btn-success btn-xs me-1"
-                                                    onclick="approveRequest('{{ $request->id }}')"
-                                                    title="Approve this request">
-                                                    <i class="fas fa-check m-1"></i> Approve
-                                                </button>
+                                                <form action="{{ route('adminsystem.non_compliant.approve', $request->id) }}" method="POST" class="d-inline">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-success btn-xs me-1"
+                                                        onclick="return confirm('Yakin ingin menyetujui permintaan ini?')">
+                                                        <i class="fas fa-check m-1"></i> Approve
+                                                    </button>
+                                                </form>
 
-                                                <button
-                                                    class="btn btn-danger btn-xs me-1"
-                                                    onclick="rejectRequest('{{ $request->id }}')"
-                                                    title="Reject this request">
-                                                    <i class="fas fa-times m-1"></i> Reject
-                                                </button>
+                                                <form action="{{ route('adminsystem.non_compliant.reject', $request->id) }}" method="POST" class="d-inline">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-danger btn-xs me-1"
+                                                        onclick="return confirm('Yakin ingin menolak permintaan ini?')">
+                                                        <i class="fas fa-times m-1"></i> Reject
+                                                    </button>
+                                                </form>
                                                 @endif
                                             </td>
                                         </tr>
@@ -214,7 +218,15 @@
                                     <label for="reason">Alasan Pengajuan Request</label>
                                     <textarea class="form-control" id="reason" name="reason" required></textarea>
                                 </div>
-                                <button type="submit" class="btn btn-primary">Submit Request</button>
+                                <button type="submit" id="submitRequestBtn" class="btn btn-primary">Submit Request</button>
+
+                                <script>
+                                    document.getElementById('requestForm').addEventListener('submit', function() {
+                                        const btn = document.getElementById('submitRequestBtn');
+                                        btn.disabled = true;
+                                        btn.innerText = 'Mengirim...'; // ubah teks saat loading
+                                    });
+                                </script>
                             </form>
                         </div>
                     </div>

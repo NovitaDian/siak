@@ -1,7 +1,9 @@
 @extends('layouts.user_type.auth')
 
 @section('content')
-
+<button type="button" class="btn btn-outline-secondary btn-md d-flex align-items-center gap-2" onclick="history.back()">
+    <img src="{{ asset('assets/img/logos/arrow-back.png') }}" alt="Back" style="width: 40px; height: 40px;">
+</button>
 <div class="container-fluid py-4">
     <div class="card mx-auto w-100" style="max-width: 95%;">
         <div class="card-header pb-0 px-3">

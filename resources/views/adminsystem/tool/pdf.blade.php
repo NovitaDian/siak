@@ -32,7 +32,7 @@
                 <th>Penulis</th>
                 <th>Tanggal Pemeriksaan</th>
                 <th>Nama Alat</th>
-                <th>ID Inspector</th>
+                <th>Nomor Alat</th>
                 <th>Nama Inspector</th>
                 <th>Status Pemeriksaan</th>
                 <th>Status</th>
@@ -46,7 +46,7 @@
                     <td>{{ $d->writer }}</td>
                     <td>{{ $d->tanggal_pemeriksaan }}</td>
                     <td>{{ $d->nama_alat }}</td>
-                    <td>{{ $d->hse_inspector_id }}</td>
+                    <td>{{ $d->alat->nomor }}</td>
                     <td>{{ $d->hse_inspector }}</td>
                     <td>{{ $d->status_pemeriksaan }}</td>
                     <td>{{ $d->status }}</td>

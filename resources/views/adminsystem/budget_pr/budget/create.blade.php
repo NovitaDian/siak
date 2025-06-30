@@ -1,7 +1,9 @@
 @extends('layouts.user_type.auth')
 
 @section('content')
-
+<button type="button" class="btn btn-outline-secondary btn-md d-flex align-items-center gap-2" onclick="history.back()">
+    <img src="{{ asset('assets/img/logos/arrow-back.png') }}" alt="Back" style="width: 40px; height: 40px;">
+</button>
 <div>
     <div class="container-fluid ">
         <h2 class="text-black font-weight-bolder text-center">CREATE BUDGET PLAN</h2>
@@ -58,18 +60,13 @@
                                 <input class="form-control" type="text" id="year" name="year" value="{{ old('gl_name') }}" required>
                             </div>
                         </div>
-
                     </div>
-
-
-
-
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="kategori">{{ __('Kategori') }}</label>
                                 <select class="form-control" id="kategori" name="kategori" required>
-                                    <option value="APEX">APEX</option>
+                                    <option value="CAPEX">CAPEX</option>
                                     <option value="OPEX">OPEX</option>
                                     <option value="Consumable">Consumable</option>
                                 </select>
@@ -82,7 +79,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="d-flex justify-content-end">
                         <button type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">{{ __('Save Budget Plan') }}</button>
                     </div>

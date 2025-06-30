@@ -34,6 +34,12 @@ class SentToolReport extends Model
     {
         return $this->belongsTo(Alat::class, 'alat_id');
     }
+
+    public function namaAlat()
+    {
+        return $this->belongsTo(NamaAlat::class);
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

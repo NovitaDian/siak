@@ -1,7 +1,9 @@
 @extends('layouts.user_type.operator')
 
 @section('content')
-
+<button type="button" class="btn btn-outline-secondary btn-md d-flex align-items-center gap-2" onclick="history.back()">
+    <img src="{{ asset('assets/img/logos/arrow-back.png') }}" alt="Back" style="width: 40px; height: 40px;">
+</button>
 <div>
     <div class="container-fluid">
         <h2 class="text-black font-weight-bolder text-center">EDIT SAFETY BEHAVIOR & PPE COMPLIANCE</h2>
@@ -115,10 +117,10 @@
                                 <label>{{ __($label) }}</label>
                             </div>
                             <div class="col-md-4">
-                                <input type="number" class="form-control" name="{{ $field }}_karyawan" min="0" value="{{ old("{$field}_karyawan", $ppeFixs->{"{$field}_karyawan"}) }}" placeholder="Karyawan" required>
+                                <input type="number" class="form-control" name="{{ $field }}_karyawan" min="0" value="{{ old("{$field}_karyawan", $ppeFixs->{"{$field}_karyawan"}) }}" placeholder="Karyawan">
                             </div>
                             <div class="col-md-4">
-                                <input type="number" class="form-control" name="{{ $field }}_kontraktor" min="0" value="{{ old("{$field}_kontraktor", $ppeFixs->{"{$field}_kontraktor"}) }}" placeholder="Kontraktor" required>
+                                <input type="number" class="form-control" name="{{ $field }}_kontraktor" min="0" value="{{ old("{$field}_kontraktor", $ppeFixs->{"{$field}_kontraktor"}) }}" placeholder="Kontraktor">
                             </div>
                         </div>
                     @endforeach

@@ -257,7 +257,7 @@ class NcrController extends Controller
         // Ambil data PPE berdasarkan ID
         $ncr = Ncr::findOrFail($id);
         $ncr->delete();
-        return redirect()->route('adminsystem.ncr.index')->with('notification', 'NCR berhasil dikirim!');
+        return redirect()->route('adminsystem.ncr.index')->with('success', 'NCR berhasil dikirim!');
     }
     public function sent_destroy(Request $request, $id)
     {
@@ -268,7 +268,7 @@ class NcrController extends Controller
         SentNcr::where('id', $request->sent_ncr_id)->update([
             'status' => 'Nothing',
         ]);
-        return redirect()->route('adminsystem.ncr.index')->with('notification', 'NCR berhasil dikirim!');
+        return redirect()->route('adminsystem.ncr.index')->with('success', 'NCR berhasil dikirim!');
     }
 
     public function storeRequest(Request $request)
@@ -359,6 +359,17 @@ class NcrController extends Controller
 
         return $pdf->download('ncr.pdf');
     }
+
+    public function exportSinglePdf($id)
+    {
+        $ncr_fixs = [SentNcr::findOrFail($id)];
+
+        $pdf = Pdf::loadView('adminsystem.ncr.pdf', compact('ncr_fixs'))
+            ->setPaper('a4', 'portrait');
+
+        return $pdf->download("ncr-{$id}.pdf");
+    }
+
     public function close($id)
     {
         $ncr_fixs = SentNcr::findOrFail($id);
@@ -743,7 +754,7 @@ class NcrController extends Controller
         // Ambil data PPE berdasarkan ID
         $ncr = Ncr::findOrFail($id);
         $ncr->delete();
-        return redirect()->route('operator.ncr.index')->with('notification', 'NCR berhasil dikirim!');
+        return redirect()->route('operator.ncr.index')->with('success', 'NCR berhasil dikirim!');
     }
     public function operator_sent_destroy(Request $request, $id)
     {
@@ -754,7 +765,7 @@ class NcrController extends Controller
         SentNcr::where('id', $request->sent_ncr_id)->update([
             'status' => 'Nothing',
         ]);
-        return redirect()->route('operator.ncr.index')->with('notification', 'NCR berhasil dikirim!');
+        return redirect()->route('operator.ncr.index')->with('success', 'NCR berhasil dikirim!');
     }
 
     public function operator_storeRequest(Request $request)

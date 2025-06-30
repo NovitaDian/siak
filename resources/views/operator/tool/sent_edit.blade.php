@@ -1,7 +1,9 @@
 @extends('layouts.user_type.operator')
 
 @section('content')
-
+<button type="button" class="btn btn-outline-secondary btn-md d-flex align-items-center gap-2" onclick="history.back()">
+    <img src="{{ asset('assets/img/logos/arrow-back.png') }}" alt="Back" style="width: 40px; height: 40px;">
+</button>
 <div>
     <div class="container-fluid">
         <h2 class="text-black font-weight-bolder text-center">EDIT LAPORAN PENGECEKAN ALAT</h2>
@@ -15,7 +17,6 @@
                 <form action="{{ route('operator.tool.sent_update', $tool_fixs->id) }}" enctype="multipart/form-data" method="POST">
                     @csrf
                     @method('PUT')
-
                     @if($errors->any())
                     <div class="mt-3 alert alert-primary alert-dismissible fade show" role="alert">
                         <span class="alert-text text-white">{{ $errors->first() }}</span>

@@ -283,7 +283,7 @@ class InventoryController extends Controller
         // Update data pemasukan
         $pemasukan->barang_id = $request->barang_id;
         $pemasukan->quantity = $request->quantity;
-        $pemasukan->unit = $request->unit;
+        $pemasukan->unit = $newBarang->unit;
         $pemasukan->keterangan = $request->keterangan;
         $pemasukan->tanggal = $request->tanggal;
         $pemasukan->save();
@@ -297,7 +297,7 @@ class InventoryController extends Controller
         if ($transaction) {
             $transaction->barang_id = $request->barang_id;
             $transaction->quantity = $request->quantity;
-            $transaction->unit = $request->unit;
+            $transaction->unit = $newBarang->unit;
             $transaction->keterangan = $request->keterangan;
             $transaction->tanggal = $request->tanggal;
             $transaction->save();

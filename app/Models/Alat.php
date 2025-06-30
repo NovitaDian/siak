@@ -16,4 +16,8 @@ class Alat extends Model
         'durasi_inspeksi',
         'status',
     ];
+    public function namaAlat()
+    {
+        return $this->belongsTo(NamaAlat::class, 'nama_alat_id');
+    }
 }

@@ -17,6 +17,9 @@
     </button>
 </div>
 @endif
+<button type="button" class="btn btn-outline-secondary btn-md d-flex align-items-center gap-2" onclick="history.back()">
+    <img src="{{ asset('assets/img/logos/arrow-back.png') }}" alt="Back" style="width: 40px; height: 40px;">
+</button>
 <div>
     <div class="container-fluid ">
         <h2 class="text-black font-weight-bolder text-center">EDIT MATERIAL GROUP</h2>

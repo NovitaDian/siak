@@ -1,11 +1,11 @@
 @extends('layouts.user_type.operator')
 
 @section('content')
-@if (session('success'))
-<div class="alert alert-success alert-dismissible fade show" role="alert" style="background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 10px; margin: 10px;">
-    {{ session('success') }}
-</div>
-@endif
+
+<button type="button" class="btn btn-outline-secondary btn-md d-flex align-items-center gap-2"
+    onclick="window.location.href='{{ route('operator.home') }}'">
+    <img src="{{ asset('assets/img/logos/arrow-back.png') }}" alt="Back" style="width: 40px; height: 40px;">
+</button>
 <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg">
 
     <div class="row">
@@ -321,7 +321,15 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Submit Request</button>
+                        <button type="submit" id="submitRequestBtn" class="btn btn-primary">Submit Request</button>
+
+                        <script>
+                            document.getElementById('requestForm').addEventListener('submit', function() {
+                                const btn = document.getElementById('submitRequestBtn');
+                                btn.disabled = true;
+                                btn.innerText = 'Mengirim...'; // ubah teks saat loading
+                            });
+                        </script>
                     </div>
                 </form>
             </div>

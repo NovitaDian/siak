@@ -1,11 +1,10 @@
 @extends('layouts.user_type.tamu')
 
 @section('content')
-@if (session('success'))
-<div class="alert alert-success alert-dismissible fade show" role="alert" style="background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 10px; margin: 10px;">
-    {{ session('success') }}
-</div>
-@endif
+<button type="button" class="btn btn-outline-secondary btn-md d-flex align-items-center gap-2"
+    onclick="window.location.href='{{ route('tamu.dashboard') }}'">
+    <img src="{{ asset('assets/img/logos/arrow-back.png') }}" alt="Back" style="width: 40px; height: 40px;">
+</button>
 <div class="row mt-4">
     <!-- Left Column: Budget Monitoring Table -->
     <div class="col">

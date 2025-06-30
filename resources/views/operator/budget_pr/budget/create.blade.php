@@ -69,7 +69,7 @@
                             <div class="form-group">
                                 <label for="kategori">{{ __('Kategori') }}</label>
                                 <select class="form-control" id="kategori" name="kategori" required>
-                                    <option value="APEX">APEX</option>
+                                    <option value="CAPEX">CAPEX</option>
                                     <option value="OPEX">OPEX</option>
                                     <option value="Consumable">Consumable</option>
                                 </select>

@@ -17,7 +17,7 @@ class ReferencesController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'file' => 'required|file|mimes:pdf,docx,xlsx,jpg,png', 
+            'file' => 'required|file|mimes:pdf,docx,xlsx,jpg,png|max:10240', 
         ]);
 
         $file = $request->file('file');

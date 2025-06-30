@@ -1202,7 +1202,7 @@ class IncidentController extends Controller
         // Hapus data dari incident
         $incident->delete();
         // Redirect dengan notifikasi
-        return redirect()->route('adminsystem.incident.index')->with('notification', 'Laporan berhasil dikirim!');
+        return redirect()->route('adminsystem.incident.index')->with('success', 'Laporan berhasil dikirim!');
     }
     public function draft_destroy($id)
     {
@@ -2523,7 +2523,7 @@ class IncidentController extends Controller
         // Hapus data dari incident
         $incident->delete();
         // Redirect dengan notifikasi
-        return redirect()->route('operator.incident.index')->with('notification', 'Laporan berhasil dikirim!');
+        return redirect()->route('operator.incident.index')->with('success', 'Laporan berhasil dikirim!');
     }
     public function operator_draft_destroy($id)
     {

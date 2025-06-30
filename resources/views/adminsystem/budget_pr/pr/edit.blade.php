@@ -1,7 +1,9 @@
 @extends('layouts.user_type.auth')
 
 @section('content')
-
+  <a href="javascript:history.back()" class="btn btn-outline-secondary btn-md mt-4 mb-4">
+        ← 
+    </a>
 <div>
     <div class="container-fluid ">
         <h2 class="text-black font-weight-bolder text-center">EDIT PURCHASE REQUEST</h2>
