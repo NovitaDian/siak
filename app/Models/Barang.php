@@ -12,7 +12,7 @@ class Barang extends Model
     protected $primaryKey = 'id'; // Primary key tabel
 
     protected $fillable = [
-        'material_code', 'material_group','material_group_id', 'description', 'image', 'material_type', 'remark', 'quantity', 'unit','unit_id'
+        'material_code','material_group_id', 'description', 'image', 'material_type', 'remark', 'quantity','unit_id'
     ];
 
     public function transactions()
@@ -21,5 +21,12 @@ class Barang extends Model
     }
 
     // Fungsi untuk menambahkan atau mengurangi quantity barang
-    
+     public function unitId()
+    {
+        return $this->belongsTo(Unit::class, 'unit_id');
+    }
+     public function materialGroup()
+    {
+        return $this->belongsTo(MaterialGroup::class, 'material_group_id');
+    }
 }

@@ -50,7 +50,7 @@
                             <select class="form-control" id="barang_id" name="barang_id" required>
                                 <option value="">Pilih Barang</option>
                                 @foreach($barangs as $barang)
-                                <option value="{{ $barang->id }}" data-unit="{{ $barang->unit }}">{{ $barang->description }}</option>
+                                <option value="{{ $barang->id }}">{{ $barang->description }}</option>
                                 @endforeach
                             </select>
                             @error('barang_id')
@@ -80,6 +80,7 @@
                     </div>
                 </div>
 
+
                 <!-- Submit Button -->
                 <div class="d-flex justify-content-end">
                     <button type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">{{ __('Submit Pemasukan') }}</button>
@@ -88,4 +89,5 @@
         </div>
     </div>
 </div>
+
 @endsection

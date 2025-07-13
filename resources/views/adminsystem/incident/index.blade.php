@@ -33,7 +33,7 @@
                                     <tbody id="notificationTableBody">
                                         @foreach ($requests as $request)
                                         <tr>
-                                            <td class="text-center text-xs font-weight-bold">{{ $request->nama_pengirim }}</td>
+                                            <td class="text-center text-xs font-weight-bold">{{ $request->user->name }}</td>
                                             <td class="text-center text-xs font-weight-bold">{{ $request->created_at->format('d/m/Y') }}</td>
                                             <td class="text-center text-xs font-weight-bold">{{ $request->type }}</td>
                                             <td class="text-center text-xs font-weight-bold">{{ $request->reason }}</td>
@@ -109,7 +109,7 @@
                                     <tr>
                                         <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal Shift Kerja</th>
                                         <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Shift Kerja</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">HSE InspectorI</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">HSE Inspector</th>
                                         <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Ada Kejadian</th>
                                         <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Klasifikasi</th>
                                         <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Korban</th>
@@ -132,7 +132,7 @@
                                         </td>
 
                                         <td class="text-center">
-                                            <p class="text-xs font-weight-bold mb-0">{{ $incident->safety_officer_1 }}</p>
+                                            <p class="text-xs font-weight-bold mb-0">{{ $incident->inspectors->name }}</p>
                                         </td>
 
                                         <td class="align-middle text-center text-sm">
@@ -251,9 +251,11 @@
                             <table class="table align-items-center mb-0" id="sentTable">
                                 <thead>
                                     <tr>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">No</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Penulis</th>
                                         <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal Shift Kerja</th>
                                         <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Shift Kerja</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">HSE InspectorI</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">HSE Inspector</th>
                                         <th style="width: 80px;" class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Ada Kejadian</th>
                                         <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Klasifikasi</th>
                                         <th style="width: 80px;" class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Korban</th>
@@ -264,10 +266,14 @@
                                 <tbody>
                                     @foreach ($incident_fixs as $incident_fix)
                                     <tr>
+                                        <td class="text-center text-xs">{{ $loop->iteration }}</td>
+                                        <td class="text-center">
+                                            <p class="text-xs font-weight-bold mb-0">{{ $incident_fix->user->name }}</p>
+                                        </td>
                                         <td class="text-center">
                                             <div class="d-flex justify-content-center align-items-center px-2 py-1">
                                                 <div class="d-flex flex-column justify-content-center">
-                                                    <h6 class="mb-0 text-sm">{{ \Carbon\Carbon::parse($incident_fix->shift_date)->format('d/m/Y') }}</h6>
+                                                    <p class="mb-0 text-xs">{{ \Carbon\Carbon::parse($incident_fix->shift_date)->format('d/m/Y') }}</p>
                                                 </div>
                                             </div>
                                         </td>
@@ -277,7 +283,7 @@
                                         </td>
 
                                         <td class="text-center">
-                                            <p class="text-xs font-weight-bold mb-0">{{ $incident_fix->safety_officer_1 }}</p>
+                                            <p class="text-xs font-weight-bold mb-0">{{ $incident_fix->inspectors->name }}</p>
                                         </td>
 
                                         <td class="align-middle text-center text-sm">
@@ -472,8 +478,5 @@
             }
         });
     });
-
-
-  
 </script>
 @endsection

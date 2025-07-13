@@ -13,13 +13,10 @@ return new class extends Migration
     {
         Schema::create('daily_fix', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('draft_id');
             $table->unsignedBigInteger('user_id');
-            $table->string('writer', 100);
             $table->date('tanggal_shift_kerja');
             $table->string('shift_kerja');
             $table->unsignedBigInteger('hse_inspector_id');
-            $table->string('nama_hse_inspector');
             $table->text('rincian_laporan');
             $table->string('status', 30)->default('Nothing');
             $table->timestamps();

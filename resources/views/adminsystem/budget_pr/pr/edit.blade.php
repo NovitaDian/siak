@@ -1,9 +1,9 @@
 @extends('layouts.user_type.auth')
 
 @section('content')
-  <a href="javascript:history.back()" class="btn btn-outline-secondary btn-md mt-4 mb-4">
-        ← 
-    </a>
+<button type="button" class="btn btn-outline-secondary btn-md d-flex align-items-center gap-2" onclick="history.back()">
+    <img src="{{ asset('assets/img/logos/arrow-back.png') }}" alt="Back" style="width: 40px; height: 40px;">
+</button>
 <div>
     <div class="container-fluid ">
         <h2 class="text-black font-weight-bolder text-center">EDIT PURCHASE REQUEST</h2>
@@ -61,10 +61,12 @@
 
                         <div class="col-md-6">
                             <label for="unit">{{ __('Satuan') }}</label>
-                            <select class="form-control" name="unit" id="unit" required>
-                                <option value="">Pilih Satuan</option>
+                            <select class="form-control" id="unit_id" name="unit_id" required>
+                                <option value="">Pilih Unit</option>
                                 @foreach($units as $unit)
-                                <option value="{{ $unit->unit }}" {{ old('unit', $pr->unit) == $unit->unit ? 'selected' : '' }}>{{ $unit->unit }}</option>
+                                <option value="{{ $unit->id }}" {{ old('unit_id', $pr->unit_id) == $unit->id ? 'selected' : '' }}>
+                                    {{ $unit->unit }}
+                                </option>
                                 @endforeach
                             </select>
                         </div>
@@ -74,19 +76,7 @@
                             <input class="form-control" type="number" name="valuation_price" id="valuation_price" value="{{ old('valuation_price', $pr->valuation_price) }}" step="0.01" required>
                         </div>
 
-                        <div class="col-md-6">
-                            <label for="io_assetcode">{{ __('IO / Assetcode') }}</label>
-                            <select class="form-control" name="io_assetcode" id="io_assetcode">
-                                <option value="">Pilih Internal Order</option>
-                                @foreach($budgets as $budget)
-                                    @if(!empty($budget->internal_order))
-                                        <option value="{{ $budget->internal_order }}" {{ old('io_assetcode', $pr->io_assetcode) == $budget->internal_order ? 'selected' : '' }}>
-                                            {{ $budget->internal_order }}
-                                        </option>
-                                    @endif
-                                @endforeach
-                            </select>
-                        </div>
+                        
 
                         <div class="d-flex justify-content-end">
                             <button type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">{{ __('Update PR') }}</button>

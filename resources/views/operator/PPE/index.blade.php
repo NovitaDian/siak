@@ -93,7 +93,7 @@
                                         </span>
                                     </td>
                                     <td class="text-center text-xs">{{ $ppe_fix->shift_kerja }}</td>
-                                    <td class="text-center text-xs">{{ $ppe_fix->nama_hse_inspector }}</td>
+                                    <td class="text-center text-xs">{{ $ppe_fix->inspector->name }}</td>
                                     <td class="text-center text-xs">{{ $ppe_fix->jam_mulai }}-{{ $ppe_fix->jam_selesai }}</td>
                                     <td class="text-center text-xs">{{ $ppe_fix->zona_pengawasan }}</td>
                                     <td class="text-center text-xs">{{ $ppe_fix->lokasi_observasi }}</td>

@@ -24,7 +24,6 @@ class PpeController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        $ppes = Ppe::where('writer', $user->name)->get();
 
         $start = $request->start_date;
         $end = $request->end_date;
@@ -41,7 +40,7 @@ class PpeController extends Controller
         }
 
         $requests = PpeRequest::all();
-        return view('adminsystem.PPE.index', compact('ppes', 'ppe_fixs', 'requests', 'latestRequests'));
+        return view('adminsystem.PPE.index', compact('ppe_fixs', 'requests', 'latestRequests'));
     }
 
     // Menampilkan form untuk membuat data baru
@@ -99,7 +98,6 @@ class PpeController extends Controller
             'tanggal_shift_kerja' => $request->tanggal_shift_kerja,
             'shift_kerja' => $request->shift_kerja,
             'hse_inspector_id' => $inspector->id,
-            'nama_hse_inspector' => $inspector->name,
             'jam_mulai' => $request->jam_mulai,
             'jam_selesai' => $request->jam_selesai,
             'zona_pengawasan' => $request->zona_pengawasan,
@@ -117,7 +115,6 @@ class PpeController extends Controller
             'jumlah_tidak_patuh_safety_harness_kontraktor' => $request->jumlah_tidak_patuh_safety_harness_kontraktor,
             'jumlah_tidak_patuh_apd_lainnya_kontraktor' => $request->jumlah_tidak_patuh_apd_lainnya_kontraktor,
             'keterangan_tidak_patuh' => $request->keterangan_tidak_patuh,
-            'writer' => Auth::user()->name,
             'user_id' => Auth::user()->id,
             'status_ppe' => ($total_tidak_patuh == 0) ? 'Compliant' : 'Non-Compliant',
         ]);
@@ -195,7 +192,6 @@ class PpeController extends Controller
             'tanggal_shift_kerja' => $request->tanggal_shift_kerja,
             'shift_kerja' => $request->shift_kerja,
             'hse_inspector_id' => $inspector->id,
-            'nama_hse_inspector' => $inspector->name,
             'jam_mulai' => $request->jam_mulai,
             'jam_selesai' => $request->jam_selesai,
             'zona_pengawasan' => $request->zona_pengawasan,
@@ -213,7 +209,6 @@ class PpeController extends Controller
             'jumlah_tidak_patuh_safety_harness_kontraktor' => $request->jumlah_tidak_patuh_safety_harness_kontraktor,
             'jumlah_tidak_patuh_apd_lainnya_kontraktor' => $request->jumlah_tidak_patuh_apd_lainnya_kontraktor,
             'keterangan_tidak_patuh' => $request->keterangan_tidak_patuh,
-            'writer' => Auth::user()->name,
             'user_id' => Auth::user()->id,
             'status_ppe' => $status_ppe
         ]);
@@ -245,11 +240,8 @@ class PpeController extends Controller
 
         // Pindahkan data ke tabel ppe_fix
         SentPpe::create([
-            'draft_id' => $ppe->id,
-            'writer' => $ppe->writer,
             'tanggal_shift_kerja' => $ppe->tanggal_shift_kerja,
             'shift_kerja' => $ppe->shift_kerja,
-            'nama_hse_inspector' => $ppe->nama_hse_inspector,
             'hse_inspector_id' => $ppe->hse_inspector_id,
             'jam_mulai' => $ppe->jam_mulai,
             'jam_selesai' => $ppe->jam_selesai,
@@ -332,7 +324,6 @@ class PpeController extends Controller
             'tanggal_shift_kerja' => $request->tanggal_shift_kerja,
             'shift_kerja' => $request->shift_kerja,
             'hse_inspector_id' => $inspector->id,
-            'nama_hse_inspector' => $inspector->name,
             'jam_mulai' => $request->jam_mulai,
             'jam_selesai' => $request->jam_selesai,
             'zona_pengawasan' => $request->zona_pengawasan,
@@ -351,7 +342,6 @@ class PpeController extends Controller
             'jumlah_tidak_patuh_apd_lainnya_kontraktor' => $request->jumlah_tidak_patuh_apd_lainnya_kontraktor,
             'keterangan_tidak_patuh' => $request->keterangan_tidak_patuh,
             'status_ppe' => ($total_tidak_patuh == 0) ? 'Compliant' : 'Non-Compliant',
-            'writer' => Auth::user()->name,
             'user_id' => Auth::user()->id,
             'status' => 'Nothing',
 
@@ -380,7 +370,6 @@ class PpeController extends Controller
             'sent_ppe_id' => $request->sent_ppe_id,
             'type' => $request->type,
             'reason' => $request->reason,
-            'nama_pengirim' => Auth::user()->name,
             'user_id' => Auth::user()->id,
             'status' => 'Pending',
         ]);
@@ -441,15 +430,23 @@ class PpeController extends Controller
         $end = $request->end_date;
 
         if ($start && $end) {
-            $ppe_fixs = SentPpe::whereBetween('tanggal_shift_kerja', [$start, $end])->get();
+            $ppe_fixs = SentPpe::with('nonCompliants')
+                ->whereBetween('tanggal_shift_kerja', [$start, $end])
+                ->get();
         } else {
-            $ppe_fixs = SentPpe::all();
+            $ppe_fixs = SentPpe::with('nonCompliants')->get();
         }
 
         $pdf = Pdf::loadView('adminsystem.ppe.pdf', compact('ppe_fixs'))
-            ->setPaper('a4', 'landscape');
+            ->setPaper('a4');
 
         return $pdf->download('ppe.pdf');
+    }
+    public function req_show($id)
+    {
+
+        $ppe_fixs = SentPpe::with('nonCompliants')->get();
+        return view('adminsystem.ppe.pdf', compact('ppe_fixs'));
     }
 
 
@@ -473,7 +470,6 @@ class PpeController extends Controller
     public function operator_index(Request $request)
     {
         $user = Auth::user();
-        $ppes = Ppe::where('writer', $user->name)->get();
 
         $start = $request->start_date;
         $end = $request->end_date;
@@ -486,12 +482,12 @@ class PpeController extends Controller
                 ->orderBy('tanggal_shift_kerja', 'desc')
                 ->get();
         } else {
-            $ppe_fixs = SentPpe::where('writer', $user->name)->orderBy('tanggal_shift_kerja', 'desc')
+            $ppe_fixs = SentPpe::where('user_id', $user->id)->orderBy('tanggal_shift_kerja', 'desc')
                 ->get();
         }
 
         $requests = PpeRequest::all();
-        return view('operator.PPE.index', compact('ppes', 'ppe_fixs', 'requests', 'latestRequests'));
+        return view('operator.PPE.index', compact('ppe_fixs', 'requests', 'latestRequests'));
     }
     // Menampilkan form untuk membuat data baru
     public function operator_create()
@@ -548,7 +544,6 @@ class PpeController extends Controller
             'tanggal_shift_kerja' => $request->tanggal_shift_kerja,
             'shift_kerja' => $request->shift_kerja,
             'hse_inspector_id' => $inspector->id,
-            'nama_hse_inspector' => $inspector->name,
             'jam_mulai' => $request->jam_mulai,
             'jam_selesai' => $request->jam_selesai,
             'zona_pengawasan' => $request->zona_pengawasan,
@@ -566,7 +561,6 @@ class PpeController extends Controller
             'jumlah_tidak_patuh_safety_harness_kontraktor' => $request->jumlah_tidak_patuh_safety_harness_kontraktor,
             'jumlah_tidak_patuh_apd_lainnya_kontraktor' => $request->jumlah_tidak_patuh_apd_lainnya_kontraktor,
             'keterangan_tidak_patuh' => $request->keterangan_tidak_patuh,
-            'writer' => Auth::user()->name,
             'user_id' => Auth::user()->id,
             'status_ppe' => ($total_tidak_patuh == 0) ? 'Compliant' : 'Non-Compliant',
         ]);
@@ -583,12 +577,20 @@ class PpeController extends Controller
 
         $ppeFix = SentPpe::findOrFail($id);
 
-        $nonCompliants = NonCompliant::where('id_ppe', $id)->where('writer', $user->name)->get();
+        $nonCompliants = NonCompliant::where('id_ppe', $id)->where('user_id', $user->id)->get();
         $requests = NonCompliantRequest::all();
         $latestRequests = NonCompliantRequest::orderByDesc('id')
             ->get()
             ->unique('sent_non_compliant_id');
         return view('operator.PPE.show', compact('ppeFix', 'requests', 'nonCompliants', 'latestRequests'));
+    }
+    public function operator_req_show($id)
+    {
+
+
+        $ppe_fixs = SentPpe::with('nonCompliants')->get();
+
+        return view('operator.ppe.pdf', compact('ppe_fixs'));
     }
 
     // Menampilkan form edit data
@@ -647,7 +649,6 @@ class PpeController extends Controller
             'tanggal_shift_kerja' => $request->tanggal_shift_kerja,
             'shift_kerja' => $request->shift_kerja,
             'hse_inspector_id' => $inspector->id,
-            'nama_hse_inspector' => $inspector->name,
             'jam_mulai' => $request->jam_mulai,
             'jam_selesai' => $request->jam_selesai,
             'zona_pengawasan' => $request->zona_pengawasan,
@@ -665,7 +666,6 @@ class PpeController extends Controller
             'jumlah_tidak_patuh_safety_harness_kontraktor' => $request->jumlah_tidak_patuh_safety_harness_kontraktor,
             'jumlah_tidak_patuh_apd_lainnya_kontraktor' => $request->jumlah_tidak_patuh_apd_lainnya_kontraktor,
             'keterangan_tidak_patuh' => $request->keterangan_tidak_patuh,
-            'writer' => Auth::user()->name,
             'user_id' => Auth::user()->id,
             'status_ppe' => $status_ppe
         ]);
@@ -697,11 +697,8 @@ class PpeController extends Controller
 
         // Pindahkan data ke tabel ppe_fix
         SentPpe::create([
-            'draft_id' => $ppe->id,
-            'writer' => $ppe->writer,
             'tanggal_shift_kerja' => $ppe->tanggal_shift_kerja,
             'shift_kerja' => $ppe->shift_kerja,
-            'nama_hse_inspector' => $ppe->nama_hse_inspector,
             'hse_inspector_id' => $ppe->hse_inspector_id,
             'jam_mulai' => $ppe->jam_mulai,
             'jam_selesai' => $ppe->jam_selesai,
@@ -784,7 +781,6 @@ class PpeController extends Controller
             'tanggal_shift_kerja' => $request->tanggal_shift_kerja,
             'shift_kerja' => $request->shift_kerja,
             'hse_inspector_id' => $inspector->id,
-            'nama_hse_inspector' => $inspector->name,
             'jam_mulai' => $request->jam_mulai,
             'jam_selesai' => $request->jam_selesai,
             'zona_pengawasan' => $request->zona_pengawasan,
@@ -803,7 +799,6 @@ class PpeController extends Controller
             'jumlah_tidak_patuh_apd_lainnya_kontraktor' => $request->jumlah_tidak_patuh_apd_lainnya_kontraktor,
             'keterangan_tidak_patuh' => $request->keterangan_tidak_patuh,
             'status_ppe' => ($total_tidak_patuh == 0) ? 'Compliant' : 'Non-Compliant',
-            'writer' => Auth::user()->name,
             'user_id' => Auth::user()->id,
             'status' => 'Nothing',
 
@@ -832,7 +827,6 @@ class PpeController extends Controller
             'sent_ppe_id' => $request->sent_ppe_id,
             'type' => $request->type,
             'reason' => $request->reason,
-            'nama_pengirim' => Auth::user()->name,
             'user_id' => Auth::user()->id,
             'status' => 'Pending',
         ]);
@@ -900,13 +894,15 @@ class PpeController extends Controller
         $end = $request->end_date;
 
         if ($start && $end) {
-            $ppe_fixs = SentPpe::whereBetween('tanggal_shift_kerja', [$start, $end])->get();
+            $ppe_fixs = SentPpe::with('nonCompliants')
+                ->whereBetween('tanggal_shift_kerja', [$start, $end])
+                ->get();
         } else {
-            $ppe_fixs = SentPpe::all();
+            $ppe_fixs = SentPpe::with('nonCompliants')->get();
         }
 
-        $pdf = Pdf::loadView('operator.ppe.pdf', compact('ppe_fixs'))
-            ->setPaper('a4', 'landscape');
+        $pdf = Pdf::loadView('adminsystem.ppe.pdf', compact('ppe_fixs'))
+            ->setPaper('a4');
 
         return $pdf->download('ppe.pdf');
     }

@@ -14,13 +14,12 @@ return new class extends Migration
         Schema::create('budget', function (Blueprint $table) {
             $table->id();
             $table->string('internal_order', 255)->nullable();
-            $table->string('gl_code', 255);
-            $table->string('gl_name', 255);
+            $table->unsignedBigInteger('gl_id');
             $table->decimal('setahun_total', 15, 2)->nullable();
             $table->string('kategori', 255);
             $table->string('year', 100);
             $table->timestamps();
-            $table->foreign('gl_code')->references('gl_code')->on('gl_account')->onDelete('cascade');
+            $table->foreign('gl_id')->references('id')->on('gl_account')->onDelete('cascade');
         });
     }
 

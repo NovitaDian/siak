@@ -1,22 +1,7 @@
 @extends('layouts.user_type.auth')
 
 @section('content')
-@if($errors->any())
-<div class="mt-3 alert alert-primary alert-dismissible fade show" role="alert">
-  <span class="alert-text text-white">{{ $errors->first() }}</span>
-  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-    <i class="fa fa-close" aria-hidden="true"></i>
-  </button>
-</div>
-@endif
-@if(session('success'))
-<div class="m-3 alert alert-success alert-dismissible fade show" role="alert">
-  <span class="alert-text text-white">{{ session('success') }}</span>
-  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-    <i class="fa fa-close" aria-hidden="true"></i>
-  </button>
-</div>
-@endif
+
 <div>
     <button type="button" class="btn btn-outline-secondary btn-md d-flex align-items-center gap-2" onclick="history.back()">
     <img src="{{ asset('assets/img/logos/arrow-back.png') }}" alt="Back" style="width: 40px; height: 40px;">

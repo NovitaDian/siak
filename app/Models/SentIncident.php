@@ -13,13 +13,12 @@ class SentIncident extends Model
 
     // Kolom-kolom yang dapat diisi secara massal
     protected $fillable = [
-        'draft_id',
         'user_id',
-        'writer',
+
         'stamp_date',
         'shift_date',
         'shift',
-        'safety_officer_1',
+        'hse_inspector_id',
         'status_kejadian',
         'tgl_kejadiannya',
         'jam_kejadiannya',
@@ -29,7 +28,7 @@ class SentIncident extends Model
         'nama_korban',
         'status',
         'jenis_kelamin',
-        'perusahaan',
+        'perusahaan_id',
         'bagian',
         'jabatan',
         'masa_kerja',
@@ -148,5 +147,13 @@ class SentIncident extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    public function inspectors()
+    {
+        return $this->belongsTo(HseInspector::class, 'hse_inspector_id');
+    }
+    public function pers()
+    {
+        return $this->belongsTo(Perusahaan::class, 'perusahaan_id');
     }
 }

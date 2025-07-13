@@ -32,7 +32,7 @@
                                 <select class="form-control" name="alat_id" id="alat_id" required>
                                     <option value="">Pilih Alat</option>
                                     @foreach($alats as $alat)
-                                    <option value="{{ $alat->id }}" {{ old('alat_id') == $alat->id ? 'selected' : '' }}>{{ $alat->nama_alat }}-{{ $alat->nomor }}</option>
+                                    <option value="{{ $alat->id }}" {{ old('alat_id') == $alat->id ? 'selected' : '' }}>{{ $alat->namaAlat->nama_alat }}-{{ $alat->nomor }}</option>
                                     @endforeach
                                 </select>
                                 @error('alat_id')

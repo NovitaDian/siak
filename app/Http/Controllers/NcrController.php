@@ -28,7 +28,7 @@ class NcrController extends Controller
         $user = Auth::user();
 
         // Ambil data draft NCR oleh user login
-        $ncrs = Ncr::where('writer', $user->name)->get();
+        $ncrs = Ncr::where('user_id', $user->id)->get();
         $allRequests = NcrRequest::all();
 
         // Ambil semua request (Edit/Delete)
@@ -56,7 +56,7 @@ class NcrController extends Controller
     public function show($id)
     {
         $ncr = Ncr::findOrFail($id);
-        return view('adminsystem.ncr.show', compact('ncr'));
+        return view('adminsystem.ncr.draft_show', compact('ncr'));
     }
     public function sent_show($id)
     {
@@ -113,30 +113,33 @@ class NcrController extends Controller
             'nama_hs_officer_2' => 'nullable|string|max:255',
             'tanggal_audit' => 'required|date',
             'nama_auditee' => 'required|string|max:255',
-            'perusahaan' => 'required|string|max:255',
+            'perusahaan_id' => 'nullable|exists:perusahaan,id',
             'nama_bagian' => 'nullable|string|max:255',
             'element_referensi_ncr' => 'required|string|max:255',
             'kategori_ketidaksesuaian' => 'required|string|max:255',
-            'estimasi' => 'required|string',
+            'estimasi' => 'required|date',
             'tindak_lanjut' => 'required|string',
             'foto' => 'required|file|mimes:pdf,jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $data = $request->all();
-        $data['user_id'] = Auth::user()->id;
-        $data['writer'] = Auth::user()->name;
+        // Ambil semua input dan tambahkan user info
+        $data = $request->except(['foto']);
+        $data['user_id'] = Auth::id();
 
+
+        // Upload Foto
         if ($request->hasFile('foto')) {
-            // Buat nama file unik dan simpan ke folder 'images' dalam storage/public
-            $imageName = time() . '.' . $request->foto->extension();
+            $imageName = time() . '.' . $request->foto->getClientOriginalExtension();
             $request->foto->move(public_path('storage/ncr'), $imageName);
             $data['foto'] = 'ncr/' . $imageName;
         }
 
+        // Simpan ke database
         Ncr::create($data);
 
         return redirect()->route('adminsystem.ncr.index')->with('success', 'Data berhasil disimpan!');
     }
+
     // Memperbarui data NCR yang ada
     public function update(Request $request, $id)
     {
@@ -147,26 +150,29 @@ class NcrController extends Controller
             'nama_hs_officer_2' => 'nullable|string|max:255',
             'tanggal_audit' => 'required|date',
             'nama_auditee' => 'required|string|max:255',
-            'perusahaan' => 'required|string|max:255',
+            'perusahaan_id' => 'nullable|exists:perusahaan,id',
             'nama_bagian' => 'nullable|string|max:255',
             'element_referensi_ncr' => 'required|string|max:255',
             'kategori_ketidaksesuaian' => 'required|string|max:255',
-            'estimasi' => 'required|string',
+            'estimasi' => 'required|date',
             'tindak_lanjut' => 'required|string',
             'foto' => 'nullable|file|mimes:pdf,jpeg,png,jpg,gif|max:2048',
         ]);
 
         $ncr = Ncr::findOrFail($id);
-        $data = $request->except('foto');
-        $data['status'] = 'Nothing';
+
+
+        $data = $request->except(['foto']);
+
         $data['updated_by'] = Auth::user()->name;
 
+        // Update Foto
         if ($request->hasFile('foto')) {
             if ($ncr->foto && file_exists(public_path('storage/' . $ncr->foto))) {
                 unlink(public_path('storage/' . $ncr->foto));
             }
 
-            $imageName = time() . '.' . $request->foto->extension();
+            $imageName = time() . '.' . $request->foto->getClientOriginalExtension();
             $request->foto->move(public_path('storage/ncr'), $imageName);
             $data['foto'] = 'ncr/' . $imageName;
         }
@@ -175,6 +181,7 @@ class NcrController extends Controller
 
         return redirect()->route('adminsystem.ncr.index')->with('success', 'Data berhasil diperbarui!');
     }
+
 
 
     public function sent_update(Request $request, $id)
@@ -186,35 +193,41 @@ class NcrController extends Controller
             'nama_hs_officer_2' => 'nullable|string|max:255',
             'tanggal_audit' => 'required|date',
             'nama_auditee' => 'required|string|max:255',
-            'perusahaan' => 'required|string|max:255',
+            'perusahaan_id' => 'nullable|exists:perusahaan,id', // Ganti dari perusahaan_id
             'nama_bagian' => 'nullable|string|max:255',
             'element_referensi_ncr' => 'required|string|max:255',
             'kategori_ketidaksesuaian' => 'required|string|max:255',
-            'estimasi' => 'required|string',
+            'estimasi' => 'required|date',
             'tindak_lanjut' => 'required|string',
             'foto' => 'nullable|file|mimes:pdf,jpeg,png,jpg,gif|max:2048',
         ]);
 
+        // Temukan record yang akan di-update
         $ncr_fixs = SentNcr::findOrFail($id);
-        $data = $request->all();
-        $data['status'] = 'Nothing';
 
-        // Optional: track who last updated
+        // Cari perusahaan berdasarkan kode
+
+        // Ambil semua input kecuali foto & perusahaan_id
+        $data = $request->except(['foto']);
+        $data['status'] = 'Nothing';
         $data['updated_by'] = Auth::user()->name;
 
+        // Update Foto jika ada
         if ($request->hasFile('foto')) {
             if ($ncr_fixs->foto && file_exists(public_path('storage/' . $ncr_fixs->foto))) {
                 unlink(public_path('storage/' . $ncr_fixs->foto));
             }
 
-            $imageName = time() . '.' . $request->foto->extension();
+            $imageName = time() . '.' . $request->foto->getClientOriginalExtension();
             $request->foto->move(public_path('storage/ncr'), $imageName);
             $data['foto'] = 'ncr/' . $imageName;
         }
+
         $ncr_fixs->update($data);
 
         return redirect()->route('adminsystem.ncr.index')->with('success', 'Data berhasil diperbarui!');
     }
+
 
     // Menghapus data NCR berdasarkan ID
     public function destroy($id)
@@ -223,16 +236,14 @@ class NcrController extends Controller
 
         // Pindahkan data ke tabel ncr_fix
         SentNcr::create([
-            'draft_id' => $ncr->id,
             'user_id' => $ncr->user_id,
-            'writer' => $ncr->writer,
             'tanggal_shift_kerja' => $ncr->tanggal_shift_kerja,
             'shift_kerja' => $ncr->shift_kerja,
             'nama_hs_officer_1' => $ncr->nama_hs_officer_1,
             'nama_hs_officer_2' => $ncr->nama_hs_officer_2,
             'tanggal_audit' => $ncr->tanggal_audit,
             'nama_auditee' => $ncr->nama_auditee,
-            'perusahaan' => $ncr->perusahaan,
+            'perusahaan_id' => $ncr->perusahaan_id,
             'nama_bagian' => $ncr->nama_bagian,
             'element_referensi_ncr' => $ncr->element_referensi_ncr,
             'kategori_ketidaksesuaian' => $ncr->kategori_ketidaksesuaian,
@@ -283,7 +294,6 @@ class NcrController extends Controller
             'sent_ncr_id' => $request->sent_ncr_id,
             'type' => $request->type,
             'reason' => $request->reason,
-            'nama_pengirim' => Auth::user()->name,
             'user_id' => Auth::user()->id,
             'status' => 'Pending',
         ]);
@@ -424,12 +434,16 @@ class NcrController extends Controller
         return redirect()->route('adminsystem.ncr.index')->with('success', 'NCR berhasil ditutup.');
     }
 
-
-    public function getBagian($perusahaan_name)
+    public function getBagian($code)
     {
-        $bagians = Bagian::where('perusahaan_name', $perusahaan_name)->get();
+        $bagians = Bagian::where('perusahaan_id', $code)->get();
         return response()->json($bagians);
     }
+
+
+
+
+
     public function close_ncr(Request $request, $id)
     {
 
@@ -447,7 +461,17 @@ class NcrController extends Controller
             'nama_hs_officer_2' => 'nullable|string|max:255',
             'tanggal_audit' => 'required|date',
             'nama_auditee' => 'required|string|max:255',
-            'perusahaan' => 'required|string|max:255',
+
+
+
+
+
+
+
+
+
+
+            'perusahaan_id' => 'required|max:255',
             'nama_bagian' => 'nullable|string|max:255',
             'element_referensi_ncr' => 'required|string|max:255',
             'kategori_ketidaksesuaian' => 'required|string|max:255',
@@ -488,18 +512,6 @@ class NcrController extends Controller
 
         // Update data NCR
         $ncr_fix->update([
-            'tanggal_shift_kerja' => $request->tanggal_shift_kerja,
-            'shift_kerja' => $request->shift_kerja,
-            'nama_hs_officer_1' => $request->nama_hs_officer_1,
-            'nama_hs_officer_2' => $request->nama_hs_officer_2,
-            'tanggal_audit' => $request->tanggal_audit,
-            'nama_auditee' => $request->nama_auditee,
-            'perusahaan' => $request->perusahaan,
-            'nama_bagian' => $request->nama_bagian,
-            'element_referensi_ncr' => $request->element_referensi_ncr,
-            'kategori_ketidaksesuaian' => $request->kategori_ketidaksesuaian,
-            'deskripsi_ketidaksesuaian' => $request->deskripsi_ketidaksesuaian,
-            'estimasi' => $request->estimasi,
             'tindak_lanjut' => $request->tindak_lanjut,
             'status_ncr' => 'Closed',
             'status_note' => $request->status_note,
@@ -527,7 +539,7 @@ class NcrController extends Controller
         $user = Auth::user();
 
         // Ambil data draft NCR oleh user login
-        $ncrs = Ncr::where('writer', $user->name)->get();
+        $ncrs = Ncr::where('user_id', $user->id)->get();
 
         // Ambil semua request (Edit/Delete)
         $allRequests = NcrRequest::all();
@@ -541,7 +553,7 @@ class NcrController extends Controller
         if ($start && $end) {
             $ncr_fixs = SentNcr::whereBetween('tanggal_shift_kerja', [$start, $end])->get();
         } else {
-            $ncr_fixs = SentNcr::where('writer', $user->name)->orderBy('tanggal_shift_kerja', 'desc')->get();
+            $ncr_fixs = SentNcr::where('user_id', $user->id)->orderBy('tanggal_shift_kerja', 'desc')->get();
         }
 
         return view('operator.ncr.index', compact('ncrs', 'ncr_fixs', 'allRequests', 'latestRequests'));
@@ -559,7 +571,15 @@ class NcrController extends Controller
         $ncr = SentNcr::findOrFail($id);
         return view('operator.ncr.show', compact('ncr'));
     }
+    public function operator_exportSinglePdf($id)
+    {
+        $ncr_fixs = [SentNcr::findOrFail($id)];
 
+        $pdf = Pdf::loadView('operator.ncr.pdf', compact('ncr_fixs'))
+            ->setPaper('a4', 'portrait');
+
+        return $pdf->download("ncr-{$id}.pdf");
+    }
 
     public function operator_closed_show($id)
     {
@@ -610,30 +630,34 @@ class NcrController extends Controller
             'nama_hs_officer_2' => 'nullable|string|max:255',
             'tanggal_audit' => 'required|date',
             'nama_auditee' => 'required|string|max:255',
-            'perusahaan' => 'required|string|max:255',
+            'perusahaan_id' => 'nullable|exists:perusahaan,id',
             'nama_bagian' => 'nullable|string|max:255',
             'element_referensi_ncr' => 'required|string|max:255',
             'kategori_ketidaksesuaian' => 'required|string|max:255',
-            'estimasi' => 'required|string',
+            'estimasi' => 'required|date',
             'tindak_lanjut' => 'required|string',
             'foto' => 'required|file|mimes:pdf,jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $data = $request->all();
-        $data['user_id'] = Auth::user()->id;
-        $data['writer'] = Auth::user()->name;
+        // Ambil data perusahaan berdasarkan ID dari form
 
+        // Ambil semua input dan tambahkan user info
+        $data = $request->except(['foto']);
+        $data['user_id'] = Auth::id();
+
+        // Upload Foto
         if ($request->hasFile('foto')) {
-            // Buat nama file unik dan simpan ke folder 'images' dalam storage/public
-            $imageName = time() . '.' . $request->foto->extension();
+            $imageName = time() . '.' . $request->foto->getClientOriginalExtension();
             $request->foto->move(public_path('storage/ncr'), $imageName);
             $data['foto'] = 'ncr/' . $imageName;
         }
 
+        // Simpan ke database
         Ncr::create($data);
 
         return redirect()->route('operator.ncr.index')->with('success', 'Data berhasil disimpan!');
     }
+
     // Memperbarui data NCR yang ada
     public function operator_update(Request $request, $id)
     {
@@ -644,26 +668,29 @@ class NcrController extends Controller
             'nama_hs_officer_2' => 'nullable|string|max:255',
             'tanggal_audit' => 'required|date',
             'nama_auditee' => 'required|string|max:255',
-            'perusahaan' => 'required|string|max:255',
+            'perusahaan_id' => 'nullable|exists:perusahaan,id',
             'nama_bagian' => 'nullable|string|max:255',
             'element_referensi_ncr' => 'required|string|max:255',
             'kategori_ketidaksesuaian' => 'required|string|max:255',
-            'estimasi' => 'required|string',
+            'estimasi' => 'required|date',
             'tindak_lanjut' => 'required|string',
             'foto' => 'nullable|file|mimes:pdf,jpeg,png,jpg,gif|max:2048',
         ]);
 
         $ncr = Ncr::findOrFail($id);
-        $data = $request->except('foto');
-        $data['status'] = 'Nothing';
+
+        // Konversi perusahaan_id ke perusahaan
+
+        $data = $request->except(['foto']);
         $data['updated_by'] = Auth::user()->name;
 
+        // Update Foto
         if ($request->hasFile('foto')) {
             if ($ncr->foto && file_exists(public_path('storage/' . $ncr->foto))) {
                 unlink(public_path('storage/' . $ncr->foto));
             }
 
-            $imageName = time() . '.' . $request->foto->extension();
+            $imageName = time() . '.' . $request->foto->getClientOriginalExtension();
             $request->foto->move(public_path('storage/ncr'), $imageName);
             $data['foto'] = 'ncr/' . $imageName;
         }
@@ -672,6 +699,7 @@ class NcrController extends Controller
 
         return redirect()->route('operator.ncr.index')->with('success', 'Data berhasil diperbarui!');
     }
+
 
 
     public function operator_sent_update(Request $request, $id)
@@ -683,36 +711,40 @@ class NcrController extends Controller
             'nama_hs_officer_2' => 'nullable|string|max:255',
             'tanggal_audit' => 'required|date',
             'nama_auditee' => 'required|string|max:255',
-            'perusahaan' => 'required|string|max:255',
+            'perusahaan_id' => 'nullable|exists:perusahaan,id', // Ganti dari perusahaan_id
             'nama_bagian' => 'nullable|string|max:255',
             'element_referensi_ncr' => 'required|string|max:255',
             'kategori_ketidaksesuaian' => 'required|string|max:255',
-            'estimasi' => 'required|string',
+            'estimasi' => 'required|date',
             'tindak_lanjut' => 'required|string',
             'foto' => 'nullable|file|mimes:pdf,jpeg,png,jpg,gif|max:2048',
         ]);
 
+        // Temukan record yang akan di-update
         $ncr_fixs = SentNcr::findOrFail($id);
-        $data = $request->all();
-        $data['status'] = 'Nothing';
 
-        // Optional: track who last updated
+        // Cari perusahaan berdasarkan kode
+
+        // Ambil semua input kecuali foto & perusahaan_id
+        $data = $request->except(['foto']);
+        $data['status'] = 'Nothing';
         $data['updated_by'] = Auth::user()->name;
 
+        // Update Foto jika ada
         if ($request->hasFile('foto')) {
             if ($ncr_fixs->foto && file_exists(public_path('storage/' . $ncr_fixs->foto))) {
                 unlink(public_path('storage/' . $ncr_fixs->foto));
             }
 
-            $imageName = time() . '.' . $request->foto->extension();
+            $imageName = time() . '.' . $request->foto->getClientOriginalExtension();
             $request->foto->move(public_path('storage/ncr'), $imageName);
             $data['foto'] = 'ncr/' . $imageName;
         }
+
         $ncr_fixs->update($data);
 
         return redirect()->route('operator.ncr.index')->with('success', 'Data berhasil diperbarui!');
     }
-
     // Menghapus data NCR berdasarkan ID
     public function operator_destroy($id)
     {
@@ -720,16 +752,14 @@ class NcrController extends Controller
 
         // Pindahkan data ke tabel ncr_fix
         SentNcr::create([
-            'draft_id' => $ncr->id,
             'user_id' => $ncr->user_id,
-            'writer' => $ncr->writer,
             'tanggal_shift_kerja' => $ncr->tanggal_shift_kerja,
             'shift_kerja' => $ncr->shift_kerja,
             'nama_hs_officer_1' => $ncr->nama_hs_officer_1,
             'nama_hs_officer_2' => $ncr->nama_hs_officer_2,
             'tanggal_audit' => $ncr->tanggal_audit,
             'nama_auditee' => $ncr->nama_auditee,
-            'perusahaan' => $ncr->perusahaan,
+            'perusahaan_id' => $ncr->perusahaan_id,
             'nama_bagian' => $ncr->nama_bagian,
             'element_referensi_ncr' => $ncr->element_referensi_ncr,
             'kategori_ketidaksesuaian' => $ncr->kategori_ketidaksesuaian,
@@ -780,7 +810,6 @@ class NcrController extends Controller
             'sent_ncr_id' => $request->sent_ncr_id,
             'type' => $request->type,
             'reason' => $request->reason,
-            'nama_pengirim' => Auth::user()->name,
             'user_id' => Auth::user()->id,
             'status' => 'Pending',
         ]);
@@ -848,11 +877,11 @@ class NcrController extends Controller
         $user = Auth::user();
 
         if ($start && $end) {
-            $ncr_fixs = SentNcr::where('writer', $user->name)
+            $ncr_fixs = SentNcr::where('user_id', $user->id)
                 ->whereBetween('tanggal_shift_kerja', [$start, $end])
                 ->get();
         } else {
-            $ncr_fixs = SentNcr::where('writer', $user->name)->get();
+            $ncr_fixs = SentNcr::where('user_id', $user->id)->get();
         }
         $pdf = Pdf::loadView('operator.ncr.pdf', compact('ncr_fixs'))
             ->setPaper('a4', 'potrait');;
@@ -935,7 +964,16 @@ class NcrController extends Controller
             'nama_hs_officer_2' => 'nullable|string|max:255',
             'tanggal_audit' => 'required|date',
             'nama_auditee' => 'required|string|max:255',
-            'perusahaan' => 'required|string|max:255',
+
+
+
+
+
+
+
+
+
+
             'nama_bagian' => 'nullable|string|max:255',
             'element_referensi_ncr' => 'required|string|max:255',
             'kategori_ketidaksesuaian' => 'required|string|max:255',

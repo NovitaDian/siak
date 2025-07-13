@@ -11,7 +11,7 @@ class DailyRequest extends Model
 
     protected $fillable = [
         'sent_daily_id',
-        'nama_pengirim',
+        '',
         'type',
         'reason',
         'user_id',

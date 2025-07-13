@@ -60,13 +60,13 @@
                                         <p class="text-xs font-weight-bold mb-0">{{ $pr->quantity }}</p>
                                     </td>
                                     <td class="text-center">
-                                        <p class="text-xs font-weight-bold mb-0">{{ $pr->unit }}</p>
+                                        <p class="text-xs font-weight-bold mb-0">{{ $pr->unitId->unit }}</p>
                                     </td>
                                     <td class="text-center">
                                         <p class="text-xs font-weight-bold mb-0">{{ number_format($pr->valuation_price, 2) }}</p>
                                     </td>
                                     <td class="text-center">
-                                        <p class="text-xs font-weight-bold mb-0">{{ $pr->gl_code }}-{{ $pr->gl_name}}</p>
+                                        <p class="text-xs font-weight-bold mb-0">{{ $pr->budget->gls->gl_name }}</p>
                                     </td>
                                     <td class="align-middle text-center">
                                         <a href="{{ route('operator.pr.edit', $pr->id) }}"

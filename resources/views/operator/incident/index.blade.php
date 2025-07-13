@@ -65,7 +65,7 @@
                                         </td>
 
                                         <td class="text-center">
-                                            <p class="text-xs font-weight-bold mb-0">{{ $incident->safety_officer_1 }}</p>
+                                            <p class="text-xs font-weight-bold mb-0">{{ $incident->inspectors->name }}</p>
                                         </td>
 
                                         <td class="align-middle text-center text-sm">
@@ -217,7 +217,7 @@
                                         </td>
 
                                         <td class="text-center">
-                                            <p class="text-xs font-weight-bold mb-0">{{ $incident_fix->safety_officer_1 }}</p>
+                                            <p class="text-xs font-weight-bold mb-0">{{ $incident_fix->inspectors->name }}</p>
                                         </td>
 
                                         <td class="align-middle text-center text-sm">

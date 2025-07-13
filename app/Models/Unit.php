@@ -23,8 +23,17 @@ class Unit extends Model
     protected $fillable = [
         'unit',
         'description',
-        
+
         // Add other attributes that you want to be mass assignable
     ];
- 
+
+    public function prs()
+    {
+        return $this->hasMany(PurchaseRequest::class, 'unit_id');
+    }
+    public function barang()
+    {
+        return $this->hasMany(Barang::class, 'unit_id');
+    }
+    
 }

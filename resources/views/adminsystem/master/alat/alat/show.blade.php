@@ -28,7 +28,7 @@
                                     <tr>
                                         <td class="text-center text-xs">{{ $index + 1 }}</td>
                                         <td class="text-center text-xs">{{ \Carbon\Carbon::parse($tool_fix->tanggal_pemeriksaan)->format('d/m/Y') }}</td>
-                                        <td class="text-center text-xs">{{ $tool_fix->hse_inspector }}</td>
+                                        <td class="text-center text-xs">{{ $tool_fix->inspector->name }}</td>
                                         <td class="text-center text-xs">{{ $tool_fix->status_pemeriksaan }}</td>
                                     </tr>
                                     @endforeach

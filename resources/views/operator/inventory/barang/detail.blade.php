@@ -36,8 +36,8 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="material_group">{{ __('Grup Material') }}</label>
-                            <input class="form-control" type="text" id="material_group" name="material_group" value="{{ $barangs->material_group }}" disabled>
+                            <label for="material_group_id">{{ __('Grup Material') }}</label>
+                            <input class="form-control" type="text" id="material_group_id" name="material_group_id" value="{{ $barangs->MaterialGroup->material_group }}" disabled>
                         </div>
 
                         <div class="form-group">
@@ -55,8 +55,8 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="unit">{{ __('Unit') }}</label>
-                            <input class="form-control" type="text" id="unit" name="unit" value="{{ $barangs->unit }}" disabled>
+                            <label for="unit_id">{{ __('Unit') }}</label>
+                            <input class="form-control" type="text" id="unit_id" name="unit_id" value="{{ $barangs->unitId->unit }}" disabled>
                         </div>
                     </div>
                 </div>
@@ -117,7 +117,7 @@
                                             <p class="text-xs font-weight-bold mb-0">{{ $tran->quantity }}</p>
                                         </td>
                                         <td class="text-center">
-                                            <p class="text-xs font-weight-bold mb-0">{{ $tran->unit}}</p>
+                                            <p class="text-xs font-weight-bold mb-0">{{ $tran->unit_id}}</p>
                                         </td>
                                         <td class="text-center">
                                             <p class="text-xs font-weight-bold mb-0">{{ $tran->keterangan }}</p>

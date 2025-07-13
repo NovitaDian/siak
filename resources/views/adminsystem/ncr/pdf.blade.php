@@ -97,10 +97,10 @@
                         <tr><td class="label">Tanggal Shift:</td><td class="value">{{ $ncr->tanggal_shift_kerja }}</td></tr>
                         <tr><td class="label">Shift:</td><td class="value">{{ $ncr->shift_kerja }}</td></tr>
                         <tr><td class="label">HS Officer 1:</td><td class="value">{{ $ncr->nama_hs_officer_1 }}</td></tr>
-                        <tr><td class="label">HS Officer 2:</td><td class="value">{{ $ncr->nama_hs_officer_2 }}</td></tr>
+                        <tr><td class="label">HS Officer 2:</td><td class="value">{{ $ncr->nama_hs_officer_2 ?? '-' }}</td></tr>
                         <tr><td class="label">Tanggal Audit:</td><td class="value">{{ $ncr->tanggal_audit }}</td></tr>
                         <tr><td class="label">Auditee:</td><td class="value">{{ $ncr->nama_auditee }}</td></tr>
-                        <tr><td class="label">Perusahaan:</td><td class="value">{{ $ncr->perusahaan }}</td></tr>
+                        <tr><td class="label">Perusahaan:</td><td class="value">{{ $ncr->pers->perusahaan_name }}</td></tr>
                         <tr><td class="label">Bagian:</td><td class="value">{{ $ncr->nama_bagian }}</td></tr>
                         <tr><td class="label">Referensi:</td><td class="value">{{ $ncr->element_referensi_ncr }}</td></tr>
                         <tr><td class="label">Kategori:</td><td class="value">{{ $ncr->kategori_ketidaksesuaian }}</td></tr>

@@ -13,7 +13,7 @@ class Pemasukan extends Model
     protected $primaryKey = 'id';    // Primary key tabel
 
     protected $fillable = [
-        'barang_id', 'tanggal', 'quantity', 'unit', 'keterangan'
+        'barang_id', 'tanggal', 'quantity', 'keterangan'
     ];
 
     // Relasi dengan model Barang

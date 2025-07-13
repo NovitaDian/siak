@@ -34,7 +34,7 @@
                     @csrf
                     @method('PUT')
 
-                    \
+                    
 
                     <div class="row">
                         {{-- Nama Alat --}}

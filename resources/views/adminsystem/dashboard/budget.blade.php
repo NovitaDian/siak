@@ -1,6 +1,10 @@
 @extends('layouts.user_type.auth')
 
 @section('content')
+<button type="button" class="btn btn-outline-secondary btn-md d-flex align-items-center gap-2"
+    onclick="window.location.href='{{ route('adminsystem.dashboard') }}'">
+    <img src="{{ asset('assets/img/logos/arrow-back.png') }}" alt="Back" style="width: 40px; height: 40px;">
+</button>
 <div class="row mt-4">
     <div class="col-md-4 mb-3">
         <form method="GET" action="{{ route('adminsystem.dashboard-budget') }}">

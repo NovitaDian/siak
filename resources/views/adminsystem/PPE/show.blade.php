@@ -1,7 +1,8 @@
 @extends('layouts.user_type.auth')
 
 @section('content')
-<button type="button" class="btn btn-outline-secondary btn-md d-flex align-items-center gap-2" onclick="history.back()">
+<button type="button" class="btn btn-outline-secondary btn-md d-flex align-items-center gap-2"
+    onclick="window.location.href='{{ route('adminsystem.ppe.index') }}'">
     <img src="{{ asset('assets/img/logos/arrow-back.png') }}" alt="Back" style="width: 40px; height: 40px;">
 </button>
 <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
@@ -29,7 +30,7 @@
                                     <tbody id="notificationTableBody">
                                         @foreach ($requests as $request)
                                         <tr>
-                                            <td class="text-center text-xs">{{ $request->nama_pengirim }}</td>
+                                            <td class="text-center text-xs">{{ $request->user->name }}</td>
                                             <td class="text-center text-xs">{{ $request->created_at->format('d/m/Y') }}</td>
                                             <td class="text-center text-xs">{{ $request->type }}</td>
                                             <td class="text-center text-xs">{{ $request->reason }}</td>
@@ -83,7 +84,7 @@
                     </div>
                     <div class="col-md-6 mb-3">
                         <strong>Safety Officer:</strong><br>
-                        {{ $ppeFix->nama_hse_inspector }}
+                        {{ $ppeFix->inspector->name }}
                     </div>
                     <div class="col-md-6 mb-3">
                         <strong>Jam Pengawasan:</strong><br>
@@ -137,7 +138,7 @@
                                     </td>
                                     <td class="text-center text-xs">{{ $nc->nama_pelanggar }}</td>
                                     <td class="text-center text-xs">{{ $nc->deskripsi_ketidaksesuaian }}</td>
-                                    <td class="text-center text-xs">{{ $nc->perusahaan }}</td>
+                                    <td class="text-center text-xs">{{ $nc->pers->perusahaan_name }}</td>
                                     <td class="text-center text-xs">{{ $nc->nama_bagian }}</td>
                                     <td class="text-center text-xs">{{ $nc->tindakan }}</td>
                                     <td class="align-middle text-center text-xs">

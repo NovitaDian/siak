@@ -9,13 +9,9 @@ return new class extends Migration {
     {
         Schema::create('tool_inspections_fix', function (Blueprint $table) {
             $table->id();
-            $table->string('writer', 100);
-            $table->unsignedBigInteger('draft_id');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('alat_id');
-            $table->string('nama_alat');
             $table->unsignedBigInteger('hse_inspector_id');
-            $table->string('hse_inspector');
             $table->date('tanggal_pemeriksaan');
             $table->binary('foto');
             $table->enum('status_pemeriksaan', ['Layak operasi', 'Layak operasi dengan catatan', 'Tidak layak operasi']);

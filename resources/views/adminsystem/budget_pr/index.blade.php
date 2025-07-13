@@ -62,7 +62,7 @@
                                     <p class="text-xs font-weight-bold mb-0">{{ $budget_fix->pr_date ?? '-' }}</p>
                                 </td>
                                 <td class="text-center">
-                                    <p class="text-xs font-weight-bold mb-0">{{ $budget_fix->gl_code }} - {{ $budget_fix->gl_name }}</p>
+                                    <p class="text-xs font-weight-bold mb-0">{{ $budget_fix->gls->gl_code }} - {{ $budget_fix->gls->gl_name }}</p>
                                 </td>
                                 <td class="text-center">
                                     <p class="text-xs font-weight-bold mb-0">{{ $budget_fix->internal_order ?? '-' }}</p>

@@ -8,7 +8,7 @@
     <div class="col-12">
         <div class="card mx-auto w-100" style="max-width: 95%;">
             <div class="card-header pb-0 px-3">
-                <h6 class="mb-0">{{ __('CLOSE NCR') }}</h6>
+                <h6 class="mb-0">{{ __('EDIT DATA UMUM') }}</h6>
             </div>
             <div class="card-body pt-4 p-3">
                 <form action="{{ route('operator.ncr.close_ncr', $ncr_fixs->id) }}" method="POST" enctype="multipart/form-data" role="form text-left">
@@ -104,16 +104,16 @@
                         <!-- Dropdown Perusahaan -->
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="perusahaan">{{ __('Perusahaan') }}</label>
-                                <select class="form-control" id="perusahaan" name="perusahaan" readonly required>
+                                <label for="perusahaan_id">{{ __('Perusahaan') }}</label>
+                                <select class="form-control" id="perusahaan_id" name="perusahaan_id" readonly required>
                                     <option value="" disabled>Pilih Perusahaan</option>
                                     @foreach($perusahaans as $perusahaan)
-                                    <option value="{{ $perusahaan->perusahaan_name }}" {{ old('perusahaan', $ncr_fixs->perusahaan) == $perusahaan->perusahaan_name ? 'selected' : '' }}>
+                                    <option value="{{ $perusahaan->id }}" {{ old('perusahaan_id', $ncr_fixs->perusahaan_id) == $perusahaan->id ? 'selected' : '' }}>
                                         {{ $perusahaan->perusahaan_name }}
                                     </option>
                                     @endforeach
                                 </select>
-                                @error('perusahaan')
+                                @error('perusahaan_id')
                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                 @enderror
                             </div>
@@ -264,11 +264,11 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
-        $('#perusahaan').on('change', function() {
-            var perusahaan_name = $(this).val();
-            if (perusahaan_name) {
+        $('#perusahaan_id').on('change', function() {
+            var perusahaan_id = $(this).val();
+            if (perusahaan_id) {
                 $.ajax({
-                    url: '/operator/ncr/get-bagian/' + perusahaan_name,
+                    url: '/operator/ncr/get-bagian/' + code,
                     type: 'GET',
                     success: function(data) {
                         $('#nama_bagian').empty();

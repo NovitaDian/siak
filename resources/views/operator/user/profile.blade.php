@@ -2,6 +2,7 @@
 
 @section('content')
 
+
 <div>
     <div class="container-fluid">
         <!-- Page Header Section -->
@@ -34,7 +35,6 @@
             <div class="card-body pt-4 p-3">
                 <form action="{{ route('operator.info_user.store')}}" method="POST">
                     @csrf
-
                     <!-- Full Name Input -->
                     <div class="row">
                         <div class="col-md-6">

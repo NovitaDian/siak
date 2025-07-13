@@ -20,18 +20,17 @@ class BagianController extends Controller
     {
         // Validasi data yang masuk
         $validated = $request->validate([
-            'perusahaan_code' => 'required|exists:perusahaan,perusahaan_code',
+            'perusahaan_id' => 'nullable|exists:perusahaan,id',
             'nama_bagian' => 'required|string|max:255',
         ]);
 
-        // Ambil nama perusahaan berdasarkan perusahaan_code
-        $perusahaan = Perusahaan::where('perusahaan_code', $request->perusahaan_code)->first();
+        // Ambil nama perusahaan berdasarkan perusahaan_id
+        $perusahaan = Perusahaan::where('id', $request->perusahaan_id)->first();
 
         if ($perusahaan) {
             // Buat data Bagian baru dengan nama perusahaan yang dipilih
             Bagian::create([
-                'perusahaan_code' => $request->perusahaan_code,
-                'perusahaan_name' => $perusahaan->perusahaan_name,  // Isi otomatis nama perusahaan
+                'perusahaan_id' => $request->perusahaan_id,
                 'nama_bagian' => $request->nama_bagian,
             ]);
 
@@ -64,18 +63,17 @@ class BagianController extends Controller
     {
         // Validasi data yang masuk
         $request->validate([
-            'perusahaan_code' => 'required|exists:perusahaan,perusahaan_code',
+            'perusahaan_id' => 'nullable|exists:perusahaan,id',
             'nama_bagian' => 'required|string|max:255',
         ]);
 
         $bagian = Bagian::findOrFail($id);
 
-        // Ambil nama perusahaan berdasarkan perusahaan_code yang dipilih
-        $perusahaan = Perusahaan::where('perusahaan_code', $request->perusahaan_code)->first();
+        // Ambil nama perusahaan berdasarkan perusahaan_id yang dipilih
+        $perusahaan = Perusahaan::where('id', $request->perusahaan_id)->first();
 
         // Perbarui data Bagian
-        $bagian->perusahaan_code = $request->perusahaan_code;
-        $bagian->perusahaan_name = $perusahaan->perusahaan_name;
+        $bagian->perusahaan_id = $request->perusahaan_id;
         $bagian->nama_bagian = $request->nama_bagian;
         $bagian->save(); // Simpan perubahan
 
@@ -108,18 +106,17 @@ class BagianController extends Controller
     {
         // Validasi data yang masuk
         $validated = $request->validate([
-            'perusahaan_code' => 'required|exists:perusahaan,perusahaan_code',
+            'perusahaan_id' => 'nullable|exists:perusahaan,id',
             'nama_bagian' => 'required|string|max:255',
         ]);
 
-        // Ambil nama perusahaan berdasarkan perusahaan_code
-        $perusahaan = Perusahaan::where('perusahaan_code', $request->perusahaan_code)->first();
+        // Ambil nama perusahaan berdasarkan perusahaan_id
+        $perusahaan = Perusahaan::where('id', $request->perusahaan_id)->first();
 
         if ($perusahaan) {
             // Buat data Bagian baru dengan nama perusahaan yang dipilih
             Bagian::create([
-                'perusahaan_code' => $request->perusahaan_code,
-                'perusahaan_name' => $perusahaan->perusahaan_name,  // Isi otomatis nama perusahaan
+                'perusahaan_id' => $request->perusahaan_id,
                 'nama_bagian' => $request->nama_bagian,
             ]);
 
@@ -152,18 +149,17 @@ class BagianController extends Controller
     {
         // Validasi data yang masuk
         $request->validate([
-            'perusahaan_code' => 'required|exists:perusahaan,perusahaan_code',
+            'perusahaan_id' => 'nullable|exists:perusahaan,id',
             'nama_bagian' => 'required|string|max:255',
         ]);
 
         $bagian = Bagian::findOrFail($id);
 
-        // Ambil nama perusahaan berdasarkan perusahaan_code yang dipilih
-        $perusahaan = Perusahaan::where('perusahaan_code', $request->perusahaan_code)->first();
+        // Ambil nama perusahaan berdasarkan perusahaan_id yang dipilih
+        $perusahaan = Perusahaan::where('id', $request->perusahaan_id)->first();
 
         // Perbarui data Bagian
-        $bagian->perusahaan_code = $request->perusahaan_code;
-        $bagian->perusahaan_name = $perusahaan->perusahaan_name;
+        $bagian->perusahaan_id = $request->perusahaan_id;
         $bagian->nama_bagian = $request->nama_bagian;
         $bagian->save(); // Simpan perubahan
 

@@ -13,11 +13,9 @@ return new class extends Migration
     {
         Schema::create('incident_draft', function (Blueprint $table) {
             $table->id();
-            $table->string('writer', 100);
             $table->dateTime('stamp_date')->nullable(); // datetime
             $table->date('shift_date');
             $table->string('shift', 8);
-            $table->string('safety_officer_1', 100);
             $table->string('status_kejadian', 5)->nullable();
             $table->date('tgl_kejadiannya')->nullable();
             $table->time('jam_kejadiannya')->nullable();
@@ -28,11 +26,12 @@ return new class extends Migration
             $table->string('nama_korban', 100)->nullable();
             $table->string('status', 100)->nullable();
             $table->string('jenis_kelamin', 100)->nullable();
-            $table->string('perusahaan', 100)->nullable();
+            $table->unsignedBigInteger('perusahaan_id')->nullable();
+            $table->unsignedBigInteger('hse_inspector_id');
             $table->string('bagian', 100)->nullable();
             $table->string('jabatan', 100)->nullable();
             $table->integer('masa_kerja')->nullable(); // sebelumnya salah: integer
-            $table->date('tgl_lahir', )->nullable();
+            $table->date('tgl_lahir',)->nullable();
             $table->string('jenis_luka_sakit', 255)->nullable();
             $table->string('jenis_luka_sakit2', 255)->nullable();
             $table->string('jenis_luka_sakit3', 255)->nullable();
@@ -43,7 +42,7 @@ return new class extends Migration
             $table->text('penjelasan_kejadiannya')->nullable();
             $table->text('tindakan_pengobatan')->nullable();
             $table->text('tindakan_segera_yang_dilakukan')->nullable();
-            $table->string('rincian_dari_pemeriksaan', 255)->nullable();
+            $table->string('rincian_dari_pemeriksaan')->nullable();
             $table->string('penyebab_langsung_1_a', 255)->nullable();
             $table->string('penyebab_langsung_1_b', 255)->nullable();
             $table->string('penyebab_langsung_2_a', 255)->nullable();
@@ -105,6 +104,8 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('perusahaan_id')->references('id')->on('perusahaan')->onDelete('cascade');
+            $table->foreign('hse_inspector_id')->references('id')->on('hse_inspector')->onDelete('cascade');
         });
     }
 

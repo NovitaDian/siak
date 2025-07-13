@@ -20,17 +20,15 @@ class NcrExport implements FromCollection, WithHeadings, WithMapping, ShouldAuto
 
     public function collection()
     {
-        $query = SentNcr::select([
+        $query = SentNcr::with(['pers', 'user'])->select([
             'id',
-            'draft_id',
-            'writer',
             'tanggal_shift_kerja',
             'shift_kerja',
             'nama_hs_officer_1',
             'nama_hs_officer_2',
             'tanggal_audit',
             'nama_auditee',
-            'perusahaan',
+            'perusahaan_id',
             'nama_bagian',
             'element_referensi_ncr',
             'kategori_ketidaksesuaian',
@@ -63,7 +61,6 @@ class NcrExport implements FromCollection, WithHeadings, WithMapping, ShouldAuto
             'Nama HS Officer 2',
             'Tanggal Audit',
             'Nama Auditee',
-            'Perusahaan',
             'Nama Bagian',
             'Element Referensi NCR',
             'Kategori Ketidaksesuaian',
@@ -82,15 +79,14 @@ class NcrExport implements FromCollection, WithHeadings, WithMapping, ShouldAuto
     {
         return [
             $row->id ?? '-',
-            $row->draft_id ?? '-',
-            $row->writer ?? '-',
+            $row->user->name ?? '-',
             $row->tanggal_shift_kerja ?? '-',
             $row->shift_kerja ?? '-',
             $row->nama_hs_officer_1 ?? '-',
             $row->nama_hs_officer_2 ?? '-',
             $row->tanggal_audit ?? '-',
             $row->nama_auditee ?? '-',
-            $row->perusahaan ?? '-',
+            $row->pers->perusahaan_name ?? '-',
             $row->nama_bagian ?? '-',
             $row->element_referensi_ncr ?? '-',
             $row->kategori_ketidaksesuaian ?? '-',

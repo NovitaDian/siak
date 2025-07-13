@@ -25,6 +25,7 @@
                         <thead>
                             <tr>
                                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Kode Barang</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Barang</th>
                                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal</th>
                                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Quantity</th>
                                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Unit</th>
@@ -36,7 +37,10 @@
                             @foreach ($pemasukans as $pemasukan)
                             <tr>
                                 <td class="text-center">
-                                    <p class="text-xs font-weight-bold mb-0">{{ $pemasukan->barang_id }}</p>
+                                    <p class="text-xs font-weight-bold mb-0">{{ $pemasukan->barang->material_code }}</p>
+                                </td>
+                                <td class="text-center">
+                                    <p class="text-xs font-weight-bold mb-0">{{ $pemasukan->barang->description }}</p>
                                 </td>
 
                                 <td class="text-center">
@@ -50,7 +54,7 @@
                                     <p class="text-xs font-weight-bold mb-0">{{ $pemasukan->quantity }}</p>
                                 </td>
                                 <td class="text-center">
-                                    <p class="text-xs font-weight-bold mb-0">{{ $pemasukan->unit }}</p>
+                                    <p class="text-xs font-weight-bold mb-0">{{ $pemasukan->barang->unitId->unit }}</p>
                                 </td>
 
                                 <td class="text-center">

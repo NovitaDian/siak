@@ -37,8 +37,8 @@
                                 <tbody>
                                     @foreach ($tools as $tool)
                                     <tr>
-                                        <td class="text-center text-xs">{{ $tool->nama_alat }}-{{ $tool->alat->nomor ?? '-' }}</td>
-                                        <td class="text-center text-xs">{{ $tool->hse_inspector }}</td>
+                                        <td class="text-center text-xs">{{ $tool->alat->namaAlat->nama_alat }}-{{ $tool->alat->nomor ?? '-' }}</td>
+                                        <td class="text-center text-xs">{{ $tool->inspector->name }}</td>
                                         <td class="text-center text-xs">{{ \Carbon\Carbon::parse($tool->tanggal_pemeriksaan)->format('d/m/Y') }}</td>
                                         <td class="text-center text-xs">{{ $tool->status_pemeriksaan }}</td>
 
@@ -125,11 +125,6 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a class="dropdown-item" href="{{ route('operator.tool.export', request()->all()) }}">
-                                            <i class="fas fa-file-excel text-success me-2"></i> Excel
-                                        </a>
-                                    </li>
-                                    <li>
                                         <a class="dropdown-item" href="{{ route('operator.tool.exportPdf', request()->all()) }}">
                                             <i class="fas fa-file-pdf text-danger me-2"></i> PDF
                                         </a>
@@ -155,8 +150,8 @@
                                 <tbody>
                                     @foreach ($tool_fixs as $tool_fix)
                                     <tr>
-                                        <td class="text-center text-xs">{{ $tool_fix->nama_alat }}-{{ $tool_fix->alat->nomor ?? '-' }}</td>
-                                        <td class="text-center text-xs">{{ $tool_fix->hse_inspector }}</td>
+                                        <td class="text-center text-xs">{{ $tool_fix->alat->namaAlat->nama_alat }}-{{ $tool_fix->alat->nomor ?? '-' }}</td>
+                                        <td class="text-center text-xs">{{ $tool_fix->inspector->name }}</td>
                                         <td class="text-center text-xs">{{ \Carbon\Carbon::parse($tool_fix->tanggal_pemeriksaan)->format('d/m/Y') }}</td>
                                         <td class="text-center text-xs">{{ $tool_fix->status_pemeriksaan }}</td>
                                         <td class="align-middle text-center">

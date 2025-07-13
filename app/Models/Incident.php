@@ -13,11 +13,11 @@ class Incident extends Model
     // Kolom-kolom yang dapat diisi secara massal
     protected $fillable = [
         'user_id',
-        'writer',
+
         'stamp_date',
         'shift_date',
         'shift',
-        'safety_officer_1',
+        'hse_inspector_id',
         'status_kejadian',
         'tgl_kejadiannya',
         'jam_kejadiannya',
@@ -28,7 +28,7 @@ class Incident extends Model
         'nama_korban',
         'status',
         'jenis_kelamin',
-        'perusahaan',
+        'perusahaan_id',
         'bagian',
         'jabatan',
         'masa_kerja',
@@ -146,5 +146,13 @@ class Incident extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    public function inspectors()
+    {
+        return $this->belongsTo(HseInspector::class, 'hse_inspector_id');
+    }
+    public function pers()
+    {
+        return $this->belongsTo(Perusahaan::class, 'perusahaan_id');
     }
 }

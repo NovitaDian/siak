@@ -85,6 +85,8 @@ class InfoUserController extends Controller
     public function operator_store(Request $request)
     {
 
+      
+
         $attributes = request()->validate([
             'name' => ['required', 'max:50'],
             'email' => ['required', 'email', 'max:50', Rule::unique('users')->ignore(Auth::user()->id)],
@@ -112,7 +114,7 @@ class InfoUserController extends Controller
                 'about_me'    => $attributes["about_me"],
             ]);
 
-
+      
         return redirect()->route('operator.info_user.index')->with('success', 'Profile berhasil diperbarui');
     }
 
@@ -146,7 +148,7 @@ class InfoUserController extends Controller
         $attributes = request()->validate([
             'name' => ['required', 'max:50'],
             'email' => ['required', 'email', 'max:50', Rule::unique('users')->ignore(Auth::user()->id)],
-            'phone'     => ['max:50'],
+            'phone'     => ['max:13'],
             'location' => ['max:70'],
             'about_me'    => ['max:150'],
         ]);
@@ -170,7 +172,7 @@ class InfoUserController extends Controller
                 'about_me'    => $attributes["about_me"],
             ]);
 
-
-        return view('tamu.user.profile')->with('success', 'Profile updated successfully');
+     
+        return redirect()->route('tamu.info_user.index')->with('success', 'Profile berhasil diperbarui');
     }
 }

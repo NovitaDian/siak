@@ -30,11 +30,9 @@ class PpeFixSeeder extends Seeder
                 $jamSelesai = (clone $jamMulai)->modify('+8 hours');
 
                 $entries[] = [
-                    'writer' => 'Seeder System',
                     'tanggal_shift_kerja' => $tanggal->format('Y-m-d'),
                     'shift_kerja' => $faker->randomElement($shifts),
                     'hse_inspector_id' => rand(1, 5),
-                    'nama_hse_inspector' => 'Inspector ' . rand(1, 5),
                     'jam_mulai' => $jamMulai->format('H:i:s'),
                     'jam_selesai' => $jamSelesai->format('H:i:s'),
                     'zona_pengawasan' => $faker->randomElement($zona),

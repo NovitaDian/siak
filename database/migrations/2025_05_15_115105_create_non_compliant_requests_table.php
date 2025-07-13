@@ -11,7 +11,6 @@ return new class extends Migration
         Schema::create('non_compliant_requests', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('sent_non_compliant_id');
-            $table->string('nama_pengirim', 100);
             $table->string('type', 100);
             $table->text('reason');
             $table->string('status', 8)->default('Pending');

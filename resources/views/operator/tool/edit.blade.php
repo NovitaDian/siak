@@ -33,7 +33,7 @@
                                 <label for="alat_id">{{ __('Alat') }}</label>
                                 <select class="form-control" name="alat_id" id="alat_id" required>
                                     @foreach($alats as $alat)
-                                    <option value="{{ $alat->id }}" {{ $toolReport->alat_id == $alat->id ? 'selected' : '' }}>{{ $alat->nama_alat }}</option>
+                                    <option value="{{ $alat->id }}" {{ $toolReport->alat_id == $alat->id ? 'selected' : '' }}>{{ $alat->namaAlat->nama_alat }}-{{ $alat->nomor }}</option>
                                     @endforeach
                                 </select>
                             </div>

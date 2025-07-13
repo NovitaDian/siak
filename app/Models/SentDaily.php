@@ -12,13 +12,11 @@ class SentDaily extends Model
 
     // Kolom yang dapat diisi (mass assignable)
     protected $fillable = [
-        'draft_id',
         'user_id',
         'tanggal_shift_kerja',
         'shift_kerja',
-        'nama_hse_inspector',
         'hse_inspector_id',
-        'writer',
+
         'rincian_laporan',
         'status'
     ];
@@ -29,5 +27,9 @@ class SentDaily extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    public function inspectors()
+    {
+        return $this->belongsTo(HseInspector::class, 'hse_inspector_id');
     }
 }

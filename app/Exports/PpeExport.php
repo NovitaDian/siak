@@ -20,13 +20,11 @@ class PpeExport implements FromCollection, WithHeadings, WithMapping, ShouldAuto
 
     public function collection()
     {
-        $query = SentPpe::select([
+        $query = SentPpe::with(['user', 'inspectors'])->select([
             'id',
-            'writer',
             'tanggal_shift_kerja',
             'shift_kerja',
             'hse_inspector_id',
-            'nama_hse_inspector',
             'jam_mulai',
             'jam_selesai',
             'zona_pengawasan',
@@ -44,8 +42,6 @@ class PpeExport implements FromCollection, WithHeadings, WithMapping, ShouldAuto
             'jumlah_tidak_patuh_pelindung_mata_kontraktor',
             'jumlah_tidak_patuh_safety_harness_kontraktor',
             'jumlah_tidak_patuh_apd_lainnya_kontraktor',
-            'durasi_ppe',
-            'status_note',
             'status_ppe',
             'status',
             'created_at',
@@ -97,7 +93,7 @@ class PpeExport implements FromCollection, WithHeadings, WithMapping, ShouldAuto
     {
         return [
             $row->id ?? '-',
-            $row->writer ?? '-',
+            $row->user->name ?? '-',
             $row->tanggal_shift_kerja ?? '-',
             $row->shift_kerja ?? '-',
             $row->hse_inspector_id ?? '-',

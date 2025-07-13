@@ -12,12 +12,16 @@ class Note extends Model
 
     protected $fillable = [
         'user_id',
-        'writer',
+
         'note',
     ];
 
     public function attachments(): HasMany
     {
         return $this->hasMany(Attachment::class, 'note_id');
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

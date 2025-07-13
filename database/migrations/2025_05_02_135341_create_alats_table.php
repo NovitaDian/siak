@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('alats', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('nama_alat_id');
-            $table->string('nama_alat');
             $table->string('nomor');
             $table->timestamp('waktu_inspeksi')->nullable();
             $table->integer('durasi_inspeksi')->comment('Durasi dalam hari');

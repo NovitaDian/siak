@@ -14,19 +14,16 @@ return new class extends Migration
         Schema::create('pr', function (Blueprint $table) {
             $table->id(); // Primary key
             $table->unsignedBigInteger('budget_id')->nullable();
+            $table->unsignedBigInteger('unit_id')->nullable();
             $table->foreign('budget_id')->references('id')->on('budget')->onDelete('cascade');
+            $table->foreign('unit_id')->references('id')->on('unit')->onDelete('cascade');
             $table->date('pr_date')->nullable();
             $table->string('pr_no', 50)->unique();
             $table->string('purchase_for', 100)->nullable();
-            $table->string('io_assetcode', 100)->nullable();
             $table->string('material', 50)->nullable();
             $table->decimal('quantity', 10, 2)->nullable();
-            $table->string('unit', 20)->nullable();
             $table->decimal('valuation_price', 15, 2)->nullable();
-            $table->string('gl_code', 50)->nullable();
-            $table->string('gl_name', 50)->nullable();
             $table->timestamps();
-           
         });
     }
 

@@ -36,16 +36,16 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="gl_code">{{ __('GL Code') }}</label>
-                                <select class="form-control" id="gl_code" name="gl_code" required>
+                                <label for="gl_id">{{ __('GL Code') }}</label>
+                                <select class="form-control" id="gl_id" name="gl_id" required>
                                     <option value="">Pilih GL Code</option>
                                     @foreach($gls as $gl)
-                                    <option value="{{ $gl->gl_code }}" {{ (old('gl_code', $budget->gl_code) == $gl->gl_code) ? 'selected' : '' }}>
-                                        {{ $gl->gl_code }} - {{ $gl->gl_name }}
+                                    <option value="{{ $gl->id }}" {{ (old('gl_id', $budget->gl_id) == $gl->id) ? 'selected' : '' }}>
+                                        {{ $gl->gl_name }}
                                     </option>
                                     @endforeach
                                 </select>
-                                @error('gl_code')
+                                @error('gl_id')
                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                 @enderror
                             </div>
@@ -53,21 +53,14 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="gl_name">{{ __('GL Name') }}</label>
-                                <input class="form-control" type="text" id="gl_name" name="gl_name" value="{{ old('gl_name', $budget->gl_name) }}" required readonly>
-                            </div>
-                        </div>
+                      
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="year">{{ __('Year') }}</label>
                                 <input class="form-control" type="text" id="year" name="year" value="{{ old('year', $budget->year) }}" required>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="row">
+                    
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="kategori">{{ __('Kategori') }}</label>

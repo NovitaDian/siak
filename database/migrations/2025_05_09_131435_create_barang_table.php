@@ -15,17 +15,15 @@ return new class extends Migration
             $table->id();
             $table->string('material_code', 50);
             $table->unsignedBigInteger('material_group_id')->nullable();
-            $table->string('material_group', 50);
             $table->text('description')->nullable();
             $table->binary('image')->nullable(); // Untuk tipe BLOB
             $table->string('material_type', 50)->nullable();
             $table->text('remark')->nullable();
             $table->integer('quantity')->default(0);
             $table->unsignedBigInteger('unit_id');
-            $table->string('unit', 20)->nullable();
             $table->timestamps();
-            $table->foreign('material_group_id')->references('id')->on('material_group')->onDelete('cascade');
             $table->foreign('unit_id')->references('id')->on('unit')->onDelete('cascade');
+            $table->foreign('material_group_id')->references('id')->on('material_group')->onDelete('cascade');
         });
     }
 

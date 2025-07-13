@@ -18,6 +18,7 @@ class PurchaseRequest extends Model
         'purchase_for',
         'material',
         'quantity',
+        'unit_id',
         'unit',
         'valuation_price',
         'gl_code',
@@ -37,5 +38,9 @@ class PurchaseRequest extends Model
     public function budget()
     {
         return $this->belongsTo(Budget::class, 'budget_id');
+    }
+     public function unitId()
+    {
+        return $this->belongsTo(Unit::class, 'unit_id');
     }
 }

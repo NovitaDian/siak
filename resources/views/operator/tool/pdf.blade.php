@@ -32,6 +32,7 @@
                 <th>Penulis</th>
                 <th>Tanggal Pemeriksaan</th>
                 <th>Nama Alat</th>
+                <th>Nomor Alat</th>
                 <th>ID Inspector</th>
                 <th>Nama Inspector</th>
                 <th>Status Pemeriksaan</th>
@@ -43,11 +44,12 @@
             @foreach($tool_fixs as $d)
                 <tr>
                     <td>{{ $d->id }}</td>
-                    <td>{{ $d->writer }}</td>
+                    <td>{{ $d->user->name }}</td>
                     <td>{{ $d->tanggal_pemeriksaan }}</td>
-                    <td>{{ $d->nama_alat }}</td>
+                    <td>{{ $d->alat->namaAlat->nama_alat }}</td>
+                    <td>{{ $d->alat->nomor }}</td>
                     <td>{{ $d->hse_inspector_id }}</td>
-                    <td>{{ $d->hse_inspector }}</td>
+                    <td>{{ $d->inspector->name }}</td>
                     <td>{{ $d->status_pemeriksaan }}</td>
                     <td>{{ $d->status }}</td>
                     <td>{{ $d->created_at->format('Y-m-d H:i') }}</td>

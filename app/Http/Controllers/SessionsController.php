@@ -23,11 +23,11 @@ class SessionsController extends Controller
         if(Auth::attempt($attributes))
         {
             session()->regenerate();
-            return redirect('home')->with(['success'=>'You are logged in.']);
+            return redirect('home')->with(['success'=>'Selamat Datang.']);
         }
         else{
 
-            return back()->withErrors(['email'=>'Email or password invalid.']);
+            return back()->withErrors(['email'=>'Email atau Password Salah.']);
         }
     }
     function login(Request $request)
@@ -36,8 +36,8 @@ class SessionsController extends Controller
             'email' => 'required',
             'password' => 'required'
         ], [
-            'email.required' => 'email can not be empty',
-            'password.required' => 'Password can not be empty',
+            'email.required' => 'email tidak boleh kosong',
+            'password.required' => 'Password tidak boleh kosong',
         ]);
         $infologin = [
             'email' => $request->email,
@@ -52,7 +52,7 @@ class SessionsController extends Controller
                 return redirect('/tamu/home');
             }
         } else {
-            return redirect('')->withErrors('NIK and Password not found ');
+            return redirect('')->withErrors('Email atau Password salah ');
         }
     }
 
@@ -62,6 +62,6 @@ class SessionsController extends Controller
 
         Auth::logout();
 
-        return redirect('/login')->with(['success'=>'You\'ve been logged out.']);
+        return redirect('/login')->with(['success'=>'Anda Telah Keluar.']);
     }
 }

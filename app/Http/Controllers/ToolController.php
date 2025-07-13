@@ -27,7 +27,7 @@ class ToolController extends Controller
         $user = Auth::user();
 
         $tools = ToolReport::with('alat')
-            ->where('writer', $user->name)
+            ->where('user_id', $user->id)
             ->orderBy('created_at', 'desc') // urutkan dari yang terbaru
             ->get();
         $latestRequests = ToolRequest::orderByDesc('id')
@@ -85,13 +85,10 @@ class ToolController extends Controller
 
         ToolReport::create([
             'alat_id'             => $alat->id,
-            'nama_alat'           => $alat->nama_alat,
             'hse_inspector_id'    => $inspector->id,
-            'hse_inspector'       => $inspector->name,
             'tanggal_pemeriksaan' => $request->tanggal_pemeriksaan,
             'status_pemeriksaan'  => $request->status_pemeriksaan,
             'foto'                => $fotoPath,
-            'writer'              => Auth::user()->name,
             'user_id'             => Auth::id(), // disingkat
         ]);
 
@@ -111,12 +108,9 @@ class ToolController extends Controller
         $toolReport = ToolReport::findOrFail($id);
         $data = [
             'alat_id' => $request->alat_id,
-            'nama_alat' => Alat::find($request->alat_id)?->nama_alat,
             'hse_inspector_id' => $request->hse_inspector_id,
-            'hse_inspector' => HseInspector::find($request->hse_inspector_id)?->name,
             'tanggal_pemeriksaan' => $request->tanggal_pemeriksaan,
             'status_pemeriksaan' => $request->status_pemeriksaan,
-            'writer' => Auth::user()->name,
             'user_id' => Auth::user()->id,
         ];
 
@@ -159,13 +153,10 @@ class ToolController extends Controller
 
         $data = [
             'alat_id' => $alat->id,
-            'nama_alat' => $alat->nama_alat,
             'hse_inspector_id' => $inspector->id,
-            'hse_inspector' => $inspector->name,
             'tanggal_pemeriksaan' => $request->tanggal_pemeriksaan,
             'status_pemeriksaan' => $request->status_pemeriksaan,
             'status' => 'Nothing',
-            'writer' => Auth::user()->name,
             'user_id' => Auth::user()->id,
         ];
 
@@ -228,13 +219,9 @@ class ToolController extends Controller
 
         // Pindahkan data ke tabel tool_fix
         SentToolReport::create([
-            'draft_id' => $tool->id,
             'user_id' => $tool->user_id,
-            'writer' => $tool->writer,
             'alat_id' => $tool->alat_id,
-            'nama_alat' => $tool->nama_alat,
             'hse_inspector_id' => $tool->hse_inspector_id,
-            'hse_inspector' => $tool->hse_inspector,
             'tanggal_pemeriksaan' => $tool->tanggal_pemeriksaan,
             'status_pemeriksaan' => $tool->status_pemeriksaan,
             'foto' => $tool->foto,
@@ -256,7 +243,7 @@ class ToolController extends Controller
         // Ambil data PPE berdasarkan ID
         $tool = ToolReport::findOrFail($id);
         $tool->delete();
-        return redirect()->route('adminsystem.tool.index')->with('success', 'NCR berhasil dihapus!');
+        return redirect()->route('adminsystem.tool.index')->with('success', 'Tool Report berhasil dihapus!');
     }
     public function sent_destroy(Request $request, $id)
     {
@@ -267,7 +254,7 @@ class ToolController extends Controller
         SentToolReport::where('id', $request->sent_tool_id)->update([
             'status' => 'Nothing',
         ]);
-        return redirect()->route('adminsystem.tool.index')->with('success', 'NCR berhasil dihapus!');
+        return redirect()->route('adminsystem.tool.index')->with('success', 'Tool Report berhasil dihapus!');
     }
     public function storeRequest(Request $request)
     {
@@ -281,7 +268,6 @@ class ToolController extends Controller
             'sent_tool_id' => $request->sent_tool_id,
             'type' => $request->type,
             'reason' => $request->reason,
-            'nama_pengirim' => Auth::user()->name,
             'user_id' => Auth::user()->id,
             'status' => 'Pending',
         ]);
@@ -375,7 +361,7 @@ class ToolController extends Controller
 
         $user = Auth::user();
         $tools = ToolReport::with('alat')
-            ->where('writer', $user->name)
+            ->where('user_id', $user->id)
             ->get();
         $start = $request->start_date;
         $end = $request->end_date;
@@ -386,10 +372,10 @@ class ToolController extends Controller
         if ($start && $end) {
             $tool_fixs = SentToolReport::whereBetween('tanggal_pemeriksaan', [$start, $end])->get();
         } else {
-            $tool_fixs = SentToolReport::where('writer', $user->name)
+            $tool_fixs = SentToolReport::where('user_id', $user->id)
                 ->get();
         }
-        $requests = ToolRequest::where('nama_pengirim', $user->name)->get();
+        $requests = ToolRequest::where('user_id', $user->id)->get();
 
         return view('operator.tool.index', compact('tools', 'tool_fixs', 'requests', 'latestRequests'));
     }
@@ -429,13 +415,10 @@ class ToolController extends Controller
 
         ToolReport::create([
             'alat_id'             => $alat->id,
-            'nama_alat'           => $alat->nama_alat,
             'hse_inspector_id'    => $inspector->id,
-            'hse_inspector'       => $inspector->name,
             'tanggal_pemeriksaan' => $request->tanggal_pemeriksaan,
             'status_pemeriksaan'  => $request->status_pemeriksaan,
             'foto'                => $fotoPath,
-            'writer'              => Auth::user()->name,
             'user_id'             => Auth::id(), // disingkat
         ]);
 
@@ -455,12 +438,9 @@ class ToolController extends Controller
         $toolReport = ToolReport::findOrFail($id);
         $data = [
             'alat_id' => $request->alat_id,
-            'nama_alat' => Alat::find($request->alat_id)?->nama_alat,
             'hse_inspector_id' => $request->hse_inspector_id,
-            'hse_inspector' => HseInspector::find($request->hse_inspector_id)?->name,
             'tanggal_pemeriksaan' => $request->tanggal_pemeriksaan,
             'status_pemeriksaan' => $request->status_pemeriksaan,
-            'writer' => Auth::user()->name,
             'user_id' => Auth::user()->id,
         ];
 
@@ -503,13 +483,10 @@ class ToolController extends Controller
 
         $data = [
             'alat_id' => $alat->id,
-            'nama_alat' => $alat->nama_alat,
             'hse_inspector_id' => $inspector->id,
-            'hse_inspector' => $inspector->name,
             'tanggal_pemeriksaan' => $request->tanggal_pemeriksaan,
             'status_pemeriksaan' => $request->status_pemeriksaan,
             'status' => 'Nothing',
-            'writer' => Auth::user()->name,
             'user_id' => Auth::user()->id,
         ];
 
@@ -572,12 +549,8 @@ class ToolController extends Controller
 
         // Pindahkan data ke tabel tool_fix
         SentToolReport::create([
-            'draft_id' => $tool->id,
-            'writer' => $tool->writer,
             'alat_id' => $tool->alat_id,
-            'nama_alat' => $tool->nama_alat,
             'hse_inspector_id' => $tool->hse_inspector_id,
-            'hse_inspector' => $tool->hse_inspector,
             'tanggal_pemeriksaan' => $tool->tanggal_pemeriksaan,
             'status_pemeriksaan' => $tool->status_pemeriksaan,
             'foto' => $tool->foto,
@@ -600,7 +573,7 @@ class ToolController extends Controller
         // Ambil data PPE berdasarkan ID
         $tool = ToolReport::findOrFail($id);
         $tool->delete();
-        return redirect()->route('operator.tool.index')->with('success', 'NCR berhasil dihapus!');
+        return redirect()->route('operator.tool.index')->with('success', 'Tool Report berhasil dihapus!');
     }
     public function operator_sent_destroy(Request $request, $id)
     {
@@ -611,7 +584,7 @@ class ToolController extends Controller
         SentToolReport::where('id', $request->sent_tool_id)->update([
             'status' => 'Nothing',
         ]);
-        return redirect()->route('operator.tool.index')->with('success', 'NCR berhasil dihapus!');
+        return redirect()->route('operator.tool.index')->with('success', 'Tool Report berhasil dihapus!');
     }
     public function operator_storeRequest(Request $request)
     {
@@ -625,7 +598,6 @@ class ToolController extends Controller
             'sent_tool_id' => $request->sent_tool_id,
             'type' => $request->type,
             'reason' => $request->reason,
-            'nama_pengirim' => Auth::user()->name,
             'user_id' => Auth::user()->id,
             'status' => 'Pending',
         ]);
@@ -693,13 +665,17 @@ class ToolController extends Controller
     }
     public function operator_exportPdf(Request $request)
     {
+        $user = Auth::user();
+        $requests = ToolRequest::where('user_id', $user->id)->get();
+
         $start = $request->start_date;
         $end = $request->end_date;
 
         if ($start && $end) {
-            $tool_fixs = SentToolReport::whereBetween('tanggal_pemeriksaan', [$start, $end])->get();
+            $tool_fixs = SentToolReport::whereBetween('tanggal_pemeriksaan', [$start, $end])::where('user_id', $user->id)->get();
         } else {
-            $tool_fixs = SentToolReport::all();
+            $tool_fixs = SentToolReport::where('user_id', $user->id)->get();
+
         }
 
         $pdf = Pdf::loadView('operator.tool.pdf', compact('tool_fixs'))

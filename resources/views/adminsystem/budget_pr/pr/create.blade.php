@@ -86,14 +86,16 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="unit">{{ __('Satuan') }}</label>
-                                <select class="form-control" id="unit" name="unit" required>
-                                    <option value="">Pilih Satuan</option>
+                                <label for="unit_id">{{ __('Unit') }}</label>
+                                <select class="form-control" id="unit_id" name="unit_id" required>
+                                    <option value="">Pilih Unit</option>
                                     @foreach($units as $unit)
-                                    <option value="{{ $unit->unit }}" {{ old('unit') == $unit->unit ? 'selected' : '' }}>{{ $unit->unit }}</option>
+                                    <option value="{{ $unit->id }}" {{ old('id') == $unit->id ? 'selected' : '' }}>
+                                        {{ $unit->unit}}
+                                    </option>
                                     @endforeach
                                 </select>
-                                @error('unit')
+                                @error('unit_id')
                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                 @enderror
                             </div>
@@ -105,19 +107,6 @@
                                 @error('valuation_price')
                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                 @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="io_assetcode">{{ __('IO / Assetcode') }}</label>
-                                <select class="form-control" id="io_assetcode" name="io_assetcode">
-                                    <option value="">Pilih Internal Order</option>
-                                    @foreach($budgets as $budget)
-                                    @if(!empty($budget->internal_order))
-                                    <option value="{{ $budget->internal_order }}" {{ old('io_assetcode') == $budget->internal_order ? 'selected' : '' }}>{{ $budget->internal_order }}</option>
-                                    @endif
-                                    @endforeach
-                                </select>
                             </div>
                         </div>
                         <div class="d-flex justify-content-end">

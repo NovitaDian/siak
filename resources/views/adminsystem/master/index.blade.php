@@ -60,6 +60,14 @@
                 </div>
             </div>
         </div>
+        <div class="col-xl-4 col-sm-6 mb-4">
+            <div class="card d-flex flex-row">
+                <div class="card-body d-flex flex-column justify-content-between text-center">
+                    <h5 class="font-weight-bolder">HARI HILANG</h5>
+                    <button class="btn btn-primary w-100" onclick="location.href='{{ route('adminsystem.hari_hilang.index') }}'">GO</button>
+                </div>
+            </div>
+        </div>
     </div>
 
 

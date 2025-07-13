@@ -12,7 +12,7 @@ class ToolRequest extends Model
 
     protected $fillable = [
         'sent_tool_id',
-        'nama_pengirim',
+        '',
         'user_id',
         'type',
         'reason',

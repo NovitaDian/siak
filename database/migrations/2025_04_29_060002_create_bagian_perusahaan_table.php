@@ -9,13 +9,11 @@ return new class extends Migration {
     {
         Schema::create('bagian_perusahaan', function (Blueprint $table) {
             $table->id();
-            $table->string('perusahaan_code');
-            $table->string('perusahaan_name');
+            $table->unsignedBigInteger('perusahaan_id')->nullable();
             $table->string('nama_bagian');
             $table->timestamps();
-            $table->foreign('perusahaan_code')->references('perusahaan_code')->on('perusahaan')->onDelete('cascade');
+            $table->foreign('perusahaan_id')->references('id')->on('perusahaan')->onDelete('cascade');
         });
-
     }
 
     public function down(): void

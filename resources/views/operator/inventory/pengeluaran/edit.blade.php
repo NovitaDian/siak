@@ -13,7 +13,7 @@
             <form action="{{ route('operator.pengeluaran.update', $pengeluaran->id) }}" method="POST" role="form text-left" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
-
+                
                 @if($errors->any())
                 <div class="mt-3 alert alert-danger alert-dismissible fade show" role="alert">
                     <span class="alert-text text-white">{{ $errors->first() }}</span>
@@ -33,16 +33,16 @@
                             @enderror
                         </div>
                     </div>
-
+                    
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="barang_id">{{ __('Barang') }}</label>
                             <select class="form-control" id="barang_id" name="barang_id" required>
                                 <option value="">Pilih Barang</option>
                                 @foreach($barangs as $barang)
-                                <option value="{{ $barang->id }}" {{ old('barang_id', $pengeluaran->barang_id) == $barang->id ? 'selected' : '' }}>
-                                    {{ $barang->description }}
-                                </option>
+                                    <option value="{{ $barang->id }}" {{ old('barang_id', $pengeluaran->barang_id) == $barang->id ? 'selected' : '' }}>
+                                        {{ $barang->description }}
+                                    </option>
                                 @endforeach
                             </select>
                             @error('barang_id')
@@ -60,6 +60,8 @@
                             @enderror
                         </div>
                     </div>
+                               
+
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="keterangan">{{ __('Keterangan') }}</label>
@@ -69,7 +71,7 @@
                             @enderror
                         </div>
                     </div>
-                </div>
+          
 
                 <div class="d-flex justify-content-end">
                     <button type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">{{ __('Update Pengeluaran') }}</button>

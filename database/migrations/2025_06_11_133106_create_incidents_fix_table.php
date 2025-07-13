@@ -13,11 +13,9 @@ return new class extends Migration
     {
         Schema::create('incidents_fix', function (Blueprint $table) {
             $table->id();
-            $table->string('writer');
             $table->dateTime('stamp_date')->nullable();
             $table->date('shift_date');
             $table->string('shift');
-            $table->string('safety_officer_1');
             $table->string('status_kejadian')->nullable();
             $table->date('tgl_kejadiannya')->nullable();
             $table->time('jam_kejadiannya')->nullable();
@@ -28,7 +26,8 @@ return new class extends Migration
             $table->string('nama_korban')->nullable();
             $table->string('status')->nullable();
             $table->string('jenis_kelamin')->nullable();
-            $table->string('perusahaan')->nullable();
+            $table->unsignedBigInteger('hse_inspector_id');
+            $table->unsignedBigInteger('perusahaan_id')->nullable();
             $table->string('bagian')->nullable();
             $table->string('jabatan')->nullable();
             $table->integer('masa_kerja')->nullable();
@@ -103,7 +102,6 @@ return new class extends Migration
             $table->integer('total_safe_day_wlta')->nullable();
 
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('draft_id');
             $table->string('status_request')->nullable();
 
             $table->timestamps();

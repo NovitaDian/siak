@@ -29,7 +29,7 @@
                                 <tbody id="notificationTableBody">
                                     @foreach ($allRequests as $request)
                                     <tr>
-                                        <td class="text-center text-xs">{{ $request->nama_pengirim }}</td>
+                                        <td class="text-center text-xs">{{ $request->user->name }}</td>
                                         <td class="text-center text-xs">{{ $request->created_at->format('d/m/Y') }}</td>
                                         <td class="text-center text-xs">{{ $request->type }}</td>
                                         <td class="text-center text-xs">{{ $request->reason }}</td>
@@ -230,6 +230,8 @@
                         <table class="table align-items-center mb-0" id="sentNcrTable">
                             <thead>
                                 <tr>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">No</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Penulis</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal Shift Kerja</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Shift Kerja</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">HSE Inspector</th>
@@ -246,6 +248,10 @@
                             <tbody>
                                 @foreach ($ncr_fixs as $ncr_fix)
                                 <tr class="sent-ncr-row" data-ncr-id="{{ $ncr_fix->id }}">
+                                    <td class="text-center text-xs">{{ $loop->iteration }}</td>
+                                    <td class="text-center">
+                                        <p class="text-xs font-weight-bold mb-0">{{ $ncr_fix->user->name}}</p>
+                                    </td>
                                     <td class="text-center text-xs">{{ \Carbon\Carbon::parse($ncr_fix->tanggal_shift_kerja)->format('d/m/Y') }}</td>
                                     <td class="text-center text-xs">{{ $ncr_fix->shift_kerja }}</td>
                                     <td class="text-center text-xs">{{ $ncr_fix->nama_hs_officer_1 }}</td>

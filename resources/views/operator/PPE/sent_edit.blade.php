@@ -19,21 +19,21 @@
                     @method('PUT')
 
                     @if($errors->any())
-                        <div class="mt-3 alert alert-primary alert-dismissible fade show" role="alert">
-                            <span class="alert-text text-white">{{ $errors->first() }}</span>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-                                <i class="fa fa-close" aria-hidden="true"></i>
-                            </button>
-                        </div>
+                    <div class="mt-3 alert alert-primary alert-dismissible fade show" role="alert">
+                        <span class="alert-text text-white">{{ $errors->first() }}</span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                            <i class="fa fa-close" aria-hidden="true"></i>
+                        </button>
+                    </div>
                     @endif
 
                     @if(session('success'))
-                        <div class="m-3 alert alert-success alert-dismissible fade show" role="alert">
-                            <span class="alert-text text-white">{{ session('success') }}</span>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-                                <i class="fa fa-close" aria-hidden="true"></i>
-                            </button>
-                        </div>
+                    <div class="m-3 alert alert-success alert-dismissible fade show" role="alert">
+                        <span class="alert-text text-white">{{ session('success') }}</span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                            <i class="fa fa-close" aria-hidden="true"></i>
+                        </button>
+                    </div>
                     @endif
 
                     <!-- Tanggal & Shift -->
@@ -60,7 +60,7 @@
                             <select class="form-control" name="hse_inspector_id" id="hse_inspector_id" required>
                                 <option value="">Pilih HSE Inspector</option>
                                 @foreach($inspectors as $inspector)
-                                    <option value="{{ $inspector->id }}" {{ old('hse_inspector_id', $ppeFixs->hse_inspector_id) == $inspector->id ? 'selected' : '' }}>{{ $inspector->name }}</option>
+                                <option value="{{ $inspector->id }}" {{ old('hse_inspector_id', $ppeFixs->hse_inspector_id) == $inspector->id ? 'selected' : '' }}>{{ $inspector->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -80,13 +80,13 @@
                             <label for="zona_pengawasan">Zona Pengawasan</label>
                             <select class="form-control" id="zona_pengawasan" name="zona_pengawasan" required>
                                 @foreach([
-                                    'ZONA I (OFFICE, SECURITY)',
-                                    'ZONA II (PROSES, KAPURAN, CT)',
-                                    'ZONA III (GD SILO, TIMBANGAN, GD BIRU, LAB)',
-                                    'ZONA IV (DEMIN, TURBIN, BOILER)',
-                                    'ZONA V (IPAL, WORKSHOP, MWH)'
+                                'ZONA I (OFFICE, SECURITY)',
+                                'ZONA II (PROSES, KAPURAN, CT)',
+                                'ZONA III (GD SILO, TIMBANGAN, GD BIRU, LAB)',
+                                'ZONA IV (DEMIN, TURBIN, BOILER)',
+                                'ZONA V (IPAL, WORKSHOP, MWH)'
                                 ] as $zona)
-                                    <option value="{{ $zona }}" {{ old('zona_pengawasan', $ppeFixs->zona_pengawasan) == $zona ? 'selected' : '' }}>{{ $zona }}</option>
+                                <option value="{{ $zona }}" {{ old('zona_pengawasan', $ppeFixs->zona_pengawasan) == $zona ? 'selected' : '' }}>{{ $zona }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -98,31 +98,31 @@
 
                     <!-- Bagian Patuh dan Tidak Patuh -->
                     @php
-                        $fields = [
-                            'jumlah_patuh_apd',
-                            'jumlah_tidak_patuh_helm',
-                            'jumlah_tidak_patuh_sepatu',
-                            'jumlah_tidak_patuh_pelindung_mata',
-                            'jumlah_tidak_patuh_safety_harness',
-                            'jumlah_tidak_patuh_apd_lainnya',
-                        ];
+                    $fields = [
+                    'jumlah_patuh_apd',
+                    'jumlah_tidak_patuh_helm',
+                    'jumlah_tidak_patuh_sepatu',
+                    'jumlah_tidak_patuh_pelindung_mata',
+                    'jumlah_tidak_patuh_safety_harness',
+                    'jumlah_tidak_patuh_apd_lainnya',
+                    ];
                     @endphp
 
                     @foreach($fields as $field)
-                        @php
-                            $label = ucwords(str_replace('_', ' ', $field));
-                        @endphp
-                        <div class="row mt-3">
-                            <div class="col-md-4">
-                                <label>{{ __($label) }}</label>
-                            </div>
-                            <div class="col-md-4">
-                                <input type="number" class="form-control" name="{{ $field }}_karyawan" min="0" value="{{ old("{$field}_karyawan", $ppeFixs->{"{$field}_karyawan"}) }}" placeholder="Karyawan">
-                            </div>
-                            <div class="col-md-4">
-                                <input type="number" class="form-control" name="{{ $field }}_kontraktor" min="0" value="{{ old("{$field}_kontraktor", $ppeFixs->{"{$field}_kontraktor"}) }}" placeholder="Kontraktor">
-                            </div>
+                    @php
+                    $label = ucwords(str_replace('_', ' ', $field));
+                    @endphp
+                    <div class="row mt-3">
+                        <div class="col-md-4">
+                            <label>{{ __($label) }}</label>
                         </div>
+                        <div class="col-md-4">
+                            <input type="number" class="form-control" name="{{ $field }}_karyawan" min="0" value="{{ old("{$field}_karyawan", $ppeFixs->{"{$field}_karyawan"}) }}" placeholder="Karyawan">
+                        </div>
+                        <div class="col-md-4">
+                            <input type="number" class="form-control" name="{{ $field }}_kontraktor" min="0" value="{{ old("{$field}_kontraktor", $ppeFixs->{"{$field}_kontraktor"}) }}" placeholder="Kontraktor">
+                        </div>
+                    </div>
                     @endforeach
 
                     <!-- Keterangan -->

@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('sent_ppe_id');
             $table->unsignedBigInteger('user_id');
-            $table->string('nama_pengirim', 100);
             $table->string('type', 6);
             $table->text('reason');
             $table->string('status', 8)->default('Pending');

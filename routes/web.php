@@ -7,6 +7,7 @@ use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\GLAccountController;
 use App\Http\Controllers\ReferencesController;
 use App\Http\Controllers\DailyController;
+use App\Http\Controllers\HariHilangController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\HseInspectorController;
 use App\Http\Controllers\IncidentController;
@@ -111,7 +112,7 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('/search', [IncidentController::class, 'search'])->name('search');
 			Route::post('/incident-request', [IncidentController::class, 'storeRequest'])->name('storeRequest');
 			Route::post('/request', [IncidentController::class, 'submitRequest'])->name('request');
-			Route::get('/get-bagian/{perusahaan_name}', [IncidentController::class, 'getBagian'])->name('getBagian');
+			Route::get('/get-bagian/{code}', [IncidentController::class, 'getBagian'])->name('getBagian');
 			Route::post('/get-jumlah-hari-hilang', [IncidentController::class, 'getJumlahHariHilang'])->name('getJumlahHariHilang');
 		});
 
@@ -123,6 +124,7 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::post('/', [PpeController::class, 'store'])->name('store');
 			Route::get('/{id}/edit', [PpeController::class, 'edit'])->name('edit');
 			Route::get('/show{id}', [PpeController::class, 'show'])->name('show');
+			Route::get('/req_show{id}', [PpeController::class, 'req_show'])->name('req_show');
 			Route::put('/{id}', [PpeController::class, 'update'])->name('update');
 			Route::delete('/{id}', [PpeController::class, 'destroy'])->name('destroy');
 			Route::get('/search', [PpeController::class, 'search'])->name('search');
@@ -147,7 +149,7 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::post('/request', [NonCompliantController::class, 'submitRequest'])->name('request');
 			Route::post('/approve/{id}', [NonCompliantController::class, 'approve'])->name('approve');
 			Route::post('/reject/{id}', [NonCompliantController::class, 'reject'])->name('reject');
-			Route::get('/get-bagian/{perusahaan_name}', [NonCompliantController::class, 'getBagian'])->name('getBagian');
+			Route::get('/get-bagian/{code}', [NonCompliantController::class, 'getBagian'])->name('getBagian');
 		});
 		Route::prefix('adminsystem/ncr')->name('adminsystem.ncr.')->group(function () {
 			Route::get('/', [NcrController::class, 'index'])->name('index');
@@ -175,7 +177,7 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::delete('/sent_destroy/{id}', [NcrController::class, 'sent_destroy'])->name('sent_destroy');
 			Route::get('/search', [NcrController::class, 'search'])->name('search');
 			Route::post('/ncr-request', [NcrController::class, 'storeRequest'])->name('storeRequest');
-			Route::get('/get-bagian/{perusahaan_name}', [NcrController::class, 'getBagian'])->name('getBagian');
+			Route::get('/get-bagian/{code}', [NcrController::class, 'getBagian'])->name('getBagian');
 		});
 		Route::get('adminsystem/master/ncr', [NcrController::class, 'master'])->name('adminsystem.ncr.master');
 
@@ -187,6 +189,7 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::put('/{id}', [PerusahaanController::class, 'update'])->name('update');
 			Route::get('/{id}', [PerusahaanController::class, 'show'])->name('show');
 			Route::delete('/{id}', [PerusahaanController::class, 'destroy'])->name('destroy');
+			Route::get('/get-bagian/{code}', [PerusahaanController::class, 'getBagian'])->name('getBagian');
 		});
 		Route::prefix('adminsystem/master/bagian')->name('adminsystem.bagian.')->group(function () {
 			Route::get('/', [BagianController::class, 'index'])->name('index');
@@ -299,6 +302,9 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::get('/create', [GLAccountController::class, 'create'])->name('create');
 			Route::get('/{id}/edit', [GLAccountController::class, 'edit'])->name('edit');
 			Route::put('/{id}', [GLAccountController::class, 'update'])->name('update');
+		});
+		Route::prefix('adminsystem/hari_hilang')->name('adminsystem.hari_hilang.')->group(function () {
+			Route::get('/', [HariHilangController::class, 'index'])->name('index');
 		});
 		Route::prefix('adminsystem/purchasinggroup')->name('adminsystem.purchasinggroup.')->group(function () {
 			Route::get('/', [PurchasingGroupController::class, 'index'])->name('index');
@@ -478,7 +484,7 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::post('/request', [IncidentController::class, 'operator_submitRequest'])->name('request');
 			Route::post('/approve/{id}', [IncidentController::class, 'operator_approve'])->name('approve');
 			Route::post('/reject/{id}', [IncidentController::class, 'operator_reject'])->name('reject');
-			Route::get('/get-bagian/{perusahaan_name}', [IncidentController::class, 'operator_getBagian'])->name('getBagian');
+			Route::get('/get-bagian/{code}', [IncidentController::class, 'operator_getBagian'])->name('getBagian');
 			Route::post('/get-jumlah-hari-hilang', [IncidentController::class, 'operator_getJumlahHariHilang'])->name('getJumlahHariHilang');
 		});
 
@@ -490,7 +496,8 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::post('/', [PpeController::class, 'operator_store'])->name('store');
 			Route::get('/{id}/edit', [PpeController::class, 'operator_edit'])->name('edit');
 			Route::put('/{id}', [PpeController::class, 'operator_update'])->name('update');
-			Route::get('/{id}', [PpeController::class, 'operator_show'])->name('show');
+			Route::get('/show{id}', [PpeController::class, 'operator_show'])->name('show');
+			Route::get('/req_show{id}', [PpeController::class, 'operator_req_show'])->name('req_show');
 			Route::delete('/{id}', [PpeController::class, 'operator_destroy'])->name('destroy');
 			Route::get('/search', [PpeController::class, 'operator_search'])->name('search');
 			Route::get('/sent_edit/{id}', [PpeController::class, 'operator_sent_edit'])->name('sent_edit');
@@ -514,12 +521,13 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::post('/request', [NonCompliantController::class, 'operator_submitRequest'])->name('request');
 			Route::post('/approve/{id}', [NonCompliantController::class, 'operator_approve'])->name('approve');
 			Route::post('/reject/{id}', [NonCompliantController::class, 'operator_reject'])->name('reject');
-			Route::get('/get-bagian/{perusahaan_name}', [NonCompliantController::class, 'operator_getBagian'])->name('getBagian');
+			Route::get('/get-bagian/{code}', [NonCompliantController::class, 'operator_getBagian'])->name('getBagian');
 		});
 		Route::prefix('operator/ncr')->name('operator.ncr.')->group(function () {
 			Route::get('/', [NcrController::class, 'operator_index'])->name('index');
 			Route::get('/export', [NcrController::class, 'operator_export'])->name('export');
 			Route::get('/export-pdf', [NcrController::class, 'operator_exportPdf'])->name('exportPdf');
+			Route::get('/{id}/export-pdf', [NcrController::class, 'operator_exportSinglePdf'])->name('exportSinglePdf');
 			Route::post('/request', [NcrController::class, 'operator_submitRequest'])->name('request');
 			Route::post('/approve/{sent_ncr_id}', [NcrController::class, 'operator_approve'])->name('approve');
 			Route::post('/reject/{sent_ncr_id}', [NcrController::class, 'operator_reject'])->name('reject');
@@ -542,7 +550,7 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::delete('/sent_destroy/{id}', [NcrController::class, 'operator_sent_destroy'])->name('sent_destroy');
 			Route::get('/search', [NcrController::class, 'operator_search'])->name('search');
 			Route::post('/ncr-request', [NcrController::class, 'operator_storeRequest'])->name('storeRequest');
-			Route::get('/get-bagian/{perusahaan_name}', [NcrController::class, 'operator_getBagian'])->name('getBagian');
+			Route::get('/get-bagian/{code}', [NcrController::class, 'operator_getBagian'])->name('getBagian');
 		});
 		Route::get('operator/master/ncr', [NcrController::class, 'operator_master'])->name('operator.ncr.master');
 
@@ -554,6 +562,7 @@ Route::group(['middleware' => 'auth'], function () {
 			Route::put('/{id}', [PerusahaanController::class, 'operator_update'])->name('update');
 			Route::get('/{id}', [PerusahaanController::class, 'operator_show'])->name('show');
 			Route::delete('/{id}', [PerusahaanController::class, 'operator_destroy'])->name('destroy');
+			Route::get('/get-bagian/{code}', [PerusahaanController::class, 'operator_getBagian'])->name('getBagian');
 		});
 		Route::prefix('operator/master/bagian')->name('operator.bagian.')->group(function () {
 			Route::get('/', [BagianController::class, 'operator_index'])->name('index');
@@ -835,3 +844,4 @@ Route::group(['middleware' => 'guest'], function () {
 Route::get('/', function () {
 	return view('session/login-session');
 })->name('login');
+

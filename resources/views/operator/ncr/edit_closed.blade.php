@@ -104,16 +104,16 @@
                         <!-- Dropdown Perusahaan -->
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="perusahaan">{{ __('Perusahaan') }}</label>
-                                <select class="form-control" id="perusahaan" name="perusahaan" readonly required>
+                                <label for="perusahaan_id">{{ __('Perusahaan') }}</label>
+                                <select class="form-control" id="perusahaan_id" name="perusahaan_id" readonly required>
                                     <option value="" disabled>Pilih Perusahaan</option>
                                     @foreach($perusahaans as $perusahaan)
-                                    <option value="{{ $perusahaan->perusahaan_name }}" {{ old('perusahaan', $ncr_fixs->perusahaan) == $perusahaan->perusahaan_name ? 'selected' : '' }}>
+                                    <option value="{{ $perusahaan->id }}" {{ old('perusahaan_id', $ncr_fixs->perusahaan_id) == $perusahaan->id ? 'selected' : '' }}>
                                         {{ $perusahaan->perusahaan_name }}
                                     </option>
                                     @endforeach
                                 </select>
-                                @error('perusahaan')
+                                @error('perusahaan_id')
                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                 @enderror
                             </div>

@@ -35,7 +35,7 @@
                                 <tbody id="notificationTableBody">
                                     @foreach ($requests as $request)
                                     <tr>
-                                        <td class="text-center text-xs">{{ $request->nama_pengirim }}</td>
+                                        <td class="text-center text-xs">{{ $request->user->name }}</td>
                                         <td class="text-center text-xs">{{ $request->created_at->format('d/m/Y') }}</td>
                                         <td class="text-center text-xs">{{ $request->type }}</td>
                                         <td class="text-center text-xs">{{ $request->reason }}</td>
@@ -109,7 +109,7 @@
                                     @foreach ($tools as $tool)
                                     <tr>
                                         <td class="text-center text-xs">{{ $tool->nama_alat }}-{{ $tool->alat->nomor ?? '-' }}</td>
-                                        <td class="text-center text-xs">{{ $tool->hse_inspector }}</td>
+                                        <td class="text-center text-xs">{{ $tool->inspector->name }}</td>
                                         <td class="text-center text-xs">{{ \Carbon\Carbon::parse($tool->tanggal_pemeriksaan)->format('d/m/Y') }}</td>
                                         <td class="text-center text-xs">{{ $tool->status_pemeriksaan }}</td>
 
@@ -215,6 +215,8 @@
                                 <thead>
                                     <tr>
 
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">No</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Penulis</th>
                                         <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Alat</th>
                                         <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Hse Inspector</th>
                                         <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal Pemeriksaan</th>
@@ -226,8 +228,12 @@
                                 <tbody>
                                     @foreach ($tool_fixs as $tool_fix)
                                     <tr>
-                                        <td class="text-center text-xs">{{ $tool_fix->nama_alat }}-{{ $tool_fix->alat->nomor ?? '-' }}</td>
-                                        <td class="text-center text-xs">{{ $tool_fix->hse_inspector }}</td>
+                                        <td class="text-center text-xs">{{ $loop->iteration }}</td>
+                                        <td class="text-center">
+                                            <p class="text-xs font-weight-bold mb-0">{{ $tool_fix->user->name}}</p>
+                                        </td>
+                                        <td class="text-center text-xs">{{ $tool_fix->alat->namaAlat->nama_alat }}-{{ $tool_fix->alat->nomor ?? '-' }}</td>
+                                        <td class="text-center text-xs">{{ $tool_fix->inspector->name }}</td>
                                         <td class="text-center text-xs">{{ \Carbon\Carbon::parse($tool_fix->tanggal_pemeriksaan)->format('d/m/Y') }}</td>
                                         <td class="text-center text-xs">{{ $tool_fix->status_pemeriksaan }}</td>
                                         <td class="align-middle text-center">

@@ -27,6 +27,7 @@
                             <thead>
                                 <tr>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Kode Barang</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Barang</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Quantity</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Unit</th>
@@ -37,10 +38,11 @@
                             <tbody>
                                 @foreach ($pengeluarans as $pengeluaran)
                                 <tr>
-                                    <td class="text-center">{{ $pengeluaran->barang_id }}</td>
+                                    <td class="text-center">{{ $pengeluaran->barang->material_code }}</td>
+                                    <td class="text-center">{{ $pengeluaran->barang->description }}</td>
                                     <td class="text-center">{{ \Carbon\Carbon::parse($pengeluaran->tanggal)->format('d/m/Y') }}</td>
                                     <td class="text-center">{{ $pengeluaran->quantity }}</td>
-                                    <td class="text-center">{{ $pengeluaran->unit }}</td>
+                                    <td class="text-center">{{ $pengeluaran->barang->unitId->unit }}</td>
                                     <td class="text-center">{{ $pengeluaran->keterangan }}</td>
                                     <td class="text-center">
                                         <a href="{{ route('adminsystem.pengeluaran.edit', $pengeluaran->id) }}"

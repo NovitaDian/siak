@@ -15,14 +15,14 @@ class Ncr extends Model
 
     // Kolom yang dapat diisi (mass assignable)
     protected $fillable = [
-        'writer',
+
         'tanggal_shift_kerja',
         'shift_kerja',
         'nama_hs_officer_1',
         'nama_hs_officer_2',
         'tanggal_audit',
         'nama_auditee',
-        'perusahaan',
+        'perusahaan_id',
         'nama_bagian',
         'element_referensi_ncr',
         'kategori_ketidaksesuaian',
@@ -41,5 +41,9 @@ class Ncr extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    public function pers()
+    {
+        return $this->belongsTo(Perusahaan::class, 'perusahaan_id');
     }
 }

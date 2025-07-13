@@ -3,18 +3,18 @@
 @section('content')
 @if($errors->any())
 <div class="mt-3 alert alert-primary alert-dismissible fade show" role="alert">
-  <span class="alert-text text-white">{{ $errors->first() }}</span>
-  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-    <i class="fa fa-close" aria-hidden="true"></i>
-  </button>
+    <span class="alert-text text-white">{{ $errors->first() }}</span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+        <i class="fa fa-close" aria-hidden="true"></i>
+    </button>
 </div>
 @endif
 @if(session('success'))
 <div class="m-3 alert alert-success alert-dismissible fade show" role="alert">
-  <span class="alert-text text-white">{{ session('success') }}</span>
-  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-    <i class="fa fa-close" aria-hidden="true"></i>
-  </button>
+    <span class="alert-text text-white">{{ session('success') }}</span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+        <i class="fa fa-close" aria-hidden="true"></i>
+    </button>
 </div>
 @endif
 <button type="button" class="btn btn-outline-secondary btn-md d-flex align-items-center gap-2" onclick="history.back()">
@@ -35,14 +35,14 @@
 
                     <!-- Perusahaan Code Select -->
                     <div class="form-group">
-                        <label for="perusahaan_code">{{ __('Perusahaan Code') }}</label>
-                        <select class="form-control" id="perusahaan_code" name="perusahaan_code" required>
+                        <label for="perusahaan_id">{{ __('Perusahaan Code') }}</label>
+                        <select class="form-control" id="perusahaan_id" name="perusahaan_id">
                             <option value="">Select Perusahaan</option>
                             @foreach($perusahaans as $perusahaan)
-                            <option value="{{ $perusahaan->perusahaan_code }}" {{ old('perusahaan_code') == $perusahaan->perusahaan_code ? 'selected' : '' }}>{{ $perusahaan->perusahaan_name }}</option>
+                            <option value="{{ $perusahaan->id }}" {{ old('perusahaan_id') == $perusahaan->id ? 'selected' : '' }}>{{ $perusahaan->perusahaan_name }}</option>
                             @endforeach
                         </select>
-                        @error('perusahaan_code')
+                        @error('perusahaan_id')
                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                         @enderror
                     </div>

@@ -29,7 +29,6 @@ class PengeluaranSeeder extends Seeder
             $pengeluaran = new Pengeluaran();
             $pengeluaran->barang_id = $barang->id;
             $pengeluaran->quantity = $maxQty;
-            $pengeluaran->unit = $barang->unit;
             $pengeluaran->keterangan = $keterangan;
             $pengeluaran->tanggal = $tanggal;
             $pengeluaran->save();
@@ -38,15 +37,6 @@ class PengeluaranSeeder extends Seeder
             $barang->quantity -= $maxQty;
             $barang->save();
 
-            // Simpan ke tabel transaksi
-            $transaction = new Transaction();
-            $transaction->barang_id = $barang->id;
-            $transaction->quantity = $maxQty;
-            $transaction->unit = $barang->unit;
-            $transaction->keterangan = $keterangan;
-            $transaction->tanggal = $tanggal;
-            $transaction->type = 'Pengeluaran';
-            $transaction->save();
         }
     }
 }

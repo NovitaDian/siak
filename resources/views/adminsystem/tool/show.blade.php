@@ -16,7 +16,7 @@
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <strong>Nama Alat:</strong>
-                    <p>{{ $tools->nama_alat ?? '-'?? '-'}}</p>
+                    <p>{{ $tools->alat->namaAlat->nama_alat ?? '-'?? '-'}}</p>
                 </div>
                 <div class="col-md-6 mb-3">
                     <strong>Nomor Alat:</strong>
@@ -24,7 +24,7 @@
                 </div>
                 <div class="col-md-6 mb-3">
                     <strong>HSE Inspector:</strong>
-                    <p>{{ $tools->hse_inspector ?? '-'}}</p>
+                    <p>{{ $tools->inspector->name ?? '-'}}</p>
                 </div>
                 <div class="col-md-6 mb-3">
                     <strong>Tanggal Pemeriksaan:</strong>
@@ -49,7 +49,7 @@
                 <div class="col-md-12 mb-3">
                     <img src="{{ asset('storage/' . $tools->foto) }}"
                         alt="{{ $tools->description }}"
-                        style="width:100%; height:100%; object-fit:cover;">
+                        style="max-height:600px; object-fit:cover;">
                 </div>
             </div>
 

@@ -10,7 +10,6 @@ class Alat extends Model
 
     protected $fillable = [
         'nama_alat_id',
-        'nama_alat',
         'nomor',
         'waktu_inspeksi',
         'durasi_inspeksi',

@@ -28,7 +28,7 @@
                             <tbody id="notificationTableBody">
                                 @foreach ($requests as $request)
                                 <tr>
-                                    <td class="text-center text-xs">{{ $request->nama_pengirim }}</td>
+                                    <td class="text-center text-xs">{{ $request->user->name }}</td>
                                     <td class="text-center text-xs">{{ $request->created_at->format('d/m/Y') }}</td>
                                     <td class="text-center text-xs">{{ $request->type }}</td>
                                     <td class="text-center text-xs">{{ $request->reason }}</td>
@@ -53,7 +53,7 @@
                                         @endif
 
                                         <form
-                                            action="{{ route('adminsystem.daily.show', ['id' => $request->id]) }}"
+                                            action="{{ route('adminsystem.daily.sent_show', ['id' => $request->sent_daily_id]) }}"
                                             method="GET"
                                             style="display:inline;"
                                             title="View details">
@@ -111,7 +111,7 @@
                                         <p class="text-xs font-weight-bold mb-0">{{ $daily->shift_kerja }}</p>
                                     </td>
                                     <td class="text-center text-xs">
-                                        <p class="text-xs font-weight-bold mb-0">{{ $daily->nama_hse_inspector }}</p>
+                                        <p class="text-xs font-weight-bold mb-0">{{ $daily->inspectors->name }}</p>
                                     </td>
 
                                     <td class="text-center text-xs">
@@ -227,6 +227,8 @@
                             <table class="table align-items-center mb-0" id="dataTableSent">
                                 <thead>
                                     <tr>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">No</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Penulis</th>
                                         <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal Shift Kerja</th>
                                         <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Shift Kerja</th>
                                         <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">HSE Inspector</th>
@@ -238,6 +240,10 @@
                                 <tbody>
                                     @foreach ($daily_fixs as $daily_fix)
                                     <tr>
+                                        <td class="text-center text-xs">{{ $loop->iteration }}</td>
+                                        <td class="text-center">
+                                            <p class="text-xs font-weight-bold mb-0">{{ $daily_fix->user->name}}</p>
+                                        </td>
                                         <td class="text-center text-xs">
                                             <div class="d-flex justify-content-center align-items-center px-2 py-1">
                                                 <div class="d-flex flex-column justify-content-center">
@@ -249,7 +255,7 @@
                                             <p class="text-xs font-weight-bold mb-0">{{ $daily_fix->shift_kerja }}</p>
                                         </td>
                                         <td class="text-center text-xs">
-                                            <p class="text-xs font-weight-bold mb-0">{{ $daily_fix->nama_hse_inspector }}</p>
+                                            <p class="text-xs font-weight-bold mb-0">{{ $daily_fix->inspectors->name  }}</p>
                                         </td>
                                         <td class="text-center text-xs">
                                             <p class="text-xs font-bold mb-0" style="max-width: 200px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">

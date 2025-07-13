@@ -63,4 +63,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Daily::class, 'user_id');
     }
+    public function nonCompliant()
+    {
+        return $this->hasMany(NonCompliant::class, 'user_id');
+    }
+  
 }

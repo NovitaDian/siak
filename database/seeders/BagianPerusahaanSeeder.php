@@ -10,15 +10,13 @@ class BagianPerusahaanSeeder extends Seeder
     {
         $data = [
             [
-                'code' => 13270,
-                'name' => 'PT. Tenang Jaya Sejahtera',
+                'perusahaan_id' => 1,
                 'bagians' => [
                     'Truck Driver',
                 ],
             ],
             [
-                'code' => 24122,
-                'name' => 'PT. SBT',
+                'perusahaan_id' => 2,
                 'bagians' => [
                     'Bongkar Raw Sugar / Batubara',
                     'GA/GARDENING',
@@ -33,15 +31,13 @@ class BagianPerusahaanSeeder extends Seeder
                 ],
             ],
             [
-                'code' => 24528,
-                'name' => 'PT. G4S',
+                'perusahaan_id' => 3,
                 'bagians' => [
                     'Security',
                 ],
             ],
             [
-                'code' => 26321,
-                'name' => 'PT. Dharmapala Usaha Sukses',
+                'perusahaan_id' => 4,
                 'bagians' => [
                     'Top Management',
                     'Process',
@@ -59,8 +55,7 @@ class BagianPerusahaanSeeder extends Seeder
                 ],
             ],
             [
-                'code' => 53270,
-                'name' => 'PT. RPM',
+                'perusahaan_id' => 5,
                 'bagians' => [
                     'Daily GA/Cleaning',
                     'Daily Process',
@@ -74,8 +69,7 @@ class BagianPerusahaanSeeder extends Seeder
                 ],
             ],
             [
-                'code' => 61517,
-                'name' => 'PT. PPT',
+                'perusahaan_id' => 6,
                 'bagians' => [
                     'Kapuran',
                     'ELECTRIC',
@@ -84,8 +78,7 @@ class BagianPerusahaanSeeder extends Seeder
                 ],
             ],
             [
-                'code' => 32372,
-                'name' => 'PT. Elcander',
+                'perusahaan_id' => 7,
                 'bagians' => [
                     'Operator Forklift',
                     'Operator Loader',
@@ -98,8 +91,7 @@ class BagianPerusahaanSeeder extends Seeder
         foreach ($data as $company) {
             foreach ($company['bagians'] as $bagian) {
                 DB::table('bagian_perusahaan')->insert([
-                    'perusahaan_code' => $company['code'],
-                    'perusahaan_name' => $company['name'],
+                    'perusahaan_id' => $company['perusahaan_id'],
                     'nama_bagian' => $bagian,
                     'created_at' => now(),
                     'updated_at' => now(),

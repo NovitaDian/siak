@@ -1,10 +1,12 @@
 @extends('layouts.user_type.operator')
 
 @section('content')
+
 <button type="button" class="btn btn-outline-secondary btn-md d-flex align-items-center gap-2"
     onclick="window.location.href='{{ route('operator.inventory.index') }}'">
     <img src="{{ asset('assets/img/logos/arrow-back.png') }}" alt="Back" style="width: 40px; height: 40px;">
 </button>
+
 <div class="row">
     <div class="col-12">
         <div class="card mb-4">
@@ -25,6 +27,7 @@
                             <thead>
                                 <tr>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Kode Barang</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nama Barang</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Quantity</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Unit</th>
@@ -35,10 +38,11 @@
                             <tbody>
                                 @foreach ($pengeluarans as $pengeluaran)
                                 <tr>
-                                    <td class="text-center">{{ $pengeluaran->barang_id }}</td>
+                                    <td class="text-center">{{ $pengeluaran->barang->material_code }}</td>
+                                    <td class="text-center">{{ $pengeluaran->barang->description }}</td>
                                     <td class="text-center">{{ \Carbon\Carbon::parse($pengeluaran->tanggal)->format('d/m/Y') }}</td>
                                     <td class="text-center">{{ $pengeluaran->quantity }}</td>
-                                    <td class="text-center">{{ $pengeluaran->unit }}</td>
+                                    <td class="text-center">{{ $pengeluaran->barang->unitId->unit }}</td>
                                     <td class="text-center">{{ $pengeluaran->keterangan }}</td>
                                     <td class="text-center">
                                         <a href="{{ route('operator.pengeluaran.edit', $pengeluaran->id) }}"

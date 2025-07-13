@@ -19,13 +19,26 @@ class InventoryController extends Controller
         $barangs = Barang::all();
         // Ambil input pencarian
         $search = $request->input('search');
-
+        $pemasukan = Pemasukan::with('barang')->get();
+        $pengeluaran = Pengeluaran::with('barang')->get();
         // Query untuk mengambil transaksi dengan filter pencarian
-        $trans = Transaction::join('barang', 'transaction.barang_id', '=', 'barang.id')
-            ->select('transaction.*', 'barang.material_code', 'barang.description')
-            ->get();
+        $gabung = collect();
 
-        return view('adminsystem.inventory.index', compact('barangs', 'trans', 'search'));
+        foreach ($pemasukan as $item) {
+            $item->jenis = 'Pemasukan';
+            $gabung->push($item);
+        }
+
+        foreach ($pengeluaran as $item) {
+            $item->jenis = 'Pengeluaran';
+            $gabung->push($item);
+        }
+
+        // Sort by tanggal
+        $gabung = $gabung->sortByDesc('tanggal')->values();
+
+
+        return view('adminsystem.inventory.index', compact('barangs', 'search', 'gabung'));
     }
     public function pemasukan_index()
     {
@@ -56,12 +69,30 @@ class InventoryController extends Controller
     public function barang_detail($id)
     {
         $barangs = Barang::findOrFail($id);
-        $trans = Transaction::join('barang', 'transaction.barang_id', '=', 'barang.id')
-            ->select('transaction.*', 'barang.material_code', 'barang.description')
-            ->where('transaction.barang_id', $id)
+        $pemasukan = Pemasukan::with('barang')
+            ->where('barang_id', $id)
             ->get();
 
-        return view('adminsystem.inventory.barang.detail', compact('barangs', 'trans'));
+        $pengeluaran = Pengeluaran::with('barang')
+            ->where('barang_id', $id)
+            ->get();
+
+        // Query untuk mengambil transaksi dengan filter pencarian
+        $gabung = collect();
+
+        foreach ($pemasukan as $item) {
+            $item->jenis = 'Pemasukan';
+            $gabung->push($item);
+        }
+
+        foreach ($pengeluaran as $item) {
+            $item->jenis = 'Pengeluaran';
+            $gabung->push($item);
+        }
+
+        // Sort by tanggal
+        $gabung = $gabung->sortByDesc('tanggal')->values();
+        return view('adminsystem.inventory.barang.detail', compact('barangs', 'gabung'));
     }
     public function getBarangDetails($id)
     {
@@ -84,28 +115,21 @@ class InventoryController extends Controller
         $request->validate([
             'material_code' => 'required|string|max:50',
             'material_group_id' => 'required|exists:material_group,id',
-            'material_group' => 'nullable|string|max:50', // akan diambil dari relasi
             'description' => 'required|string',
             'material_type' => 'required|string|max:50',
             'remark' => 'required|string',
             'unit_id' => 'required|exists:unit,id',
-            'unit' => 'nullable|string|max:20', // akan diambil dari relasi
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        // Ambil relasi unit dan material group
-        $unit = Unit::findOrFail($request->unit_id);
-        $material_group = MaterialGroup::findOrFail($request->material_group_id);
 
         $barang = new Barang();
         $barang->material_code = $request->material_code;
         $barang->material_group_id = $request->material_group_id;
-        $barang->material_group = $material_group->material_group;
         $barang->description = $request->description;
         $barang->material_type = $request->material_type;
         $barang->remark = $request->remark;
         $barang->unit_id = $request->unit_id;
-        $barang->unit = $unit->unit;
 
         if ($request->hasFile('image')) {
             $imageName = time() . '.' . $request->image->extension();
@@ -123,30 +147,23 @@ class InventoryController extends Controller
         $request->validate([
             'material_code' => 'required|string|max:50',
             'material_group_id' => 'required|exists:material_group,id',
-            'material_group' => 'nullable|string|max:50', // akan diambil dari relasi
             'description' => 'required|string',
             'material_type' => 'required|string|max:50',
             'remark' => 'required|string',
             'unit_id' => 'required|exists:unit,id',
-            'unit' => 'nullable|string|max:20', // akan diambil dari relasi
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         $barang = Barang::findOrFail($id);
 
-        // Ambil relasi unit dan material group
-        $unit = Unit::findOrFail($request->unit_id);
-        $material_group = MaterialGroup::findOrFail($request->material_group_id);
 
         // Update field
         $barang->material_code = $request->material_code;
         $barang->material_group_id = $request->material_group_id;
-        $barang->material_group = $material_group->material_group;
         $barang->description = $request->description;
         $barang->material_type = $request->material_type;
         $barang->remark = $request->remark;
         $barang->unit_id = $request->unit_id;
-        $barang->unit = $unit->unit;
 
         // Jika ada gambar baru
         if ($request->hasFile('image')) {
@@ -227,7 +244,6 @@ class InventoryController extends Controller
         $pemasukan = new Pemasukan();
         $pemasukan->barang_id = $barang->id;
         $pemasukan->quantity = $request->quantity;
-        $pemasukan->unit = $barang->unit; // Diambil dari tabel barang, bukan dari input
         $pemasukan->keterangan = $request->keterangan;
         $pemasukan->tanggal = $request->tanggal;
         $pemasukan->save();
@@ -236,15 +252,6 @@ class InventoryController extends Controller
         $barang->quantity += $request->quantity;
         $barang->save();
 
-        // Simpan ke tabel transaction
-        $transaction = new Transaction();
-        $transaction->barang_id = $barang->id;
-        $transaction->quantity = $request->quantity;
-        $transaction->unit = $barang->unit;
-        $transaction->keterangan = $request->keterangan;
-        $transaction->tanggal = $request->tanggal;
-        $transaction->type = 'Pemasukan';
-        $transaction->save();
 
         return redirect()->route('adminsystem.pemasukan.index')->with('success', 'Pemasukan Barang Berhasil');
     }
@@ -262,7 +269,6 @@ class InventoryController extends Controller
         // Ambil data pemasukan lama
         $pemasukan = Pemasukan::findOrFail($id);
         $oldBarangId = $pemasukan->barang_id;
-        $oldTanggal = $pemasukan->tanggal;
 
         // Kurangi stok lama
         $oldBarang = Barang::findOrFail($oldBarangId);
@@ -283,25 +289,9 @@ class InventoryController extends Controller
         // Update data pemasukan
         $pemasukan->barang_id = $request->barang_id;
         $pemasukan->quantity = $request->quantity;
-        $pemasukan->unit = $newBarang->unit;
         $pemasukan->keterangan = $request->keterangan;
         $pemasukan->tanggal = $request->tanggal;
         $pemasukan->save();
-
-        // Update transaction terkait
-        $transaction = Transaction::where('type', 'Pemasukan')
-            ->where('barang_id', $oldBarangId)
-            ->where('tanggal', $oldTanggal)
-            ->first();
-
-        if ($transaction) {
-            $transaction->barang_id = $request->barang_id;
-            $transaction->quantity = $request->quantity;
-            $transaction->unit = $newBarang->unit;
-            $transaction->keterangan = $request->keterangan;
-            $transaction->tanggal = $request->tanggal;
-            $transaction->save();
-        }
 
         return redirect()->route('adminsystem.pemasukan.index')->with('success', 'Data Pemasukan berhasil diperbarui');
     }
@@ -327,14 +317,6 @@ class InventoryController extends Controller
 
         // Hapus data pemasukan
         $pemasukan->delete();
-
-        // Hapus transaksi yang sesuai
-        Transaction::where('barang_id', $pemasukan->barang_id)
-            ->where('quantity', $pemasukan->quantity)
-            ->where('tanggal', $pemasukan->tanggal)
-            ->where('type', 'Pemasukan')
-            ->first()?->delete();
-
         return redirect()->route('adminsystem.pemasukan.index')->with('success', 'Data pemasukan berhasil dihapus dan stok barang diperbarui.');
     }
 
@@ -358,22 +340,12 @@ class InventoryController extends Controller
         $pengeluaran = new Pengeluaran();
         $pengeluaran->barang_id = $barang->id;
         $pengeluaran->quantity = $request->quantity;
-        $pengeluaran->unit = $barang->unit;
         $pengeluaran->keterangan = $request->keterangan;
         $pengeluaran->tanggal = $request->tanggal;
         $pengeluaran->save();
 
         $barang->quantity -= $request->quantity;
         $barang->save();
-
-        $transaction = new Transaction();
-        $transaction->barang_id = $barang->id;
-        $transaction->quantity = $request->quantity;
-        $transaction->unit = $barang->unit;
-        $transaction->keterangan = $request->keterangan;
-        $transaction->tanggal = $request->tanggal;
-        $transaction->type = 'Pengeluaran';
-        $transaction->save();
 
         return redirect()->route('adminsystem.pengeluaran.index')->with('success', 'Pengeluaran Barang Berhasil');
     }
@@ -410,25 +382,10 @@ class InventoryController extends Controller
 
         $pengeluaran->barang_id = $request->barang_id;
         $pengeluaran->quantity = $request->quantity;
-        $pengeluaran->unit = $newBarang->unit;
         $pengeluaran->keterangan = $request->keterangan;
         $pengeluaran->tanggal = $request->tanggal;
         $pengeluaran->save();
 
-        // Update transaction
-        $transaction = Transaction::where('type', 'Pengeluaran')
-            ->where('barang_id', $pengeluaran->barang_id)
-            ->where('tanggal', $pengeluaran->tanggal)
-            ->first();
-
-        if ($transaction) {
-            $transaction->barang_id = $request->barang_id;
-            $transaction->quantity = $request->quantity;
-            $transaction->unit = $newBarang->unit;
-            $transaction->keterangan = $request->keterangan;
-            $transaction->tanggal = $request->tanggal;
-            $transaction->save();
-        }
 
         return redirect()->route('adminsystem.pengeluaran.index')->with('success', 'Data Pengeluaran berhasil diperbarui');
     }
@@ -455,12 +412,6 @@ class InventoryController extends Controller
         // Hapus data pengeluaran
         $pengeluaran->delete();
 
-        // Hapus transaksi yang sesuai
-        Transaction::where('barang_id', $pengeluaran->barang_id)
-            ->where('quantity', $pengeluaran->quantity)
-            ->where('tanggal', $pengeluaran->tanggal)
-            ->where('type', 'Pengeluaran')
-            ->first()?->delete();
 
         return redirect()->route('adminsystem.pengeluaran.index')->with('success', 'Data pengeluaran berhasil dihapus dan stok barang diperbarui.');
     }
@@ -485,14 +436,28 @@ class InventoryController extends Controller
         $barangs = Barang::all();
         // Ambil input pencarian
         $search = $request->input('search');
-
+        $pemasukan = Pemasukan::with('barang')->get();
+        $pengeluaran = Pengeluaran::with('barang')->get();
         // Query untuk mengambil transaksi dengan filter pencarian
-        $trans = Transaction::join('barang', 'transaction.barang_id', '=', 'barang.id')
-            ->select('transaction.*', 'barang.material_code', 'barang.description')
-            ->get();
+        $gabung = collect();
 
-        return view('operator.inventory.index', compact('barangs', 'trans', 'search'));
+        foreach ($pemasukan as $item) {
+            $item->jenis = 'Pemasukan';
+            $gabung->push($item);
+        }
+
+        foreach ($pengeluaran as $item) {
+            $item->jenis = 'Pengeluaran';
+            $gabung->push($item);
+        }
+
+        // Sort by tanggal
+        $gabung = $gabung->sortByDesc('tanggal')->values();
+
+
+        return view('operator.inventory.index', compact('barangs', 'search', 'gabung'));
     }
+
     public function operator_pemasukan_index()
     {
         $barangs = Barang::all();
@@ -550,12 +515,10 @@ class InventoryController extends Controller
         $request->validate([
             'material_code' => 'required|string|max:50',
             'material_group_id' => 'required|exists:material_group,id',
-            'material_group' => 'nullable|string|max:50', // akan diambil dari relasi
             'description' => 'required|string',
             'material_type' => 'required|string|max:50',
             'remark' => 'required|string',
             'unit_id' => 'required|exists:unit,id',
-            'unit' => 'nullable|string|max:20', // akan diambil dari relasi
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
@@ -566,12 +529,10 @@ class InventoryController extends Controller
         $barang = new Barang();
         $barang->material_code = $request->material_code;
         $barang->material_group_id = $request->material_group_id;
-        $barang->material_group = $material_group->material_group;
         $barang->description = $request->description;
         $barang->material_type = $request->material_type;
         $barang->remark = $request->remark;
         $barang->unit_id = $request->unit_id;
-        $barang->unit = $unit->unit;
 
         if ($request->hasFile('image')) {
             $imageName = time() . '.' . $request->image->extension();
@@ -589,12 +550,10 @@ class InventoryController extends Controller
         $request->validate([
             'material_code' => 'required|string|max:50',
             'material_group_id' => 'required|exists:material_group,id',
-            'material_group' => 'nullable|string|max:50', // akan diambil dari relasi
             'description' => 'required|string',
             'material_type' => 'required|string|max:50',
             'remark' => 'required|string',
             'unit_id' => 'required|exists:unit,id',
-            'unit' => 'nullable|string|max:20', // akan diambil dari relasi
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
@@ -607,12 +566,10 @@ class InventoryController extends Controller
         // Update field
         $barang->material_code = $request->material_code;
         $barang->material_group_id = $request->material_group_id;
-        $barang->material_group = $material_group->material_group;
         $barang->description = $request->description;
         $barang->material_type = $request->material_type;
         $barang->remark = $request->remark;
         $barang->unit_id = $request->unit_id;
-        $barang->unit = $unit->unit;
 
         // Jika ada gambar baru
         if ($request->hasFile('image')) {
@@ -693,7 +650,6 @@ class InventoryController extends Controller
         $pemasukan = new Pemasukan();
         $pemasukan->barang_id = $barang->id;
         $pemasukan->quantity = $request->quantity;
-        $pemasukan->unit = $barang->unit; // Diambil dari tabel barang, bukan dari input
         $pemasukan->keterangan = $request->keterangan;
         $pemasukan->tanggal = $request->tanggal;
         $pemasukan->save();
@@ -702,15 +658,6 @@ class InventoryController extends Controller
         $barang->quantity += $request->quantity;
         $barang->save();
 
-        // Simpan ke tabel transaction
-        $transaction = new Transaction();
-        $transaction->barang_id = $barang->id;
-        $transaction->quantity = $request->quantity;
-        $transaction->unit = $barang->unit;
-        $transaction->keterangan = $request->keterangan;
-        $transaction->tanggal = $request->tanggal;
-        $transaction->type = 'Pemasukan';
-        $transaction->save();
 
         return redirect()->route('operator.pemasukan.index')->with('success', 'Pemasukan Barang Berhasil');
     }
@@ -748,25 +695,11 @@ class InventoryController extends Controller
         // Update data pemasukan
         $pemasukan->barang_id = $request->barang_id;
         $pemasukan->quantity = $request->quantity;
-        $pemasukan->unit = $request->unit;
         $pemasukan->keterangan = $request->keterangan;
         $pemasukan->tanggal = $request->tanggal;
         $pemasukan->save();
 
-        // Update transaction terkait
-        $transaction = Transaction::where('type', 'Pemasukan')
-            ->where('barang_id', $oldBarangId)
-            ->where('tanggal', $oldTanggal)
-            ->first();
 
-        if ($transaction) {
-            $transaction->barang_id = $request->barang_id;
-            $transaction->quantity = $request->quantity;
-            $transaction->unit = $request->unit;
-            $transaction->keterangan = $request->keterangan;
-            $transaction->tanggal = $request->tanggal;
-            $transaction->save();
-        }
 
         return redirect()->route('operator.pemasukan.index')->with('success', 'Data Pemasukan berhasil diperbarui');
     }
@@ -793,13 +726,6 @@ class InventoryController extends Controller
         // Hapus data pemasukan
         $pemasukan->delete();
 
-        // Hapus transaksi yang sesuai
-        Transaction::where('barang_id', $pemasukan->barang_id)
-            ->where('quantity', $pemasukan->quantity)
-            ->where('tanggal', $pemasukan->tanggal)
-            ->where('type', 'Pemasukan')
-            ->first()?->delete();
-
         return redirect()->route('operator.pemasukan.index')->with('success', 'Data pemasukan berhasil dihapus dan stok barang diperbarui.');
     }
 
@@ -820,7 +746,6 @@ class InventoryController extends Controller
         $pengeluaran = new Pengeluaran();
         $pengeluaran->barang_id = $request->barang_id;
         $pengeluaran->quantity = $request->quantity;
-        $pengeluaran->unit = $barang->unit;
         $pengeluaran->keterangan = $request->keterangan;
         $pengeluaran->tanggal = $request->tanggal;
         $pengeluaran->save();
@@ -828,15 +753,6 @@ class InventoryController extends Controller
         $barang->quantity -= $request->quantity;
         $barang->save();
 
-        // Simpan ke tabel transaction
-        $transaction = new Transaction();
-        $transaction->barang_id = $request->barang_id;
-        $transaction->quantity = $request->quantity;
-        $transaction->unit = $barang->unit;
-        $transaction->keterangan = $request->keterangan;
-        $transaction->tanggal = $request->tanggal;
-        $transaction->type = 'Pengeluaran';
-        $transaction->save();
         return redirect()->route('operator.pengeluaran.index')->with('success', 'Pengeluaran Barang Berhasil');
     }
     public function operator_pengeluaran_update(Request $request, $id)
@@ -871,25 +787,10 @@ class InventoryController extends Controller
 
         $pengeluaran->barang_id = $request->barang_id;
         $pengeluaran->quantity = $request->quantity;
-        $pengeluaran->unit = $newBarang->unit;
         $pengeluaran->keterangan = $request->keterangan;
         $pengeluaran->tanggal = $request->tanggal;
         $pengeluaran->save();
 
-        // Update transaction
-        $transaction = Transaction::where('type', 'Pengeluaran')
-            ->where('barang_id', $pengeluaran->barang_id)
-            ->where('tanggal', $pengeluaran->tanggal)
-            ->first();
-
-        if ($transaction) {
-            $transaction->barang_id = $request->barang_id;
-            $transaction->quantity = $request->quantity;
-            $transaction->unit = $newBarang->unit;
-            $transaction->keterangan = $request->keterangan;
-            $transaction->tanggal = $request->tanggal;
-            $transaction->save();
-        }
 
         return redirect()->route('operator.pengeluaran.index')->with('success', 'Data Pengeluaran berhasil diperbarui');
     }

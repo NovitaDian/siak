@@ -16,7 +16,6 @@ class NonCompliant extends Model
     protected $fillable = [
         'id_ppe',
         'user_id',
-        'nama_hse_inspector',
         'shift_kerja',
         'jam_mulai',
         'jam_selesai',
@@ -25,10 +24,10 @@ class NonCompliant extends Model
         'tipe_observasi',
         'deskripsi_ketidaksesuaian',
         'nama_pelanggar',
-        'perusahaan',
+        'perusahaan_id',
         'nama_bagian',
         'tindakan',
-        'writer',
+
         'foto',
         'status',
     ];
@@ -41,5 +40,13 @@ class NonCompliant extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    public function inspector()
+    {
+        return $this->belongsTo(HseInspector::class, 'hse_inspector_id');
+    }
+    public function pers()
+    {
+        return $this->belongsTo(Perusahaan::class, 'perusahaan_id');
     }
 }

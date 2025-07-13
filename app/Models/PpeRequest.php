@@ -13,7 +13,7 @@ class PpeRequest extends Model
     protected $fillable = [
         'sent_ppe_id',
         'user_id',
-        'nama_pengirim',
+        '',
         'type',
         'reason',
         'status',

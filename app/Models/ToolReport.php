@@ -14,12 +14,10 @@ class ToolReport extends Model
 
 
     protected $fillable = [
-        'writer',
+
         'user_id',
-        'nama_alat',
         'alat_id',
         'hse_inspector_id',
-        'hse_inspector',
         'tanggal_pemeriksaan',
         'status_pemeriksaan',
         'status',

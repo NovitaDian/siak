@@ -16,7 +16,7 @@
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <strong>Nama Alat:</strong>
-                    <p>{{ $tools->nama_alat ?? '-'?? '-'}}</p>
+                    <p>{{ $tools->alat->namaAlat->nama_alat ?? '-'}}</p>
                 </div>
                 <div class="col-md-6 mb-3">
                     <strong>Nomor Alat:</strong>
@@ -24,7 +24,7 @@
                 </div>
                 <div class="col-md-6 mb-3">
                     <strong>HSE Inspector:</strong>
-                    <p>{{ $tools->hse_inspector ?? '-'}}</p>
+                    <p>{{ $tools->inspector->name ?? '-'}}</p>
                 </div>
                 <div class="col-md-6 mb-3">
                     <strong>Tanggal Pemeriksaan:</strong>
@@ -34,13 +34,10 @@
                     <strong>Status Pemeriksaan:</strong>
                     <p>{{ $tools->status_pemeriksaan ?? '-'}}</p>
                 </div>
-                <div class="col-md-6 mb-3">
-                    <strong>Status:</strong>
-                    <p>{{ $tools->status ?? '-'}}</p>
-                </div>
+                
                 <div class="col-md-6 mb-3">
                     <strong>Penulis:</strong>
-                    <p>{{ $tools->writer ?? '-'}}</p>
+                    <p>{{ $tools->user->name ?? '-'}}</p>
                 </div>
                 <div class="col-md-6 mb-3">
                     <strong>Dibuat Pada:</strong>

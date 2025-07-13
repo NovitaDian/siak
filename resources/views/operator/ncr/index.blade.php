@@ -8,6 +8,7 @@
 </button>
 <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg">
 
+    
     <div class="row">
         <div class="col-12">
             <div class="card mb-4">
@@ -163,6 +164,8 @@
                         <table class="table align-items-center mb-0" id="sentNcrTable">
                             <thead>
                                 <tr>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">No</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Penulis</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal Shift Kerja</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Shift Kerja</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">HSE Inspector</th>
@@ -179,11 +182,16 @@
                             <tbody>
                                 @foreach ($ncr_fixs as $ncr_fix)
                                 <tr class="sent-ncr-row" data-ncr-id="{{ $ncr_fix->id }}">
+                                    <td class="text-center text-xs">{{ $loop->iteration }}</td>
+                                    <td class="text-center">
+                                        <p class="text-xs font-weight-bold mb-0">{{ $ncr_fix->user->name}}</p>
+                                    </td>
                                     <td class="text-center text-xs">{{ \Carbon\Carbon::parse($ncr_fix->tanggal_shift_kerja)->format('d/m/Y') }}</td>
                                     <td class="text-center text-xs">{{ $ncr_fix->shift_kerja }}</td>
                                     <td class="text-center text-xs">{{ $ncr_fix->nama_hs_officer_1 }}</td>
                                     <td class="text-center text-xs">{{ \Carbon\Carbon::parse($ncr_fix->tanggal_audit)->format('d/m/Y') }}</td>
                                     <td class="text-center text-xs">{{ $ncr_fix->nama_auditee }}</td>
+
 
                                     @php
                                     $estimasiDate = \Carbon\Carbon::parse($ncr_fix->estimasi);
@@ -206,6 +214,7 @@
                                             {{ $estimasiDate->format('d/m/Y') }}
                                         </span>
                                     </td>
+
 
 
                                     <td class="text-center text-xs">{{ $ncr_fix->durasi_ncr }}</td>
@@ -276,15 +285,16 @@
                                         </div>
                                     </td>
                                     <td class="align-middle text-center text-xs">
-                                        <a href="{{ $ncr_fix->status_ncr === 'Closed' 
-                ? route('operator.ncr.closed_show', $ncr_fix->id) 
-                : route('operator.ncr.sent_show', $ncr_fix->id) }}"
-                                            class="dropdown-item"
+                                        <form
+                                            action="{{ route('operator.ncr.sent_show', ['id' => $ncr_fix->id]) }}"
+                                            method="GET"
+                                            style="display:inline;"
                                             title="View details">
-                                            <i class="fas fa-eye me-1"></i> Show
-                                        </a>
+                                            <button type="submit" class="btn btn-light btn-xs">
+                                                <i class="fas fa-eye"></i> Show
+                                            </button>
+                                        </form>
                                     </td>
-
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -296,7 +306,6 @@
             </div>
         </div>
     </div>
-
     <!-- Modal Request -->
     <div class="modal fade" id="requestModal" tabindex="-1" role="dialog" aria-labelledby="requestModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">

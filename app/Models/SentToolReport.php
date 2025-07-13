@@ -14,13 +14,9 @@ class SentToolReport extends Model
 
 
     protected $fillable = [
-        'draft_id',
         'user_id',
-        'writer',
         'alat_id',
-        'nama_alat',
         'hse_inspector_id',
-        'hse_inspector',
         'tanggal_pemeriksaan',
         'status_pemeriksaan',
         'status',

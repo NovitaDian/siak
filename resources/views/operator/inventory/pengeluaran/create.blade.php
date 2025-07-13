@@ -65,16 +65,18 @@
                             @enderror
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="keterangan">{{ __('Keterangan') }}</label>
-                            <textarea class="form-control" id="keterangan" name="keterangan" rows="3">{{ old('keterangan') }}</textarea>
-                            @error('keterangan')
-                            <p class="text-danger text-xs mt-2">{{ $message }}</p>
-                            @enderror
-                        </div>
+             
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="keterangan">{{ __('Keterangan') }}</label>
+                        <textarea class="form-control" id="keterangan" name="keterangan" rows="3">{{ old('keterangan') }}</textarea>
+                        @error('keterangan')
+                        <p class="text-danger text-xs mt-2">{{ $message }}</p>
+                        @enderror
                     </div>
                 </div>
+
 
                 <div class="d-flex justify-content-end">
                     <button type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">{{ __('Submit Pengeluaran') }}</button>

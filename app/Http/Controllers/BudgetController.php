@@ -19,9 +19,9 @@ class BudgetController extends Controller
 {
     public function index()
     {
-  
+
         $budget_fixs = BudgetFix::orderBy('created_at', 'desc')->get();
-       
+
         return view('adminsystem.budget_pr.index', compact('budgets', 'danaTerpakai', 'danaTersisa', 'prs', 'budget_fixs'));
     }
     // budget
@@ -48,11 +48,11 @@ class BudgetController extends Controller
     {
         // Ambil data Budget
         $budget = Budget::findOrFail($id);
-        $glCode = $budget->gl_code;
+        $glCode = $budget->gl_id;
         $year = $budget->year;
 
-        // Cek apakah ada PR yang menggunakan gl_code dan year ini
-        $prCount = PurchaseRequest::where('gl_code', $glCode)
+        // Cek apakah ada PR yang menggunakan gl_id dan year ini
+        $prCount = PurchaseRequest::where('gl_id', $glCode)
             ->whereYear('pr_date', $year)
             ->count();
 
@@ -63,16 +63,7 @@ class BudgetController extends Controller
 
         // Hapus Budget
         $budget->delete();
-
-        // Opsional: Hapus BudgetFix jika usage = 0
-        $budgetFix = BudgetFix::where('gl_code', $glCode)
-            ->where('year', $year)
-            ->latest()
-            ->first();
-
-        if ($budgetFix && $budgetFix->usage == 0) {
-            $budgetFix->delete();
-        }
+     
 
         return redirect()->route('adminsystem.budget.index')->with('success', 'Data budget berhasil dihapus.');
     }
@@ -80,8 +71,7 @@ class BudgetController extends Controller
     {
         $request->validate([
             'internal_order' => 'nullable|string|max:50',
-            'gl_code' => 'required|string|max:50',
-            'gl_name' => 'required|string|max:100',
+            'gl_id' => 'required|exists:gl_account,id',
             'setahun_total' => 'required|numeric',
             'kategori' => 'required|string|max:100',
             'year' => 'required|string|max:100',
@@ -90,8 +80,7 @@ class BudgetController extends Controller
         // Store the data in the database
         Budget::create([
             'internal_order' => $request->internal_order,
-            'gl_code' => $request->gl_code,
-            'gl_name' => $request->gl_name,
+            'gl_id' => $request->gl_id,
             'setahun_total' => $request->setahun_total,
             'kategori' => $request->kategori,
             'year' => $request->year
@@ -104,8 +93,7 @@ class BudgetController extends Controller
         // Validasi input
         $request->validate([
             'internal_order' => 'nullable|string|max:50',
-            'gl_code' => 'required|string|max:50',
-            'gl_name' => 'required|string|max:100',
+            'gl_id' => 'required|exists:gl_account,id',
             'setahun_total' => 'required|numeric',
             'kategori' => 'required|string|max:100',
             'year' => 'required|string|max:100',
@@ -115,8 +103,7 @@ class BudgetController extends Controller
         $budget = Budget::findOrFail($id);
         $budget->update([
             'internal_order' => $request->internal_order,
-            'gl_code'        => $request->gl_code,
-            'gl_name'        => $request->gl_name,
+            'gl_id'        => $request->gl_id,
             'setahun_total'  => $request->setahun_total,
             'kategori'       => $request->kategori,
             'year'           => $request->year,
@@ -130,16 +117,6 @@ class BudgetController extends Controller
         return view('adminsystem.budget_pr.budget.edit', compact('budget', 'gls'));
     }
 
-    public function getGlName($gl_code)
-    {
-        $gl = Gl_Account::where('gl_code', $gl_code)->first(); // Assuming Gl_Account is your model
-
-        if ($gl) {
-            return response()->json(['gl_name' => $gl->gl_name]);
-        }
-
-        return response()->json(['gl_name' => ''], 404); // Return empty if not found
-    }
 
 
 
@@ -161,14 +138,12 @@ class BudgetController extends Controller
         $budgetId = $request->query('budget_id');
         $budget = Budget::findOrFail($budgetId);
 
-        $purs = PurchasingGroup::all();
         $budgets = Budget::all();
         $units = Unit::all();
         $material_groups = MaterialGroup::all();
         $materials = Barang::all();
 
         return view('adminsystem.budget_pr.pr.create', compact(
-            'purs',
             'units',
             'material_groups',
             'materials',
@@ -187,28 +162,20 @@ class BudgetController extends Controller
             'purchase_for' => 'required|string',
             'material' => 'required|string',
             'quantity' => 'required|numeric',
-            'unit' => 'required|string',
+            'unit_id' => 'required|string',
             'valuation_price' => 'required|numeric',
-            'io_assetcode' => 'nullable|string',
-            'description' => 'nullable|string',
         ]);
 
-        // Ambil gl_code dan gl_name dari budget_id
-        $budget = Budget::findOrFail($validated['budget_id']);
 
         PurchaseRequest::create([
             'budget_id' => $validated['budget_id'],
+            'unit_id' => $validated['unit_id'],
             'pr_date' => $validated['pr_date'],
             'pr_no' => $validated['pr_no'],
             'purchase_for' => $validated['purchase_for'],
             'material' => $validated['material'],
             'quantity' => $validated['quantity'],
-            'unit' => $validated['unit'],
             'valuation_price' => $validated['valuation_price'],
-            'io_assetcode' => $validated['io_assetcode'] ?? null,
-            'gl_code' => $budget->gl_code,
-            'gl_name' => $budget->gl_name,
-            'description' => $validated['description'] ?? null,
         ]);
 
         return redirect()->route('adminsystem.budget.pr', $validated['budget_id'])
@@ -224,40 +191,27 @@ class BudgetController extends Controller
             'purchase_for' => 'required|string',
             'material' => 'required|string',
             'quantity' => 'required|numeric',
-            'unit' => 'required|string',
+            'unit_id' => 'required|string',
             'valuation_price' => 'required|numeric',
-            'io_assetcode' => 'nullable|string',
-            'description' => 'nullable|string',
         ]);
 
-        // Ambil gl_code dan gl_name dari budget terkait
-        $budget = Budget::findOrFail($validated['budget_id']);
+        // Ambil gl_id dan gl_name dari budget terkait
 
         // Update PR
         $pr = PurchaseRequest::findOrFail($id);
         $pr->update([
-            'budget_id'       => $validated['budget_id'],
             'pr_date'         => $validated['pr_date'],
+            'unit_id'       => $validated['unit_id'],
             'pr_no'           => $validated['pr_no'],
             'purchase_for'    => $validated['purchase_for'],
             'material'        => $validated['material'],
             'quantity'        => $validated['quantity'],
-            'unit'            => $validated['unit'],
             'valuation_price' => $validated['valuation_price'],
-            'io_assetcode'    => $validated['io_assetcode'] ?? null,
-            'gl_code'         => $budget->gl_code,
-            'gl_name'         => $budget->gl_name,
-            'description'     => $validated['description'] ?? null,
         ]);
 
         return redirect()->route('adminsystem.budget.pr', $validated['budget_id'])
             ->with('success', 'PR berhasil diperbarui');
     }
-
-
-
-
-
     public function pr_edit($id)
     {
         $pr = PurchaseRequest::findOrFail($id);
@@ -266,8 +220,6 @@ class BudgetController extends Controller
         $gls = Gl_Account::all();
         return view('adminsystem.budget_pr.pr.edit', compact('pr', 'units', 'budgets', 'gls'));
     }
-
-
     public function pr_destroy($id)
     {
         // Ambil data PR berdasarkan ID
@@ -347,11 +299,11 @@ class BudgetController extends Controller
     {
         // Ambil data Budget
         $budget = Budget::findOrFail($id);
-        $glCode = $budget->gl_code;
+        $glCode = $budget->gl_id;
         $year = $budget->year;
 
-        // Cek apakah ada PR yang menggunakan gl_code dan year ini
-        $prCount = PurchaseRequest::where('gl_code', $glCode)
+        // Cek apakah ada PR yang menggunakan gl_id dan year ini
+        $prCount = PurchaseRequest::where('gl_id', $glCode)
             ->whereYear('pr_date', $year)
             ->count();
 
@@ -364,7 +316,7 @@ class BudgetController extends Controller
         $budget->delete();
 
         // Opsional: Hapus BudgetFix jika usage = 0
-        $budgetFix = BudgetFix::where('gl_code', $glCode)
+        $budgetFix = BudgetFix::where('gl_id', $glCode)
             ->where('year', $year)
             ->latest()
             ->first();
@@ -379,8 +331,7 @@ class BudgetController extends Controller
     {
         $request->validate([
             'internal_order' => 'nullable|string|max:50',
-            'gl_code' => 'required|string|max:50',
-            'gl_name' => 'required|string|max:100',
+            'gl_id' => 'required|exists:gl_account,id',
             'setahun_total' => 'required|numeric',
             'kategori' => 'required|string|max:100',
             'year' => 'required|string|max:100',
@@ -389,8 +340,7 @@ class BudgetController extends Controller
         // Store the data in the database
         Budget::create([
             'internal_order' => $request->internal_order,
-            'gl_code' => $request->gl_code,
-            'gl_name' => $request->gl_name,
+            'gl_id' => $request->gl_id,
             'setahun_total' => $request->setahun_total,
             'kategori' => $request->kategori,
             'year' => $request->year
@@ -403,8 +353,7 @@ class BudgetController extends Controller
         // Validasi input
         $request->validate([
             'internal_order' => 'nullable|string|max:50',
-            'gl_code' => 'required|string|max:50',
-            'gl_name' => 'required|string|max:100',
+            'gl_id' => 'required|exists:gl_account,id',
             'setahun_total' => 'required|numeric',
             'kategori' => 'required|string|max:100',
             'year' => 'required|string|max:100',
@@ -414,8 +363,7 @@ class BudgetController extends Controller
         $budget = Budget::findOrFail($id);
         $budget->update([
             'internal_order' => $request->internal_order,
-            'gl_code'        => $request->gl_code,
-            'gl_name'        => $request->gl_name,
+            'gl_id'        => $request->gl_id,
             'setahun_total'  => $request->setahun_total,
             'kategori'       => $request->kategori,
             'year'           => $request->year,
@@ -429,15 +377,15 @@ class BudgetController extends Controller
         return view('operator.budget_pr.budget.edit', compact('budget', 'gls'));
     }
 
-    public function operator_getGlName($gl_code)
+    public function operator_getGlName($gl_id)
     {
-        $gl = Gl_Account::where('gl_code', $gl_code)->first(); // Assuming Gl_Account is your model
+        $gl = Gl_Account::where('gl_id', $gl_id)->first();
 
         if ($gl) {
             return response()->json(['gl_name' => $gl->gl_name]);
         }
 
-        return response()->json(['gl_name' => ''], 404); // Return empty if not found
+        return response()->json(['gl_name' => ''], 404);
     }
 
 
@@ -460,14 +408,12 @@ class BudgetController extends Controller
         $budgetId = $request->query('budget_id');
         $budget = Budget::findOrFail($budgetId);
 
-        $purs = PurchasingGroup::all();
         $budgets = Budget::all();
         $units = Unit::all();
         $material_groups = MaterialGroup::all();
         $materials = Barang::all();
 
         return view('operator.budget_pr.pr.create', compact(
-            'purs',
             'units',
             'material_groups',
             'materials',
@@ -486,27 +432,23 @@ class BudgetController extends Controller
             'purchase_for' => 'required|string',
             'material' => 'required|string',
             'quantity' => 'required|numeric',
-            'unit' => 'required|string',
+            'unit_id' => 'required|string',
             'valuation_price' => 'required|numeric',
-            'io_assetcode' => 'nullable|string',
-            'description' => 'nullable|string',
         ]);
 
-        // Ambil gl_code dan gl_name dari budget_id
+        // Ambil gl_id dan gl_name dari budget_id
         $budget = Budget::findOrFail($validated['budget_id']);
 
         PurchaseRequest::create([
             'budget_id' => $validated['budget_id'],
+            'unit_id' => $validated['unit_id'],
             'pr_date' => $validated['pr_date'],
             'pr_no' => $validated['pr_no'],
             'purchase_for' => $validated['purchase_for'],
             'material' => $validated['material'],
             'quantity' => $validated['quantity'],
-            'unit' => $validated['unit'],
             'valuation_price' => $validated['valuation_price'],
-            'io_assetcode' => $validated['io_assetcode'] ?? null,
-            'gl_code' => $budget->gl_code,
-            'gl_name' => $budget->gl_name,
+            'gl_id' => $budget->gl_id,
             'description' => $validated['description'] ?? null,
         ]);
 
@@ -523,13 +465,11 @@ class BudgetController extends Controller
             'purchase_for' => 'required|string',
             'material' => 'required|string',
             'quantity' => 'required|numeric',
-            'unit' => 'required|string',
+            'unit_id' => 'required|string',
             'valuation_price' => 'required|numeric',
-            'io_assetcode' => 'nullable|string',
-            'description' => 'nullable|string',
         ]);
 
-        // Ambil gl_code dan gl_name dari budget terkait
+        // Ambil gl_id dan gl_name dari budget terkait
         $budget = Budget::findOrFail($validated['budget_id']);
 
         // Update PR
@@ -541,12 +481,9 @@ class BudgetController extends Controller
             'purchase_for'    => $validated['purchase_for'],
             'material'        => $validated['material'],
             'quantity'        => $validated['quantity'],
-            'unit'            => $validated['unit'],
+            'unit_id'            => $validated['unit_id'],
             'valuation_price' => $validated['valuation_price'],
-            'io_assetcode'    => $validated['io_assetcode'] ?? null,
-            'gl_code'         => $budget->gl_code,
-            'gl_name'         => $budget->gl_name,
-            'description'     => $validated['description'] ?? null,
+            'gl_id'         => $budget->gl_id,
         ]);
 
         return redirect()->route('operator.budget.pr', $validated['budget_id'])

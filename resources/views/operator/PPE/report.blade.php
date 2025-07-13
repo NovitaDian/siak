@@ -48,7 +48,7 @@
                                 <label for="shift_kerja">{{ __('Shift Kerja') }}</label>
                                 <select class="form-control" id="shift_kerja" name="shift_kerja" required>
                                     <option value="Shift 1" {{ old('shift_kerja') ==  'Shift 1' ? 'selected' : '' }}>SHIFT I</option>
-                                    <option value="ZONA II (PROSES, KAPURAN, CT)" {{ old('shift_kerja') ==  'Shift 2' ? 'selected' : '' }}>SHIFT II</option>
+                                    <option value="Shift 2" {{ old('shift_kerja') ==  'Shift 2' ? 'selected' : '' }}>SHIFT II</option>
                                     <option value="Shift 3" {{ old('shift_kerja') ==  'Shift 3' ? 'selected' : '' }}>SHIFT III</option>
                                     <option value="Nonshift" {{ old('shift_kerja') == 'Nonshift' ? 'selected' : '' }}>NONSHIFT</option>
                                 </select>

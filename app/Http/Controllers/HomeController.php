@@ -61,7 +61,6 @@ class HomeController extends Controller
 
         $note = Note::create([
             'user_id' => auth()->user()->id, // Assuming you are using authentication
-            'writer' => auth()->user()->name, // Assuming you are using authentication
             'note' => $request->input('note'),
         ]);
 
@@ -222,7 +221,7 @@ public function budget(Request $request)
     $usages = [];
 
     foreach ($budgets as $budget) {
-        $labels[] = $budget->gl_name;
+        $labels[] = $budget->gls->gl_name;
         $totalBudgets[] = (int) $budget->setahun_total;
         $usages[] = (int) $budget->usage; // Pastikan usage dikirim, bukan persentasenya
     }
@@ -377,7 +376,7 @@ public function budget(Request $request)
         $setting->target_manhours = $request->target_manhours;
         $setting->save();
 
-        return redirect()->back()->with('success', 'Target updated successfully.');
+        return redirect()->back()->with('success', 'Target berhasil diperbarui.');
     }
 
     public function spi(Request $request)
@@ -572,7 +571,7 @@ public function budget(Request $request)
     $usages = [];
 
     foreach ($budgets as $budget) {
-        $labels[] = $budget->gl_name;
+        $labels[] = $budget->gls->gl_name;
         $totalBudgets[] = (int) $budget->setahun_total;
         $usages[] = (int) $budget->usage; // Pastikan usage dikirim, bukan persentasenya
     }
@@ -726,7 +725,7 @@ public function budget(Request $request)
         $setting->target_manhours = $request->target_manhours;
         $setting->save();
 
-        return redirect()->back()->with('success', 'Target updated successfully.');
+        return redirect()->back()->with('success', 'Target berhasil diperbarui.');
     }
 
     public function operator_spi(Request $request)
@@ -943,7 +942,7 @@ public function budget(Request $request)
         $setting->target_manhours = $request->target_manhours;
         $setting->save();
 
-        return redirect()->back()->with('success', 'Target updated successfully.');
+        return redirect()->back()->with('success', 'Target berhasil diperbarui.');
     }
 
     public function tamu_spi(Request $request)

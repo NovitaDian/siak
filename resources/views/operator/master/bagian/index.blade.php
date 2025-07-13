@@ -30,10 +30,10 @@
                                 @foreach ($bagians as $bagian)
                                 <tr>
                                     <td class="text-center">
-                                        <p class="text-xs font-weight-bold mb-0">{{ $bagian->perusahaan_code }}</p>
+                                        <p class="text-xs font-weight-bold mb-0">{{ $bagian->per->perusahaan_code }}</p>
                                     </td>
                                     <td class="text-center">
-                                        <p class="text-xs font-weight-bold mb-0">{{ $bagian->perusahaan_name }}</p>
+                                        <p class="text-xs font-weight-bold mb-0">{{ $bagian->per->perusahaan_name }}</p>
                                     </td>
                                     <td class="text-center">
                                         <p class="text-xs font-weight-bold mb-0">{{ $bagian->nama_bagian }}</p>

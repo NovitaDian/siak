@@ -15,25 +15,31 @@ class PemasukanSeeder extends Seeder
         $barangList = [
             [
                 'material_code' => '2309202K63738',
+                'material_group_id' => '1',
                 'description' => 'Topi safety',
-                'unit' => 'PCS',
+                'material_type' => 'STD:Stock',
+                
             ],
             [
                 'material_code' => '2309202K63988',
+                'material_group_id' => '2',
                 'description' => 'Sepatu safety',
-                'unit' => 'PCS',
+                'material_type' => 'STD:NonStock',
             ],
             [
                 'material_code' => '2309202K63789',
+                'material_group_id' => '3',
                 'description' => 'Thermometer',
-                'unit' => 'PCS',
+                'material_type' => 'STD:NonStock',
             ],
             [
                 'material_code' => '2309202K63784',
+                'material_group_id' => '4',
                 'description' => 'Sarung Tangan Kain',
-                'unit' => 'PAC',
+                'material_type' => 'STD:Stock',
             ],
         ];
+            $unit= rand(1, 5);
 
         foreach ($barangList as $item) {
             // Cek atau buat barang
@@ -41,7 +47,9 @@ class PemasukanSeeder extends Seeder
                 ['material_code' => $item['material_code']],
                 [
                     'description' => $item['description'],
-                    'unit' => $item['unit'],
+                    'material_group_id' => $item['material_group_id'],
+                    'material_type' => $item['material_type'],
+                    'unit_id' => $unit,
                     'quantity' => 0, 
                 ]
             );
@@ -55,7 +63,6 @@ class PemasukanSeeder extends Seeder
             $pemasukan = new Pemasukan();
             $pemasukan->barang_id = $barang->id;
             $pemasukan->quantity = $quantity;
-            $pemasukan->unit = $barang->unit;
             $pemasukan->keterangan = $keterangan;
             $pemasukan->tanggal = $tanggal;
             $pemasukan->save();
@@ -64,15 +71,6 @@ class PemasukanSeeder extends Seeder
             $barang->quantity += $quantity;
             $barang->save();
 
-            // Simpan ke tabel transaksi
-            $transaction = new Transaction();
-            $transaction->barang_id = $barang->id;
-            $transaction->quantity = $quantity;
-            $transaction->unit = $barang->unit;
-            $transaction->keterangan = $keterangan;
-            $transaction->tanggal = $tanggal;
-            $transaction->type = 'Pemasukan';
-            $transaction->save();
         }
     }
 }

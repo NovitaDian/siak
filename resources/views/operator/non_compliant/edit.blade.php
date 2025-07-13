@@ -14,7 +14,7 @@
             <div class="col-md-2">
                 <div class="form-group">
                     <label>Nama HSE Inspector</label>
-                    <input type="text" name="nama_hse_inspector" class="form-control" value="{{ $ppeFix->nama_hse_inspector ?? '' }}" readonly>
+                    <input type="text" name="hse_inspector_id" class="form-control" value="{{ $ppeFix->inspector->name ?? '' }}" readonly>
                 </div>
             </div>
             <div class="col-md-2">
@@ -71,11 +71,11 @@
         </div>
     </div>
     <div class="col-md-6">
-        <label for="perusahaan">Perusahaan</label>
-        <select class="form-control" id="perusahaan" name="perusahaan" required>
+        <label for="perusahaan_id">Perusahaan</label>
+        <select name="perusahaan_id" id="perusahaan_id" class="form-control" required>
             <option value="" disabled>Pilih Perusahaan</option>
             @foreach($perusahaans as $perusahaan)
-            <option value="{{ $perusahaan->perusahaan_name }}" {{ $nonCompliant->perusahaan == $perusahaan->perusahaan_name ? 'selected' : '' }}>
+            <option value="{{ $perusahaan->id }}" {{ $nonCompliant->perusahaan_id == $perusahaan->id ? 'selected' : '' }}>
                 {{ $perusahaan->perusahaan_name }}
             </option>
             @endforeach
@@ -115,17 +115,31 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
-        $('#perusahaan').on('change', function() {
-            var perusahaan_name = $(this).val();
-            if (perusahaan_name) {
+        $('#perusahaan_id').on('change', function() {
+            var code = $(this).val();
+            if (code) {
                 $.ajax({
-                    url: '/operator/non_compliant/get-bagian/' + perusahaan_name,
+                    url: '/operator/master/perusahaan/get-bagian/' + code,
                     type: 'GET',
+                    dataType: 'json',
                     success: function(data) {
                         $('#nama_bagian').empty().append('<option value="" disabled selected>Pilih Bagian</option>');
                         $.each(data, function(index, bagian) {
                             $('#nama_bagian').append('<option value="' + bagian.nama_bagian + '">' + bagian.nama_bagian + '</option>');
                         });
+                    },
+                    error: function() {
+                        alert('Gagal memuat data bagian.');
+                    }
+                });
+
+                // Ambil ID perusahaan juga via AJAX (agar update perusahaan_id di hidden input)
+                $.ajax({
+                    url: '/api/get-perusahaan-id/' + code,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#perusahaan_id').val(data.id);
                     }
                 });
             }

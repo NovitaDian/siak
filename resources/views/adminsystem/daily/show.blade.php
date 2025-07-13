@@ -27,7 +27,7 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <strong>HSE Inspector:</strong>
-                            <p class="text-muted mb-0">{{ $daily->nama_hse_inspector ?? '-' }}</p>
+                            <p class="text-muted mb-0">{{ $daily->inspectors->name ?? '-' }}</p>
                         </div>
                     </div>
 

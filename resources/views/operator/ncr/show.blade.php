@@ -33,7 +33,7 @@
 
                 <div class="col-md-6 mb-3">
                     <label class="form-label fw-bold">Nama H&S Officer 2 / Auditor</label>
-                    <div class="border p-2 rounded bg-light">{{ $ncr->nama_hs_officer_2 }}</div>
+                    <div class="border p-2 rounded bg-light">{{ $ncr->nama_hs_officer_2 ?? '-'}}</div>
                 </div>
 
                 <div class="col-md-6 mb-3">
@@ -48,7 +48,7 @@
 
                 <div class="col-md-6 mb-3">
                     <label class="form-label fw-bold">Perusahaan</label>
-                    <div class="border p-2 rounded bg-light">{{ $ncr->perusahaan }}</div>
+                    <div class="border p-2 rounded bg-light">{{ $ncr->pers->perusahaan_name }}</div>
                 </div>
 
                 <div class="col-md-6 mb-3">
@@ -80,6 +80,14 @@
                     <label class="form-label fw-bold">Estimasi Penyelesaian</label>
                     <div class="border p-2 rounded bg-light">{{ $ncr->estimasi }}</div>
                 </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Durasi</label>
+                    <div class="border p-2 rounded bg-light">{{ $ncr->durasi_ncr ?? '-'}}</div>
+                </div>
+                <div>
+                    <label class="form-label fw-bold">Status</label>
+                    <div class="border p-2 rounded bg-light">{{ $ncr->status_note ?? '-'}}</div>
+                </div>
 
                 <div class="col-md-6 mb-3">
                     <label class="form-label fw-bold">Foto</label><br>
@@ -89,8 +97,23 @@
                     <div class="border p-2 rounded bg-light">Tidak ada foto</div>
                     @endif
                 </div>
-             
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Foto Close</label><br>
+                    @if($ncr->foto_closed)
+                    <img src="{{ asset('storage/' . $ncr->foto_closed) }}" alt="Foto NCR" class="img-fluid rounded" style="max-height: 300px;">
+                    @else
+                    <div class="border p-2 rounded bg-light">Tidak ada foto</div>
+                    @endif
+                </div>
+
+
             </div>
+            <div class="mt-4 text-end">
+                <a href="{{ route('operator.ncr.exportSinglePdf', $ncr->id) }}" class="btn btn-danger">
+                    <i class="fas fa-file-pdf me-2"></i> Download PDF
+                </a>
+            </div>
+
         </div>
     </div>
 </div>

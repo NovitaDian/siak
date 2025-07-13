@@ -49,7 +49,7 @@
                             <select class="form-control" id="barang_id" name="barang_id" required>
                                 <option value="">Pilih Barang</option>
                                 @foreach($barangs as $barang)
-                                <option value="{{ $barang->id }}" data-unit="{{ $barang->unit }}"
+                                <option value="{{ $barang->id }}"
                                     {{ old('barang_id', $pemasukan->barang_id) == $barang->id ? 'selected' : '' }}>
                                     {{ $barang->description }}
                                 </option>
@@ -60,6 +60,8 @@
                             @enderror
                         </div>
                     </div>
+
+
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="quantity">{{ __('Quantity') }}</label>
@@ -69,6 +71,8 @@
                             @enderror
                         </div>
                     </div>
+
+
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="keterangan">{{ __('Keterangan') }}</label>
@@ -78,11 +82,10 @@
                             @enderror
                         </div>
                     </div>
-                </div>
 
-                <div class="d-flex justify-content-end">
-                    <button type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">{{ __('Update Pemasukan') }}</button>
-                </div>
+                    <div class="d-flex justify-content-end">
+                        <button type="submit" class="btn bg-gradient-dark btn-md mt-4 mb-4">{{ __('Update Pemasukan') }}</button>
+                    </div>
             </form>
         </div>
     </div>

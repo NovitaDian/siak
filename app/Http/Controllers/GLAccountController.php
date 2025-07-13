@@ -63,7 +63,7 @@ class GLAccountController extends Controller
         $gl = Gl_Account::findOrFail($id);
         $gl->delete();
 
-        return redirect()->route('adminsystem.glaccount.index')->with('success', 'Purchase Request berhasil dihapus.');
+        return redirect()->route('adminsystem.glaccount.index')->with('success', 'GL Account berhasil dihapus.');
     }
     public function operator_index()
     {
@@ -121,6 +121,6 @@ class GLAccountController extends Controller
         $gl = Gl_Account::findOrFail($id);
         $gl->delete();
 
-        return redirect()->route('operator.glaccount.index')->with('success', 'Purchase Request berhasil dihapus.');
+        return redirect()->route('operator.glaccount.index')->with('success', 'GL Account berhasil dihapus.');
     }
 }

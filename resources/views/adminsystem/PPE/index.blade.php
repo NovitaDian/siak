@@ -32,7 +32,7 @@
                                     @forelse ($requests as $request)
                                     <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                         <td class="text-center text-xs">{{ $loop->iteration }}</td>
-                                        <td class="text-center text-xs text-gray-900 dark:text-white">{{ $request->nama_pengirim }}</td>
+                                        <td class="text-center text-xs text-gray-900 dark:text-white">{{ $request->user->name }}</td>
                                         <td class="text-center text-xs">{{ $request->created_at->format('d/m/Y') }}</td>
                                         <td class="text-center text-xs">{{ $request->type }}</td>
                                         <td class="text-center text-xs">{{ $request->reason }}</td>
@@ -57,7 +57,7 @@
                                             @endif
 
                                             <form
-                                                action="{{ route('adminsystem.ppe.show', ['id' => $request->sent_ppe_id]) }}"
+                                                action="{{ route('adminsystem.ppe.req_show', ['id' => $request->sent_ppe_id]) }}"
                                                 method="GET"
                                                 style="display:inline;"
                                                 title="View details">
@@ -99,14 +99,14 @@
                                 <button class="btn btn-sm btn-primary dropdown-toggle w-md-auto" type="button" id="downloadDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="fas fa-download me-1"></i> Unduh
                                 </button>
-                                <ul class="dropdown-menu" aria-labelledby="downloadDropdown">
+                                <ul class="dropdown-menu">
                                     <li>
-                                        <a class="dropdown-item" href="#">
+                                        <a class="dropdown-item" href="{{ route('adminsystem.ppe.export', request()->all()) }}">
                                             <i class="fas fa-file-excel text-success me-2"></i> Excel
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item" href="#">
+                                        <a class="dropdown-item" href="{{ route('adminsystem.ppe.exportPdf', request()->all()) }}">
                                             <i class="fas fa-file-pdf text-danger me-2"></i> PDF
                                         </a>
                                     </li>
@@ -139,7 +139,9 @@
                         <table class="table align-items-center mb-0" id="dataTableSent">
                             <thead>
                                 <tr>
+
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">No</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Penulis</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal Shift Kerja</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Shift Kerja</th>
@@ -155,6 +157,9 @@
                                 @forelse ($ppe_fixs as $ppe_fix)
                                 <tr>
                                     <td class="text-center text-xs">{{ $loop->iteration }}</td>
+                                    <td class="text-center">
+                                        <p class="text-xs font-weight-bold mb-0">{{ $ppe_fix->user->name}}</p>
+                                    </td>
                                     <td class="text-center text-xs">{{ \Carbon\Carbon::parse($ppe_fix->tanggal_shift_kerja)->format('d/m/Y') }}</td>
                                     <td class="align-middle text-center text-sm">
                                         <span class="badge badge-sm {{ $ppe_fix->status_ppe == 'Non-Compliant' ? 'bg-gradient-warning' : 'bg-gradient-success' }}">
@@ -162,7 +167,7 @@
                                         </span>
                                     </td>
                                     <td class="text-center text-xs">{{ $ppe_fix->shift_kerja }}</td>
-                                    <td class="text-center text-xs">{{ $ppe_fix->nama_hse_inspector }}</td>
+                                    <td class="text-center text-xs">{{ $ppe_fix->inspector->name }}</td>
                                     <td class="text-center text-xs">{{ $ppe_fix->jam_mulai }}-{{ $ppe_fix->jam_selesai }}</td>
                                     <td class="text-center text-xs">{{ $ppe_fix->zona_pengawasan }}</td>
                                     <td class="text-center text-xs">{{ $ppe_fix->lokasi_observasi }}</td>

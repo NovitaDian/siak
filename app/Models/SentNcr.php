@@ -14,8 +14,7 @@ class SentNcr extends Model
 
     // Kolom yang dapat diisi (mass assignable)
     protected $fillable = [
-        'draft_id',
-        'writer',
+
         'user_id',
         'tanggal_shift_kerja',
         'shift_kerja',
@@ -23,7 +22,7 @@ class SentNcr extends Model
         'nama_hs_officer_2',
         'tanggal_audit',
         'nama_auditee',
-        'perusahaan',
+        'perusahaan_id',
         'nama_bagian',
         'element_referensi_ncr',
         'kategori_ketidaksesuaian',
@@ -51,5 +50,9 @@ class SentNcr extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    public function pers()
+    {
+        return $this->belongsTo(Perusahaan::class, 'perusahaan_id');
     }
 }

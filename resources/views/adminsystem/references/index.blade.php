@@ -18,7 +18,7 @@
                     <form action="{{ route('adminsystem.references.store') }}" method="POST" enctype="multipart/form-data" class="mb-4">
                         @csrf
                         <div class="form-group">
-                            <label for="file">Pilih File:</label>
+                            <label for="file">Pilih File:          (Max: 10 Mb)</label>
                             <input type="file" class="form-control" name="file" id="file">
                         </div>
                         <button type="submit" class="btn btn-sm btn-primary mt-2">Tambah</button>

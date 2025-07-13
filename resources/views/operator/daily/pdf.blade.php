@@ -63,7 +63,7 @@
                             <p class="text-xs font-weight-bold mb-0">{{ $daily_fix->shift_kerja }}</p>
                         </td>
                         <td class="text-center text-xs">
-                            <p class="text-xs font-weight-bold mb-0">{{ $daily_fix->nama_hse_inspector }}</p>
+                            <p class="text-xs font-weight-bold mb-0">{{ $daily_fix->inspectors->name }}</p>
                         </td>
                         <td class="text-center text-xs">
                             <p class="text-xs font-weight-bold mb-0">{{ $daily_fix->rincian_laporan }}</p>

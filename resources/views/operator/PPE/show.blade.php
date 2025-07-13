@@ -1,7 +1,8 @@
 @extends('layouts.user_type.operator')
 
 @section('content')
-<button type="button" class="btn btn-outline-secondary btn-md d-flex align-items-center gap-2" onclick="history.back()">
+<button type="button" class="btn btn-outline-secondary btn-md d-flex align-items-center gap-2"
+    onclick="window.location.href='{{ route('operator.ppe.index') }}'">
     <img src="{{ asset('assets/img/logos/arrow-back.png') }}" alt="Back" style="width: 40px; height: 40px;">
 </button>
 <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg ">
@@ -27,7 +28,7 @@
                     </div>
                     <div class="col-md-6 mb-3">
                         <strong>Safety Officer:</strong><br>
-                        {{ $ppeFix->nama_hse_inspector }}
+                        {{ $ppeFix->inspector->name }}
                     </div>
                     <div class="col-md-6 mb-3">
                         <strong>Jam Pengawasan:</strong><br>
@@ -88,7 +89,7 @@
                                     </td>
                                     <td class="text-center text-xs">{{ $nc->nama_pelanggar }}</td>
                                     <td class="text-center text-xs">{{ $nc->deskripsi_ketidaksesuaian }}</td>
-                                    <td class="text-center text-xs">{{ $nc->perusahaan }}</td>
+                                    <td class="text-center text-xs">{{ $nc->pers->perusahaan_name }}</td>
                                     <td class="text-center text-xs">{{ $nc->nama_bagian }}</td>
                                     <td class="text-center text-xs">{{ $nc->tindakan }}</td>
                                     <td class="align-middle text-center text-xs">

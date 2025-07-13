@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bagian;
 use App\Models\Perusahaan;
 use Illuminate\Http\Request;
 
@@ -89,8 +90,16 @@ class PerusahaanController extends Controller
             return response()->json(data: ['message' => 'Perusahaan tidak ditemukan']);
         }
     }
-
-
+    public function getBagian($code)
+    {
+        $bagians = Bagian::where('perusahaan_id', $code)->get();
+        return response()->json($bagians);
+    }
+    public function operator_getBagian($code)
+    {
+        $bagians = Bagian::where('perusahaan_id', $code)->get();
+        return response()->json($bagians);
+    }
 
 
 

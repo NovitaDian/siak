@@ -14,10 +14,12 @@ class Bagian extends Model
 
     // Kolom yang dapat diisi (mass assignable)
     protected $fillable = [
-        'perusahaan_code',
-        'perusahaan_name',
+        'perusahaan_id',
         'nama_bagian'
     ];
 
-   
+   public function per()
+    {
+        return $this->belongsTo(Perusahaan::class, 'perusahaan_id');
+    }
 }

@@ -100,7 +100,7 @@
                                     </option>
                                     @endforeach
                                 </select>
-                                @error('unit')
+                                @error('unit_id')
                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                 @enderror
                             </div>

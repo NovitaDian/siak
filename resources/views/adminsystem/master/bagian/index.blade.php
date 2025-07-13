@@ -2,7 +2,8 @@
 
 @section('content')
 
-<button type="button" class="btn btn-outline-secondary btn-md d-flex align-items-center gap-2" onclick="history.back()">
+<button type="button" class="btn btn-outline-secondary btn-md d-flex align-items-center gap-2"
+    onclick="window.location.href='{{ route('adminsystem.master.index') }}'">
     <img src="{{ asset('assets/img/logos/arrow-back.png') }}" alt="Back" style="width: 40px; height: 40px;">
 </button>
 <main class="main-content position-relative max-height-vh-100 h-100 mt-1 border-radius-lg">
@@ -34,10 +35,10 @@
                                 @foreach ($bagians as $bagian)
                                 <tr>
                                     <td class="text-center">
-                                        <p class="text-xs font-weight-bold mb-0">{{ $bagian->perusahaan_code }}</p>
+                                        <p class="text-xs font-weight-bold mb-0">{{ $bagian->per->perusahaan_code }}</p>
                                     </td>
                                     <td class="text-center">
-                                        <p class="text-xs font-weight-bold mb-0">{{ $bagian->perusahaan_name }}</p>
+                                        <p class="text-xs font-weight-bold mb-0">{{ $bagian->per->perusahaan_name}}</p>
                                     </td>
                                     <td class="text-center">
                                         <p class="text-xs font-weight-bold mb-0">{{ $bagian->nama_bagian }}</p>

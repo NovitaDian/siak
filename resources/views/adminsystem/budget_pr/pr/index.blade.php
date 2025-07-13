@@ -32,7 +32,6 @@
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">PR Date</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">PR No</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Material/Jasa</th>
-                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Short Text</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Quantity</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Unit</th>
                                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Valuation Price</th>
@@ -47,10 +46,7 @@
                                         <h6 class="mb-0 text-sm">{{ \Carbon\Carbon::parse($pr->pr_date)->format('d/m/Y') }}</h6>
                                     </td>
                                     <td class="text-center">
-                                        <p class="text-xs font-weight-bold mb-0">{{ $pr->material_group }}</p>
-                                    </td>
-                                    <td class="text-center">
-                                        <p class="text-xs font-weight-bold mb-0">{{ $pr->pr_no }}</p>
+                                        <p class="text-xs font-weight-bold mb-0">{{ $pr->pr_no}}</p>
                                     </td>
                                     <td class="text-center">
                                         <p class="text-xs font-weight-bold mb-0">{{ $pr->material }}</p>
@@ -59,13 +55,13 @@
                                         <p class="text-xs font-weight-bold mb-0">{{ $pr->quantity }}</p>
                                     </td>
                                     <td class="text-center">
-                                        <p class="text-xs font-weight-bold mb-0">{{ $pr->unit }}</p>
+                                        <p class="text-xs font-weight-bold mb-0">{{ $pr->unitId->unit }}</p>
                                     </td>
                                     <td class="text-center">
                                         <p class="text-xs font-weight-bold mb-0">{{ number_format($pr->valuation_price, 2) }}</p>
                                     </td>
                                     <td class="text-center">
-                                        <p class="text-xs font-weight-bold mb-0">{{ $pr->gl_code }}-{{ $pr->gl_name}}</p>
+                                        <p class="text-xs font-weight-bold mb-0">{{ $pr->budget->gls->gl_name}}</p>
                                     </td>
                                     <td class="align-middle text-center">
                                         <a href="{{ route('adminsystem.pr.edit', $pr->id) }}"

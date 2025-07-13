@@ -13,7 +13,7 @@ class Pengeluaran extends Model
     protected $primaryKey = 'id';     // Primary key tabel
 
     protected $fillable = [
-        'barang_id', 'tanggal', 'quantity', 'unit', 'keterangan'
+        'barang_id', 'tanggal', 'quantity', 'keterangan'
     ];
 
     // Relasi dengan model Barang
@@ -22,6 +22,4 @@ class Pengeluaran extends Model
         return $this->belongsTo(Barang::class, 'barang_id');
     }
 
-    // Event untuk mencatat transaksi pengeluaran ke tabel transaksi
-  
 }

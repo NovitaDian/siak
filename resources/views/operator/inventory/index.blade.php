@@ -54,38 +54,38 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($trans as $tran)
+                            @foreach($gabung as $item)
                             <tr>
                                 <td class="text-center">
-                                    <p class="text-xs font-weight-bold mb-0">{{ $tran->material_code }}</p>
+                                    <p class="text-xs font-weight-bold mb-0">{{ $item->barang->material_code }}</p>
                                 </td>
                                 <td class="text-center">
-                                    <p class="text-xs font-weight-bold mb-0">{{ $tran->description }}</p>
+                                    <p class="text-xs font-weight-bold mb-0">{{ $item->barang->description }}</p>
                                 </td>
                                 <td class="align-middle text-center text-sm">
-                                    <span class="badge badge-sm {{ $tran->type == 'Pengeluaran' ? 'bg-gradient-warning' : 'bg-gradient-success' }}">
-                                        {{ $tran->type == 'Pengeluaran' ? 'Pengeluaran' : 'Pemasukan' }}
+                                    <span class="badge badge-sm {{ $item->jenis == 'Pengeluaran' ? 'bg-gradient-warning' : 'bg-gradient-success' }}">
+                                        {{ $item->jenis == 'Pengeluaran' ? 'Pengeluaran' : 'Pemasukan' }}
                                     </span>
                                 </td>
 
                                 <td class="text-center">
-                                    <p class="text-xs font-weight-bold mb-0">{{ $tran->tanggal}}</p>
+                                    <p class="text-xs font-weight-bold mb-0">{{ $item->tanggal}}</p>
                                 </td>
                                 <td class="text-center">
-                                    <p class="text-xs font-weight-bold mb-0">{{ $tran->quantity }}</p>
+                                    <p class="text-xs font-weight-bold mb-0">{{ $item->quantity }}</p>
                                 </td>
                                 <td class="text-center">
-                                    <p class="text-xs font-weight-bold mb-0">{{ $tran->unit}}</p>
+                                    <p class="text-xs font-weight-bold mb-0">{{ $item->barang->unitId->unit}}</p>
                                 </td>
                                 <td class="text-center">
-                                    <p class="text-xs font-weight-bold mb-0">{{ $tran->keterangan }}</p>
+                                    <p class="text-xs font-weight-bold mb-0">{{ $item->keterangan }}</p>
                                 </td>
                             </tr>
                             @endforeach
                         </tbody>
                     </table>
 
-                    @if($trans->isEmpty())
+                    @if($gabung->isEmpty())
                     <div class="text-center p-4">
                         <p class="text-secondary">Tidak ada transaksi.</p>
                     </div>
@@ -146,7 +146,7 @@
                                     <p class="text-xs font-weight-bold mb-0">{{ $barang->quantity }}</p>
                                 </td>
                                 <td class="text-center">
-                                    <p class="text-xs font-weight-bold mb-0">{{ $barang->unit}}</p>
+                                    <p class="text-xs font-weight-bold mb-0">{{ $barang->unitId->unit}}</p>
                                 </td>
                                 <td class="text-center">
                                     <a href="{{ route('operator.barang.detail', ['id' => $barang->id]) }}" class="btn btn-primary d-block" style="margin-top: 5px;">Lihat Detail</a>

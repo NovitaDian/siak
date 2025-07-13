@@ -15,16 +15,14 @@ class NcrFixSeeder extends Seeder
 
         for ($i = 1; $i <= 20; $i++) {
             DB::table('ncr_fix')->insert([
-                'draft_id' => $i,
-                'user_id' => rand(1, 5),
-                'writer' => $faker->name,
+                'user_id' => rand(1, 3),
                 'tanggal_shift_kerja' => $faker->date(),
                 'shift_kerja' => $faker->randomElement(['Shift 1', 'Shift 2', 'Shift 3']),
                 'nama_hs_officer_1' => $faker->optional()->name,
                 'nama_hs_officer_2' => $faker->optional()->name,
                 'tanggal_audit' => $faker->date(),
                 'nama_auditee' => $faker->optional()->name,
-                'perusahaan' => $faker->randomElement(['PT.RPM', 'PT.Dharmapala Usaha Sukses']),
+                'perusahaan_id' => $faker->randomElement(['1', '2']),
                 'nama_bagian' => $faker->randomElement(['Contractor', 'Process']),
                 'element_referensi_ncr' => $faker->sentence,
                 'kategori_ketidaksesuaian' => $faker->randomElement(['System Documentation', 'Implementation/Pratices', 'Review/Analysis', 'Improvement Action']),
@@ -32,7 +30,6 @@ class NcrFixSeeder extends Seeder
                 'status' => $faker->randomElement(['Nothing']),
                 'status_note' => $faker->optional()->sentence,
                 'status_ncr' => $faker->randomElement(['Open', 'Closed']),
-                'durasi' => $faker->optional()->numberBetween(1, 30),
                 'estimasi' => $faker->optional()->date(),
                 'tindak_lanjut' => $faker->optional()->paragraph,
                 'foto' => null,

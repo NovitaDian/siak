@@ -23,7 +23,7 @@ class DailyController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-        $dailys = Daily::where('writer', $user->name)->get();
+        $dailys = Daily::where('user_id', $user->id)->get();
         $latestRequests = DailyRequest::orderByDesc('id')
             ->get()
             ->unique('sent_daily_id');
@@ -58,20 +58,17 @@ class DailyController extends Controller
             'tanggal_shift_kerja' => 'required|date',
             'shift_kerja' => 'required|string|max:50',
             'hse_inspector_id' => 'required|exists:hse_inspector,id',
-            'rincian_laporan' => 'nullable|string|max:255',
+            'rincian_laporan' => 'nullable|string',
         ]);
 
         // Ambil data HSE Inspector
-        $inspector = HseInspector::findOrFail($request->hse_inspector_id);
 
         // Simpan data ke database
         Daily::create([
             'tanggal_shift_kerja' => $request->tanggal_shift_kerja,
             'shift_kerja' => $request->shift_kerja,
-            'nama_hse_inspector' => $inspector->name,
-            'hse_inspector_id' => $inspector->id,
             'rincian_laporan' => $request->rincian_laporan,
-            'writer' => Auth::user()->name,
+            'hse_inspector_id' => $request->hse_inspector_id,
             'user_id' => Auth::user()->id,
         ]);
 
@@ -108,23 +105,20 @@ class DailyController extends Controller
             'tanggal_shift_kerja' => 'required|date',
             'shift_kerja' => 'required|string|max:50',
             'hse_inspector_id' => 'required|exists:hse_inspector,id',
-            'rincian_laporan' => 'nullable|string|max:255',
+            'rincian_laporan' => 'nullable|string',
         ]);
 
         // Ambil data Daily yang akan diupdate
         $daily = Daily::findOrFail($id);
 
         // Ambil data HSE Inspector
-        $inspector = HseInspector::findOrFail($request->hse_inspector_id);
 
         // Update data
         $daily->update([
             'tanggal_shift_kerja' => $request->tanggal_shift_kerja,
-            'shift_kerja' => $request->shift_kerja,
-            'nama_hse_inspector' => $inspector->name,
-            'hse_inspector_id' => $inspector->id,
+            'shift_kerja'  => $request->shift_kerja,
+            'hse_inspector_id'  => $request->hse_inspector_id,
             'rincian_laporan' => $request->rincian_laporan,
-            'writer' => Auth::user()->name,
             'user_id' => Auth::user()->id,
         ]);
 
@@ -140,13 +134,10 @@ class DailyController extends Controller
 
         // Pindahkan data ke tabel daily_fix
         SentDaily::create([
-            'draft_id' => $daily->id,
-            'writer' => $daily->writer,
             'user_id' => $daily->user_id,
             'alat_id' => $daily->alat_id,
             'tanggal_shift_kerja' => $daily->tanggal_shift_kerja,
             'shift_kerja' => $daily->shift_kerja,
-            'nama_hse_inspector' => $daily->nama_hse_inspector,
             'hse_inspector_id' => $daily->hse_inspector_id,
             'rincian_laporan' => $daily->rincian_laporan,
 
@@ -172,23 +163,20 @@ class DailyController extends Controller
             'tanggal_shift_kerja' => 'required|date',
             'shift_kerja' => 'required|string|max:50',
             'hse_inspector_id' => 'required|exists:hse_inspector,id',
-            'rincian_laporan' => 'nullable|string|max:255',
+            'rincian_laporan' => 'nullable|string',
         ]);
 
         // Ambil data Daily yang akan diupdate
         $daily_fix = SentDaily::findOrFail($id);
 
         // Ambil data HSE Inspector
-        $inspector = HseInspector::findOrFail($request->hse_inspector_id);
 
         // Update data
         $daily_fix->update([
             'tanggal_shift_kerja' => $request->tanggal_shift_kerja,
             'shift_kerja' => $request->shift_kerja,
-            'nama_hse_inspector' => $inspector->name,
-            'hse_inspector_id' => $inspector->id,
+            'hse_inspector_id'  => $request->hse_inspector_id,
             'rincian_laporan' => $request->rincian_laporan,
-            'writer' => Auth::user()->name,
             'user_id' => Auth::user()->id,
             'status' => 'Nothing',
 
@@ -225,7 +213,6 @@ class DailyController extends Controller
             'sent_daily_id' => $request->sent_daily_id,
             'type' => $request->type,
             'reason' => $request->reason,
-            'nama_pengirim' => Auth::user()->name,
             'user_id' => Auth::user()->id,
             'status' => 'Pending',
         ]);
@@ -312,7 +299,7 @@ class DailyController extends Controller
     public function operator_index(Request $request)
     {
         $user = Auth::user();
-        $dailys = Daily::where('writer', $user->name)->get();
+        $dailys = Daily::where('user_id', $user->id)->get();
         $latestRequests = DailyRequest::orderByDesc('id')
             ->get()
             ->unique('sent_daily_id');
@@ -347,20 +334,17 @@ class DailyController extends Controller
             'tanggal_shift_kerja' => 'required|date',
             'shift_kerja' => 'required|string|max:50',
             'hse_inspector_id' => 'required|exists:hse_inspector,id',
-            'rincian_laporan' => 'nullable|string|max:255',
+            'rincian_laporan' => 'nullable|string',
         ]);
 
         // Ambil data HSE Inspector
-        $inspector = HseInspector::findOrFail($request->hse_inspector_id);
 
         // Simpan data ke database
         Daily::create([
             'tanggal_shift_kerja' => $request->tanggal_shift_kerja,
             'shift_kerja' => $request->shift_kerja,
-            'nama_hse_inspector' => $inspector->name,
-            'hse_inspector_id' => $inspector->id,
             'rincian_laporan' => $request->rincian_laporan,
-            'writer' => Auth::user()->name,
+            'hse_inspector_id' => $request->hse_inspector_id,
             'user_id' => Auth::user()->id,
         ]);
 
@@ -395,23 +379,20 @@ class DailyController extends Controller
             'tanggal_shift_kerja' => 'required|date',
             'shift_kerja' => 'required|string|max:50',
             'hse_inspector_id' => 'required|exists:hse_inspector,id',
-            'rincian_laporan' => 'nullable|string|max:255',
+            'rincian_laporan' => 'nullable|string',
         ]);
 
         // Ambil data Daily yang akan diupdate
         $daily = Daily::findOrFail($id);
 
         // Ambil data HSE Inspector
-        $inspector = HseInspector::findOrFail($request->hse_inspector_id);
 
         // Update data
         $daily->update([
             'tanggal_shift_kerja' => $request->tanggal_shift_kerja,
             'shift_kerja' => $request->shift_kerja,
-            'nama_hse_inspector' => $inspector->name,
-            'hse_inspector_id' => $inspector->id,
+            'hse_inspector_id'  => $request->hse_inspector_id,
             'rincian_laporan' => $request->rincian_laporan,
-            'writer' => Auth::user()->name,
             'user_id' => Auth::user()->id,
             'status' => 'Nothing',
 
@@ -429,13 +410,10 @@ class DailyController extends Controller
 
         // Pindahkan data ke tabel daily_fix
         SentDaily::create([
-            'draft_id' => $daily->id,
-            'writer' => $daily->writer,
             'alat_id' => $daily->alat_id,
             'user_id' => $daily->user_id,
             'tanggal_shift_kerja' => $daily->tanggal_shift_kerja,
             'shift_kerja' => $daily->shift_kerja,
-            'nama_hse_inspector' => $daily->nama_hse_inspector,
             'hse_inspector_id' => $daily->hse_inspector_id,
             'rincian_laporan' => $daily->rincian_laporan,
 
@@ -462,23 +440,20 @@ class DailyController extends Controller
             'tanggal_shift_kerja' => 'required|date',
             'shift_kerja' => 'required|string|max:50',
             'hse_inspector_id' => 'required|exists:hse_inspector,id',
-            'rincian_laporan' => 'nullable|string|max:255',
+            'rincian_laporan' => 'nullable|string',
         ]);
 
         // Ambil data Daily yang akan diupdate
         $daily_fix = SentDaily::findOrFail($id);
 
         // Ambil data HSE Inspector
-        $inspector = HseInspector::findOrFail($request->hse_inspector_id);
 
         // Update data
         $daily_fix->update([
             'tanggal_shift_kerja' => $request->tanggal_shift_kerja,
+            'hse_inspector_id'  => $request->hse_inspector_id,
             'shift_kerja' => $request->shift_kerja,
-            'nama_hse_inspector' => $inspector->name,
-            'hse_inspector_id' => $inspector->id,
             'rincian_laporan' => $request->rincian_laporan,
-            'writer' => Auth::user()->name,
             'user_id' => Auth::user()->id,
             'status' => 'Nothing',
 
@@ -515,7 +490,6 @@ class DailyController extends Controller
             'sent_daily_id' => $request->sent_daily_id,
             'type' => $request->type,
             'reason' => $request->reason,
-            'nama_pengirim' => Auth::user()->name,
             'user_id' => Auth::user()->id,
             'status' => 'Pending',
         ]);

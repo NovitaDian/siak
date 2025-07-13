@@ -33,7 +33,7 @@ class AlatController extends Controller
     public function alat_store(Request $request)
     {
         $request->validate([
-            'nama_alat_id' => 'required|exists:nama_alats,id',
+            'nama_alat_id' => 'required|exists:nama_alats,id', //validasi id nama_alats
             'nomor' => 'required|string|max:255',
             'waktu_inspeksi' => 'nullable|date',
             'durasi_inspeksi' => 'required|integer|min:0',
@@ -44,7 +44,6 @@ class AlatController extends Controller
 
         Alat::create([
             'nama_alat_id' => $namaAlat->id,
-            'nama_alat' => $namaAlat->nama_alat,
             'nomor' => $request->nomor,
             'waktu_inspeksi' => $request->waktu_inspeksi,
             'durasi_inspeksi' => $request->durasi_inspeksi,
@@ -69,7 +68,7 @@ class AlatController extends Controller
             'nomor' => 'required|string|max:255',
             'waktu_inspeksi' => 'nullable|date',
             'durasi_inspeksi' => 'required|integer|min:0',
-            'status' => 'required|string|max:255'
+            'status' => 'nullable|string|max:255'
         ]);
 
         $alat = Alat::findOrFail($id);
@@ -77,7 +76,6 @@ class AlatController extends Controller
 
         $alat->update([
             'nama_alat_id' => $namaAlat->id,
-            'nama_alat' => $namaAlat->nama_alat,
             'nomor' => $request->nomor,
             'waktu_inspeksi' => $request->waktu_inspeksi,
             'durasi_inspeksi' => $request->durasi_inspeksi,
@@ -193,7 +191,6 @@ class AlatController extends Controller
 
         Alat::create([
             'nama_alat_id' => $namaAlat->id,
-            'nama_alat' => $namaAlat->nama_alat,
             'nomor' => $request->nomor,
             'waktu_inspeksi' => $request->waktu_inspeksi,
             'durasi_inspeksi' => $request->durasi_inspeksi,
@@ -218,7 +215,7 @@ class AlatController extends Controller
             'nomor' => 'required|string|max:255',
             'waktu_inspeksi' => 'nullable|date',
             'durasi_inspeksi' => 'required|integer|min:0',
-            'status' => 'required|string|max:255'
+            'status' => 'nullable|string|max:255'
         ]);
 
         $alat = Alat::findOrFail($id);
@@ -226,7 +223,6 @@ class AlatController extends Controller
 
         $alat->update([
             'nama_alat_id' => $namaAlat->id,
-            'nama_alat' => $namaAlat->nama_alat,
             'nomor' => $request->nomor,
             'waktu_inspeksi' => $request->waktu_inspeksi,
             'durasi_inspeksi' => $request->durasi_inspeksi,

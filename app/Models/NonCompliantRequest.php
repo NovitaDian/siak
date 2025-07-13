@@ -12,7 +12,6 @@ class NonCompliantRequest extends Model
     protected $fillable = [
         'sent_non_compliant_id',
         'user_id',
-        'nama_pengirim',
         'type',
         'reason',
         'status',

@@ -21,14 +21,11 @@ class ToolExport implements FromCollection, WithHeadings, WithMapping, ShouldAut
 
     public function collection()
     {
-        $query = SentToolReport::select([
+        $query = SentToolReport::with(['user', 'inspector', 'alat'])->select([
             'id',
-            'writer',
-            'draft_id',
             'alat_id',
-            'nama_alat',
+            'user_id',
             'hse_inspector_id',
-            'hse_inspector',
             'tanggal_pemeriksaan',
             'status_pemeriksaan',
             'status',
@@ -47,9 +44,9 @@ class ToolExport implements FromCollection, WithHeadings, WithMapping, ShouldAut
         return [
             'ID',
             'Penulis',
-            'ID Draft',
             'ID Alat',
             'Nama Alat',
+            'Nomor Alat',
             'ID HSE Inspector',
             'Nama HSE Inspector',
             'Tanggal Pemeriksaan',
@@ -63,16 +60,16 @@ class ToolExport implements FromCollection, WithHeadings, WithMapping, ShouldAut
     {
         return [
             $row->id ?? '-',
-            $row->writer ?? '-',
-            $row->draft_id ?? '-',
+            $row->user->name ?? '-',
             $row->alat_id ?? '-',
-            $row->nama_alat ?? '-',
+            $row->alat->namaAlat->nama_alat ?? '-'  ,
+            $row->alat->nomor ?? '-'  ,
             $row->hse_inspector_id ?? '-',
-            $row->hse_inspector ?? '-',
+            $row->inspector->name ?? '-',
             $row->tanggal_pemeriksaan ?? '-',
             $row->status_pemeriksaan ?? '-',
             $row->status ?? '-',
-            optional($row->created_at)->format('Y-m-d H:i') ?? '-',
+            ($row->created_at)->format('Y-m-d H:i') ?? '-',
         ];
     }
 }

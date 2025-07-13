@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('budget_fix', function (Blueprint $table) {
             $table->id();
             $table->string('gl_code', 255);
-            $table->text('gl_name')->nullable();
             $table->string('internal_order', 255)->nullable();
             $table->decimal('bg_approve', 15, 2)->nullable();
             $table->decimal('usage', 15, 2)->nullable();

@@ -29,7 +29,7 @@ class IncidentController extends Controller
     public function index(Request $request)
     {
         $user = auth()->user();
-        $incidents = Incident::where('writer', $user->name)->latest()
+        $incidents = Incident::where('user_id', $user->id)->latest()
             ->get();
         $requests = IncidentRequest::latest()
             ->get();
@@ -70,7 +70,7 @@ class IncidentController extends Controller
             'stamp_date' => 'nullable|date_format:d/m/Y',
             'shift_date' => 'required|date',
             'shift' => 'required|string|max:255',
-            'safety_officer_1' => 'required|string|max:255',
+            'hse_inspector_id' => 'required|exists:hse_inspector,id',
             'status_kejadian' => 'nullable|string|max:255',
             'tgl_kejadiannya' => 'nullable|date',
             'jam_kejadiannya' => 'nullable|date_format:H:i',
@@ -80,7 +80,7 @@ class IncidentController extends Controller
             'nama_korban' => 'nullable|string|max:255',
             'status' => 'nullable|string|max:255',
             'jenis_kelamin' => 'nullable|string|max:50',
-            'perusahaan' => 'nullable|string|max:255',
+            'perusahaan_id' => 'nullable|exists:perusahaan,id',
             'bagian' => 'nullable|string|max:255',
             'jabatan' => 'nullable|string|max:255',
             'masa_kerja' => 'nullable|integer',
@@ -142,8 +142,6 @@ class IncidentController extends Controller
         // Tanggal stamp & user
         $validated['stamp_date'] = Carbon::today()->toDateString();
         $validated['user_id'] = auth()->user()->id;
-        $validated['writer'] = auth()->user()->name;
-
         // Total tenaga kerja
         $totalWorkforce =
             ($request->input('jml_employee') ?? 0) +
@@ -362,7 +360,6 @@ class IncidentController extends Controller
 
         // Simpan ke database
         $incident = Incident::create($validated);
-
         return redirect()->route('adminsystem.incident.index', $incident->id)
             ->with('success', 'Data berhasil ditambahkan.');
     }
@@ -399,7 +396,7 @@ class IncidentController extends Controller
             'stamp_date' => 'nullable|date_format:d/m/Y',
             'shift_date' => 'required|date',
             'shift' => 'required|string|max:255',
-            'safety_officer_1' => 'required|string|max:255',
+            'hse_inspector_id' => 'required|exists:hse_inspector,id',
             'status_kejadian' => 'nullable|string|max:255',
             'tgl_kejadiannya' => 'nullable|date',
             'jam_kejadiannya' => 'nullable',
@@ -409,7 +406,7 @@ class IncidentController extends Controller
             'nama_korban' => 'nullable|string|max:255',
             'status' => 'nullable|string|max:255',
             'jenis_kelamin' => 'nullable|string|max:50',
-            'perusahaan' => 'nullable|string|max:255',
+            'perusahaan_id' => 'nullable|exists:perusahaan,id',
             'bagian' => 'nullable|string|max:255',
             'jabatan' => 'nullable|string|max:255',
             'masa_kerja' => 'nullable|integer',
@@ -468,10 +465,13 @@ class IncidentController extends Controller
             'no_laporan' => 'nullable|string|max:255',
         ]);
 
+
+
         // Tanggal stamp & user
         $validated['stamp_date'] = Carbon::today()->toDateString();
         $validated['user_id'] = auth()->user()->id;
-        $validated['writer'] = auth()->user()->name;
+
+
 
         // Total tenaga kerja
         $totalWorkforce =
@@ -709,7 +709,6 @@ class IncidentController extends Controller
             11 => 'XI',
             12 => 'XII'
         ];
-
         // Ambil angka romawi berdasarkan bulan dari shiftDate
         $bulan = $bulanRomawi[(int)$shiftDate->format('n')];
 
@@ -737,7 +736,8 @@ class IncidentController extends Controller
             'stamp_date' => 'nullable|date_format:d/m/Y',
             'shift_date' => 'required|date',
             'shift' => 'required|string|max:255',
-            'safety_officer_1' => 'required|string|max:255',
+            'hse_inspector_id' => 'required|exists:hse_inspector,id',
+            'perusahaan_id' => 'required|exists:perusahaan,id',
             'status_kejadian' => 'nullable|string|max:255',
             'tgl_kejadiannya' => 'nullable|date',
             'jam_kejadiannya' => 'nullable',
@@ -747,7 +747,7 @@ class IncidentController extends Controller
             'nama_korban' => 'nullable|string|max:255',
             'status' => 'nullable|string|max:255',
             'jenis_kelamin' => 'nullable|string|max:50',
-            'perusahaan' => 'nullable|string|max:255',
+            'perusahaan_id' => 'nullable|exists:perusahaan,id',
             'bagian' => 'nullable|string|max:255',
             'jabatan' => 'nullable|string|max:255',
             'masa_kerja' => 'nullable|integer',
@@ -809,9 +809,7 @@ class IncidentController extends Controller
         // Tanggal stamp & user
         $validated['stamp_date'] = Carbon::today()->toDateString();
         $validated['user_id'] = auth()->user()->id;
-        $validated['writer'] = auth()->user()->name;
         $validated['status_request'] = "Nothing";
-
         // Total tenaga kerja
         $totalWorkforce =
             ($request->input('jml_employee') ?? 0) +
@@ -825,7 +823,6 @@ class IncidentController extends Controller
         // Total man hours per hari (diasumsikan 8 jam kerja)
         $validated['man_hours_per_day'] = $totalWorkforce * 8;
 
-        // Hitung status korban
         // Hitung bulan_tahun
         $validated['shift_date'] = date('Y-m-d', strtotime($request->input('shift_date')));
 
@@ -1035,7 +1032,6 @@ class IncidentController extends Controller
 
         unset($validated['no_laporan']);
 
-        // Update semua nilai ke dalam model
 
         $incident->update($validated);
 
@@ -1060,7 +1056,7 @@ class IncidentController extends Controller
         if (!$incident) {
             abort(404, 'Data tidak ditemukan');
         }
-        return view('adminsystem.incident.view ', compact('incident'));
+        return view('adminsystem.incident.view', compact('incident'));
     }
 
     // Menghapus data (destroy)
@@ -1099,12 +1095,11 @@ class IncidentController extends Controller
         $no_laporan = "{$incidentCount}/{$bulan}/HSE/{$tahun2Digit}";
         // Pindahkan data ke tabel incident_fix
         SentIncident::create([
-            'writer' => $incident->writer,
             'user_id' => $incident->user_id,
             'stamp_date' => $incident->stamp_date,
             'shift_date' => $incident->shift_date,
             'shift' => $incident->shift,
-            'safety_officer_1' => $incident->safety_officer_1,
+            'hse_inspector_id' => $incident->hse_inspector_id,
             'status_kejadian' => $incident->status_kejadian,
             'tgl_kejadiannya' => $incident->tgl_kejadiannya,
             'jam_kejadiannya' => $incident->jam_kejadiannya,
@@ -1114,7 +1109,7 @@ class IncidentController extends Controller
             'nama_korban' => $incident->nama_korban,
             'status' => $incident->status,
             'jenis_kelamin' => $incident->jenis_kelamin,
-            'perusahaan' => $incident->perusahaan,
+            'perusahaan_id' => $incident->perusahaan_id,
             'bagian' => $incident->bagian,
             'jabatan' => $incident->jabatan,
             'masa_kerja' => $incident->masa_kerja,
@@ -1193,7 +1188,6 @@ class IncidentController extends Controller
             'total_safe_day_wlta' => $incident->total_safe_day_wlta,
             'foto' => $incident->foto,
             'status_request' => 'Nothing',
-            'draft_id' => $incident->id,
             'no_laporan' => $no_laporan,
         ]);
 
@@ -1212,7 +1206,7 @@ class IncidentController extends Controller
         $incident->delete();
 
         // Redirect to a relevant page, such as the incident index page with a success message
-        return redirect()->route('adminsystem.incident.index')->with('success', 'Incident deleted successfully.');
+        return redirect()->route('adminsystem.incident.index')->with('success', 'Incident berhasil dihapus.');
     }
     public function sent_destroy($id)
     {
@@ -1222,7 +1216,7 @@ class IncidentController extends Controller
         $incident->delete();
 
         // Redirect to a relevant page, such as the incident index page with a success message
-        return redirect()->route('adminsystem.incident.index')->with('success', 'Incident deleted successfully.');
+        return redirect()->route('adminsystem.incident.index')->with('success', 'Incident berhasil dihapus.');
     }
 
     // Mencari data (search)
@@ -1250,7 +1244,6 @@ class IncidentController extends Controller
             'sent_incident_id' => $request->sent_incident_id,
             'type' => $request->type,
             'reason' => $request->reason,
-            'nama_pengirim' => Auth::user()->name,
             'user_id' => Auth::user()->id,
             'status' => 'Pending',
         ]);
@@ -1353,7 +1346,7 @@ class IncidentController extends Controller
     public function operator_index(Request $request)
     {
         $user = auth()->user();
-        $incidents = Incident::where('writer', $user->name)->latest()
+        $incidents = Incident::where('user_id', $user->id)->latest()
             ->get();
         $requests = IncidentRequest::latest()
             ->get();
@@ -1369,7 +1362,7 @@ class IncidentController extends Controller
         if ($start && $end) {
             $incident_fixs = SentIncident::whereBetween('shift_date', [$start, $end])->orderBy('shift_date', 'desc')->get();
         } else {
-            $incident_fixs = SentIncident::where('writer', $user->name)->orderBy('shift_date', 'desc')->get();
+            $incident_fixs = SentIncident::where('user_id', $user->id)->orderBy('shift_date', 'desc')->get();
         }
 
         return view('operator.incident.index', compact('incidents', 'incident_fixs', 'requests', 'latestRequests'));
@@ -1393,7 +1386,8 @@ class IncidentController extends Controller
             'stamp_date' => 'nullable|date_format:d/m/Y',
             'shift_date' => 'required|date',
             'shift' => 'required|string|max:255',
-            'safety_officer_1' => 'required|string|max:255',
+            'hse_inspector_id' => 'required|exists:hse_inspector,id',
+            'perusahaan_id' => 'nullable|exists:perusahaan,id',
             'status_kejadian' => 'nullable|string|max:255',
             'tgl_kejadiannya' => 'nullable|date',
             'jam_kejadiannya' => 'nullable|date_format:H:i',
@@ -1403,7 +1397,6 @@ class IncidentController extends Controller
             'nama_korban' => 'nullable|string|max:255',
             'status' => 'nullable|string|max:255',
             'jenis_kelamin' => 'nullable|string|max:50',
-            'perusahaan' => 'nullable|string|max:255',
             'bagian' => 'nullable|string|max:255',
             'jabatan' => 'nullable|string|max:255',
             'masa_kerja' => 'nullable|integer',
@@ -1465,7 +1458,6 @@ class IncidentController extends Controller
         // Tanggal stamp & user
         $validated['stamp_date'] = Carbon::today()->toDateString();
         $validated['user_id'] = auth()->user()->id;
-        $validated['writer'] = auth()->user()->name;
 
         // Total tenaga kerja
         $totalWorkforce =
@@ -1722,7 +1714,8 @@ class IncidentController extends Controller
             'stamp_date' => 'nullable|date_format:d/m/Y',
             'shift_date' => 'required|date',
             'shift' => 'required|string|max:255',
-            'safety_officer_1' => 'required|string|max:255',
+            'hse_inspector_id' => 'required|exists:hse_inspector,id',
+            'perusahaan_id' => 'required|exists:perusahaan,id',
             'status_kejadian' => 'nullable|string|max:255',
             'tgl_kejadiannya' => 'nullable|date',
             'jam_kejadiannya' => 'nullable',
@@ -1732,7 +1725,6 @@ class IncidentController extends Controller
             'nama_korban' => 'nullable|string|max:255',
             'status' => 'nullable|string|max:255',
             'jenis_kelamin' => 'nullable|string|max:50',
-            'perusahaan' => 'nullable|string|max:255',
             'bagian' => 'nullable|string|max:255',
             'jabatan' => 'nullable|string|max:255',
             'masa_kerja' => 'nullable|integer',
@@ -1794,7 +1786,6 @@ class IncidentController extends Controller
         // Tanggal stamp & user
         $validated['stamp_date'] = Carbon::today()->toDateString();
         $validated['user_id'] = auth()->user()->id;
-        $validated['writer'] = auth()->user()->name;
 
         // Total tenaga kerja
         $totalWorkforce =
@@ -2059,7 +2050,8 @@ class IncidentController extends Controller
             'stamp_date' => 'nullable|date_format:d/m/Y',
             'shift_date' => 'required|date',
             'shift' => 'required|string|max:255',
-            'safety_officer_1' => 'required|string|max:255',
+            'hse_inspector_id' => 'required|exists:hse_inspector,id',
+            'perusahaan_id' => 'required|exists:perusahaan,id',
             'status_kejadian' => 'nullable|string|max:255',
             'tgl_kejadiannya' => 'nullable|date',
             'jam_kejadiannya' => 'nullable',
@@ -2069,7 +2061,6 @@ class IncidentController extends Controller
             'nama_korban' => 'nullable|string|max:255',
             'status' => 'nullable|string|max:255',
             'jenis_kelamin' => 'nullable|string|max:50',
-            'perusahaan' => 'nullable|string|max:255',
             'bagian' => 'nullable|string|max:255',
             'jabatan' => 'nullable|string|max:255',
             'masa_kerja' => 'nullable|integer',
@@ -2131,7 +2122,6 @@ class IncidentController extends Controller
         // Tanggal stamp & user
         $validated['stamp_date'] = Carbon::today()->toDateString();
         $validated['user_id'] = auth()->user()->id;
-        $validated['writer'] = auth()->user()->name;
         $validated['status_request'] = "Nothing";
 
         // Total tenaga kerja
@@ -2421,12 +2411,12 @@ class IncidentController extends Controller
         $no_laporan = "{$incidentCount}/{$bulan}/HSE/{$tahun2Digit}";
         // Pindahkan data ke tabel incident_fix
         SentIncident::create([
-            'writer' => $incident->writer,
             'user_id' => $incident->user_id,
+            'perusahaan_id' => $incident->perusahaan_id,
             'stamp_date' => $incident->stamp_date,
             'shift_date' => $incident->shift_date,
             'shift' => $incident->shift,
-            'safety_officer_1' => $incident->safety_officer_1,
+            'hse_inspector_id' => $incident->hse_inspector_id,
             'status_kejadian' => $incident->status_kejadian,
             'tgl_kejadiannya' => $incident->tgl_kejadiannya,
             'jam_kejadiannya' => $incident->jam_kejadiannya,
@@ -2436,7 +2426,6 @@ class IncidentController extends Controller
             'nama_korban' => $incident->nama_korban,
             'status' => $incident->status,
             'jenis_kelamin' => $incident->jenis_kelamin,
-            'perusahaan' => $incident->perusahaan,
             'bagian' => $incident->bagian,
             'jabatan' => $incident->jabatan,
             'masa_kerja' => $incident->masa_kerja,
@@ -2515,7 +2504,6 @@ class IncidentController extends Controller
             'total_safe_day_wlta' => $incident->total_safe_day_wlta,
             'foto' => $incident->foto,
             'status_request' => 'Nothing',
-            'draft_id' => $incident->id,
             'no_laporan' => $no_laporan,
         ]);
 
@@ -2533,7 +2521,7 @@ class IncidentController extends Controller
         $incident->delete();
 
         // Redirect to a relevant page, such as the incident index page with a success message
-        return redirect()->route('operator.incident.index')->with('success', 'Incident deleted successfully.');
+        return redirect()->route('operator.incident.index')->with('success', 'Incident berhasil dihapus.');
     }
     public function operator_sent_destroy($id)
     {
@@ -2543,7 +2531,7 @@ class IncidentController extends Controller
         $incident->delete();
 
         // Redirect to a relevant page, such as the incident index page with a success message
-        return redirect()->route('operator.incident.index')->with('success', 'Incident deleted successfully.');
+        return redirect()->route('operator.incident.index')->with('success', 'Incident berhasil dihapus.');
     }
 
     // Mencari data (search)
@@ -2571,7 +2559,6 @@ class IncidentController extends Controller
             'sent_incident_id' => $request->sent_incident_id,
             'type' => $request->type,
             'reason' => $request->reason,
-            'nama_pengirim' => Auth::user()->name,
             'user_id' => Auth::user()->id,
             'status' => 'Pending',
         ]);

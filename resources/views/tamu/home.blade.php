@@ -23,7 +23,7 @@
                         <div class="timeline-item">
                             <div class="timeline-content">
                                 <p class="text-end">Dibuat pada: {{ $note->created_at->format('d/m/Y') }}</p>
-                                <p class="text-end">Ditulis oleh: {{ $note->writer }}</p>
+                                <p class="text-end">Ditulis oleh: {{ $note->user->name}}</p>
                                 <br>
                                 <p>Catatan: {{ $note->note }}</p>
 
@@ -42,7 +42,7 @@
         </div>
     </div>
 
-   
+
     <style>
         .timeline-item {
             border-bottom: 1px solid #ddd;

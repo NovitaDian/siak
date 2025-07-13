@@ -13,12 +13,11 @@ class SentPpe extends Model
 
     // Daftar kolom yang dapat diisi secara massal
     protected $fillable = [
-        'writer',
+
         'user_id',
         'tanggal_shift_kerja',
         'shift_kerja',
         'status_ppe',
-        'nama_hse_inspector',
         'hse_inspector_id',
         'jam_mulai',
         'jam_selesai',
@@ -42,6 +41,10 @@ class SentPpe extends Model
     public function requests()
     {
         return $this->hasMany(PpeRequest::class);
+    }
+    public function inspector()
+    {
+        return $this->belongsTo(HseInspector::class, 'hse_inspector_id');
     }
     public function nonCompliants()
     {

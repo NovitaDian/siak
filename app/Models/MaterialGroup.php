@@ -23,6 +23,10 @@ class MaterialGroup extends Model
         'material_group',
     ];
    
+public function barang()
+{
+    return $this->hasMany(Barang::class, 'material_group_id');
+}
 
     
 }

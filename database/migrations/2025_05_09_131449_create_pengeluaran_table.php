@@ -16,7 +16,6 @@ return new class extends Migration
             $table->unsignedBigInteger('barang_id')->nullable();
             $table->date('tanggal');
             $table->integer('quantity');
-            $table->string('unit', 20)->nullable();
             $table->text('keterangan')->nullable();
             $table->timestamps();
 

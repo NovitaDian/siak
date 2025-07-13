@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('ncr_request', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('sent_ncr_id'); // Foreign key, bisa dihubungkan ke tabel lain
-            $table->string('nama_pengirim', 100);
             $table->string('type', 6);
             $table->text('reason');
             $table->string('status', 8)->default('Pending');

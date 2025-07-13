@@ -20,5 +20,28 @@ class Perusahaan extends Model
         'street'
     ];
 
-   
+     public function bagian()
+    {
+        return $this->hasMany(Bagian::class, 'perusahaan_id');
+    }
+    public function nonCompliant()
+    {
+        return $this->belongsTo(NonCompliant::class);
+    }
+    public function ncr()
+    {
+        return $this->belongsTo(Ncr::class);
+    }
+    public function sentNcr()
+    {
+        return $this->belongsTo(SentNcr::class);
+    }
+    public function incident()
+    {
+        return $this->belongsTo(Incident::class);
+    }
+    public function sentIncident()
+    {
+        return $this->belongsTo(SentIncident::class);
+    }
 }

@@ -15,7 +15,6 @@ class Daily extends Model
         'tanggal_shift_kerja',
         'shift_kerja',
         'hse_inspector_id',
-        'nama_hse_inspector',
         'rincian_laporan',
         'user_id',
         'writer'
@@ -23,5 +22,9 @@ class Daily extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    public function inspectors()
+    {
+        return $this->belongsTo(HseInspector::class, 'hse_inspector_id');
     }
 }

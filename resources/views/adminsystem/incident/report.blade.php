@@ -61,16 +61,16 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="safety_officer_1">{{ __('Safety Officer') }}</label>
-                                <select class="form-control" id="safety_officer_1" name="safety_officer_1">
+                                <label for="hse_inspector_id">{{ __('Safety Officer') }}</label>
+                                <select class="form-control" id="hse_inspector_id" name="hse_inspector_id">
                                     <option value="" disabled selected>Pilih Safety Officer</option>
                                     @foreach($officers as $officer)
-                                    <option value="{{ $officer->name }}" {{ old('safety_officer_1') == $officer->name ? 'selected' : '' }}>
+                                    <option value="{{ $officer->id }}" {{ old('hse_inspector_id') == $officer->id ? 'selected' : '' }}>
                                         {{ $officer->name }}
                                     </option>
                                     @endforeach
                                 </select>
-                                @error('safety_officer_1')
+                                @error('hse_inspector_id')
                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                 @enderror
                             </div>
@@ -399,16 +399,16 @@
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="perusahaan">{{ __('Perusahaan') }}</label>
-                                        <select class="form-control" id="perusahaan" name="perusahaan">
+                                        <label for="perusahaan_id">Perusahaan</label>
+                                        <select class="form-control" id="perusahaan_id" name="perusahaan_id">
                                             <option value="" disabled selected>Pilih Perusahaan</option>
                                             @foreach($perusahaans as $perusahaan)
-                                            <option value="{{ $perusahaan->perusahaan_name }}" {{ old('perusahaan') == $perusahaan->perusahaan_name ? 'selected' : '' }}>
+                                            <option value="{{ $perusahaan->id }}" {{ old('perusahaan_id') == $perusahaan->id ? 'selected' : '' }}>
                                                 {{ $perusahaan->perusahaan_name }}
                                             </option>
                                             @endforeach
                                         </select>
-                                        @error('perusahaan')
+                                        @error('perusahaan_id')
                                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                         @enderror
                                     </div>
@@ -1560,29 +1560,29 @@
 </script>
 <script>
     $(document).ready(function() {
-        $('#perusahaan').on('change', function() {
-            var perusahaan_name = $(this).val();
-            console.log("Selected Perusahaan: ", perusahaan_name); // Log the selected value
+        $('#perusahaan_id').on('change', function() {
+            var code = $(this).val();
 
-            if (perusahaan_name) {
+            if (code) {
                 $.ajax({
-                    url: '/adminsystem/incident/get-bagian/' + perusahaan_name,
+                    url: '/adminsystem/master/perusahaan/get-bagian/' + code,
                     type: 'GET',
+                    dataType: 'json',
                     success: function(data) {
-                        console.log("Bagian Data: ", data); // Log the response data
-                        $('#bagian').empty();
+                        $('#bagian').empty(); // Clear existing options
                         $('#bagian').append('<option value="" disabled selected>Pilih Bagian</option>');
-
                         $.each(data, function(index, bagian) {
                             $('#bagian').append('<option value="' + bagian.nama_bagian + '">' + bagian.nama_bagian + '</option>');
                         });
                     },
                     error: function(xhr, status, error) {
-                        console.log("Error:", error);
+                        console.error("AJAX Error:", error);
+                        alert('Gagal mengambil data bagian. Silakan coba lagi.');
                     }
                 });
             } else {
                 $('#bagian').empty();
+                $('#bagian').append('<option value="" disabled selected>Pilih Bagian</option>');
             }
         });
     });

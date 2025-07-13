@@ -36,8 +36,8 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="material_group">{{ __('Grup Material') }}</label>
-                            <input class="form-control" type="text" id="material_group" name="material_group" value="{{ $barangs->material_group }}" disabled>
+                            <label for="material_group_id">{{ __('Grup Material') }}</label>
+                            <input class="form-control" type="text" id="material_group_id" name="material_group_id" value="{{ $barangs->materialGroup->material_group }}" disabled>
                         </div>
 
                         <div class="form-group">
@@ -50,13 +50,13 @@
                             <input class="form-control" type="text" id="material_type" name="material_type" value="{{ $barangs->material_type }}" disabled>
                         </div>
                         <div class="form-group">
-                            <label for="material_type">{{ __('Remark') }}</label>
-                            <input class="form-control" type="text" id="material_type" name="material_type" value="{{ $barangs->remark }}" disabled>
+                            <label for="remark">{{ __('Remark') }}</label>
+                            <input class="form-control" type="text" id="remark" name="remark" value="{{ $barangs->remark }}" disabled>
                         </div>
 
                         <div class="form-group">
                             <label for="unit">{{ __('Unit') }}</label>
-                            <input class="form-control" type="text" id="unit" name="unit" value="{{ $barangs->unit }}" disabled>
+                            <input class="form-control" type="text" id="unit" name="unit" value="{{ $barangs->unitId->unit }}" disabled>
                         </div>
                     </div>
                 </div>
@@ -96,17 +96,17 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($trans as $tran)
+                                    @foreach ($gabung as $tran)
                                     <tr>
                                         <td class="text-center">
-                                            <p class="text-xs font-weight-bold mb-0">{{ $tran->material_code }}</p>
+                                            <p class="text-xs font-weight-bold mb-0">{{ $tran->barang->material_group_id }}</p>
                                         </td>
                                         <td class="text-center">
-                                            <p class="text-xs font-weight-bold mb-0">{{ $tran->description }}</p>
+                                            <p class="text-xs font-weight-bold mb-0">{{ $tran->barang->description }}</p>
                                         </td>
                                         <td class="align-middle text-center text-sm">
-                                            <span class="badge badge-sm {{ $tran->type == 'Pengeluaran' ? 'bg-gradient-warning' : 'bg-gradient-success' }}">
-                                                {{ $tran->type == 'Pengeluaran' ? 'Pengeluaran' : 'Pemasukan' }}
+                                            <span class="badge badge-sm {{ $tran->jenis == 'Pengeluaran' ? 'bg-gradient-warning' : 'bg-gradient-success' }}">
+                                                {{ $tran->jenis == 'Pengeluaran' ? 'Pengeluaran' : 'Pemasukan' }}
                                             </span>
                                         </td>
 
@@ -117,7 +117,7 @@
                                             <p class="text-xs font-weight-bold mb-0">{{ $tran->quantity }}</p>
                                         </td>
                                         <td class="text-center">
-                                            <p class="text-xs font-weight-bold mb-0">{{ $tran->unit}}</p>
+                                            <p class="text-xs font-weight-bold mb-0">{{ $tran->barang->UnitId->unit}}</p>
                                         </td>
                                         <td class="text-center">
                                             <p class="text-xs font-weight-bold mb-0">{{ $tran->keterangan }}</p>
@@ -127,7 +127,7 @@
                                 </tbody>
                             </table>
 
-                            @if($trans->isEmpty())
+                            @if($gabung->isEmpty())
                             <div class="text-center p-4">
                                 <p class="text-secondary">Tidak ada transaksi.</p>
                             </div>

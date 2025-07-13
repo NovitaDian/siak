@@ -17,8 +17,6 @@ return new class extends Migration
             $table->date('tanggal');
             $table->integer('quantity');
             $table->enum('type', ['Pemasukan', 'Pengeluaran']);
-            $table->string('unit', 20)->nullable();
-            $table->text('keterangan')->nullable();
             $table->timestamps();
 
         });

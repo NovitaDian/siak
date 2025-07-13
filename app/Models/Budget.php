@@ -20,14 +20,16 @@ class Budget extends Model
     public $timestamps = false;
     protected $fillable = [
         'internal_order',
-        'gl_code',
-        'gl_name',
+        'gl_id',
         'setahun_total',
         'kategori',
         'year',
 
     ];
-
+    public function gls()
+    {
+        return $this->belongsTo(Gl_Account::class, 'gl_id');
+    }
     public function prs()
     {
         return $this->hasMany(PurchaseRequest::class, 'budget_id');

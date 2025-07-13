@@ -49,9 +49,9 @@
                             <div class="form-group">
                                 <label for="shift">{{ __('Shift Kerja') }}</label>
                                 <select class="form-control" id="shift" name="shift" required>
-                                    <option value="Shift 1" {{ old('shift', $incident_fix->shift) ==  'Shift 1' ? 'selected' : '' }}>SHIFT I</option>
-                                    <option value="Shift 2" {{ old('shift', $incident_fix->shift) ==  'Shift 2' ? 'selected' : '' }}>SHIFT II</option>
-                                    <option value="Shift 3" {{ old('shift', $incident_fix->shift) ==  'Shift 3' ? 'selected' : '' }}>SHIFT III</option>
+                                    <option value="Shift 1" {{ old('shift', $incident_fix->shift) == 'Shift 1' ? 'selected' : '' }}>SHIFT I</option>
+                                    <option value="Shift 2" {{ old('shift', $incident_fix->shift) == 'Shift 2' ? 'selected' : '' }}>SHIFT II</option>
+                                    <option value="Shift 3" {{ old('shift', $incident_fix->shift) == 'Shift 3' ? 'selected' : '' }}>SHIFT III</option>
                                     <option value="Nonshift" {{ old('shift', $incident_fix->shift) == 'Nonshift' ? 'selected' : '' }}>NONSHIFT</option>
                                 </select>
                                 @error('shift')
@@ -63,16 +63,16 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="safety_officer_1">{{ __('Safety Officer') }}</label>
-                                <select class="form-control" id="safety_officer_1" name="safety_officer_1">
+                                <label for="hse_inspector_id">{{ __('Safety Officer') }}</label>
+                                <select class="form-control" id="hse_inspector_id" name="hse_inspector_id">
                                     <option value="" disabled selected>Pilih Safety Officer</option>
                                     @foreach($officers as $officer)
-                                    <option value="{{ $officer->name }}" {{ old('safety_officer_1', $incident_fix->safety_officer_1) == $officer->name ? 'selected' : '' }}>
+                                    <option value="{{ $officer->id }}" {{ old('hse_inspector_id', $incident_fix->hse_inspector_id) == $officer->id ? 'selected' : '' }}>
                                         {{ $officer->name }}
                                     </option>
                                     @endforeach
                                 </select>
-                                @error('safety_officer_1')
+                                @error('hse_inspector_id')
                                 <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                 @enderror
                             </div>
@@ -402,21 +402,23 @@
                                 <!-- Dropdown Perusahaan -->
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="perusahaan">{{ __('Perusahaan') }}</label>
-                                        <select class="form-control" id="perusahaan" name="perusahaan">
-                                            <option value="" disabled {{ old('perusahaan', $incident_fix->perusahaan ?? '') ? '' : 'selected' }}>Pilih Perusahaan</option>
+                                        <label for="perusahaan_id">Perusahaan</label>
+                                        <select class="form-control" id="perusahaan_id" name="perusahaan_id">
+                                            <option value="" disabled {{ old('perusahaan_id', $incident_fix->perusahaan_id ?? '') ? '' : 'selected' }}>Pilih Perusahaan</option>
                                             @foreach($perusahaans as $perusahaan)
-                                            <option value="{{ $perusahaan->perusahaan_name }}"
-                                                {{ old('perusahaan', $incident_fix->perusahaan ?? '') == $perusahaan->perusahaan_name ? 'selected' : '' }}>
+                                            <option value="{{ $perusahaan->id }}"
+                                                {{ old('perusahaan_id', $incident_fix->perusahaan_id ?? '') == $perusahaan->id ? 'selected' : '' }}>
                                                 {{ $perusahaan->perusahaan_name }}
                                             </option>
                                             @endforeach
                                         </select>
-                                        @error('perusahaan')
+                                        @error('perusahaan_id')
                                         <p class="text-danger text-xs mt-2">{{ $message }}</p>
                                         @enderror
                                     </div>
                                 </div>
+
+
                                 <!-- Dropdown Bagian -->
                                 <div class="col-md-4">
                                     <div class="form-group">
@@ -1567,14 +1569,14 @@
         </script>
         <script>
             $(document).ready(function() {
-                const oldPerusahaan = "{{ old('perusahaan', $incident_fix->perusahaan ?? '') }}";
+                const oldPerusahaan = "{{ old('perusahaan_id', $incident_fix->perusahaan_id ?? '') }}";
                 const oldBagian = "{{ old('bagian', $incident_fix->bagian ?? '') }}";
 
                 // Fungsi load Bagian berdasarkan perusahaan
-                function loadBagian(perusahaanName, selectedBagian = '') {
-                    if (perusahaanName) {
+                function loadBagian(code, selectedBagian = '') {
+                    if (code) {
                         $.ajax({
-                            url: '/operator/incident/get-bagian/' + encodeURIComponent(perusahaanName),
+                            url: '/operator/master/perusahaan/get-bagian/' + encodeURIComponent(code),
                             type: 'GET',
                             success: function(data) {
                                 $('#bagian').empty();
@@ -1600,14 +1602,14 @@
                 }
 
                 // Saat user ganti perusahaan
-                $('#perusahaan').on('change', function() {
-                    const perusahaanName = $(this).val();
-                    loadBagian(perusahaanName);
+                $('#perusahaan_id').on('change', function() {
+                    const code = $(this).val();
+                    loadBagian(code);
                 });
 
                 // Trigger otomatis saat halaman load, jika ada old value
                 if (oldPerusahaan) {
-                    $('#perusahaan').val(oldPerusahaan);
+                    $('#perusahaan_id').val(oldPerusahaan);
                     loadBagian(oldPerusahaan, oldBagian);
                 }
             });

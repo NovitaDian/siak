@@ -86,7 +86,7 @@
                                 @foreach ($alats as $alat)
                                 <tr>
                                     <td class="text-center">
-                                        <p class="text-xs font-weight-bold mb-0">{{ $alat->nama_alat }}</p>
+                                        <p class="text-xs font-weight-bold mb-0">{{ $alat->namaAlat->nama_alat }}</p>
                                     </td>
                                     <td class="text-center">
                                         <p class="text-xs font-weight-bold mb-0">{{ $alat->nomor }}</p>
