@@ -9,7 +9,7 @@
   <hr class="horizontal dark mt-0">
   <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
     <ul class="navbar-nav">
-<li class="nav-item">
+      <li class="nav-item">
         <a class="nav-link {{ Request::routeIs('tamu.home') ? 'active' : '' }}" href="{{ route('tamu.home') }}">
           <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
             <img src="{{ asset('../assets/img/house-chimney-user.png') }}" alt="home" width="16" height="16">
@@ -17,8 +17,22 @@
           <span class="nav-link-text ms-1">Home</span>
         </a>
       </li>
+      @php
+      $dashboardPaths = [
+      'tamu/dashboard',
+      'tamu/dashboard/*',
+      'tamu/dashboard-*',
+      ];
+      @endphp
+
       <li class="nav-item">
-        <a class="nav-link {{ Request::is('tamu/dashboard') ? 'active' : '' }}" href="{{ url('tamu/dashboard') }}">
+        <a class="nav-link 
+        @foreach ($dashboardPaths as $path)
+            @if (Request::is($path))
+                active
+                @break
+            @endif
+        @endforeach" href="{{ url('tamu/dashboard') }}">
           <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
             <img src="{{ asset('../assets/img/dashboard.png') }}" alt="dashboard" width="16" height="16">
           </div>
@@ -30,7 +44,7 @@
         <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">User </h6>
       </li>
       <li class="nav-item">
-        <a class="nav-link {{ (Request::is('user-profile') ? 'active' : '') }} " href="{{ route('tamu.info_user.index') }}">
+        <a class="nav-link {{ (Request::is('tamu/info_user') ? 'active' : '') }} " href="{{ route('tamu.info_user.index') }}">
           <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
             <svg width="12px" height="12px" viewBox="0 0 46 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
               <title>customer-support</title>
@@ -57,8 +71,8 @@
       <div class="full-background" style="background-image: url('../assets/img/curved-images/white-curved.jpeg')"></div>
       <div class="card-body text-start p-3 w-100 mb-0">
         <div class="docs-info">
-          <h6 class="text-white up mb-0">Need help?</h6>
-          <p class="text-xs font-weight-bold">Please check our docs</p>
+          <h6 class="text-white up mb-0">Butuh Bantuan?</h6>
+          <p class="text-xs font-weight-bold">Lihat dokumentasi kami</p>
           <a href="/assets/manual_book/TAMU.pdf" target="_blank" class="btn btn-white btn-sm w-100 mb-0">Documentation</a>
         </div>
       </div>

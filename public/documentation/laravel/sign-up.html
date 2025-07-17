@@ -588,7 +588,7 @@
 
 
 
-                    session()->flash('success', 'Your account has been created.');
+                    session()->flash('success', 'Akun anda berhasil dibuat');
                     $user = User::create($attributes);
                     Auth::login($user);
                     return redirect('/dashboard');

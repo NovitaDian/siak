@@ -73,7 +73,7 @@
             <td><strong>ID</strong></td>
             <td>{{ $d->id }}</td>
             <td><strong>Penulis</strong></td>
-            <td>{{ $d->writer }}</td>
+            <td>{{ $d->user->name }}</td>
         </tr>
         <tr>
             <td><strong>Tanggal Shift</strong></td>

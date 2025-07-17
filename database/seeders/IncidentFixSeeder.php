@@ -58,6 +58,8 @@ class IncidentFixSeeder extends Seeder
                 'total_man_hours_lta' => 0,
                 'total_man_hours_wlta2' => 0,
                 'user_id' => 1, // pastikan user ID 1 ada
+                'status_request' => 'Nothing', 
+                'status_kejadian' => 'Tidak', 
                 'no_laporan' => $faker->unique()->numberBetween(10, 100),
             ]);
         }

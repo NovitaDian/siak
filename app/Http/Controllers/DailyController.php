@@ -61,7 +61,6 @@ class DailyController extends Controller
             'rincian_laporan' => 'nullable|string',
         ]);
 
-        // Ambil data HSE Inspector
 
         // Simpan data ke database
         Daily::create([
@@ -111,7 +110,6 @@ class DailyController extends Controller
         // Ambil data Daily yang akan diupdate
         $daily = Daily::findOrFail($id);
 
-        // Ambil data HSE Inspector
 
         // Update data
         $daily->update([
@@ -169,7 +167,6 @@ class DailyController extends Controller
         // Ambil data Daily yang akan diupdate
         $daily_fix = SentDaily::findOrFail($id);
 
-        // Ambil data HSE Inspector
 
         // Update data
         $daily_fix->update([
@@ -337,7 +334,6 @@ class DailyController extends Controller
             'rincian_laporan' => 'nullable|string',
         ]);
 
-        // Ambil data HSE Inspector
 
         // Simpan data ke database
         Daily::create([
@@ -385,7 +381,6 @@ class DailyController extends Controller
         // Ambil data Daily yang akan diupdate
         $daily = Daily::findOrFail($id);
 
-        // Ambil data HSE Inspector
 
         // Update data
         $daily->update([
@@ -446,7 +441,6 @@ class DailyController extends Controller
         // Ambil data Daily yang akan diupdate
         $daily_fix = SentDaily::findOrFail($id);
 
-        // Ambil data HSE Inspector
 
         // Update data
         $daily_fix->update([

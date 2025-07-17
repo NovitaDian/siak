@@ -36,11 +36,11 @@
                 </div>
                 <div class="col-md-6 mb-3">
                     <strong>Status:</strong>
-                    <p>{{ $tools->status ?? '-'}}</p>
+                    <p>{{ $tools->alat->status ?? '-'}}</p>
                 </div>
                 <div class="col-md-6 mb-3">
                     <strong>Penulis:</strong>
-                    <p>{{ $tools->writer ?? '-'}}</p>
+                    <p>{{ $tools->user->name ?? '-'}}</p>
                 </div>
                 <div class="col-md-6 mb-3">
                     <strong>Dibuat Pada:</strong>

@@ -94,22 +94,7 @@ class InventoryController extends Controller
         $gabung = $gabung->sortByDesc('tanggal')->values();
         return view('adminsystem.inventory.barang.detail', compact('barangs', 'gabung'));
     }
-    public function getBarangDetails($id)
-    {
-        // Find the barang by ID
-        $barang = Barang::find($id);
-
-        if ($barang) {
-            // Return unit and keterangan
-            return response()->json([
-                'barang_id' => $barang->barang_id,
-                'unit' => $barang->unit,
-            ]);
-        }
-
-        return response()->json([], 404);  // Return an empty response if the barang is not found
-    }
-
+    
     public function barang_store(Request $request)
     {
         $request->validate([

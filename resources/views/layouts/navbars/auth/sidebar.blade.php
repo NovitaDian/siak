@@ -9,46 +9,140 @@
   <hr class="horizontal dark mt-0">
   <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
     <ul class="navbar-nav">
+      @php
+      $homePaths = [
+      'adminsystem/home',
+      'adminsystem/home/*',
+      'adminsystem/incident',
+      'adminsystem/incident/*',
+      'adminsystem/ppe',
+      'adminsystem/ppe/*',
+      'adminsystem/ncr',
+      'adminsystem/ncr/*',
+      'adminsystem/tool',
+      'adminsystem/tool/*',
+      'adminsystem/daily',
+      'adminsystem/daily/*',
+      ];
+      @endphp
+
       <li class="nav-item">
-        <a class="nav-link {{ Request::routeIs('adminsystem.home') ? 'active' : '' }}" href="{{ route('adminsystem.home') }}">
+        <a class="nav-link 
+        @foreach ($homePaths as $path)
+            @if (Request::is($path))
+                active
+                @break
+            @endif
+        @endforeach" href="{{ route('adminsystem.home') }}">
           <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
             <img src="{{ asset('../assets/img/house-chimney-user.png') }}" alt="home" width="16" height="16">
           </div>
           <span class="nav-link-text ms-1">Home</span>
         </a>
       </li>
+      @php
+      $dashboardPaths = [
+      'adminsystem/dashboard',
+      'adminsystem/dashboard/*',
+      'adminsystem/dashboard-*',
+      ];
+      @endphp
+
       <li class="nav-item">
-        <a class="nav-link {{ Request::is('adminsystem/dashboard') ? 'active' : '' }}" href="{{ url('adminsystem/dashboard') }}">
+        <a class="nav-link 
+        @foreach ($dashboardPaths as $path)
+            @if (Request::is($path))
+                active
+                @break
+            @endif
+        @endforeach" href="{{ url('adminsystem/dashboard') }}">
           <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
             <img src="{{ asset('../assets/img/dashboard.png') }}" alt="dashboard" width="16" height="16">
           </div>
           <span class="nav-link-text ms-1">Dashboard</span>
         </a>
       </li>
+      @php
+      $budgetPaths = [
+      'adminsystem/budget',
+      'adminsystem/budget/*',
+      'adminsystem/pr',
+      'adminsystem/pr/*',
+      ];
+      @endphp
+
       <li class="nav-item">
-        <a class="nav-link {{ Request::is('adminsystem/budget') ? 'active' : '' }}" href="{{ url('adminsystem/budget') }}">
+        <a class="nav-link 
+        @foreach ($budgetPaths as $path)
+            @if (Request::is($path))
+                active
+                @break
+            @endif
+        @endforeach " href="{{ url('adminsystem/budget') }}">
           <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
             <img src="{{ asset('../assets/img/money.png') }}" alt="budget" width="16" height="16">
           </div>
           <span class="nav-link-text ms-1">Budget & PR</span>
         </a>
       </li>
+      @php
+      $inventoryPaths = [
+      'adminsystem/inventory',
+      'adminsystem/inventory/*',
+      'adminsystem/pemasukan',
+      'adminsystem/pemasukan/*',
+      'adminsystem/pengeluaran',
+      'adminsystem/pengeluaran/*',
+      ];
+      @endphp
+
       <li class="nav-item">
-        <a class="nav-link {{ Request::is('adminsystem/inventory') ? 'active' : '' }}" href="{{ url('adminsystem/inventory') }}">
+        <a class="nav-link 
+        @foreach ($inventoryPaths as $path)
+            @if (Request::is($path))
+                active
+                @break
+            @endif
+        @endforeach" href="{{ url('adminsystem/inventory') }}">
           <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
             <img src="{{ asset('../assets/img/box.png') }}" alt="inventory" width="16" height="16">
           </div>
           <span class="nav-link-text ms-1">Inventory</span>
         </a>
       </li>
+      @php
+      $masterPaths = [
+      'adminsystem/master',
+      'adminsystem/master/*',
+      'adminsystem/glaccount',
+      'adminsystem/glaccount/*',
+      'adminsystem/material_group',
+      'adminsystem/material_group/*',
+      'adminsystem/unit',
+      'adminsystem/unit/*',
+      'adminsystem/hse_inspector',
+      'adminsystem/hse_inspector/*',
+      'adminsystem/hari_hilang',
+      'adminsystem/hari_hilang/*',
+      ];
+      @endphp
+
       <li class="nav-item">
-        <a class="nav-link {{ Request::is('adminsystem/master') ? 'active' : '' }}" href="{{ url('adminsystem/master') }}">
+        <a class="nav-link 
+        @foreach ($masterPaths as $path)
+            @if (Request::is($path))
+                active
+                @break
+            @endif
+        @endforeach
+    " href="{{ url('adminsystem/master') }}">
           <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
             <img src="{{ asset('../assets/img/newspaper.png') }}" alt="master" width="16" height="16">
           </div>
           <span class="nav-link-text ms-1">Master</span>
         </a>
       </li>
+
       <li class="nav-item">
         <a class="nav-link {{ Request::is('adminsystem/references') ? 'active' : '' }}" href="{{ url('adminsystem/references') }}">
           <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -61,7 +155,7 @@
         <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">User </h6>
       </li>
       <li class="nav-item">
-        <a class="nav-link {{ (Request::is('user-profile') ? 'active' : '') }} " href="{{ route('adminsystem.info_user.index') }}">
+        <a class="nav-link {{ (Request::is('adminsystem/info_user') ? 'active' : '') }} " href="{{ route('adminsystem.info_user.index') }}">
           <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
             <svg width="12px" height="12px" viewBox="0 0 46 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
               <title>customer-support</title>
@@ -81,8 +175,21 @@
           <span class="nav-link-text ms-1">User Profile</span>
         </a>
       </li>
+      @php
+      $userPaths = [
+      'adminsystem/user',
+      'adminsystem/user/*',
+      ];
+      @endphp
+
       <li class="nav-item pb-2">
-        <a class="nav-link {{ (Request::is('user-management') ? 'active' : '') }}" href="{{ route('adminsystem.user.index') }}">
+        <a class="nav-link 
+        @foreach ($userPaths as $path)
+            @if (Request::is($path))
+                active
+                @break
+            @endif
+        @endforeach" href="{{ route('adminsystem.user.index') }}">
           <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
             <i style="font-size: 1rem;" class="fas fa-lg fa-list-ul ps-2 pe-2 text-center text-dark {{ (Request::is('user-management') ? 'text-white' : 'text-dark') }} " aria-hidden="true"></i>
           </div>
@@ -98,8 +205,8 @@
       <div class="full-background" style="background-image: url('../assets/img/curved-images/white-curved.jpeg')"></div>
       <div class="card-body text-start p-3 w-100 mb-0">
         <div class="docs-info">
-          <h6 class="text-white up mb-0">Need help?</h6>
-          <p class="text-xs font-weight-bold">Please check our docs</p>
+          <h6 class="text-white up mb-0">Butuh Bantuan?</h6>
+          <p class="text-xs font-weight-bold">Lihat dokumentasi kami</p>
           <a href="/assets/manual_book/ADMIN.pdf" target="_blank" class="btn btn-white btn-sm w-100 mb-0">Documentation</a>
         </div>
       </div>

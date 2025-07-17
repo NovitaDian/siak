@@ -57,10 +57,10 @@
             <tr>
                 <td class="text-center text-xs">{{ $loop->iteration }}</td>
                 <td class="text-center">
-                    <p class="text-xs font-weight-bold mb-0">{{ $budget->gl_code }}</p>
+                    <p class="text-xs font-weight-bold mb-0">{{ $budget->gls->gl_code }}</p>
                 </td>
                 <td class="text-center">
-                    <p class="text-xs font-weight-bold mb-0">{{ $budget->gl_name }}</p>
+                    <p class="text-xs font-weight-bold mb-0">{{ $budget->gls->gl_name }}</p>
                 </td>
                 <td class="text-center">
                     <p class="text-xs font-weight-bold mb-0">{{ $budget->internal_order ?? '-' }}</p>

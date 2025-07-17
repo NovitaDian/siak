@@ -54,30 +54,40 @@ class HomeController extends Controller
     //  NOTES
     public function store(Request $request)
     {
+        // Validasi input dari form
         $request->validate([
-            'note' => 'required',
-            'attachment' => 'nullable|file|mimes:jpeg,png,jpg,pdf|max:2048', // Adjust file types and size as needed
+            'note' => 'required', // Catatan wajib diisi
+            'attachment' => 'nullable|file|mimes:jpeg,png,jpg,pdf|max:2048',
+            // File lampiran bersifat opsional, harus berupa file dengan tipe jpeg, png, jpg, atau pdf, maksimal 2MB
         ]);
 
+        // Simpan data catatan ke tabel Note
         $note = Note::create([
-            'user_id' => auth()->user()->id, // Assuming you are using authentication
-            'note' => $request->input('note'),
+            'user_id' => Auth::user()->id, // Ambil ID user yang sedang login
+            'note' => $request->input('note'), // Isi catatan dari input form
         ]);
 
+        // Cek apakah ada file yang diunggah
         if ($request->hasFile('attachment')) {
-            $file = $request->file('attachment');
+            $file = $request->file('attachment'); // Ambil file dari input form
             $fileName = time() . '_' . $file->getClientOriginalName();
-            $filePath = $file->storeAs('uploads', $fileName, 'public'); // Store in 'storage/app/public/uploads'
+            // Buat nama file unik berdasarkan timestamp dan nama asli file
 
+            $filePath = $file->storeAs('uploads', $fileName, 'public');
+            // Simpan file di folder 'storage/app/public/uploads'
+
+            // Simpan informasi file ke tabel Attachment
             Attachment::create([
-                'note_id' => $note->id,
-                'file_name' => $fileName,
-                'file_path' => $filePath,
+                'note_id' => $note->id, // Hubungkan file ke catatan yang baru dibuat
+                'file_name' => $fileName, // Simpan nama file
+                'file_path' => $filePath, // Simpan path lokasi file
             ]);
         }
 
+        // Redirect ke halaman home admin dengan pesan sukses
         return redirect()->route('adminsystem.home')->with('success', 'Catatan berhasil disimpan.');
     }
+
     public function destroy(Note $note)
     {
         foreach ($note->attachments as $attachment) {
@@ -93,24 +103,30 @@ class HomeController extends Controller
 
     public function dashboard(Request $request)
     {
+        // Ambil input tahun dan bulan dari request
         $year = $request->input('year');
         $month = $request->input('month');
 
+        // Mulai query dari tabel ppe_fix
         $query = DB::table('ppe_fix');
 
+        // Jika tahun dipilih, filter berdasarkan tahun
         if ($year) {
             $query->whereYear('tanggal_shift_kerja', $year);
         }
 
+        // Jika bulan dipilih, filter berdasarkan bulan dan kelompokkan per tanggal
         if ($month) {
             $query->whereMonth('tanggal_shift_kerja', $month);
             $groupBy = DB::raw('DATE(tanggal_shift_kerja)');
             $selectDate = "DATE(tanggal_shift_kerja) as tanggal";
         } else {
+            // Jika tidak, kelompokkan per bulan
             $groupBy = DB::raw('MONTH(tanggal_shift_kerja)');
             $selectDate = "MONTH(tanggal_shift_kerja) as bulan";
         }
 
+        // Lakukan select dan agregasi data patuh dan tidak patuh APD
         $data = $query->selectRaw("
         $selectDate,
         SUM(jumlah_patuh_apd_karyawan) as patuh_karyawan,
@@ -138,6 +154,7 @@ class HomeController extends Controller
             ->orderBy($groupBy)
             ->get();
 
+        // Siapkan array untuk data yang akan dikirim ke view (chart, label, dsb)
         $labels = [];
         $employeeData = [];
         $contractorData = [];
@@ -150,36 +167,46 @@ class HomeController extends Controller
         $contractorHelmData = [];
         $contractorSepatuData = [];
 
+        // Proses data hasil query menjadi format yang bisa digunakan untuk grafik
         foreach ($data as $item) {
             if ($month) {
+                // Jika per hari (karena filter per bulan), label menggunakan tanggal
                 $labels[] = date('d M', strtotime($item->tanggal));
             } else {
+                // Jika per bulan, label hanya nama bulan
                 $labels[] = date('M', mktime(0, 0, 0, $item->bulan, 10));
             }
 
+            // Hitung total karyawan dan kontraktor (patuh + tidak patuh)
             $total_karyawan = $item->patuh_karyawan + $item->tidak_patuh_karyawan;
             $total_kontraktor = $item->patuh_kontraktor + $item->tidak_patuh_kontraktor;
 
+            // Hitung persentase kepatuhan APD
             $employeeData[] = $total_karyawan > 0 ? round(($item->patuh_karyawan / $total_karyawan) * 100, 2) : 0;
             $contractorData[] = $total_kontraktor > 0 ? round(($item->patuh_kontraktor / $total_kontraktor) * 100, 2) : 0;
 
+            // Simpan data patuh dan tidak patuh untuk keperluan grafik batang atau tabel
             $tidak_patuh_karyawan[] = $item->tidak_patuh_karyawan;
             $patuh_karyawan[] = $item->patuh_karyawan;
             $tidak_patuh_kontraktor[] = $item->tidak_patuh_kontraktor;
             $patuh_kontraktor[] = $item->patuh_kontraktor;
 
+            // Detail ketidakpatuhan helm dan sepatu untuk analisis lanjutan
             $employeeHelmData[] = $item->tidak_patuh_helm_karyawan;
             $employeeSepatuData[] = $item->tidak_patuh_sepatu_karyawan;
             $contractorHelmData[] = $item->tidak_patuh_helm_kontraktor;
             $contractorSepatuData[] = $item->tidak_patuh_sepatu_kontraktor;
         }
 
+        // Ambil daftar tahun dan bulan yang tersedia dalam tabel ppe_fix
         $years = DB::table('ppe_fix')->selectRaw('YEAR(tanggal_shift_kerja) as year')->distinct()->orderBy('year', 'desc')->pluck('year');
         $months = DB::table('ppe_fix')->selectRaw('MONTH(tanggal_shift_kerja) as month')->distinct()->orderBy('month', 'desc')->pluck('month');
 
+        // Ambil nilai target persentase kepatuhan dari tabel target
         $targetEmployee = Target::where('key', 'target_employee_compliance')->value('value');
         $targetContractor = Target::where('key', 'target_contractor_compliance')->value('value');
 
+        // Kirim semua data ke view dashboard
         return view('adminsystem.dashboard.dashboard', compact(
             'labels',
             'employeeData',
@@ -203,50 +230,82 @@ class HomeController extends Controller
 
 
 
-   // Controller Method
-public function budget(Request $request)
-{
-    $year = $request->year;
 
-    $query = Budget::with('prs');
+    // Controller Method
+    public function budget(Request $request)
+    {
+        // Ambil input tahun dari parameter request
+        $year = $request->year;
 
-    if ($year) {
-        $query->where('year', $year);
+        // Ambil data budget beserta relasi 'prs' (relasi ke purchase request mungkin)
+        $query = Budget::with('prs');
+
+        // Jika input tahun ada, filter berdasarkan tahun tersebut
+        if ($year) {
+            $query->where('year', $year);
+        }
+
+        // Jalankan query dan ambil semua data hasil filter
+        $budgets = $query->get();
+
+        // Inisialisasi array untuk dikirim ke view (biasanya untuk grafik atau tabel)
+        $labels = [];
+        $totalBudgets = [];
+        $usages = [];
+
+        // Loop setiap data budget
+        foreach ($budgets as $budget) {
+            // Ambil nama GL (General Ledger) dari relasi gls
+            $labels[] = $budget->gls->gl_name;
+
+            // Ambil total budget setahun, pastikan dalam bentuk integer
+            $totalBudgets[] = (int) $budget->setahun_total;
+
+            // Ambil nilai penggunaan (usage), bukan persentasenya
+            $usages[] = (int) $budget->usage;
+        }
+
+        // Ambil daftar tahun yang tersedia dari tabel budget untuk keperluan filter
+        $years = Budget::select('year')->distinct()->orderBy('year', 'desc')->pluck('year');
+
+        // Kirim data ke view 'adminsystem.dashboard.budget'
+        return view('adminsystem.dashboard.budget', compact('labels', 'totalBudgets', 'usages', 'year', 'years'));
     }
 
-    $budgets = $query->get();
-
-    $labels = [];
-    $totalBudgets = [];
-    $usages = [];
-
-    foreach ($budgets as $budget) {
-        $labels[] = $budget->gls->gl_name;
-        $totalBudgets[] = (int) $budget->setahun_total;
-        $usages[] = (int) $budget->usage; // Pastikan usage dikirim, bukan persentasenya
-    }
-
-    $years = Budget::select('year')->distinct()->orderBy('year', 'desc')->pluck('year');
-
-    return view('adminsystem.dashboard.budget', compact('labels', 'totalBudgets', 'usages', 'year', 'years'));
-}
 
     public function ncr(Request $request)
     {
+        // Ambil input tahun dari request
         $year = $request->input('year');
 
+        // Ambil data NCR dari tabel sent_ncr
+        // Jika tahun diisi, filter berdasarkan tahun dari kolom tanggal_shift_kerja
         $ncr_fixs = SentNcr::when($year, function ($query) use ($year) {
             return $query->whereYear('tanggal_shift_kerja', $year);
         })->get();
 
+        // Hitung jumlah data NCR dengan status "Open"
         $openCount = $ncr_fixs->where('status_ncr', 'Open')->count();
+
+        // Hitung jumlah data NCR dengan status "Closed"
         $closedCount = $ncr_fixs->where('status_ncr', 'Closed')->count();
+
+        // Ambil daftar tahun yang tersedia dari data NCR (untuk filter dropdown)
         $years = SentNcr::selectRaw('YEAR(tanggal_shift_kerja) as year')
             ->distinct()
             ->orderBy('year', 'desc')
             ->pluck('year');
-        return view('adminsystem.dashboard.ncr', compact('ncr_fixs', 'openCount', 'closedCount', 'years', 'year'));
+
+        // Kirim data ke view adminsystem.dashboard.ncr
+        return view('adminsystem.dashboard.ncr', compact(
+            'ncr_fixs',        // daftar semua data NCR (filtered by year jika ada)
+            'openCount',       // total NCR yang masih "Open"
+            'closedCount',     // total NCR yang sudah "Closed"
+            'years',           // daftar tahun yang tersedia
+            'year'             // tahun yang sedang difilter
+        ));
     }
+
 
     public function setComplianceTarget(Request $request)
     {
@@ -270,29 +329,30 @@ public function budget(Request $request)
 
     public function incident(Request $request)
     {
-        // Ambil input shift_date dan shift
+        // Ambil input dari form filter (jika ada)
         $shiftDate = $request->input('shift_date');
         $shift = $request->input('shift');
 
-        // Jika user mengisi filter, validasi input
+        // Jika user mengisi form filter, lakukan validasi input
         if ($request->has(['shift_date', 'shift'])) {
             $request->validate([
-                'shift_date' => 'required|date',
-                'shift' => 'required|string',
+                'shift_date' => 'required|date',     // Tanggal harus valid
+                'shift' => 'required|string',        // Shift harus diisi
             ]);
         }
 
-        // Ambil target manhours
+        // Ambil target jam kerja dari tabel TargetManHours
         $targetManHours = TargetManHours::value('target_manhours');
 
-        // Jika tidak ada filter (shift kosong), ambil data terakhir dari DB
+        // Jika input shift atau tanggal kosong (tidak difilter)
         if (!$shiftDate || !$shift) {
+            // Ambil data incident terakhir dari database
             $latestData = SentIncident::orderByDesc('shift_date')
-                ->orderByDesc('created_at') // atau orderByDesc('id') jika perlu
+                ->orderByDesc('created_at')
                 ->first();
 
+            // Jika database kosong (tidak ada data incident)
             if (!$latestData) {
-                // Kalau database kosong
                 return view('adminsystem.dashboard.dashboard-incident', [
                     'daysSinceLastLTA' => 0,
                     'daysSinceLastWLTA' => 0,
@@ -307,12 +367,13 @@ public function budget(Request $request)
                 ]);
             }
 
-            // Ambil last LTA date berdasar data terakhir
+            // Ambil tanggal terakhir terjadinya LTA sebelum/tanggal data terakhir
             $lastLtaDate = SentIncident::where('lta', 1)
                 ->whereDate('shift_date', '<=', $latestData->shift_date)
                 ->orderByDesc('shift_date')
                 ->value('shift_date');
 
+            // Tampilkan dashboard berdasarkan data terakhir
             return view('adminsystem.dashboard.dashboard-incident', [
                 'daysSinceLastLTA' => $latestData->total_safe_day_lta2 ?? 0,
                 'daysSinceLastWLTA' => $latestData->total_safe_day_wlta ?? 0,
@@ -328,22 +389,26 @@ public function budget(Request $request)
             ]);
         }
 
-        // Jika ada filter shift dan date, cari data berdasarkan input
+        // Jika ada input filter (shift dan tanggal), parse tanggalnya
         $shiftDateParsed = Carbon::parse($shiftDate)->format('Y-m-d');
 
+        // Cari data incident sesuai dengan tanggal dan shift yang diinput
         $data = SentIncident::whereDate('shift_date', $shiftDateParsed)
             ->where('shift', $shift)
             ->first();
 
+        // Jika tidak ditemukan data, redirect kembali dengan error
         if (!$data) {
             return redirect()->back()->with('error', 'Data tidak ditemukan untuk tanggal dan shift tersebut.');
         }
 
+        // Ambil tanggal terakhir terjadinya LTA sebelum/tanggal input
         $lastLtaDate = SentIncident::where('lta', 1)
             ->whereDate('shift_date', '<=', $shiftDateParsed)
             ->orderByDesc('shift_date')
             ->value('shift_date');
 
+        // Tampilkan dashboard berdasarkan filter tanggal dan shift
         return view('adminsystem.dashboard.dashboard-incident', [
             'daysSinceLastLTA' => $data->total_safe_day_lta2 ?? 0,
             'daysSinceLastWLTA' => $data->total_safe_day_wlta ?? 0,
@@ -357,6 +422,7 @@ public function budget(Request $request)
             'targetManHours' => $targetManHours,
         ]);
     }
+
 
 
 
@@ -555,31 +621,31 @@ public function budget(Request $request)
         ));
     }
     public function operator_budget(Request $request)
-{
-    $year = $request->year;
+    {
+        $year = $request->year;
 
-    $query = Budget::with('prs');
+        $query = Budget::with('prs');
 
-    if ($year) {
-        $query->where('year', $year);
+        if ($year) {
+            $query->where('year', $year);
+        }
+
+        $budgets = $query->get();
+
+        $labels = [];
+        $totalBudgets = [];
+        $usages = [];
+
+        foreach ($budgets as $budget) {
+            $labels[] = $budget->gls->gl_name;
+            $totalBudgets[] = (int) $budget->setahun_total;
+            $usages[] = (int) $budget->usage; // Pastikan usage dikirim, bukan persentasenya
+        }
+
+        $years = Budget::select('year')->distinct()->orderBy('year', 'desc')->pluck('year');
+
+        return view('operator.dashboard.budget', compact('labels', 'totalBudgets', 'usages', 'year', 'years'));
     }
-
-    $budgets = $query->get();
-
-    $labels = [];
-    $totalBudgets = [];
-    $usages = [];
-
-    foreach ($budgets as $budget) {
-        $labels[] = $budget->gls->gl_name;
-        $totalBudgets[] = (int) $budget->setahun_total;
-        $usages[] = (int) $budget->usage; // Pastikan usage dikirim, bukan persentasenya
-    }
-
-    $years = Budget::select('year')->distinct()->orderBy('year', 'desc')->pluck('year');
-
-    return view('operator.dashboard.budget', compact('labels', 'totalBudgets', 'usages', 'year', 'years'));
-}
     public function operator_ncr(Request $request)
     {
         $year = $request->input('year');

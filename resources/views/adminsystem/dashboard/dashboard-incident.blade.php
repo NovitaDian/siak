@@ -1,9 +1,9 @@
 @extends('layouts.user_type.auth')
+@section('content')
 <button type="button" class="btn btn-outline-secondary btn-md d-flex align-items-center gap-2"
     onclick="window.location.href='{{ route('adminsystem.dashboard') }}'">
     <img src="{{ asset('assets/img/logos/arrow-back.png') }}" alt="Back" style="width: 40px; height: 40px;">
 </button>
-@section('content')
 
 <div class="container-fluid">
     <div class="title-board text-center fw-bold fs-4 mb-4">SAFETY PERFORMANCE BOARD</div>

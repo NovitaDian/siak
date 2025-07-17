@@ -28,7 +28,7 @@ class IncidentController extends Controller
 {
     public function index(Request $request)
     {
-        $user = auth()->user();
+        $user = Auth::user();
         $incidents = Incident::where('user_id', $user->id)->latest()
             ->get();
         $requests = IncidentRequest::latest()
@@ -141,7 +141,7 @@ class IncidentController extends Controller
 
         // Tanggal stamp & user
         $validated['stamp_date'] = Carbon::today()->toDateString();
-        $validated['user_id'] = auth()->user()->id;
+        $validated['user_id'] = Auth::user()->id;
         // Total tenaga kerja
         $totalWorkforce =
             ($request->input('jml_employee') ?? 0) +
@@ -155,7 +155,6 @@ class IncidentController extends Controller
         // Total man hours per hari (diasumsikan 8 jam kerja)
         $validated['man_hours_per_day'] = $totalWorkforce * 8;
 
-        // Hitung status korban
         // Hitung bulan_tahun
         $validated['shift_date'] = date('Y-m-d', strtotime($request->input('shift_date')));
 
@@ -469,7 +468,7 @@ class IncidentController extends Controller
 
         // Tanggal stamp & user
         $validated['stamp_date'] = Carbon::today()->toDateString();
-        $validated['user_id'] = auth()->user()->id;
+        $validated['user_id'] = Auth::user()->id;
 
 
 
@@ -737,7 +736,7 @@ class IncidentController extends Controller
             'shift_date' => 'required|date',
             'shift' => 'required|string|max:255',
             'hse_inspector_id' => 'required|exists:hse_inspector,id',
-            'perusahaan_id' => 'required|exists:perusahaan,id',
+            'perusahaan_id' => 'nullable|exists:perusahaan,id',
             'status_kejadian' => 'nullable|string|max:255',
             'tgl_kejadiannya' => 'nullable|date',
             'jam_kejadiannya' => 'nullable',
@@ -747,7 +746,6 @@ class IncidentController extends Controller
             'nama_korban' => 'nullable|string|max:255',
             'status' => 'nullable|string|max:255',
             'jenis_kelamin' => 'nullable|string|max:50',
-            'perusahaan_id' => 'nullable|exists:perusahaan,id',
             'bagian' => 'nullable|string|max:255',
             'jabatan' => 'nullable|string|max:255',
             'masa_kerja' => 'nullable|integer',
@@ -808,7 +806,7 @@ class IncidentController extends Controller
 
         // Tanggal stamp & user
         $validated['stamp_date'] = Carbon::today()->toDateString();
-        $validated['user_id'] = auth()->user()->id;
+        $validated['user_id'] = Auth::user()->id;
         $validated['status_request'] = "Nothing";
         // Total tenaga kerja
         $totalWorkforce =
@@ -1345,7 +1343,7 @@ class IncidentController extends Controller
 
     public function operator_index(Request $request)
     {
-        $user = auth()->user();
+        $user = Auth::user();
         $incidents = Incident::where('user_id', $user->id)->latest()
             ->get();
         $requests = IncidentRequest::latest()
@@ -1457,7 +1455,7 @@ class IncidentController extends Controller
 
         // Tanggal stamp & user
         $validated['stamp_date'] = Carbon::today()->toDateString();
-        $validated['user_id'] = auth()->user()->id;
+        $validated['user_id'] = Auth::user()->id;
 
         // Total tenaga kerja
         $totalWorkforce =
@@ -1785,7 +1783,7 @@ class IncidentController extends Controller
 
         // Tanggal stamp & user
         $validated['stamp_date'] = Carbon::today()->toDateString();
-        $validated['user_id'] = auth()->user()->id;
+        $validated['user_id'] = Auth::user()->id;
 
         // Total tenaga kerja
         $totalWorkforce =
@@ -2051,7 +2049,7 @@ class IncidentController extends Controller
             'shift_date' => 'required|date',
             'shift' => 'required|string|max:255',
             'hse_inspector_id' => 'required|exists:hse_inspector,id',
-            'perusahaan_id' => 'required|exists:perusahaan,id',
+            'perusahaan_id' => 'nullable|exists:perusahaan,id',
             'status_kejadian' => 'nullable|string|max:255',
             'tgl_kejadiannya' => 'nullable|date',
             'jam_kejadiannya' => 'nullable',
@@ -2121,7 +2119,7 @@ class IncidentController extends Controller
 
         // Tanggal stamp & user
         $validated['stamp_date'] = Carbon::today()->toDateString();
-        $validated['user_id'] = auth()->user()->id;
+        $validated['user_id'] = Auth::user()->id;
         $validated['status_request'] = "Nothing";
 
         // Total tenaga kerja

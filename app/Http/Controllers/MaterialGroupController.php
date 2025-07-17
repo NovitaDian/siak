@@ -27,7 +27,7 @@ class MaterialGroupController extends Controller
 
         MaterialGroup::create($request->all());
 
-        return redirect()->route('adminsystem.material_group.index')->with('success', 'Purchase Request berhasil dibuat.');
+        return redirect()->route('adminsystem.material_group.index')->with('success', 'Material Group berhasil dibuat.');
     }
 
     public function edit($id)
@@ -46,7 +46,7 @@ class MaterialGroupController extends Controller
 
         $material_group->update($request->all());
 
-        return redirect()->route('adminsystem.material_group.index')->with('success', 'Purchase Request berhasil diperbarui.');
+        return redirect()->route('adminsystem.material_group.index')->with('success', 'Material Group berhasil diperbarui.');
     }
 
     public function destroy($id)
@@ -54,7 +54,7 @@ class MaterialGroupController extends Controller
         $material_group = MaterialGroup::findOrFail($id);
         $material_group->delete();
 
-        return redirect()->route('adminsystem.material_group.index')->with('success', 'Purchase Request berhasil dihapus.');
+        return redirect()->route('adminsystem.material_group.index')->with('success', 'Material Group berhasil dihapus.');
     }
 
 
@@ -76,7 +76,7 @@ class MaterialGroupController extends Controller
 
         MaterialGroup::create($request->all());
 
-        return redirect()->route('operator.material_group.index')->with('success', 'Purchase Request berhasil dibuat.');
+        return redirect()->route('operator.material_group.index')->with('success', 'Material Group berhasil dibuat.');
     }
 
     public function operator_edit($id)
@@ -95,7 +95,7 @@ class MaterialGroupController extends Controller
 
         $material_group->update($request->all());
 
-        return redirect()->route('operator.material_group.index')->with('success', 'Purchase Request berhasil diperbarui.');
+        return redirect()->route('operator.material_group.index')->with('success', 'Material Group berhasil diperbarui.');
     }
 
     public function operator_destroy($id)
@@ -103,7 +103,7 @@ class MaterialGroupController extends Controller
         $material_group = MaterialGroup::findOrFail($id);
         $material_group->delete();
 
-        return redirect()->route('operator.material_group.index')->with('success', 'Purchase Request berhasil dihapus.');
+        return redirect()->route('operator.material_group.index')->with('success', 'Material Group berhasil dihapus.');
     }
 
 }

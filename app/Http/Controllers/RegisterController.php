@@ -22,21 +22,19 @@ class RegisterController extends Controller
             'password' => ['required', 'min:5', 'max:20'],
             'agreement' => ['accepted']
         ]);
-    
+
         // Jangan simpan 'agreement' ke database
         $attributes = collect($validated)->except('agreement')->toArray();
-    
+
         $attributes['password'] = bcrypt($attributes['password']);
         $attributes['role'] = 'tamu';
 
         // Buat user tanpa login otomatis
         $user = User::create($attributes);
-    
-        session()->flash('success', 'Your account has been created.');
-    
+
+        session()->flash('success', 'Akun anda berhasil dibuat');
+
         // Redirect ke halaman login, tidak auto-login
         return redirect('/login');
     }
-    
-    
 }
